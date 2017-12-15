@@ -65,7 +65,7 @@ module ocn_tracer_advection
 
    subroutine ocn_tracer_advection_tend(tracers, normalThicknessFlux, &
                                         w, layerThickness, dt, tend,  &
-                                        computeBudgets)!{{{
+                                        computeBudgets, tracerGroupName)!{{{
 
       !*** Input/Output parameters
 
@@ -88,6 +88,12 @@ module ocn_tracer_advection
       logical, intent(in) :: &
          computeBudgets      ! flag to compute active tracer budget
 
+      character (len=*), intent(in) :: &
+         tracerGroupName     !< [in] Tracer name to check if active tracers
+
+      logical :: &
+         limiterOn           ! flag to limit tracer group
+
       ! end of preamble
       !----------------
       ! begin code
@@ -97,15 +103,26 @@ module ocn_tracer_advection
 
       call mpas_timer_start("tracer adv")
 
+      if (tracerGroupName == 'activeTracers'.or. &
+          config_IFVTracers_limit_advection.and.(tracerGroupName == 'IFVTracers').or. &
+          config_IFHTracers_limit_advection.and.(tracerGroupName == 'IFHTracers').or. &
+          config_debugTracers_limit_advection.and.(tracerGroupName == 'debugTracers')) then
+        limiterOn = .true.
+      else
+        limiterOn = .false.
+      endif
+
       ! call specific advection routine based on choice of monotonicity
+      ! MRP note, for IRFs limiting is controlled within the mono subroutine
       if (monotonicOn) then
          call ocn_tracer_advection_mono_tend(tend, tracers, layerThickness,    &
                                              normalThicknessFlux, w, dt,       &
-                                             computeBudgets)
+                                             computeBudgets, tracerGroupName,      &
+                                             limiterOn)
 
       else
          call ocn_tracer_advection_std_tend(tracers, normalThicknessFlux, &
-                                            w, layerThickness, dt, tend)
+                                            w, layerThickness, dt, tend, tracerGroupName)
       endif
 
       call mpas_timer_stop("tracer adv")

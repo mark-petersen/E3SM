@@ -1287,6 +1287,18 @@ contains
                   !$omp end parallel
 #endif
                endif
+            elseif (config_use_IFVTracers.and.trim(groupItr % memberName) == 'IFVTracers') then
+                  !$omp parallel
+                  !$omp do schedule(runtime)
+                  do iCell = 1, nCellsOwned
+                  do k = 1, nVertLevels
+                  do iTracer = 1, num_tracers
+                     IFVTracersVertMixTend(iTracer,k,iCell)=tracersGroup(iTracer,k,iCell)
+                  end do
+                  end do
+                  end do
+                  !$omp end do
+                  !$omp end parallel
             endif
 
             if ( associated(tracersGroup) ) then
@@ -1333,6 +1345,19 @@ contains
                   !$acc update host(activeTracerVertMixTendency)
 #endif
                endif
+            elseif (config_use_IFVTracers.and.trim(groupItr % memberName) == 'IFVTracers') then
+                  !$omp parallel
+                  !$omp do schedule(runtime)
+                  do iCell = 1, nCellsOwned
+                  do k = 1, nVertLevels
+                  do iTracer = 1, num_tracers
+                     IFVTracersVertMixTend(iTracer,k,iCell) = &
+                        (tracersGroup(iTracer,k,iCell) - IFVTracersVertMixTend(iTracer,k,iCell)) / dt
+                  end do
+                  end do
+                  end do
+                  !$omp end do
+                  !$omp end parallel
             endif
 
 #ifdef MPAS_OPENACC

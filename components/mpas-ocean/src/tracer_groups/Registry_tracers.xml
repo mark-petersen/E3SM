@@ -5,4 +5,6 @@
 #include "Registry_MacroMolecules.xml"
 #include "Registry_idealAge.xml"
 #include "Registry_CFC.xml"
+#include "Registry_IFV.xml"
+#include "Registry_IFH.xml"
 //#include "Registry_TEMPLATEGRP.xml"

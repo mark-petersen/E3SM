@@ -28,6 +28,7 @@ module ocn_tracer_advection_std
    use ocn_mesh
    use ocn_tracer_advection_shared
    use ocn_tracer_advection_vert
+   use ocn_diagnostics_variables
 
    implicit none
    private
@@ -59,7 +60,7 @@ module ocn_tracer_advection_std
 !-----------------------------------------------------------------------
 
    subroutine ocn_tracer_advection_std_tend(tracers, normalThicknessFlux, &
-                                            w, layerThickness, dt, tend)
+                                            w, layerThickness, dt, tend, tracerGroupName)
 
       !-----------------------------------------------------------------
       ! Input/Output variables
@@ -82,6 +83,9 @@ module ocn_tracer_advection_std
 
       real (kind=RKIND), intent(in) :: &
          dt                    !< [in] Timestep
+
+      character (len=*), intent(in) :: &
+         tracerGroupName     !< [in] Tracer name to check if active tracers
 
       !-----------------------------------------------------------------
       ! Local variables
@@ -271,6 +275,37 @@ module ocn_tracer_advection_std
         end do ! iCell loop
 #ifndef MPAS_OPENACC
         !$omp end do
+
+        if (config_use_IFHTracers.and.tracerGroupName == 'IFHTracers') then
+          !$omp do schedule(runtime) private(invAreaCell1, i, iEdge, k)
+          do iCell = 1, nCellsAll
+            invAreaCell1 = 1.0_RKIND / areaCell(iCell)
+            IFHTracersHorAdvTend(iTracer,:,iCell) = 0.0_RKIND
+            do i = 1, nEdgesOnCell(iCell)
+              iEdge = edgesOnCell(i, iCell)
+              do k = 1, maxLevelEdgeTop(iEdge)
+                IFHTracersHorAdvTend(iTracer,k,iCell) = IFHTracersHorAdvTend(iTracer,k,iCell) &
+                    + edgeSignOnCell(i, iCell) * highOrderFlxHorz(k, iEdge) * invAreaCell1
+              end do
+            end do
+          end do
+          !$omp end do
+        end if
+
+        if (config_use_IFVTracers.and.tracerGroupName == 'IFVTracers') then
+          ! Accumulate the scaled high order vertical tendencies.
+          !$omp do schedule(runtime) private(k)
+          do iCell = 1, nCellsOwned
+            IFVTracersVertAdvTend(iTracer,:,iCell) = 0.0_RKIND
+            do k = 1, maxLevelCell(iCell)
+              IFVTracersVertAdvTend(iTracer,k,iCell) = IFVTracersVertAdvTend(iTracer,k,iCell) &
+                     + vertDivFactor * (highOrderFlxVert(k+1, iCell) &
+                     - highOrderFlxVert(k, iCell))
+            end do ! k loop
+          end do ! iCell loop
+          !$omp end do
+        end if
+
         !$omp end parallel
 #endif
       end do ! iTracer loop

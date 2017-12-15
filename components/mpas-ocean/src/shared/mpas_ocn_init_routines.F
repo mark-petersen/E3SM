@@ -106,7 +106,7 @@ contains
       real (kind=RKIND), dimension(:,:), pointer :: layerThickness
       real (kind=RKIND), dimension(:,:), pointer :: normalVelocity
 
-      real (kind=RKIND), dimension(:,:,:), pointer :: tracersGroup
+      real (kind=RKIND), dimension(:,:,:), pointer :: tracersGroup, tracersGroupNew
 
       integer, pointer :: nCells, nEdges, nVertices, nVertLevels
 
@@ -230,6 +230,20 @@ contains
                   tracersGroup(:, maxLevelCell(iCell)+1:nVertLevels,iCell) =  -1.0e34_RKIND
                   tracersGroup(:, 1:minLevelCell(iCell)-1,iCell) =  -1.0e34_RKIND
                end do
+               ! Copy Impulse Response Functions from time index 1 to time 2
+               ! That is because we copy it from index 2 to 1 at the beginning
+               ! of each time step to reset the IRFs.
+               if ( config_use_IFVTracers.and.trim(groupItr % memberName) == 'IFVTracers'.or. &
+                    config_use_IFHTracers.and.trim(groupItr % memberName) == 'IFHTracers' ) then
+                  call mpas_pool_get_array(tracersPool, groupItr % memberName, tracersGroupNew, 2)
+                  !$omp do schedule(runtime) private(k)
+                  do iCell = 1, nCells
+                     do k = 1, nVertLevels
+                        tracersGroupNew(:,k,iCell) = tracersGroup(:,k,iCell)
+                     end do
+                  end do
+                  !$omp end do
+               end if
             end if
          end if
       end do

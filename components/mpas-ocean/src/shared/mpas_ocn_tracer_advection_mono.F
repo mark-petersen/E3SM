@@ -66,7 +66,8 @@ module ocn_tracer_advection_mono
    subroutine ocn_tracer_advection_mono_tend( &
                                         tend, tracers, layerThickness, &
                                         normalThicknessFlux, w, dt,    &
-                                        computeBudgets)!{{{
+                                        computeBudgets, tracerGroupName,      &
+                                        limiterOn)!{{{
 
       !-----------------------------------------------------------------
       ! Input/Output parameters
@@ -92,6 +93,10 @@ module ocn_tracer_advection_mono
 
       logical, intent(in) :: &
          computeBudgets        !< [in] Flag to compute active tracer budgets
+      character (len=*), intent(in) :: &
+         tracerGroupName     !< [in] Tracer name to check if active tracers
+      logical, intent(in) :: &
+         limiterOn              !< [in] Flag to limit this tracer group
 
       !-----------------------------------------------------------------
       ! Local variables
@@ -478,6 +483,12 @@ module ocn_tracer_advection_mono
         !$omp end parallel
 #endif
 
+        ! If the limiter is off for this tracer, set the scale factor to 1 for the
+        ! horizontal so no limiting occurs.
+        if (.not.limiterOn) then
+            flxIn(:,:) = 1.0_RKIND
+            flxOut(:,:) = 1.0_RKIND
+        endif
 #ifdef _ADV_TIMERS
         call mpas_timer_stop('scale factor build')
         call mpas_timer_start('rescale horiz fluxes')
@@ -562,6 +573,18 @@ module ocn_tracer_advection_mono
         !$omp end do
         !$omp end parallel
 #endif
+
+        if (config_use_IFHTracers.and.tracerGroupName == 'IFHTracers') then
+           !$omp parallel
+           !$omp do schedule(runtime) private(k)
+           do iCell = 1, nCellsAll
+             do k = 1, maxLevelCell(iCell)
+                 IFHTracersHorAdvTend(iTracer,k,iCell) = workTend(k,iCell)
+             end do
+           end do ! iCell loop
+           !$omp end do
+           !$omp end parallel
+        end if
 
 #ifdef _ADV_TIMERS
         call mpas_timer_stop('flux accumulate')
@@ -840,6 +863,13 @@ module ocn_tracer_advection_mono
         call mpas_timer_start('flux accumulate')
 #endif
 
+        ! If the limiter is off for this tracer, set the scale factor to 1 for the
+        ! vertical so no limiting occurs.
+        if (.not.limiterOn) then
+           flxIn(:,:) = 1.0_RKIND
+           flxOut(:,:) = 1.0_RKIND
+        endif
+
         ! Accumulate the scaled high order vertical tendencies
         ! and the upwind tendencies
 
@@ -881,6 +911,18 @@ module ocn_tracer_advection_mono
         !$omp end do
         !$omp end parallel
 #endif
+
+        if (config_use_IFVTracers.and.tracerGroupName == 'IFVTracers') then
+           !$omp parallel
+           !$omp do schedule(runtime) private(k)
+           do iCell = 1, nCells
+             do k = 1, maxLevelCell(iCell)
+                 IFVTracersVertAdvTend(iTracer,k,iCell) = workTend(k,iCell)
+             end do
+           end do ! iCell loop
+           !$omp end do
+           !$omp end parallel
+        end if
 
         ! Compute advection diagnostics and monotonicity checks if requested
 #ifdef _ADV_TIMERS
