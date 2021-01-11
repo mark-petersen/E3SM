@@ -6,4 +6,5 @@
 #include "Registry_MacroMolecules.xml"
 #include "Registry_idealAge.xml"
 #include "Registry_CFC.xml"
+#include "Registry_sedimentTracers.xml"
 //#include "Registry_TEMPLATEGRP.xml"

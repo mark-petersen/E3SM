@@ -92,6 +92,7 @@ list(APPEND RAW_SOURCES
   core_ocean/shared/mpas_ocn_tracer_CFC.F
   core_ocean/shared/mpas_ocn_tracer_TTD.F
   core_ocean/shared/mpas_ocn_tracer_ecosys.F
+  core_ocean/shared/mpas_ocn_tracer_sediment.F
   core_ocean/shared/mpas_ocn_tracer_DMS.F
   core_ocean/shared/mpas_ocn_tracer_MacroMolecules.F
   core_ocean/shared/mpas_ocn_transport_tests.F
@@ -147,6 +148,10 @@ if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/core_ocean/BGC/.git)
   message(FATAL_ERROR "Missing core_ocean/BGC/.git, did you forget to 'git submodule update --init --recursive' ?")
 endif()
 set(BGC_FILES
+  core_ocean/BGC/BGC_mod.F90
+  core_ocean/BGC/BGC_parms.F90
+  core_ocean/BGC/SEDIMENT_mod.F90
+  core_ocean/BGC/SEDIMENT_parms.F90
   core_ocean/BGC/DMS_mod.F90
   core_ocean/BGC/DMS_parms.F90
   core_ocean/BGC/MACROS_mod.F90

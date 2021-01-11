@@ -50,6 +50,7 @@ module ocn_tendency
    use ocn_tracer_TTD
    use ocn_tracer_surface_flux_to_tend
    use ocn_tracer_ecosys
+   use ocn_tracer_sediment
    use ocn_tracer_DMS
    use ocn_tracer_MacroMolecules
    use ocn_tracer_CFC
@@ -1040,6 +1041,20 @@ contains
                                         nTracersGroup, nCellsOwned, &
                                         indxTemp, indxSalt, tracerGroupSurfaceFlux, indxCFC11, indxCFC12, err)
          endif ! CFC
+         ! compute suspended sediment source-sink tendencies and net surface fluxes
+         ! NOTE: must be called before ocn_tracer_surface_flux_tend
+         !
+         if ( groupName == 'sedimentTracers' ) then
+            call ocn_tracer_sediment_compute(tracerGroup, &
+                                     nTracersGroup,forcingPool,  &
+                                     nCellsOwned, minLevelCell, maxLevelCell, &
+                                     nVertLevels, layerThickness, &
+                                     tracerGroupTend, err)
+
+            call ocn_tracer_sediment_surface_flux_compute(tracerGroup, &
+                                     forcingPool, nCellsOwned, zMid,  &
+                                     tracerGroupSurfaceFlux, err)
+         endif ! sediment
 
          !
          ! ocean surface restoring
