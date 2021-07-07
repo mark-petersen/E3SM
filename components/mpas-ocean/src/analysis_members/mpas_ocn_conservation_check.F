@@ -578,7 +578,7 @@ contains
 
          if (config_AM_conservationCheck_write_to_logfile) then
 
-            formatString = "(a32,2x,1pe24.17)"
+            formatString = "(a32,2x,1pes24.17)"
 
             call mpas_log_write('----------------------------------------------------------')
             call mpas_log_write(' Energy conservation check')
