@@ -1927,7 +1927,7 @@ module ocn_time_integration_si
          resid = (crit_main+100.0)**2.0
 
          !**************************************************************!
-         do while ( dsqrt(resid) > crit_main )
+         do while ( sqrt(resid) > crit_main )
          !**************************************************************!
 
             iter = iter + 1
@@ -3250,7 +3250,7 @@ module ocn_time_integration_si
 
             call mpas_dmpar_sum_real(dminfo,local_area_sum,total_area_sum)
 
-            area_mean = dsqrt(total_area_sum / total_num_cells)
+            area_mean = sqrt(total_area_sum / total_num_cells)
             ncpus = domain % dminfo % nprocs
             mean_num_cells = total_num_cells/ncpus
 

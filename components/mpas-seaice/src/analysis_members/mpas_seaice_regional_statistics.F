@@ -2446,7 +2446,7 @@ contains
     allocate(outputFieldArrayTmp(nRegions))
 
     ! initialize aggregate sum
-    outputFieldArrayTmp = 1.0e34_RKIND
+    outputFieldArrayTmp = 1.0e24_RKIND
 
     block => domain % blocklist
     do while (associated(block))
@@ -2552,7 +2552,7 @@ contains
     allocate(outputFieldArrayTmp(size(outputFieldArray,1),nRegions))
 
     ! initialize aggregate sum
-    outputFieldArrayTmp = 1.0e34_RKIND
+    outputFieldArrayTmp = 1.0e24_RKIND
 
     block => domain % blocklist
     do while (associated(block))
@@ -2659,7 +2659,7 @@ contains
     allocate(outputFieldArrayTmp(nRegions))
 
     ! initialize aggregate sum
-    outputFieldArrayTmp = -1.0e34_RKIND
+    outputFieldArrayTmp = -1.0e24_RKIND
 
     block => domain % blocklist
     do while (associated(block))
@@ -2765,7 +2765,7 @@ contains
     allocate(outputFieldArrayTmp(size(outputFieldArray,1),nRegions))
 
     ! initialize aggregate sum
-    outputFieldArrayTmp = -1.0e34_RKIND
+    outputFieldArrayTmp = -1.0e24_RKIND
 
     block => domain % blocklist
     do while (associated(block))

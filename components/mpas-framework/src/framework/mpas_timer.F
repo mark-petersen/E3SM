@@ -183,9 +183,9 @@
                    allocate(current_timer % min_time(numThreads))
                    allocate(current_timer % avg_time(numThreads))
                    current_timer % running(:) = .false.
-                   current_timer % start_time(:) = 0.0_R8KIND
-                   current_timer % end_time(:) = 0.0_R8KIND
-                   current_timer % total_time(:) = 0.0_R8KIND
+                   current_timer % start_time(:) = 0.0_RKIND
+                   current_timer % end_time(:) = 0.0_RKIND
+                   current_timer % total_time(:) = 0.0_RKIND
                    current_timer % max_time(:) = -huge(RKIND)
                    current_timer % min_time(:) = huge(RKIND)
                    current_timer % avg_time(:) = 0.0_RKIND
@@ -204,9 +204,9 @@
                    current_timer % calls = 0
                 end if
                 current_timer % running(threadNum + 1) = .false.
-                current_timer % start_time(threadNum + 1) = 0.0_R8KIND
-                current_timer % end_time(threadNum + 1) = 0.0_R8KIND
-                current_timer % total_time(threadNum + 1) = 0.0_R8KIND
+                current_timer % start_time(threadNum + 1) = 0.0_RKIND
+                current_timer % end_time(threadNum + 1) = 0.0_RKIND
+                current_timer % total_time(threadNum + 1) = 0.0_RKIND
                 current_timer % max_time(threadNum + 1) = -huge(RKIND)
                 current_timer % min_time(threadNum + 1) = huge(RKIND)
                 current_timer % avg_time(threadNum + 1) = 0.0_RKIND
@@ -246,7 +246,7 @@
 
           character (len=len_trim(timer_name)) :: trimmed_name !< Trimmed timer name
 
-          real (kind=R8KIND) :: temp_time
+          real (kind=RKIND) :: temp_time
 
           integer :: usecs, nlen, iErr, threadNum
 

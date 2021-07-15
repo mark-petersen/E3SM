@@ -861,7 +861,8 @@ contains
       integer :: ymd, tod, ihour, iminute, isecond
       integer :: iyear, imonth, iday, curr_ymd, curr_tod
       integer :: shrloglev, shrlogunit
-      real (kind=RKIND) :: dt, current_wallclock_time
+      real (kind=RKIND) :: dt
+      real (kind=RKIND) :: current_wallclock_time
 
       type (block_type), pointer :: block_ptr
 

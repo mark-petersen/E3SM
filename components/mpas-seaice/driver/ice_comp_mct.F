@@ -211,6 +211,9 @@ contains
 
     real(kind=RKIND), pointer :: &
          dayOfNextShortwaveCalculation ! needed for CESM like coupled simulations
+    real(kind=R8KIND) :: &
+         dayOfNextShortwaveCalculation_R8 ! needed for CESM like coupled simulations
+
 
     interface
        subroutine xml_stream_parser(xmlname, mgr_p, comm, ierr) bind(c)
@@ -598,8 +601,9 @@ contains
 
        call MPAS_pool_get_subpool(block % structs, "shortwave", shortwave)
        call MPAS_pool_get_array(shortwave, "dayOfNextShortwaveCalculation", dayOfNextShortwaveCalculation)
-       call seq_infodata_GetData(infodata, nextsw_cday=dayOfNextShortwaveCalculation )
-
+       dayOfNextShortwaveCalculation_R8 = real(dayOfNextShortwaveCalculation, kind=R8KIND)
+       call seq_infodata_GetData(infodata, nextsw_cday=dayOfNextShortwaveCalculation_R8)
+       dayOfNextShortwaveCalculation = real(dayOfNextShortwaveCalculation_R8, kind=RKIND)
        ! Set dayOfNextShortwaveCalculation to -1 for continue and branch runs.
        if (trim(runtype) /= 'initial') dayOfNextShortwaveCalculation = -1
        call mpas_log_write('dayOfNextShortwaveCalculation = $r', realArgs=(/dayOfNextShortwaveCalculation/))
@@ -1042,6 +1046,9 @@ contains
       character (len=StrKIND), pointer :: config_restart_timestamp_name
       real(kind=RKIND), pointer :: &
             dayOfNextShortwaveCalculation ! needed for CESM like coupled simulations
+      real(kind=R8KIND) :: &
+         dayOfNextShortwaveCalculation_R8 ! needed for CESM like coupled simulations
+
 
       iam = domain % dminfo % my_proc_id
 
@@ -1074,8 +1081,9 @@ contains
          ! Determine time of next atmospheric shortwave calculation
          call MPAS_pool_get_subpool(block % structs, "shortwave", shortwave)
          call MPAS_pool_get_array(shortwave, "dayOfNextShortwaveCalculation", dayOfNextShortwaveCalculation)
-         call seq_infodata_GetData(infodata, nextsw_cday=dayOfNextShortwaveCalculation )
-
+         dayOfNextShortwaveCalculation_R8 = real(dayOfNextShortwaveCalculation, kind=R8KIND)
+         call seq_infodata_GetData(infodata, nextsw_cday=dayOfNextShortwaveCalculation_R8 )
+         dayOfNextShortwaveCalculation = real(dayOfNextShortwaveCalculation_R8, kind=RKIND)
          ! perform post coupling operations
          call post_atmospheric_coupling(block)
          call post_oceanic_coupling(block)

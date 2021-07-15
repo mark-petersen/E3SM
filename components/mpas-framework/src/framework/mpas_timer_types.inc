@@ -10,7 +10,7 @@
           integer :: nlen
           logical, pointer, dimension(:) :: running
           integer :: calls
-          real (kind=R8KIND), pointer, dimension(:) :: start_time, end_time, total_time
+          real (kind=RKIND), pointer, dimension(:) :: start_time, end_time, total_time
           real (kind=RKIND), pointer, dimension(:) :: max_time, min_time, avg_time
           type (mpas_timer_node), pointer :: next => null()
           type (mpas_timer_node), pointer :: child => null()

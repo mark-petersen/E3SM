@@ -23,7 +23,7 @@ module ice_therm_mushy
        update_vertical_tracers_snow
 
   real(kind=dbl_kind), parameter :: &
-       dTemp_errmax = 5.0e-4_dbl_kind ! max allowed change in temperature 
+       dTemp_errmax = 1.0e-1_dbl_kind ! max allowed change in temperature 
                                       ! between iterations
 
 !=======================================================================
@@ -1252,7 +1252,7 @@ contains
          nit               ! Picard iteration count
 
     integer, parameter :: &
-         nit_max = 100     ! maximum number of Picard iterations
+         nit_max = 500     ! maximum number of Picard iterations
 
     lconverged = .false.
 

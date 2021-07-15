@@ -6513,7 +6513,7 @@ subroutine mpas_dmpar_get_exch_list(haloLayer, ownedListField, neededListField, 
 
       implicit none
 
-      real (kind=R8KIND), intent(out) :: curTime !< Output: Current time
+      real (kind=RKIND), intent(out) :: curTime !< Output: Current time
       integer :: clock, hz, threadNum
 
 #ifdef _MPI
@@ -6521,7 +6521,7 @@ subroutine mpas_dmpar_get_exch_list(haloLayer, ownedListField, neededListField, 
 #else
       call system_clock(count=clock)
       call system_clock(count_rate=hz)
-      curTime = real(clock, kind=R8KIND) / real(hz, kind=R8KIND)
+      curTime = real(clock, kind=RKIND) / real(hz, kind=RKIND)
 #endif
 
    end subroutine mpas_dmpar_get_time!}}}

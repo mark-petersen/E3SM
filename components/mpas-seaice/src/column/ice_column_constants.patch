@@ -1,0 +1,114 @@
+commit 48b76c0c18cb1e0e4f44030784c3f63654571dc5
+Author: “Anthony <“ameza98@outlook.com”>
+Date:   Wed Jul 14 02:49:32 2021 -0700
+
+    same single precision patches
+
+diff --git a/components/mpas-seaice/src/column/ice_colpkg.F90 b/components/mpas-seaice/src/column/ice_colpkg.F90
+index 285d439840..e6ab4e6f7f 100644
+--- a/components/mpas-seaice/src/column/ice_colpkg.F90
++++ b/components/mpas-seaice/src/column/ice_colpkg.F90
+@@ -425,6 +425,14 @@
+ #else
+       use ice_orbital, only: shr_orb_params
+ #endif
++       real (kind=8)    :: obliq_R8
++       real (kind=8)    :: mvelp_R8
++       real (kind=8)    :: eccen_R8
++       real (kind=8)    :: mvelpp_R8
++       real (kind=8)    :: lambm0_R8
++       real (kind=8)    :: obliqr_R8
++       real (kind=8)    :: decln_R8
++       real (kind=8)    :: eccf_R8
+ 
+ 
+       logical (kind=log_kind), intent(out) :: &
+@@ -432,14 +440,28 @@
+ 
+       character (len=*), intent(out) :: stop_label
+ 
++      eccen_R8 = real(eccen, kind = 8)
++      mvelpp_R8 = real(mvelpp, kind = 8)
++      mvelp_R8 = real(mvelp, kind = 8)
++      obliq_R8  = real(obliq, kind =8)
++      lambm0_R8  = real(lambm0, kind =8)
++      obliqr_R8  = real(obliqr, kind =8)
++      !decln_R8  = real(decln, kind = R8KIND)
++      !eccf_R8  = real(eccf, kind = R8KIND)
+       l_stop = .false.      ! initialized for CCSMCOUPLED
+       stop_label = ''       ! initialized for CCSMCOUPLED
+       iyear_AD  = 1950
+       log_print = .false.   ! if true, write out orbital parameters
+ 
+ #ifdef CCSMCOUPLED
+-      call shr_orb_params( iyear_AD, eccen , obliq , mvelp    , &
+-                           obliqr  , lambm0, mvelpp, log_print)
++      call shr_orb_params( iyear_AD, eccen_R8 , obliq_R8 , mvelp_R8 , &
++                           obliqr_R8  , lambm0_R8, mvelpp_R8, log_print)
++      eccen = real(eccen_R8, kind=dbl_kind)
++      obliq = real(obliq_R8, kind=dbl_kind)
++      obliqr = real(obliqr_R8, kind=dbl_kind)
++      mvelp = real(mvelp_R8, kind=dbl_kind)
++      mvelpp = real(mvelpp_R8, kind=dbl_kind)
++      lambm0 = real(lambm0_R8, kind=dbl_kind)
+ #else
+       call shr_orb_params( iyear_AD, eccen , obliq , mvelp    , &
+                            obliqr  , lambm0, mvelpp, log_print, &
+diff --git a/components/mpas-seaice/src/column/ice_kinds_mod.F90 b/components/mpas-seaice/src/column/ice_kinds_mod.F90
+index 4b12177c78..f3bcab55be 100644
+--- a/components/mpas-seaice/src/column/ice_kinds_mod.F90
++++ b/components/mpas-seaice/src/column/ice_kinds_mod.F90
+@@ -20,7 +20,7 @@
+                             log_kind  = kind(.true.), &
+                             int_kind  = selected_int_kind(6), &
+                             real_kind = selected_real_kind(6), &
+-                            dbl_kind  = selected_real_kind(13), &
++                            dbl_kind  = selected_real_kind(6), &
+                             r16_kind  = selected_real_kind(26)
+ 
+ !=======================================================================
+diff --git a/components/mpas-seaice/src/column/ice_orbital.F90 b/components/mpas-seaice/src/column/ice_orbital.F90
+index 45c3dd2b2b..b0ff25f42d 100644
+--- a/components/mpas-seaice/src/column/ice_orbital.F90
++++ b/components/mpas-seaice/src/column/ice_orbital.F90
+@@ -62,11 +62,15 @@
+  
+       real (kind=dbl_kind), intent(in) :: &
+          dt                  ! thermodynamic time step
+-
++      real (kind=8)    :: ydayp1_R8
+       ! local variables
+-
+       real (kind=dbl_kind) :: ydayp1 ! day of year plus one time step
+- 
++      real (kind=8)    :: eccen_R8
++      real (kind=8)    :: mvelpp_R8
++      real (kind=8)    :: lambm0_R8
++      real (kind=8)    :: obliqr_R8
++      real (kind=8)    :: decln_R8
++      real (kind=8)    :: eccf_R8
+ ! Solar declination for next time step
+  
+ #ifdef CCSMCOUPLED
+@@ -81,10 +85,17 @@
+ #else
+       ydayp1 = yday + sec/secday
+ #endif
+- 
+-      call shr_orb_decl(ydayp1, eccen, mvelpp, lambm0, &
+-                        obliqr, decln, eccf)
+-
++      ydayp1_R8 = real(ydayp1, kind = 8)
++      eccen_R8 = real(eccen, kind = 8)
++      mvelpp_R8 = real(mvelpp, kind = 8)
++      lambm0_R8  = real(lambm0, kind =8)
++      obliqr_R8  = real(obliqr, kind = 8)
++      decln_R8  = real(decln, kind = 8)
++      eccf_R8  = real(eccf, kind = 8)
++      call shr_orb_decl(ydayp1_R8, eccen_R8, mvelpp_R8, lambm0_R8, &
++                        obliqr_R8, decln_R8, eccf_R8) 
++      decln = real(decln_R8, kind=dbl_kind)
++      eccf = real(eccf_R8, kind=dbl_kind)
+       coszen = sin(tlat)*sin(decln) &
+              + cos(tlat)*cos(decln) &
+              *cos((sec/secday-p5)*c2*pi + tlon) !cos(hour angle)

@@ -80,19 +80,19 @@ module ocn_okubo_weiss
 
    interface
       subroutine compute_ev_2(A, wr, wi) bind(C)!{{{
-         use iso_c_binding, only: c_double
-         real (c_double), dimension(2,2) :: A
-         real (c_double), dimension(2) :: wr
-         real (c_double), dimension(2) :: wi
+         use iso_c_binding, only: c_float
+         real (c_float), dimension(2,2) :: A
+         real (c_float), dimension(2) :: wr
+         real (c_float), dimension(2) :: wi
       end subroutine compute_ev_2!}}}
    end interface
 
    interface
       subroutine compute_ev_3(A, wr, wi) bind(C)!{{{
-         use iso_c_binding, only: c_double
-         real (c_double), dimension(3,3) :: A
-         real (c_double), dimension(3) :: wr
-         real (c_double), dimension(3) :: wi
+         use iso_c_binding, only: c_float
+         real (c_float), dimension(3,3) :: A
+         real (c_float), dimension(3) :: wr
+         real (c_float), dimension(3) :: wi
       end subroutine compute_ev_3!}}}
    end interface
 

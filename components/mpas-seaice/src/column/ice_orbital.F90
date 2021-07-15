@@ -62,11 +62,15 @@
  
       real (kind=dbl_kind), intent(in) :: &
          dt                  ! thermodynamic time step
-
+      real (kind=8)    :: ydayp1_R8
       ! local variables
-
       real (kind=dbl_kind) :: ydayp1 ! day of year plus one time step
- 
+      real (kind=8)    :: eccen_R8
+      real (kind=8)    :: mvelpp_R8
+      real (kind=8)    :: lambm0_R8
+      real (kind=8)    :: obliqr_R8
+      real (kind=8)    :: decln_R8
+      real (kind=8)    :: eccf_R8
 ! Solar declination for next time step
  
 #ifdef CCSMCOUPLED
@@ -81,10 +85,18 @@
 #else
       ydayp1 = yday + sec/secday
 #endif
- 
-      call shr_orb_decl(ydayp1, eccen, mvelpp, lambm0, &
-                        obliqr, decln, eccf)
-
+      ydayp1_R8 = real(ydayp1, kind = 8)
+      eccen_R8 = real(eccen, kind = 8)
+      mvelpp_R8 = real(mvelpp, kind = 8)
+      lambm0_R8  = real(lambm0, kind =8)
+      obliqr_R8  = real(obliqr, kind = 8)
+      decln_R8  = real(decln, kind = 8)
+      eccf_R8  = real(eccf, kind = 8)
+      call shr_orb_decl(ydayp1_R8, eccen_R8, mvelpp_R8, & 
+                        lambm0_R8, obliqr_R8, decln_R8, & 
+                        eccf_R8) 
+      decln = real(decln_R8, kind=dbl_kind)
+      eccf = real(eccf_R8, kind=dbl_kind)
       coszen = sin(tlat)*sin(decln) &
              + cos(tlat)*cos(decln) &
              *cos((sec/secday-p5)*c2*pi + tlon) !cos(hour angle)

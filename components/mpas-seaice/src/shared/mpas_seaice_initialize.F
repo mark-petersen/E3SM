@@ -212,7 +212,7 @@ contains
          njunk
 
     real(kind=RKIND), parameter :: &
-         value_junk = -1.0e34_RKIND
+         value_junk = -1.0e24_RKIND
 
     integer, pointer :: &
          nCells

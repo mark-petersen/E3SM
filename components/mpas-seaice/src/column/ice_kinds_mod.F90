@@ -20,9 +20,13 @@
                             log_kind  = kind(.true.), &
                             int_kind  = selected_int_kind(6), &
                             real_kind = selected_real_kind(6), &
-                            dbl_kind  = selected_real_kind(13), &
                             r16_kind  = selected_real_kind(26)
+#ifdef SINGLE_PRECISION
 
+       integer, parameter :: dbl_kind  = selected_real_kind(6)
+#else
+       integer, parameter :: dbl_kind  = selected_real_kind(13)
+#endif 
 !=======================================================================
 
       end module ice_kinds_mod
