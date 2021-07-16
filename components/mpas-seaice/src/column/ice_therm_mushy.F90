@@ -23,7 +23,7 @@ module ice_therm_mushy
        update_vertical_tracers_snow
 
   real(kind=dbl_kind), parameter :: &
-       dTemp_errmax = 1.0e-1_dbl_kind ! max allowed change in temperature 
+       dTemp_errmax = 1.0e-3_always_dbl_kind ! max allowed change in temperature 
                                       ! between iterations
 
 !=======================================================================
@@ -533,7 +533,7 @@ contains
           ! check if solution is consistent 
           ! surface conductive heat flux should be less than 
           ! incoming surface heat flux
-          if (fcondtop - fsurfn < 0.9_dbl_kind*ferrmax) then
+          if (fcondtop - fsurfn < 0.9_always_dbl_kind*ferrmax) then
 
              ! solution is consistent - have solution so finish
              return
@@ -586,7 +586,7 @@ contains
        ! check if solution is consistent 
        ! surface conductive heat flux should be less than 
        ! incoming surface heat flux
-       if (fcondtop - fsurfn < 0.9_dbl_kind*ferrmax) then
+       if (fcondtop - fsurfn < 0.9_always_dbl_kind*ferrmax) then
 
           ! solution is consistent - have solution so finish
           return
@@ -852,7 +852,7 @@ contains
           ! check if solution is consistent 
           ! surface conductive heat flux should be less than 
           ! incoming surface heat flux
-          if (fcondtop - fsurfn < 0.9_dbl_kind*ferrmax) then
+          if (fcondtop - fsurfn < 0.9_always_dbl_kind*ferrmax) then
 
              ! solution is consistent - have solution so finish
              return
@@ -905,7 +905,7 @@ contains
        ! check if solution is consistent 
        ! surface conductive heat flux should be less than 
        ! incoming surface heat flux
-       if (fcondtop - fsurfn < 0.9_dbl_kind*ferrmax) then
+       if (fcondtop - fsurfn < 0.9_always_dbl_kind*ferrmax) then
 
           ! solution is consistent - have solution so finish
           return
@@ -1701,7 +1701,7 @@ contains
     lconverged = (dTsf  < dTemp_errmax .and. &
                   dzTsn < dTemp_errmax .and. &
                   dzTin < dTemp_errmax .and. &
-                  abs(ferr) < 0.9_dbl_kind*ferrmax)
+                  abs(ferr) < 0.9_always_dbl_kind*ferrmax)
 
   end subroutine check_picard_convergence
 
@@ -2952,7 +2952,7 @@ contains
     real(kind=dbl_kind), dimension(:), intent(out) :: &
          x      ! solution vector
 
-    real(kind=dbl_kind), dimension(nilyr+nslyr+1) :: &
+    real(kind=always_dbl_kind), dimension(nilyr+nslyr+1) :: &
          cp , & ! modified upper off-diagonal vector
          dp     ! modified right hand side vector
 
@@ -2996,7 +2996,7 @@ contains
     real(kind=dbl_kind), parameter :: &
          phic = p05 ! critical liquid fraction for impermeability
 
-    perm = 3.0e-8_dbl_kind * max(phi - phic, c0)**3
+    perm = 3.0e-8_always_dbl_kind * max(phi - phic, c0)**3
 
   end function permeability
 
@@ -3046,7 +3046,7 @@ contains
          qbr       ! ice layer brine enthalpy (J m-3)
 
     real(kind=dbl_kind), parameter :: &
-         kappal        = 8.824e-8_dbl_kind, & ! heat diffusivity of liquid
+         kappal        = 8.824e-8_always_dbl_kind, & ! heat diffusivity of liquid
          ra_constants  = gravit / (viscosity_dyn * kappal), & ! for Rayleigh number
          fracmax       = p2               , & ! limiting advective layer fraction
          zSin_min      = p1               , & ! minimum bulk salinity (ppt)
@@ -3120,7 +3120,7 @@ contains
        ! permeabilities
        perm = permeability(phi(k))
        perm_min = min(perm_min,perm)
-       perm_harm = perm_harm + (c1 / max(perm,1.0e-30_dbl_kind))
+       perm_harm = perm_harm + (c1 / max(perm,1.0e-30_always_dbl_kind))
 
        ! densities
        rho_sum = rho_sum + rho(k)
@@ -3146,16 +3146,16 @@ contains
        Ap = (pi * a_rapid_mode**4) / (c8 * viscosity_dyn)
        Bp = -rho_pipe * gravit
 
-       q(k) = max((Am / dx2) * ((-Ap*Bp - Am*Bm) / (Am + Ap) + Bm), 1.0e-30_dbl_kind)
+       q(k) = max((Am / dx2) * ((-Ap*Bp - Am*Bm) / (Am + Ap) + Bm), 1.0e-30_always_dbl_kind)
 
        ! modify by Rayleigh number and advection limit
        q(k) = min(q(k) * (max(Ra - Rac_rapid_mode, c0) / (Ra+puny)), qlimit)
 
        ! late stage drainage
        dSdt(k) = dSdt_slow_mode * (max((zSin(k) - phi_c_slow_mode*Sbr(k)), c0) &
-                                *  max((Tbot - Tsf), c0)) / (hin + 0.001_dbl_kind)
+                                *  max((Tbot - Tsf), c0)) / (hin + 0.001_always_dbl_kind)
 
-       dSdt(k) = max(dSdt(k), (-zSin(k) * 0.5_dbl_kind) / dt)
+       dSdt(k) = max(dSdt(k), (-zSin(k) * 0.5_always_dbl_kind) / dt)
 
        ! restrict flows to prevent too much salt loss
        dS_guess = (((q(k) * (Sbr(k+1) - Sbr(k))) / hilyr + dSdt(k)) * dt) * safety_factor
@@ -3215,7 +3215,7 @@ contains
          w             ! vertical flushing Darcy flow rate (m s-1)
 
     real(kind=dbl_kind), parameter :: &
-         advection_limit = 0.005_dbl_kind ! limit to fraction of brine in 
+         advection_limit = 0.005_always_dbl_kind ! limit to fraction of brine in 
                                           ! any layer that can be advected 
 
     real(kind=dbl_kind) :: &
@@ -3256,7 +3256,7 @@ contains
                (c1 - phi(k)) * rhoi
 
           ! permeability harmonic mean
-          perm_harm = perm_harm + c1 / (perm + 1e-30_dbl_kind)
+          perm_harm = perm_harm + c1 / (perm + 1e-30_always_dbl_kind)
 
        enddo ! k
 
@@ -3316,8 +3316,8 @@ contains
          hpond     ! melt pond thickness (m)
     
     real(kind=dbl_kind), parameter :: &
-         lambda_pond = c1 / (10.0_dbl_kind * 24.0_dbl_kind * 3600.0_dbl_kind), &
-         hpond0 = 0.01_dbl_kind
+         lambda_pond = c1 / (10.0_always_dbl_kind * 24.0_always_dbl_kind * 3600.0_always_dbl_kind), &
+         hpond0 = 0.01_always_dbl_kind
 
     if (tr_pond) then
        if (apond > c0 .and. hpond > c0) then

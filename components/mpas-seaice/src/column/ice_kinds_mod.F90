@@ -24,8 +24,10 @@
 #ifdef SINGLE_PRECISION
 
        integer, parameter :: dbl_kind  = selected_real_kind(6)
+       integer, parameter :: always_dbl_kind  = selected_real_kind(13)
 #else
        integer, parameter :: dbl_kind  = selected_real_kind(13)
+       integer, parameter :: always_dbl_kind  = selected_real_kind(13)
 #endif 
 !=======================================================================
 
