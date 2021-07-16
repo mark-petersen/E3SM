@@ -211,7 +211,7 @@ contains
                tend(k,iEdge) = tend(k,iEdge) - &
                                edgeMask(k,iEdge)*invdcEdge* &
                                (  gravity*(ssh(cell2) - ssh(cell1)) &
-                                - density0Inv*(  surfacePressure(cell2) &
+                                + density0Inv*(  surfacePressure(cell2) &
                                                - surfacePressure(cell1)) )
             end do
          end do
