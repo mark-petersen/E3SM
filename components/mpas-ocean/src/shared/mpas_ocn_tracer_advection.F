@@ -137,7 +137,8 @@ module ocn_tracer_advection
 
       ! determine whether active tracer budgets should be computed
       computeBudgets = (budgetDiagsOn .and. tracerGroupName == 'activeTracers')
-      if (config_IFVTracers_limit_advection.and.(tracerGroupName == 'IFVTracers').or. &
+      if (tracerGroupName == 'activeTracers'.or. &
+          config_IFVTracers_limit_advection.and.(tracerGroupName == 'IFVTracers').or. &
           config_IFHTracers_limit_advection.and.(tracerGroupName == 'IFHTracers').or. &
           config_debugTracers_limit_advection.and.(tracerGroupName == 'debugTracers')) then
         limiterOn = .true.

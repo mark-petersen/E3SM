@@ -461,6 +461,8 @@ module ocn_tracer_advection_mono
         !$omp end do
         !$omp end parallel
 
+        ! If the limiter is off for this tracer, set the scale factor to 1 for the
+        ! horizontal so no limiting occurs.
         if (.not.limiterOn) then
             flxIn(:,:) = 1.0_RKIND
             flxOut(:,:) = 1.0_RKIND
@@ -830,7 +832,9 @@ module ocn_tracer_advection_mono
 #endif
 
         nCells = nCellsArray( 1 )
-        if (limiterOn) then
+      ! If the limiter is on for this tracer, scale by flxIn, flxOut in the
+      ! vertical
+      if (limiterOn) then
         ! Accumulate the scaled high order vertical tendencies
         ! and the upwind tendencies
         !$omp parallel
@@ -861,7 +865,7 @@ module ocn_tracer_advection_mono
           end do ! iCell loop
           !$omp end do
           !$omp end parallel
-        else ! no limiter
+        else ! no limiter on vertical: no scaling by flxOut,flxIn
           !$omp parallel
           !$omp do schedule(runtime) private(kmax, k, flux)
           do iCell = 1, nCells
