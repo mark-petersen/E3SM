@@ -471,7 +471,6 @@ module ocn_tracer_advection_mono
         call mpas_timer_stop('scale factor build')
         call mpas_timer_start('rescale horiz fluxes')
 #endif
-        !if (limiterOn) then
         ! Need all of the edges around owned cells
         nEdges = nEdgesArray( 2 )
         !  rescale the high order horizontal fluxes
@@ -832,9 +831,13 @@ module ocn_tracer_advection_mono
 #endif
 
         nCells = nCellsArray( 1 )
-      ! If the limiter is on for this tracer, scale by flxIn, flxOut in the
-      ! vertical
-      if (limiterOn) then
+        ! If the limiter is off for this tracer, set the scale factor to 1 for the
+        ! vertical so no limiting occurs.
+        if (.not.limiterOn) then
+           flxIn(:,:) = 1.0_RKIND
+           flxOut(:,:) = 1.0_RKIND
+        endif
+
         ! Accumulate the scaled high order vertical tendencies
         ! and the upwind tendencies
         !$omp parallel
@@ -862,27 +865,9 @@ module ocn_tracer_advection_mono
             tend(iTracer,k,iCell) = tend(iTracer,k,iCell) + workTend(k,iCell)
           end do ! k loop
 
-          end do ! iCell loop
-          !$omp end do
-          !$omp end parallel
-        else ! no limiter on vertical: no scaling by flxOut,flxIn
-          !$omp parallel
-          !$omp do schedule(runtime) private(kmax, k, flux)
-          do iCell = 1, nCells
-            kmax = maxLevelCell(iCell)
-            do k = 1,kmax
-              ! workTend on the RHS is the upwind tendency
-              ! workTend on the LHS is the total vertical advection tendency
-              workTend(k, iCell) = workTend(k, iCell)       &
-                                 + (highOrderFlx(k+1,iCell) &
-                                  - highOrderFlx(k  ,iCell))
-              tend(iTracer,k,iCell) = tend(iTracer,k,iCell) + workTend(k,iCell)
-            end do ! k loop
-
-          end do ! iCell loop
-          !$omp end do
-          !$omp end parallel
-        endif
+        end do ! iCell loop
+        !$omp end do
+        !$omp end parallel
 
         if (tracerGroupName == 'IFVTracers') then
            !$omp parallel

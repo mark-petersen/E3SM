@@ -147,9 +147,8 @@ module ocn_tracer_advection
       endif
 
       ! call specific advection routine based on choice of monotonicity
-      !!!!! MRP IRFs: need to change this so it is less confusing
-      if (monotonicOn.or.limiterOn) then
-         call mpas_log_write('Calling mono_tend for tracer group '//tracerGroupName)
+      ! MRP note, for IRFs limiting is controlled within the mono subroutine
+      if (monotonicOn) then
          call ocn_tracer_advection_mono_tend(tend, tracers, layerThickness,    &
                                              normalThicknessFlux, w, dt,       &
                                              advCoefs, advCoefs3rd,            &
@@ -162,7 +161,6 @@ module ocn_tracer_advection
                                              limiterOn)
 
       else
-         call mpas_log_write('Calling std_tend for tracer group '//tracerGroupName)
          call ocn_tracer_advection_std_tend(tracers, advCoefs, advCoefs3rd, &
             nAdvCellsForEdge, advCellsForEdge, normalThicknessFlux, w, layerThickness, &
             layerThickness, dt, meshPool, tend, minLevelCell, maxLevelCell, &
