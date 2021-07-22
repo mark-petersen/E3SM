@@ -65,6 +65,8 @@ module seaice_column
 
      ! first ancestor type mask
      real(kind=RKIND), dimension(:,:), allocatable :: firstAncestorMask !trcr_base
+     ! first ancestor type mask
+     real(kind=R8KIND), dimension(:,:), allocatable :: firstAncestorMask_R8 !trcr_base
 
      ! indices of ancestor tracers excluding base tracer
      integer, dimension(:,:), allocatable :: ancestorIndices ! nt_strata
@@ -176,11 +178,16 @@ module seaice_column
 
   real(kind=RKIND), dimension(:,:), allocatable :: &
        tracerArrayCategory
+  real(kind=R8KIND), dimension(:,:), allocatable :: &
+       tracerArrayCategory_R8
 !$omp threadprivate(tracerArrayCategory)
 
   real(kind=RKIND), dimension(:), allocatable :: &
        tracerArrayCell
+!$omp threadprivate(tracerArrayCategory_R8)
 
+  real(kind=RKIND), dimension(:), allocatable :: &
+       tracerArrayCell_R8
   ! warnings string kind
   integer, parameter :: strKINDWarnings = char_len_long
 
@@ -320,7 +327,7 @@ contains
 
     integer, pointer :: &
          nCategories
-
+    
     logical :: &
          abortFlag
 
@@ -330,6 +337,7 @@ contains
     call MPAS_pool_get_dimension(domain % blocklist % dimensions, "nCategories", nCategories)
 
     block => domain % blocklist
+
     do while (associated(block))
 
        call MPAS_pool_get_subpool(block % structs, "initial", initial)
@@ -338,21 +346,19 @@ contains
 
        abortFlag = .false.
        abortMessage = ""
-
        call colpkg_init_itd(&
             nCategories, &
             categoryThicknessLimits, &
             abortFlag, &
             abortMessage)
-
        ! code abort
+
        if (abortFlag) then
           call mpas_log_write("init_column_itd: "//trim(abortMessage), messageType=MPAS_LOG_CRIT)
        endif
 
        block => block % next
     end do
-
   end subroutine init_column_itd
 
 !|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -392,6 +398,9 @@ contains
     real(kind=RKIND), dimension(:), allocatable :: &
          initialSalinityProfileVertical
 
+    real(kind=R8KIND), dimension(:), allocatable :: &
+         initialSalinityProfileVertical_R8
+
     real(kind=RKIND), dimension(:,:), pointer :: &
          initialSalinityProfile, &
          initialMeltingTemperatureProfile
@@ -403,10 +412,11 @@ contains
        call MPAS_pool_get_dimension(block % dimensions, "nIceLayers", nIceLayers)
 
        allocate(initialSalinityProfileVertical(1:nIceLayers+1))
-
+       initialSalinityProfileVertical_R8 = real(initialSalinityProfileVertical, kind=R8KIND)
        call colpkg_init_thermo(&
             nIceLayers, &
-            initialSalinityProfileVertical)
+            initialSalinityProfileVertical_R8)
+       initialSalinityProfileVertical = real(initialSalinityProfileVertical_R8, kind=RKIND)
 
        call MPAS_pool_get_subpool(block % structs, "initial", initial)
 
@@ -415,16 +425,16 @@ contains
 
        do iCell = 1, nCellsSolve
           do iIceLayer = 1, nIceLayers + 1
-
              ! these profiles are not used by mushy
              initialSalinityProfile(iIceLayer,iCell)           = initialSalinityProfileVertical(iIceLayer)
              initialMeltingTemperatureProfile(iIceLayer,iCell) = &
-                  colpkg_liquidus_temperature(initialSalinityProfileVertical(iIceLayer))
+                  colpkg_liquidus_temperature(initialSalinityProfileVertical_R8(iIceLayer))
 
           enddo ! iIceLayer
        enddo ! iCell
 
        deallocate(initialSalinityProfileVertical)
+       deallocate(initialSalinityProfileVertical_R8)
 
        block => block % next
     end do
@@ -924,6 +934,7 @@ contains
 
        do iCell = 1, nCellsSolve
           do iCategory = 1, nCategories
+             
 
              call colpkg_init_trcr(&
                   airTemperature(iCell), &
@@ -4133,9 +4144,9 @@ contains
        deallocate(oceanBioConcentrationsUsed)
 
        block => block % next
-    end do
+     end do
 
-  end subroutine column_biogeochemistry
+     end subroutine column_biogeochemistry
 
 !|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 !
@@ -4418,6 +4429,11 @@ contains
          iceVolumeCategory, &
          snowVolumeCategory
 
+    real(kind = R8KIND) :: &
+         aice_R8, &
+         vice_R8, &
+         vsno_R8, &
+         aice0_R8
     integer :: &
          iCell
 
@@ -4482,6 +4498,11 @@ contains
                ciceTracerObject % ancestorNumber, & ! n_trcr_strata
                ciceTracerObject % ancestorIndices) ! nt_strata
 
+          ! iceAreaCell(iCell) = real(aice_R8, kind = RKIND)
+          ! iceVolumeCell(iCell) = real(vice_R8, kind = RKIND)
+          ! snowVolumeCell(iCell) = real(vsno_R8, kind = RKIND)
+          ! openWaterArea(iCell) = real(aice0_R8, kind = RKIND)
+          
           ! set the cell tracer array
           call get_cice_tracer_array_cell(block, ciceTracerObject, &
                tracerArrayCell, iCell, setGetPhysicsTracers, setGetBGCTracers)

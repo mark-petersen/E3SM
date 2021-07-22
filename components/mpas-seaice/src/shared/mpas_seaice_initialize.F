@@ -712,7 +712,7 @@ contains
 
           surfaceTemperature(1,:,iCell) = seaFreezingTemperature(iCell)
           do iSnowLayer = 1, nSnowLayers
-             snowEnthalpy(iSnowLayer,:,iCell) = colpkg_enthalpy_snow(0.0_RKIND)
+             snowEnthalpy(iSnowLayer,:,iCell) = colpkg_enthalpy_snow(0.0_R8KIND)
           end do
 
        endif
@@ -776,7 +776,8 @@ contains
 
     real(kind=RKIND), dimension(:), pointer :: &
          categoryThicknessLimits
-
+    real(kind=R8KIND), dimension(:), allocatable :: &
+         categoryThicknessLimits_R8
     real(kind=RKIND) :: &
          areaCategorySum
 
@@ -809,9 +810,8 @@ contains
     !--------------------------------------------------------
 
     call MPAS_pool_get_config(block % configs, "config_use_column_package", config_use_column_package)
-
     if (.not. config_use_column_package) then
-
+     
        call colpkg_init_itd(&
             nCategories, &
             categoryThicknessLimits, &
@@ -1848,7 +1848,7 @@ contains
        call MPAS_pool_get_config(block % configs, "config_do_restart", config_do_restart)
 
        do iCell = 1, nCells
-          seaFreezingTemperature(iCell) = colpkg_liquidus_temperature(seaSurfaceSalinity(iCell))
+          seaFreezingTemperature(iCell) = colpkg_liquidus_temperature(real(seaSurfaceSalinity(iCell), kind=R8KIND))
        enddo ! iCell
 
        ! sea surface temperature is not initialized if we're restarting

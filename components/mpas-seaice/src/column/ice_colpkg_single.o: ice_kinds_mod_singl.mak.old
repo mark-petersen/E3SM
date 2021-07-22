@@ -1,0 +1,57 @@
+ice_colpkg_single.o: ice_kinds_mod_single.o ice_constants_colpkg_single.o ice_warnings_single.o ice_colpkg_shared_single.o ice_therm_shared_single.o ice_orbital_single.o ice_atmo_single.o ice_age_single.o ice_firstyear_single.o ice_flux_colpkg_single.o ice_meltpond_cesm_single.o ice_meltpond_lvl_single.o ice_meltpond_topo_single.o ice_therm_vertical_single.o ice_itd_single.o ice_therm_itd_single.o ice_shortwave_single.o ice_mechred_single.o ice_colpkg_tracers_single.o ice_atmo_single.o ice_mushy_physics_single.o ice_zbgc_single.o ice_zbgc_shared_single.o  ice_aerosol_single.o ice_algae_single.o ice_brine_single.o ice_zsalinity_single.o ice_snow_single.o
+
+ice_warnings_single_single.o: ice_kinds_mod_single.o
+
+ice_constants_colpkg_single.o: ice_constants_colpkg.F90 ice_kinds_mod_single.o
+
+ice_colpkg_shared_single.o: ice_kinds_mod_single.o ice_constants_colpkg_single.o
+
+ice_mushy_physics_single.o: ice_kinds_mod_single.o ice_constants_colpkg_single.o
+
+ice_therm_shared_single.o: ice_kinds_mod_single.o ice_constants_colpkg_single.o
+
+ice_orbital_single.o: ice_kinds_mod_single.o ice_constants_colpkg_single.o
+
+ice_therm_mushy_single.o: ice_kinds_mod_single.o ice_constants_colpkg_single.o ice_colpkg_shared_single.o ice_therm_shared_single.o ice_mushy_physics_single.o ice_colpkg_tracers_single.o
+
+ice_atmo_single.o: ice_kinds_mod_single.o ice_constants_colpkg_single.o ice_colpkg_tracers_single.o
+
+ice_age_single.o: ice_kinds_mod_single.o
+
+ice_firstyear_single.o: ice_kinds_mod_single.o ice_constants_colpkg_single.o
+
+ice_flux_colpkg_single.o: ice_kinds_mod_single.o ice_constants_colpkg_single.o
+
+ice_meltpond_cesm_single.o: ice_kinds_mod_single.o ice_constants_colpkg_single.o
+
+ice_meltpond_lvl_single.o: ice_kinds_mod_single.o ice_constants_colpkg_single.o ice_therm_shared_single.o
+
+ice_meltpond_topo_single.o: ice_kinds_mod_single.o ice_constants_colpkg_single.o ice_therm_shared_single.o
+
+ice_therm_vertical_single.o: ice_kinds_mod_single.o ice_constants_colpkg_single.o ice_colpkg_shared_single.o ice_therm_shared_single.o ice_therm_bl99_single.o ice_therm_0layer_single.o ice_therm_mushy_single.o ice_mushy_physics_single.o
+
+ice_therm_bl99_single.o: ice_kinds_mod_single.o ice_constants_colpkg_single.o ice_colpkg_shared_single.o ice_therm_shared_single.o
+
+ice_therm_0layer_single.o: ice_kinds_mod_single.o ice_constants_colpkg_single.o ice_therm_bl99_single.o
+
+ice_itd_single.o: ice_kinds_mod_single.o ice_constants_colpkg_single.o ice_colpkg_tracers_single.o ice_therm_shared_single.o ice_zbgc_shared_single.o
+
+ice_colpkg_tracers_single.o: ice_kinds_mod_single.o ice_constants_colpkg_single.o 
+
+ice_therm_itd_single.o: ice_kinds_mod_single.o ice_constants_colpkg_single.o ice_itd_single.o ice_colpkg_tracers_single.o ice_therm_shared_single.o ice_therm_shared_single.o  ice_mushy_physics_single.o ice_zbgc_single.o ice_zbgc_shared_single.o
+
+ice_shortwave_single.o: ice_kinds_mod_single.o ice_constants_colpkg_single.o ice_orbital_single.o
+
+ice_mechred_single.o: ice_kinds_mod_single.o ice_constants_colpkg_single.o ice_itd_single.o ice_colpkg_tracers_single.o
+
+ice_aerosol_single.o: ice_kinds_mod_single.o ice_constants_colpkg_single.o ice_colpkg_shared_single.o ice_colpkg_tracers_single.o ice_zbgc_shared_single.o 
+
+ice_algae_single.o: ice_kinds_mod_single.o ice_constants_colpkg_single.o ice_colpkg_shared_single.o ice_colpkg_tracers_single.o ice_zbgc_shared_single.o ice_aerosol_single.o ice_warnings_single.o
+
+ice_brine_single.o: ice_kinds_mod_single.o ice_constants_colpkg_single.o ice_colpkg_shared_single.o ice_colpkg_tracers_single.o ice_zbgc_shared_single.o ice_therm_mushy_single.o ice_mushy_physics_single.o ice_therm_shared_single.o
+
+ice_zbgc_single.o: ice_kinds_mod_single.o ice_constants_colpkg_single.o ice_colpkg_shared_single.o ice_colpkg_tracers_single.o ice_zbgc_shared_single.o ice_therm_shared_single.o ice_itd_single.o 
+
+ice_zbgc_shared_single.o: ice_kinds_mod_single.o ice_constants_colpkg_single.o ice_colpkg_shared_single.o 
+
+ice_snow_single.o: ice_kinds_mod_single.o ice_constants_colpkg_single.o ice_warnings_single.o  ice_therm_vertical_single.o ice_colpkg_shared_single.o

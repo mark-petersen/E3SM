@@ -130,7 +130,7 @@ contains
     enddo
 
     ! find the minimum edge length in the grid
-    dvEdgeMin = 1.0e30_RKIND
+    dvEdgeMin = 1.0e24_RKIND
 
     block => domain % blocklist
     do while (associated(block))

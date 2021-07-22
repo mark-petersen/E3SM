@@ -22,8 +22,8 @@ module ice_therm_mushy
        permeability, &
        update_vertical_tracers_snow
 
-  real(kind=dbl_kind), parameter :: &
-       dTemp_errmax = 1.0e-3_dbl_kind ! max allowed change in temperature 
+  real(kind=real_kind), parameter :: &
+       dTemp_errmax = 1.0e-3_always_real_kind ! max allowed change in temperature 
                                       ! between iterations
 
 !=======================================================================
@@ -71,10 +71,10 @@ contains
          nilyr , & ! number of ice layers
          nslyr     ! number of snow layers
     
-    real (kind=dbl_kind), intent(in) :: &
+    real (kind=real_kind), intent(in) :: &
          dt              ! time step (s)
     
-    real (kind=dbl_kind), intent(in) :: &
+    real (kind=real_kind), intent(in) :: &
          rhoa        , & ! air density (kg/m^3)
          flw         , & ! incoming longwave radiation (W/m^2)
          potT        , & ! air potential temperature  (K)
@@ -84,41 +84,41 @@ contains
          Tbot        , & ! ice bottom surfce temperature (deg C)
          sss             ! sea surface salinity (PSU)
          
-    real (kind=dbl_kind), intent(inout) :: &
+    real (kind=real_kind), intent(inout) :: &
          fswsfc      , & ! SW absorbed at ice/snow surface (W m-2)
          fswint          ! SW absorbed in ice interior below surface (W m-2)
     
-    real (kind=dbl_kind), intent(inout) :: &
+    real (kind=real_kind), intent(inout) :: &
          hilyr       , & ! ice layer thickness (m)
          hslyr       , & ! snow layer thickness (m)
          apond       , & ! melt pond area fraction
          hpond           ! melt pond depth (m)
 
-    real (kind=dbl_kind), intent(in) :: &
+    real (kind=real_kind), intent(in) :: &
          einit_old       ! initial energy of melting (J m-2)
     
-    real (kind=dbl_kind), dimension (:), intent(inout) :: &
+    real (kind=real_kind), dimension (:), intent(inout) :: &
          Sswabs      , & ! SW radiation absorbed in snow layers (W m-2)
          Iswabs      , & ! SW radiation absorbed in ice layers (W m-2)
          smice       , & ! ice mass tracer in snow (kg/m^3)
          smliq           ! liquid water mass tracer in snow (kg/m^3)
     
-    real (kind=dbl_kind), intent(inout):: &
+    real (kind=real_kind), intent(inout):: &
          fsurfn      , & ! net flux to top surface, excluding fcondtopn
          fcondtop    , & ! downward cond flux at top surface (W m-2)
          fsensn      , & ! surface downward sensible heat (W m-2)
          flatn       , & ! surface downward latent heat (W m-2)
          flwoutn         ! upward LW at surface (W m-2)
     
-    real (kind=dbl_kind), intent(out):: &
+    real (kind=real_kind), intent(out):: &
          fcondbot    , & ! downward cond flux at bottom surface (W m-2)
          fadvheat    , & ! flow of heat to ocean due to advection (W m-2)
          snoice          ! snow ice formation
 
-    real (kind=dbl_kind), intent(inout):: &
+    real (kind=real_kind), intent(inout):: &
          Tsf             ! ice/snow surface temperature (C)
 
-    real (kind=dbl_kind), dimension (:), intent(inout) :: &
+    real (kind=real_kind), dimension (:), intent(inout) :: &
          zqin        , & ! ice layer enthalpy (J m-3)
          zTin        , & ! internal ice layer temperatures
          zSin        , & ! internal ice layer salinities
@@ -135,7 +135,7 @@ contains
          stop_label   ! abort error message
 
     ! local variables
-    real(kind=dbl_kind), dimension(1:nilyr) :: &
+    real(kind=real_kind), dimension(1:nilyr) :: &
          zqin0       , & ! ice layer enthalpy (J m-3) at start of timestep
          zTin0       , & ! internal ice layer temperatures (C) at start of timestep
          zSin0       , & ! internal ice layer salinities (ppt) at start of timestep
@@ -143,19 +143,19 @@ contains
          km          , & ! ice conductivity (W m-1 K-1)
          dSdt            ! gravity drainage desalination rate for slow mode (ppt s-1)
 
-    real(kind=dbl_kind), dimension(1:nilyr+1) :: &
+    real(kind=real_kind), dimension(1:nilyr+1) :: &
          Sbr         , & ! brine salinity (ppt)
          qbr             ! brine enthalpy (J m-3)
 
-    real(kind=dbl_kind), dimension(0:nilyr) :: &
+    real(kind=real_kind), dimension(0:nilyr) :: &
          q               ! upward interface vertical Darcy flow (m s-1)
 
-    real(kind=dbl_kind), dimension(1:nslyr) :: &
+    real(kind=real_kind), dimension(1:nslyr) :: &
          zqsn0       , & ! snow layer enthalpy (J m-3) at start of timestep
          zTsn0       , & ! internal snow layer temperatures (C) at start of timestep
          ks              ! snow conductivity (W m-1 K-1)
 
-    real(kind=dbl_kind) :: &
+    real(kind=real_kind) :: &
          Tsf0        , & ! ice/snow surface temperature (C) at start of timestep
          hin         , & ! ice thickness (m)
          hsn         , & ! snow thickness (m)
@@ -188,16 +188,16 @@ contains
     Spond = c0
     qpond = enthalpy_brine(c0)
 
-    hslyr_min = hs_min / real(nslyr, dbl_kind)
+    hslyr_min = hs_min / real(nslyr, real_kind)
 
     lsnow = (hslyr > hslyr_min)
 
-    hin = hilyr * real(nilyr,dbl_kind)
+    hin = hilyr * real(nilyr,real_kind)
 
     qocn = enthalpy_brine(Tbot)
 
     if (lsnow) then
-       hsn = hslyr * real(nslyr,dbl_kind)
+       hsn = hslyr * real(nslyr,real_kind)
     else
        hsn = c0
     endif
@@ -378,10 +378,10 @@ contains
          nilyr      , &  ! number of ice layers
          nslyr           ! number of snow layers
 
-    real(kind=dbl_kind), intent(inout) :: &
+    real(kind=real_kind), intent(inout) :: &
          Tsf             ! snow surface temperature (C)
 
-    real(kind=dbl_kind), intent(out) :: &
+    real(kind=real_kind), intent(out) :: &
          fcondtop    , & ! downward cond flux at top surface (W m-2)
          fcondbot    , & ! downward cond flux at bottom surface (W m-2)
          flwoutn     , & ! upward LW at surface (W m-2)
@@ -390,26 +390,26 @@ contains
          fsurfn      , & ! net flux to top surface, excluding fcondtop
          fadvheat        ! flow of heat to ocean due to advection (W m-2)
 
-    real(kind=dbl_kind), intent(in) :: &
+    real(kind=real_kind), intent(in) :: &
          Tsf0            ! snow surface temperature (C) at beginning of timestep
 
-    real(kind=dbl_kind), dimension(:), intent(inout) :: &
+    real(kind=real_kind), dimension(:), intent(inout) :: &
          zqsn        , & ! snow layer enthalpy (J m-3)
          zTsn            ! snow layer temperature (C)
 
-    real(kind=dbl_kind), dimension(:), intent(in) :: &
+    real(kind=real_kind), dimension(:), intent(in) :: &
          zqsn0       , & ! snow layer enthalpy (J m-3) at beginning of timestep
          zTsn0       , & ! snow layer temperature (C) at beginning of timestep
          ks          , & ! snow conductivity (W m-1 K-1)
          Sswabs          ! SW radiation absorbed in snow layers (W m-2)
 
-    real(kind=dbl_kind), dimension(:), intent(inout) :: &
+    real(kind=real_kind), dimension(:), intent(inout) :: &
          zqin        , & ! ice layer enthalpy (J m-3) 
          zSin        , & ! ice layer bulk salinity (ppt)
          zTin        , & ! ice layer temperature (C)
          phi             ! ice layer liquid fraction
 
-    real(kind=dbl_kind), dimension(:), intent(in) :: &
+    real(kind=real_kind), dimension(:), intent(in) :: &
          zqin0       , & ! ice layer enthalpy (J m-3) at beginning of timestep
          zSin0       , & ! ice layer bulk salinity (ppt) at beginning of timestep
          zTin0       , & ! ice layer temperature (C) at beginning of timestep
@@ -417,10 +417,10 @@ contains
          Iswabs      , & ! SW radiation absorbed in ice layers (W m-2)
          dSdt            ! gravity drainage desalination rate for slow mode (ppt s-1)
 
-    real(kind=dbl_kind), dimension(0:nilyr), intent(in) :: &
+    real(kind=real_kind), dimension(0:nilyr), intent(in) :: &
          q               ! upward interface vertical Darcy flow (m s-1)
 
-    real(kind=dbl_kind), intent(in) :: &
+    real(kind=real_kind), intent(in) :: &
          dt          , & ! time step (s)
          Tbot        , & ! ice bottom surfce temperature (deg C)
          hilyr       , & ! ice layer thickness (m)
@@ -445,7 +445,7 @@ contains
     character(len=*), intent(out) :: &
          stop_label      ! fatal error message
 
-    real(kind=dbl_kind) :: &
+    real(kind=real_kind) :: &
          fcondtop1   , & ! first stage downward cond flux at top surface (W m-2)
          fsurfn1     , & ! first stage net flux to top surface, excluding fcondtop
          Tsf1            ! first stage ice surface temperature (C)
@@ -533,7 +533,7 @@ contains
           ! check if solution is consistent 
           ! surface conductive heat flux should be less than 
           ! incoming surface heat flux
-          if (fcondtop - fsurfn < 0.9_dbl_kind*ferrmax) then
+          if (fcondtop - fsurfn < 0.9_always_real_kind*ferrmax) then
 
              ! solution is consistent - have solution so finish
              return
@@ -586,7 +586,7 @@ contains
        ! check if solution is consistent 
        ! surface conductive heat flux should be less than 
        ! incoming surface heat flux
-       if (fcondtop - fsurfn < 0.9_dbl_kind*ferrmax) then
+       if (fcondtop - fsurfn < 0.9_always_real_kind*ferrmax) then
 
           ! solution is consistent - have solution so finish
           return
@@ -696,10 +696,10 @@ contains
          nilyr      , &  ! number of ice layers
          nslyr           ! number of snow layers
 
-    real(kind=dbl_kind), intent(inout) :: &
+    real(kind=real_kind), intent(inout) :: &
          Tsf             ! ice surface temperature (C)
 
-    real(kind=dbl_kind), intent(out) :: &
+    real(kind=real_kind), intent(out) :: &
          fcondtop    , & ! downward cond flux at top surface (W m-2)
          fcondbot    , & ! downward cond flux at bottom surface (W m-2)
          flwoutn     , & ! upward LW at surface (W m-2)
@@ -708,26 +708,26 @@ contains
          fsurfn      , & ! net flux to top surface, excluding fcondtop
          fadvheat        ! flow of heat to ocean due to advection (W m-2)
 
-    real(kind=dbl_kind), intent(in) :: &
+    real(kind=real_kind), intent(in) :: &
          Tsf0            ! ice surface temperature (C) at beginning of timestep
 
-    real(kind=dbl_kind), dimension(:), intent(inout) :: &
+    real(kind=real_kind), dimension(:), intent(inout) :: &
          zqsn        , & ! snow layer enthalpy (J m-3)
          zTsn            ! snow layer temperature (C)
 
-    real(kind=dbl_kind), dimension(:), intent(in) :: &
+    real(kind=real_kind), dimension(:), intent(in) :: &
          zqsn0       , & ! snow layer enthalpy (J m-3) at beginning of timestep
          zTsn0       , & ! snow layer temperature (C) at beginning of timestep
          ks          , & ! snow conductivity (W m-1 K-1)
          Sswabs          ! SW radiation absorbed in snow layers (W m-2)
 
-    real(kind=dbl_kind), dimension(:), intent(inout) :: &
+    real(kind=real_kind), dimension(:), intent(inout) :: &
          zqin        , & ! ice layer enthalpy (J m-3) 
          zSin        , & ! ice layer bulk salinity (ppt)
          zTin        , & ! ice layer temperature (C)
          phi             ! ice layer liquid fraction
 
-    real(kind=dbl_kind), dimension(:), intent(in) :: &
+    real(kind=real_kind), dimension(:), intent(in) :: &
          zqin0       , & ! ice layer enthalpy (J m-3) at beginning of timestep
          zSin0       , & ! ice layer bulk salinity (ppt) at beginning of timestep
          zTin0       , & ! ice layer temperature (C) at beginning of timestep
@@ -735,10 +735,10 @@ contains
          Iswabs      , & ! SW radiation absorbed in ice layers (W m-2)
          dSdt            ! gravity drainage desalination rate for slow mode (ppt s-1)
 
-    real(kind=dbl_kind), dimension(0:nilyr), intent(in) :: &
+    real(kind=real_kind), dimension(0:nilyr), intent(in) :: &
          q               ! upward interface vertical Darcy flow (m s-1)
 
-    real(kind=dbl_kind), intent(in) :: &
+    real(kind=real_kind), intent(in) :: &
          dt          , & ! time step (s)
          hilyr       , & ! ice layer thickness (m)
          hslyr       , & ! snow layer thickness (m)
@@ -763,7 +763,7 @@ contains
     character(len=*), intent(out) :: &
          stop_label      ! fatal error message
 
-    real(kind=dbl_kind) :: &
+    real(kind=real_kind) :: &
          Tmlt        , & ! upper ice layer melting temperature (C)
          fcondtop1   , & ! first stage downward cond flux at top surface (W m-2)
          fsurfn1     , & ! first stage net flux to top surface, excluding fcondtop
@@ -852,7 +852,7 @@ contains
           ! check if solution is consistent 
           ! surface conductive heat flux should be less than 
           ! incoming surface heat flux
-          if (fcondtop - fsurfn < 0.9_dbl_kind*ferrmax) then
+          if (fcondtop - fsurfn < 0.9_always_real_kind*ferrmax) then
 
              ! solution is consistent - have solution so finish
              return
@@ -905,7 +905,7 @@ contains
        ! check if solution is consistent 
        ! surface conductive heat flux should be less than 
        ! incoming surface heat flux
-       if (fcondtop - fsurfn < 0.9_dbl_kind*ferrmax) then
+       if (fcondtop - fsurfn < 0.9_always_real_kind*ferrmax) then
 
           ! solution is consistent - have solution so finish
           return
@@ -979,7 +979,7 @@ contains
     integer (kind=int_kind), intent(in) :: &
          type
 
-    real(kind=dbl_kind), intent(in) :: &
+    real(kind=real_kind), intent(in) :: &
          Tsf, &
          Tmlt, &
          fcondtop, &
@@ -1068,18 +1068,18 @@ contains
     logical, intent(in) :: &
          lsnow      ! snow presence: T: has snow, F: no snow
 
-    real(kind=dbl_kind), dimension(:), intent(in) :: &
+    real(kind=real_kind), dimension(:), intent(in) :: &
          zqin   , & ! ice layer enthalpy (J m-3)
          zSin   , & ! ice layer bulk salinity (ppt)
          km     , & ! ice conductivity (W m-1 K-1)
          zqsn   , & ! snow layer enthalpy (J m-3)
          ks         ! snow conductivity (W m-1 K-1)
 
-    real(kind=dbl_kind), intent(in) :: &
+    real(kind=real_kind), intent(in) :: &
          hilyr  , & ! ice layer thickness (m)
          hslyr      ! snow layer thickness (m)
 
-    real(kind=dbl_kind), dimension(:), intent(out) :: &
+    real(kind=real_kind), dimension(:), intent(out) :: &
          zTin   , & ! ice layer temperature (C)
          Sbr    , & ! ice layer brine salinity (ppt)
          phi    , & ! ice layer liquid fraction
@@ -1087,7 +1087,7 @@ contains
          dxp    , & ! distances between grid points (m)
          kcstar     ! interface conductivities  (W m-1 K-1)
 
-    real(kind=dbl_kind), intent(out) :: &
+    real(kind=real_kind), intent(out) :: &
          einit      ! initial total energy (J)
 
     integer(kind=int_kind) :: k
@@ -1159,15 +1159,15 @@ contains
          lsnow         , & ! snow presence: T: has snow, F: no snow
          lcold             ! surface cold: T: surface is cold, F: surface is melting
 
-    real(kind=dbl_kind), intent(inout) :: &
+    real(kind=real_kind), intent(inout) :: &
          Tsf               ! snow surface temperature (C)
 
-    real(kind=dbl_kind), intent(out) :: &
+    real(kind=real_kind), intent(out) :: &
          fcondtop      , & ! downward cond flux at top surface (W m-2)
          fcondbot      , & ! downward cond flux at bottom surface (W m-2)
          fadvheat          ! flow of heat to ocean due to advection (W m-2)
 
-    real(kind=dbl_kind), dimension(:), intent(inout) :: &
+    real(kind=real_kind), dimension(:), intent(inout) :: &
          zqin          , & ! ice layer enthalpy (J m-3)
          zSin          , & ! ice layer bulk salinity (ppt)
          zTin          , & ! ice layer temperature (C)
@@ -1175,25 +1175,25 @@ contains
          zqsn          , & ! snow layer enthalpy (J m-3)
          zTsn              ! snow layer temperature (C)
 
-    real(kind=dbl_kind), dimension(:), intent(in) :: &
+    real(kind=real_kind), dimension(:), intent(in) :: &
          km            , & ! ice conductivity (W m-1 K-1)
          Iswabs        , & ! SW radiation absorbed in ice layers (W m-2)
          dSdt              ! gravity drainage desalination rate for slow mode (ppt s-1)
 
-    real(kind=dbl_kind), dimension(0:nilyr), intent(in) :: &
+    real(kind=real_kind), dimension(0:nilyr), intent(in) :: &
          q                 ! upward interface vertical Darcy flow (m s-1)
 
-    real(kind=dbl_kind), dimension(:), intent(in) :: &
+    real(kind=real_kind), dimension(:), intent(in) :: &
          ks            , & ! snow conductivity (W m-1 K-1)
          Sswabs            ! SW radiation absorbed in snow layers (W m-2)
 
-    real(kind=dbl_kind), intent(out) :: &
+    real(kind=real_kind), intent(out) :: &
          flwoutn       , & ! upward LW at surface (W m-2)
          fsensn        , & ! surface downward sensible heat (W m-2)
          flatn         , & ! surface downward latent heat (W m-2)
          fsurfn            ! net flux to top surface, excluding fcondtop
 
-    real(kind=dbl_kind), intent(in) :: &
+    real(kind=real_kind), intent(in) :: &
          dt            , & ! time step (s)
          hilyr         , & ! ice layer thickness (m)
          hslyr         , & ! snow layer thickness (m)
@@ -1218,7 +1218,7 @@ contains
     character(len=*), intent(out) :: &
          stop_label        ! fatal error message
 
-    real(kind=dbl_kind), dimension(nilyr) :: &
+    real(kind=real_kind), dimension(nilyr) :: &
          Sbr           , & ! ice layer brine salinity (ppt)
          qbr           , & ! ice layer brine enthalpy (J m-3)
          zTin0         , & ! ice layer temperature (C) at start of timestep
@@ -1226,16 +1226,16 @@ contains
          zSin0         , & ! ice layer bulk salinity (ppt) at start of timestep
          zTin_prev         ! ice layer temperature at previous iteration
     
-    real(kind=dbl_kind), dimension(nslyr) :: &
+    real(kind=real_kind), dimension(nslyr) :: &
          zqsn0         , & ! snow layer enthalpy (J m-3) at start of timestep
          zTsn0         , & ! snow layer temperature (C) at start of timestep
          zTsn_prev         ! snow layer temperature at previous iteration
 
-    real(kind=dbl_kind), dimension(nslyr+nilyr+1) :: &
+    real(kind=real_kind), dimension(nslyr+nilyr+1) :: &
          dxp           , & ! distances between grid points (m)
          kcstar            ! interface conductivities (W m-1 K-1)
 
-    real(kind=dbl_kind) :: &
+    real(kind=real_kind) :: &
          Tsf0          , & ! snow surface temperature (C) at start of timestep
          dfsurfn_dTsf  , & ! derivative of net flux to top surface, excluding fcondtopn
          dflwoutn_dTsf , & ! derivative of longwave flux wrt surface temperature
@@ -1436,11 +1436,11 @@ contains
          nilyr , & ! number of ice layers
          nslyr     ! number of snow layers
 
-    real(kind=dbl_kind), intent(in) :: &
+    real(kind=real_kind), intent(in) :: &
          Tsf0  , & ! snow surface temperature (C) at beginning of timestep
          Tsf       ! snow surface temperature (C)
 
-    real(kind=dbl_kind), dimension(:), intent(in) :: &
+    real(kind=real_kind), dimension(:), intent(in) :: &
          zTsn0 , & ! snow layer temperature (C) at beginning of timestep
          zTsn  , & ! snow layer temperature (C)
          zqsn0 , &
@@ -1452,7 +1452,7 @@ contains
          phi   , & ! ice layer liquid fraction
          zqin0
 
-    real(kind=dbl_kind), intent(in) :: &
+    real(kind=real_kind), intent(in) :: &
          dt            , & ! time step (s)
          hilyr         , & ! ice layer thickness (m)
          hslyr         , & ! snow layer thickness (m)
@@ -1471,25 +1471,25 @@ contains
          sss           , & ! sea surface salinity (ppt)
          w                 ! vertical flushing Darcy velocity (m/s)
 
-    real(kind=dbl_kind), dimension(:), intent(in) :: &
+    real(kind=real_kind), dimension(:), intent(in) :: &
          km            , & ! ice conductivity (W m-1 K-1)
          Iswabs        , & ! SW radiation absorbed in ice layers (W m-2)
          dSdt              ! gravity drainage desalination rate for slow mode (ppt s-1)
 
-    real(kind=dbl_kind), dimension(0:nilyr), intent(in) :: &
+    real(kind=real_kind), dimension(0:nilyr), intent(in) :: &
          q                 ! upward interface vertical Darcy flow (m s-1)
 
-    real(kind=dbl_kind), dimension(:), intent(in) :: &
+    real(kind=real_kind), dimension(:), intent(in) :: &
          ks            , & ! snow conductivity (W m-1 K-1)
          Sswabs            ! SW radiation absorbed in snow layers (W m-2)
 
-    real(kind=dbl_kind), intent(in) :: &
+    real(kind=real_kind), intent(in) :: &
          flwoutn       , & ! upward LW at surface (W m-2)
          fsensn        , & ! surface downward sensible heat (W m-2)
          flatn         , & ! surface downward latent heat (W m-2)
          fsurfn            ! net flux to top surface, excluding fcondtop
 
-    real(kind=dbl_kind), intent(in) :: &
+    real(kind=real_kind), intent(in) :: &
          fcondtop      , & ! downward cond flux at top surface (W m-2)
          fcondbot      , & ! downward cond flux at bottom surface (W m-2)
          fadvheat          ! flow of heat to ocean due to advection (W m-2)
@@ -1632,7 +1632,7 @@ contains
     integer, intent(in) :: &
          nit          ! Picard iteration count
 
-    real(kind=dbl_kind), intent(in) :: &
+    real(kind=real_kind), intent(in) :: &
          dt       , & ! time step (s)
          Tsf      , & ! snow surface temperature (C)
          Tsf_prev , & ! snow surface temperature at previous iteration
@@ -1643,28 +1643,28 @@ contains
          Tbot     , & ! ice bottom surfce temperature (deg C)
          fadvheat     ! flow of heat to ocean due to advection (W m-2)
 
-    real(kind=dbl_kind), dimension(:), intent(in) :: &
+    real(kind=real_kind), dimension(:), intent(in) :: &
          zTin     , & ! ice layer temperature (C)
          zTin_prev, & ! ice layer temperature at previous iteration
          phi      , & ! ice layer liquid fraction
          km           ! ice conductivity (W m-1 K-1)
 
-    real(kind=dbl_kind), dimension(:), intent(out) :: &
+    real(kind=real_kind), dimension(:), intent(out) :: &
          zqin         ! ice layer enthalpy (J m-3)
 
-    real(kind=dbl_kind), dimension(:), intent(in) :: &
+    real(kind=real_kind), dimension(:), intent(in) :: &
          zTsn     , & ! snow layer temperature (C)
          zTsn_prev, & ! snow layer temperature at previous iteration
          ks           ! snow conductivity (W m-1 K-1)
 
-    real(kind=dbl_kind), dimension(:), intent(out) :: &
+    real(kind=real_kind), dimension(:), intent(out) :: &
          zqsn         ! snow layer enthalpy (J m-3)
 
-    real(kind=dbl_kind), intent(out) :: &    
+    real(kind=real_kind), intent(out) :: &    
          fcondtop , & ! downward cond flux at top surface (W m-2)
          fcondbot     ! downward cond flux at bottom surface (W m-2)
 
-    real(kind=dbl_kind) :: &
+    real(kind=real_kind) :: &
          ferr     , & ! energy flux error
          efinal   , & ! initial total energy (J) at iteration
          dzTsn    , & ! change in snow temperature (C) between iterations
@@ -1701,7 +1701,7 @@ contains
     lconverged = (dTsf  < dTemp_errmax .and. &
                   dzTsn < dTemp_errmax .and. &
                   dzTin < dTemp_errmax .and. &
-                  abs(ferr) < 0.9_dbl_kind*ferrmax)
+                  abs(ferr) < 0.9_always_real_kind*ferrmax)
 
   end subroutine check_picard_convergence
 
@@ -1714,16 +1714,16 @@ contains
     integer (kind=int_kind), intent(in) :: &
          nilyr        ! number of ice layers
 
-    real(kind=dbl_kind), intent(out) :: &
+    real(kind=real_kind), intent(out) :: &
          fadvheat ! flow of heat to ocean due to advection (W m-2)
 
-    real(kind=dbl_kind), dimension(0:nilyr), intent(in) :: &    
+    real(kind=real_kind), dimension(0:nilyr), intent(in) :: &    
          q        ! upward interface vertical Darcy flow (m s-1)
 
-    real(kind=dbl_kind), dimension(:), intent(in) :: &
+    real(kind=real_kind), dimension(:), intent(in) :: &
          qbr      ! ice layer brine enthalpy (J m-3)
 
-    real(kind=dbl_kind), intent(in) :: &
+    real(kind=real_kind), intent(in) :: &
          qocn , & ! ocean brine enthalpy (J m-3)
          hilyr    ! ice layer thickness (m)
 
@@ -1755,13 +1755,13 @@ contains
     integer (kind=int_kind), intent(in) :: &
          nilyr        ! number of ice layers
 
-    real(kind=dbl_kind), intent(inout) :: &
+    real(kind=real_kind), intent(inout) :: &
          fadvheat  ! flow of heat to ocean due to advection (W m-2)
 
-    real(kind=dbl_kind), dimension(:), intent(in) :: &
+    real(kind=real_kind), dimension(:), intent(in) :: &
          qbr       ! ice layer brine enthalpy (J m-3)
 
-    real(kind=dbl_kind), intent(in) :: &
+    real(kind=real_kind), intent(in) :: &
          w     , & ! vertical flushing Darcy velocity (m/s)
          qocn  , & ! ocean brine enthalpy (J m-3)
          qpond     ! melt pond brine enthalpy (J m-3)
@@ -1780,17 +1780,17 @@ contains
     logical, intent(in) :: &
          lsnow        ! snow presence: T: has snow, F: no snow
 
-    real(kind=dbl_kind), intent(in) :: &
+    real(kind=real_kind), intent(in) :: &
          Tsf      , & ! snow surface temperature (C)
          Tsf_prev     ! snow surface temperature at previous iteration
 
-    real(kind=dbl_kind), dimension(:), intent(in) :: &
+    real(kind=real_kind), dimension(:), intent(in) :: &
          zTsn     , & ! snow layer temperature (C)
          zTsn_prev, & ! snow layer temperature at previous iteration
          zTin     , & ! ice layer temperature (C)
          zTin_prev    ! ice layer temperature at previous iteration
 
-    real(kind=dbl_kind), intent(out) :: &
+    real(kind=real_kind), intent(out) :: &
          dTsf     , & ! change in surface temperature (C) between iterations
          dzTsn    , & ! change in snow temperature (C) between iterations
          dzTin        ! change in surface temperature (C) between iterations
@@ -1822,15 +1822,15 @@ contains
          nilyr , & ! number of ice layers
          nslyr     ! number of snow layers
 
-    real(kind=dbl_kind), dimension(:), intent(in) :: &
+    real(kind=real_kind), dimension(:), intent(in) :: &
          zqin  , & ! ice layer enthalpy (J m-3)
          zqsn      ! snow layer enthalpy (J m-3)
 
-    real(kind=dbl_kind), intent(in) :: &
+    real(kind=real_kind), intent(in) :: &
          hilyr , & ! ice layer thickness (m)
          hslyr     ! snow layer thickness (m)
 
-    real(kind=dbl_kind), intent(out) :: &    
+    real(kind=real_kind), intent(out) :: &    
          energy    ! total energy of ice and snow
 
     integer :: &
@@ -1870,10 +1870,10 @@ contains
     integer (kind=int_kind), intent(in) :: &
          nilyr   ! number of ice layers
 
-    real(kind=dbl_kind), dimension(:), intent(in) :: &
+    real(kind=real_kind), dimension(:), intent(in) :: &
          zTin    ! ice layer temperature (C)
 
-    real(kind=dbl_kind), dimension(:), intent(inout) :: &
+    real(kind=real_kind), dimension(:), intent(inout) :: &
          Sbr , & ! ice layer brine salinity (ppt)
          qbr     ! ice layer brine enthalpy (J m-3)
 
@@ -1901,10 +1901,10 @@ contains
     integer (kind=int_kind), intent(in) :: &
          nilyr   ! number of ice layers
 
-    real(kind=dbl_kind), dimension(:), intent(in) :: &
+    real(kind=real_kind), dimension(:), intent(in) :: &
          zTin ! ice layer temperature (C)
 
-    real(kind=dbl_kind), dimension(:), intent(inout) :: &
+    real(kind=real_kind), dimension(:), intent(inout) :: &
          qbr  ! ice layer brine enthalpy (J m-3)
 
     integer :: &
@@ -1937,11 +1937,11 @@ contains
     logical, intent(in) :: &
          lsnow   ! snow presence: T: has snow, F: no snow
 
-    real(kind=dbl_kind), dimension(:), intent(out) :: &
+    real(kind=real_kind), dimension(:), intent(out) :: &
          zqin, & ! ice layer enthalpy (J m-3)
          zqsn    ! snow layer enthalpy (J m-3)
 
-    real(kind=dbl_kind), dimension(:), intent(in) :: &
+    real(kind=real_kind), dimension(:), intent(in) :: &
          zTin, & ! ice layer temperature (C)
          phi , & ! ice layer liquid fraction
          zTsn    ! snow layer temperature (C)
@@ -1974,11 +1974,11 @@ contains
     logical, intent(in) :: &
          lsnow     ! snow presence: T: has snow, F: no snow
 
-    real(kind=dbl_kind), intent(in) :: &
+    real(kind=real_kind), intent(in) :: &
          hilyr , & ! ice layer thickness (m)
          hslyr     ! snow layer thickness (m)
 
-    real(kind=dbl_kind), dimension(:), intent(out) :: &
+    real(kind=real_kind), dimension(:), intent(out) :: &
          dxp       ! distances between grid points (m)
 
     integer :: &
@@ -2041,18 +2041,18 @@ contains
     logical, intent(in) :: &
          lsnow      ! snow presence: T: has snow, F: no snow
 
-    real(kind=dbl_kind), dimension(:), intent(in) :: &
+    real(kind=real_kind), dimension(:), intent(in) :: &
          km     , & ! ice conductivity (W m-1 K-1)
          ks         ! snow conductivity (W m-1 K-1)
 
-    real(kind=dbl_kind), intent(in) :: &
+    real(kind=real_kind), intent(in) :: &
          hilyr  , & ! ice layer thickness (m)
          hslyr      ! snow layer thickness (m)
 
-    real(kind=dbl_kind), dimension(:), intent(out) :: &
+    real(kind=real_kind), dimension(:), intent(out) :: &
          kcstar     ! interface conductivities (W m-1 K-1)
 
-    real(kind=dbl_kind) :: &
+    real(kind=real_kind) :: &
          fe         ! distance fraction at interface
 
     integer :: &
@@ -2128,17 +2128,17 @@ contains
          nilyr, & ! number of ice layers
          nslyr    ! number of snow layers
 
-    real(kind=dbl_kind), dimension(:), intent(in) :: &
+    real(kind=real_kind), dimension(:), intent(in) :: &
          zqin0        , & ! ice layer enthalpy (J m-3) at beggining of timestep
          Iswabs       , & ! SW radiation absorbed in ice layers (W m-2)
          phi          , & ! ice layer liquid fraction
          zqsn0        , & ! snow layer enthalpy (J m-3) at start of timestep
          Sswabs           ! SW radiation absorbed in snow layers (W m-2)
     
-    real(kind=dbl_kind), intent(inout) :: &
+    real(kind=real_kind), intent(inout) :: &
          Tsf              ! snow surface temperature (C)
 
-    real(kind=dbl_kind), intent(in) :: &
+    real(kind=real_kind), intent(in) :: &
          dt           , & ! timestep (s)
          hilyr        , & ! ice layer thickness (m)
          hslyr        , & ! snow layer thickness (m)
@@ -2149,23 +2149,23 @@ contains
          fsurfn       , & ! net flux to top surface, excluding fcondtop
          dfsurfn_dTsf     ! derivative of net flux to top surface, excluding fcondtopn
 
-    real(kind=dbl_kind), dimension(0:nilyr), intent(in) :: &    
+    real(kind=real_kind), dimension(0:nilyr), intent(in) :: &    
          q                ! upward interface vertical Darcy flow (m s-1)
 
-    real(kind=dbl_kind), dimension(:), intent(in) :: &
+    real(kind=real_kind), dimension(:), intent(in) :: &
          dxp          , & ! distances between grid points (m)
          kcstar           ! interface conductivities (W m-1 K-1)
 
-    real(kind=dbl_kind), dimension(:), intent(inout) :: &
+    real(kind=real_kind), dimension(:), intent(inout) :: &
          zTin             ! ice layer temperature (C)
 
-    real(kind=dbl_kind), dimension(:), intent(out) :: &
+    real(kind=real_kind), dimension(:), intent(out) :: &
          zTsn             ! snow layer temperature (C)
 
     integer, intent(in) :: &
          nit              ! Picard iteration count
 
-    real(kind=dbl_kind), dimension(nilyr+nslyr+1) :: &
+    real(kind=real_kind), dimension(nilyr+nslyr+1) :: &
          Ap           , & ! diagonal of tridiagonal matrix
          As           , & ! lower off-diagonal of tridiagonal matrix
          An           , & ! upper off-diagonal of tridiagonal matrix
@@ -2272,13 +2272,13 @@ contains
          nilyr , & ! number of ice layers
          nslyr     ! number of snow layers
 
-    real(kind=dbl_kind), dimension(:), intent(in) :: &
+    real(kind=real_kind), dimension(:), intent(in) :: &
          T         ! matrix solution vector
 
-    real(kind=dbl_kind), intent(inout) :: &
+    real(kind=real_kind), intent(inout) :: &
          Tsf       ! snow surface temperature (C)
 
-    real(kind=dbl_kind), dimension(:), intent(inout) :: &
+    real(kind=real_kind), dimension(:), intent(inout) :: &
          zTin  , & ! ice layer temperature (C)
          zTsn      ! snow layer temperature (C)
 
@@ -2355,7 +2355,7 @@ contains
                                          fsurfn, dfsurfn_dTsf, &
                                          dt)
      
-    real(kind=dbl_kind), dimension(:), intent(out) :: &
+    real(kind=real_kind), dimension(:), intent(out) :: &
          Ap           , & ! diagonal of tridiagonal matrix
          As           , & ! lower off-diagonal of tridiagonal matrix
          An           , & ! upper off-diagonal of tridiagonal matrix
@@ -2368,12 +2368,12 @@ contains
          nilyr , & ! number of ice layers
          nslyr     ! number of snow layers
 
-    real(kind=dbl_kind), dimension(:), intent(in) :: &
+    real(kind=real_kind), dimension(:), intent(in) :: &
          zqin0        , & ! ice layer enthalpy (J m-3) at beggining of timestep
          Iswabs       , & ! SW radiation absorbed in ice layers (W m-2)
          phi              ! ice layer liquid fraction
 
-    real(kind=dbl_kind), intent(in) :: &
+    real(kind=real_kind), intent(in) :: &
          Tsf          , & ! snow surface temperature (C)
          dt           , & ! timestep (s)
          hilyr        , & ! ice layer thickness (m)
@@ -2384,10 +2384,10 @@ contains
          fsurfn       , & ! net flux to top surface, excluding fcondtop
          dfsurfn_dTsf     ! derivative of net flux to top surface, excluding fcondtopn
 
-    real(kind=dbl_kind), dimension(0:nilyr), intent(in) :: &    
+    real(kind=real_kind), dimension(0:nilyr), intent(in) :: &    
          q                ! upward interface vertical Darcy flow (m s-1)
 
-    real(kind=dbl_kind), dimension(:), intent(in) :: &
+    real(kind=real_kind), dimension(:), intent(in) :: &
          dxp          , & ! distances between grid points (m)
          kcstar           ! interface conductivities (W m-1 K-1)
 
@@ -2464,7 +2464,7 @@ contains
                                          fsurfn, dfsurfn_dTsf, &
                                          dt)
      
-    real(kind=dbl_kind), dimension(:), intent(out) :: &
+    real(kind=real_kind), dimension(:), intent(out) :: &
          Ap           , & ! diagonal of tridiagonal matrix
          As           , & ! lower off-diagonal of tridiagonal matrix
          An           , & ! upper off-diagonal of tridiagonal matrix
@@ -2477,12 +2477,12 @@ contains
          nilyr , & ! number of ice layers
          nslyr     ! number of snow layers
 
-    real(kind=dbl_kind), dimension(:), intent(in) :: &
+    real(kind=real_kind), dimension(:), intent(in) :: &
          zqin0        , & ! ice layer enthalpy (J m-3) at beggining of timestep
          Iswabs       , & ! SW radiation absorbed in ice layers (W m-2)
          phi              ! ice layer liquid fraction
 
-    real(kind=dbl_kind), intent(in) :: &
+    real(kind=real_kind), intent(in) :: &
          Tsf          , & ! snow surface temperature (C)
          dt           , & ! timestep (s)
          hilyr        , & ! ice layer thickness (m)
@@ -2493,10 +2493,10 @@ contains
          fsurfn       , & ! net flux to top surface, excluding fcondtop
          dfsurfn_dTsf     ! derivative of net flux to top surface, excluding fcondtopn
 
-    real(kind=dbl_kind), dimension(0:nilyr), intent(in) :: &    
+    real(kind=real_kind), dimension(0:nilyr), intent(in) :: &    
          q                ! upward interface vertical Darcy flow (m s-1)
 
-    real(kind=dbl_kind), dimension(:), intent(in) :: &
+    real(kind=real_kind), dimension(:), intent(in) :: &
          dxp          , & ! distances between grid points (m)
          kcstar           ! interface conductivities (W m-1 K-1)
 
@@ -2579,7 +2579,7 @@ contains
                                        fsurfn, dfsurfn_dTsf, &
                                        dt)
      
-    real(kind=dbl_kind), dimension(:), intent(out) :: &
+    real(kind=real_kind), dimension(:), intent(out) :: &
          Ap           , & ! diagonal of tridiagonal matrix
          As           , & ! lower off-diagonal of tridiagonal matrix
          An           , & ! upper off-diagonal of tridiagonal matrix
@@ -2592,14 +2592,14 @@ contains
          nilyr , & ! number of ice layers
          nslyr     ! number of snow layers
 
-    real(kind=dbl_kind), dimension(:), intent(in) :: &
+    real(kind=real_kind), dimension(:), intent(in) :: &
          zqin0        , & ! ice layer enthalpy (J m-3) at beggining of timestep
          Iswabs       , & ! SW radiation absorbed in ice layers (W m-2)
          phi          , & ! ice layer liquid fraction
          zqsn0        , & ! snow layer enthalpy (J m-3) at start of timestep
          Sswabs           ! SW radiation absorbed in snow layers (W m-2)
 
-    real(kind=dbl_kind), intent(in) :: &
+    real(kind=real_kind), intent(in) :: &
          Tsf          , & ! snow surface temperature (C)
          dt           , & ! timestep (s)
          hilyr        , & ! ice layer thickness (m)
@@ -2611,10 +2611,10 @@ contains
          fsurfn       , & ! net flux to top surface, excluding fcondtop
          dfsurfn_dTsf     ! derivative of net flux to top surface, excluding fcondtopn
 
-    real(kind=dbl_kind), dimension(0:nilyr), intent(in) :: &    
+    real(kind=real_kind), dimension(0:nilyr), intent(in) :: &    
          q                ! upward interface vertical Darcy flow (m s-1)
 
-    real(kind=dbl_kind), dimension(:), intent(in) :: &
+    real(kind=real_kind), dimension(:), intent(in) :: &
          dxp          , & ! distances between grid points (m)
          kcstar           ! interface conductivities (W m-1 K-1)
 
@@ -2716,7 +2716,7 @@ contains
                                        fsurfn, dfsurfn_dTsf, &
                                        dt)
      
-    real(kind=dbl_kind), dimension(:), intent(out) :: &
+    real(kind=real_kind), dimension(:), intent(out) :: &
          Ap           , & ! diagonal of tridiagonal matrix
          As           , & ! lower off-diagonal of tridiagonal matrix
          An           , & ! upper off-diagonal of tridiagonal matrix
@@ -2729,14 +2729,14 @@ contains
          nilyr , & ! number of ice layers
          nslyr     ! number of snow layers
 
-    real(kind=dbl_kind), dimension(:), intent(in) :: &
+    real(kind=real_kind), dimension(:), intent(in) :: &
          zqin0        , & ! ice layer enthalpy (J m-3) at beggining of timestep
          Iswabs       , & ! SW radiation absorbed in ice layers (W m-2)
          phi          , & ! ice layer liquid fraction
          zqsn0        , & ! snow layer enthalpy (J m-3) at start of timestep
          Sswabs           ! SW radiation absorbed in snow layers (W m-2)
 
-    real(kind=dbl_kind), intent(in) :: &
+    real(kind=real_kind), intent(in) :: &
          Tsf          , & ! snow surface temperature (C)
          dt           , & ! timestep (s)
          hilyr        , & ! ice layer thickness (m)
@@ -2748,10 +2748,10 @@ contains
          fsurfn       , & ! net flux to top surface, excluding fcondtop
          dfsurfn_dTsf     ! derivative of net flux to top surface, excluding fcondtopn
 
-    real(kind=dbl_kind), dimension(0:nilyr), intent(in) :: &    
+    real(kind=real_kind), dimension(0:nilyr), intent(in) :: &    
          q                ! upward interface vertical Darcy flow (m s-1)
 
-    real(kind=dbl_kind), dimension(:), intent(in) :: &
+    real(kind=real_kind), dimension(:), intent(in) :: &
          dxp          , & ! distances between grid points (m)
          kcstar           ! interface conductivities (W m-1 K-1)
 
@@ -2861,17 +2861,17 @@ contains
     integer (kind=int_kind), intent(in) :: &
          nilyr      ! number of ice layers
 
-    real(kind=dbl_kind), dimension(:), intent(inout) :: &
+    real(kind=real_kind), dimension(:), intent(inout) :: &
          zSin       ! ice layer bulk salinity (ppt)
 
-    real(kind=dbl_kind), dimension(:), intent(in) :: &
+    real(kind=real_kind), dimension(:), intent(in) :: &
          Sbr   , & ! ice layer brine salinity (ppt)
          dSdt      ! gravity drainage desalination rate for slow mode (ppt s-1)
          
-    real(kind=dbl_kind), dimension(0:nilyr), intent(in) :: &
+    real(kind=real_kind), dimension(0:nilyr), intent(in) :: &
          q         ! upward interface vertical Darcy flow (m s-1)
 
-    real(kind=dbl_kind), intent(in) :: &
+    real(kind=real_kind), intent(in) :: &
          Spond , & ! melt pond salinity (ppt)
          sss   , & ! sea surface salinity (ppt)
          w     , & ! vertical flushing Darcy velocity (m/s)
@@ -2881,10 +2881,10 @@ contains
     integer :: &
          k         ! vertical layer index
 
-    real(kind=dbl_kind), parameter :: &
+    real(kind=real_kind), parameter :: &
          S_min = p01
     
-    real(kind=dbl_kind), dimension(nilyr) :: &
+    real(kind=real_kind), dimension(nilyr) :: &
          zSin0
 
     zSin0 = zSin
@@ -2943,16 +2943,16 @@ contains
     integer(kind=int_kind), intent(in) :: &
          n      ! matrix size
     
-    real(kind=dbl_kind), dimension(:), intent(in) :: &
+    real(kind=real_kind), dimension(:), intent(in) :: &
          a  , & ! matrix lower off-diagonal
          b  , & ! matrix diagonal
          c  , & ! matrix upper off-diagonal
          d      ! right hand side vector
  
-    real(kind=dbl_kind), dimension(:), intent(out) :: &
+    real(kind=real_kind), dimension(:), intent(out) :: &
          x      ! solution vector
 
-    real(kind=dbl_kind), dimension(nilyr+nslyr+1) :: &
+    real(kind=always_real_kind), dimension(nilyr+nslyr+1) :: &
          cp , & ! modified upper off-diagonal vector
          dp     ! modified right hand side vector
 
@@ -2987,16 +2987,16 @@ contains
     ! given the liquid fraction calculate the permeability
     ! See Golden et al. 2007
 
-    real(kind=dbl_kind), intent(in) :: &
+    real(kind=real_kind), intent(in) :: &
          phi                  ! liquid fraction
 
-    real(kind=dbl_kind) :: &
+    real(kind=real_kind) :: &
          perm                 ! permeability (m2)
     
-    real(kind=dbl_kind), parameter :: &
+    real(kind=real_kind), parameter :: &
          phic = p05 ! critical liquid fraction for impermeability
 
-    perm = 3.0e-8_dbl_kind * max(phi - phic, c0)**3
+    perm = 3.0e-8_always_real_kind * max(phi - phic, c0)**3
 
   end function permeability
 
@@ -3022,11 +3022,11 @@ contains
     integer (kind=int_kind), intent(in) :: &
          nilyr     ! number of ice layers
 
-    real(kind=dbl_kind), dimension(:), intent(in) :: &
+    real(kind=real_kind), dimension(:), intent(in) :: &
          zSin, &   ! ice layer bulk salinity (ppt)
          zTin      ! ice layer temperature (C)
 
-    real(kind=dbl_kind), intent(in) :: &
+    real(kind=real_kind), intent(in) :: &
          Tsf   , & ! ice/snow surface temperature (C)
          Tbot  , & ! ice bottom temperature (C)
          dt    , & ! time step (s)
@@ -3035,30 +3035,30 @@ contains
          hilyr , & ! ice layer thickness (m)
          hin       ! ice thickness (m)
 
-    real(kind=dbl_kind), dimension(0:nilyr), intent(out) :: &
+    real(kind=real_kind), dimension(0:nilyr), intent(out) :: &
          q         ! rapid mode upward interface vertical Darcy flow (m s-1)
 
-    real(kind=dbl_kind), dimension(:), intent(out) :: &
+    real(kind=real_kind), dimension(:), intent(out) :: &
          dSdt      ! slow mode drainage rate (ppt s-1)
 
-    real(kind=dbl_kind), dimension(:), intent(out) :: &
+    real(kind=real_kind), dimension(:), intent(out) :: &
          Sbr , &   ! ice layer brine salinity (ppt)
          qbr       ! ice layer brine enthalpy (J m-3)
 
-    real(kind=dbl_kind), parameter :: &
-         kappal        = 8.824e-8_dbl_kind, & ! heat diffusivity of liquid
+    real(kind=real_kind), parameter :: &
+         kappal        = 8.824e-8_always_real_kind, & ! heat diffusivity of liquid
          ra_constants  = gravit / (viscosity_dyn * kappal), & ! for Rayleigh number
          fracmax       = p2               , & ! limiting advective layer fraction
          zSin_min      = p1               , & ! minimum bulk salinity (ppt)
          safety_factor = c10                  ! to prevent negative salinities
 
-    real(kind=dbl_kind), dimension(1:nilyr) :: &
+    real(kind=real_kind), dimension(1:nilyr) :: &
          phi           ! ice layer liquid fraction
 
-    real(kind=dbl_kind), dimension(0:nilyr) :: &
+    real(kind=real_kind), dimension(0:nilyr) :: &
          rho           ! ice layer brine density (kg m-3)
 
-    real(kind=dbl_kind) :: &
+    real(kind=real_kind) :: &
          rho_ocn   , & ! ocean density (kg m-3)
          perm_min  , & ! minimum permeability from layer to ocean (m2)
          perm_harm , & ! harmonic mean of permeability from layer to ocean (m2)
@@ -3115,12 +3115,12 @@ contains
     do k = nilyr, 1, -1
 
        ! vertical position from ice top surface
-       z = ((real(k, dbl_kind) - p5) / real(nilyr, dbl_kind)) * hin
+       z = ((real(k, real_kind) - p5) / real(nilyr, real_kind)) * hin
 
        ! permeabilities
        perm = permeability(phi(k))
        perm_min = min(perm_min,perm)
-       perm_harm = perm_harm + (c1 / max(perm,1.0e-30_dbl_kind))
+       perm_harm = perm_harm + (c1 / max(perm,1.0e-30_always_real_kind))
 
        ! densities
        rho_sum = rho_sum + rho(k)
@@ -3132,7 +3132,7 @@ contains
        Ra = drho * (hin-z) * perm_min * ra_constants
 
        ! height of mush layer to layer k
-       rn = real(nilyr-k+1,dbl_kind)
+       rn = real(nilyr-k+1,real_kind)
        L = rn * hilyr
 
        ! horizontal size of convection
@@ -3146,16 +3146,16 @@ contains
        Ap = (pi * a_rapid_mode**4) / (c8 * viscosity_dyn)
        Bp = -rho_pipe * gravit
 
-       q(k) = max((Am / dx2) * ((-Ap*Bp - Am*Bm) / (Am + Ap) + Bm), 1.0e-30_dbl_kind)
+       q(k) = max((Am / dx2) * ((-Ap*Bp - Am*Bm) / (Am + Ap) + Bm), 1.0e-30_always_real_kind)
 
        ! modify by Rayleigh number and advection limit
        q(k) = min(q(k) * (max(Ra - Rac_rapid_mode, c0) / (Ra+puny)), qlimit)
 
        ! late stage drainage
        dSdt(k) = dSdt_slow_mode * (max((zSin(k) - phi_c_slow_mode*Sbr(k)), c0) &
-                                *  max((Tbot - Tsf), c0)) / (hin + 0.001_dbl_kind)
+                                *  max((Tbot - Tsf), c0)) / (hin + 0.001_always_real_kind)
 
-       dSdt(k) = max(dSdt(k), (-zSin(k) * 0.5_dbl_kind) / dt)
+       dSdt(k) = max(dSdt(k), (-zSin(k) * 0.5_always_real_kind) / dt)
 
        ! restrict flows to prevent too much salt loss
        dS_guess = (((q(k) * (Sbr(k+1) - Sbr(k))) / hilyr + dSdt(k)) * dt) * safety_factor
@@ -3198,12 +3198,12 @@ contains
     integer (kind=int_kind), intent(in) :: &
          nilyr         ! number of ice layers
 
-    real(kind=dbl_kind), dimension(:), intent(in) :: &
+    real(kind=real_kind), dimension(:), intent(in) :: &
          zTin      , & ! ice layer temperature (C)
          zSin      , & ! ice layer bulk salinity (ppt)
          phi           ! ice layer liquid fraction
 
-    real(kind=dbl_kind), intent(in) :: &
+    real(kind=real_kind), intent(in) :: &
          hilyr     , & ! ice layer thickness (m)
          hpond     , & ! melt pond thickness (m)
          apond     , & ! melt pond area (-)
@@ -3211,14 +3211,14 @@ contains
          hin       , & ! ice thickness (m)
          dt            ! time step (s)
 
-    real(kind=dbl_kind), intent(out) :: &
+    real(kind=real_kind), intent(out) :: &
          w             ! vertical flushing Darcy flow rate (m s-1)
 
-    real(kind=dbl_kind), parameter :: &
-         advection_limit = 0.005_dbl_kind ! limit to fraction of brine in 
+    real(kind=real_kind), parameter :: &
+         advection_limit = 0.005_always_real_kind ! limit to fraction of brine in 
                                           ! any layer that can be advected 
 
-    real(kind=dbl_kind) :: &
+    real(kind=real_kind) :: &
          perm       , & ! ice layer permeability (m2)
          ice_mass   , & ! mass of ice (kg m-2)
          perm_harm  , & ! harmonic mean of ice permeability (m2)
@@ -3256,13 +3256,13 @@ contains
                (c1 - phi(k)) * rhoi
 
           ! permeability harmonic mean
-          perm_harm = perm_harm + c1 / (perm + 1e-30_dbl_kind)
+          perm_harm = perm_harm + c1 / (perm + 1e-30_always_real_kind)
 
        enddo ! k
 
        ice_mass = ice_mass * hilyr
 
-       perm_harm = real(nilyr,dbl_kind) / perm_harm 
+       perm_harm = real(nilyr,real_kind) / perm_harm 
 
        ! calculate ocean surface height above bottom of ice
        hocn = (ice_mass + hpond * apond * rhow + hsn * rhos) / rhow
@@ -3306,18 +3306,18 @@ contains
 
     ! given a flushing velocity drain the meltponds
 
-    real(kind=dbl_kind), intent(in) :: &
+    real(kind=real_kind), intent(in) :: &
          w     , & ! vertical flushing Darcy flow rate (m s-1)
          hin   , & ! ice thickness (m)
          apond , & ! melt pond area (-)
          dt        ! time step (s)
 
-    real(kind=dbl_kind), intent(inout) :: &
+    real(kind=real_kind), intent(inout) :: &
          hpond     ! melt pond thickness (m)
     
-    real(kind=dbl_kind), parameter :: &
-         lambda_pond = c1 / (10.0_dbl_kind * 24.0_dbl_kind * 3600.0_dbl_kind), &
-         hpond0 = 0.01_dbl_kind
+    real(kind=real_kind), parameter :: &
+         lambda_pond = c1 / (10.0_always_real_kind * 24.0_always_real_kind * 3600.0_always_real_kind), &
+         hpond0 = 0.01_always_real_kind
 
     if (tr_pond) then
        if (apond > c0 .and. hpond > c0) then
@@ -3360,14 +3360,14 @@ contains
          nilyr , & ! number of ice layers
          nslyr     ! number of snow layers
 
-    real(kind=dbl_kind), intent(in) :: &
+    real(kind=real_kind), intent(in) :: &
          dt                , & ! time step (s)
          hsn               , & ! snow thickness (m)
          hin               , & ! ice thickness (m)
          sss               , & ! sea surface salinity (ppt)
          qocn                  ! ocean brine enthalpy (J m-2)
 
-    real(kind=dbl_kind), dimension(:), intent(inout) :: &
+    real(kind=real_kind), dimension(:), intent(inout) :: &
          zqsn              , & ! snow layer enthalpy (J m-2)
          zqin              , & ! ice layer enthalpy (J m-2)
          zSin              , & ! ice layer bulk salinity (ppt)
@@ -3375,23 +3375,23 @@ contains
          smice             , & ! ice mass tracer in snow (kg/m^3)
          smliq                 ! liquid water mass tracer in snow (kg/m^3)     
 
-    real(kind=dbl_kind), dimension(:), intent(in) :: &
+    real(kind=real_kind), dimension(:), intent(in) :: &
          Sbr                   ! ice layer brine salinity (ppt)
 
-    real(kind=dbl_kind), intent(inout) :: &
+    real(kind=real_kind), intent(inout) :: &
          hslyr             , & ! snow layer thickness (m)
          hilyr                 ! ice layer thickness (m)
 
-    real(kind=dbl_kind), intent(out) :: &
+    real(kind=real_kind), intent(out) :: &
          snoice                ! snow ice formation
 
-    real(kind=dbl_kind), intent(inout) :: &
+    real(kind=real_kind), intent(inout) :: &
          fadvheat              ! advection heat flux to ocean
 
     logical (kind=log_kind), intent(in) :: &
          tr_snow               ! if .true., use snow tracers
 
-    real(kind=dbl_kind) :: &
+    real(kind=real_kind) :: &
          hin2              , & ! new ice thickness (m)
          hsn2              , & ! new snow thickness (m)
          hilyr2            , & ! new ice layer thickness (m)
@@ -3469,8 +3469,8 @@ contains
           hin2 = hin + dh
           hsn2 = hsn - dh
 
-          hilyr2 = hin2 / real(nilyr,dbl_kind)
-          hslyr2 = hsn2 / real(nslyr,dbl_kind)
+          hilyr2 = hin2 / real(nilyr,real_kind)
+          hslyr2 = hsn2 / real(nslyr,real_kind)
 
           ! properties of new snow ice
           zSin_snowice = phi_snowice * sss
@@ -3520,17 +3520,17 @@ contains
     integer (kind=int_kind), intent(in) :: &
          nslyr        ! number of snow layers
 
-    real(kind=dbl_kind), intent(in) :: &
+    real(kind=real_kind), intent(in) :: &
          dh       , & ! thickness of new snowice formation (m)
          hsn          ! initial snow thickness
 
-    real(kind=dbl_kind), dimension(:), intent(in) :: &
+    real(kind=real_kind), dimension(:), intent(in) :: &
          zqsn         ! snow layer enthalpy (J m-2)
 
-    real(kind=dbl_kind), intent(out) :: &
+    real(kind=real_kind), intent(out) :: &
          zqsn_snowice ! enthalpy of snow becoming snowice (J m-2)
 
-    real(kind=dbl_kind) :: &
+    real(kind=real_kind) :: &
          rnlyr        ! real value of number of snow layers turning to snowice
 
     integer(kind=int_kind) :: &
@@ -3552,7 +3552,7 @@ contains
 
        ! partially converted snow layer
        zqsn_snowice = zqsn_snowice + &
-            ((rnlyr - real(nlyr,dbl_kind)) / rnlyr) * zqsn(nslyr-nlyr)
+            ((rnlyr - real(nlyr,real_kind)) / rnlyr) * zqsn(nslyr-nlyr)
     endif
 
   end subroutine enthalpy_snow_snowice
@@ -3566,14 +3566,14 @@ contains
     integer (kind=int_kind), intent(in) :: &
          nslyr       ! number of snow layers
     
-    real(kind=dbl_kind), dimension(:), intent(inout) :: &
+    real(kind=real_kind), dimension(:), intent(inout) :: &
          trc         ! vertical tracer
 
-    real(kind=dbl_kind), intent(in) :: &
+    real(kind=real_kind), intent(in) :: &
          hlyr1   , & ! old cell thickness
          hlyr2       ! new cell thickness
 
-    real(kind=dbl_kind), dimension(1:nslyr) :: &
+    real(kind=real_kind), dimension(1:nslyr) :: &
          trc2        ! temporary array for updated tracer
     
     ! vertical indexes for old and new grid
@@ -3581,7 +3581,7 @@ contains
          k1      , & ! vertical index for old grid
          k2          ! vertical index for new grid
     
-    real(kind=dbl_kind) :: &
+    real(kind=real_kind) :: &
          z1a     , & ! lower boundary of old cell
          z1b     , & ! upper boundary of old cell
          z2a     , & ! lower boundary of new cell
@@ -3633,24 +3633,24 @@ contains
     integer (kind=int_kind), intent(in) :: &
          nilyr       ! number of ice layers
 
-    real(kind=dbl_kind), dimension(:), intent(inout) :: &
+    real(kind=real_kind), dimension(:), intent(inout) :: &
          trc         ! vertical tracer
     
-    real(kind=dbl_kind), intent(in) :: &
+    real(kind=real_kind), intent(in) :: &
          hlyr1 , &   ! old cell thickness
          hlyr2 , &   ! new cell thickness
          h1    , &   ! old total thickness
          h2    , &   ! new total thickness
          trc0        ! tracer value of added snow ice on ice top
     
-    real(kind=dbl_kind), dimension(1:nilyr) :: &
+    real(kind=real_kind), dimension(1:nilyr) :: &
          trc2        ! temporary array for updated tracer
     
     integer(kind=int_kind) :: &
          k1 , &      ! vertical indexes for old grid
          k2          ! vertical indexes for new grid
     
-    real(kind=dbl_kind) :: &
+    real(kind=real_kind) :: &
          z1a     , & ! lower boundary of old cell
          z1b     , & ! upper boundary of old cell
          z2a     , & ! lower boundary of new cell

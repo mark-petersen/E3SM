@@ -1979,7 +1979,7 @@ contains
         seaSurfaceTemperature(i)       = x2i_i % rAttr(index_x2i_So_t, n)
         seaSurfaceSalinity(i)          = x2i_i % rAttr(index_x2i_So_s, n)
 
-        seaFreezingTemperature(i) = colpkg_sea_freezing_temperature(seaSurfaceSalinity(i))
+        seaFreezingTemperature(i) = colpkg_sea_freezing_temperature(real(seaSurfaceSalinity(i), kind=R8KIND))
 
         uOceanVelocity(i)              = x2i_i % rAttr(index_x2i_So_u, n)
         vOceanVelocity(i)              = x2i_i % rAttr(index_x2i_So_v, n)
@@ -2792,8 +2792,8 @@ contains
          else
              Si0new = seaSurfaceSalinity**2 / (4.0_RKIND*dSin0_frazil)
          endif
-         Ti = liquidus_temperature_mush(Si0new/phi_init)
-         qi0new = enthalpy_mush(Ti, Si0new)
+         Ti = liquidus_temperature_mush(real(Si0new/phi_init, kind=R8KIND))
+         qi0new = enthalpy_mush(real(Ti, kind=R8KIND), real(Si0new, kind=R8KIND))
       else
          qi0new = -seaiceDensityIce*seaiceLatentHeatMelting
       endif    ! ktherm

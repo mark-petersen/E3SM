@@ -293,14 +293,14 @@ contains
 
                             depth = (real(iIceLayer,kind=RKIND) - 0.5_RKIND) / real(nIceLayers,kind=RKIND)
                             iceTemperature = surfaceTemperature(1,iCategory,iCell) + temperatureGradient * depth
-                            iceSalinity(iIceLayer,iCategory,iCell) = colpkg_salinity_profile(depth)
-                            iceEnthalpy(iIceLayer,iCategory,iCell) = colpkg_enthalpy_ice(iceTemperature,iceSalinity(iIceLayer,iCategory,iCell))
+                            iceSalinity(iIceLayer,iCategory,iCell) = colpkg_salinity_profile(real(depth, kind=R8KIND))
+                            iceEnthalpy(iIceLayer,iCategory,iCell) = colpkg_enthalpy_ice(real(iceTemperature, kind=R8KIND),real(iceSalinity(iIceLayer,iCategory,iCell), R8KIND))
 
                          enddo ! iIceLayer
 
                          ! snow quantities
                          do iSnowLayer = 1, nSnowLayers
-                            snowEnthalpy(iSnowLayer,iCategory,iCell) = colpkg_enthalpy_snow(surfaceTemperature(1,iCategory,iCell))
+                            snowEnthalpy(iSnowLayer,iCategory,iCell) = colpkg_enthalpy_snow(real(surfaceTemperature(1,iCategory,iCell), kind=R8KIND))
                          enddo ! iSnowLayer
 
                       endif

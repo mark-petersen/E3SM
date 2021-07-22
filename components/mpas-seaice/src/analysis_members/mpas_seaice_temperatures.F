@@ -269,7 +269,10 @@ contains
            iceEnthalpy, &
            snowEnthalpy, &
            iceSalinity
-
+      real(kind=R8KIND) :: &
+         iceEnthalpy_R8, &
+         iceSalinity_R8, &
+         snowEnthalpy_R8
       integer, pointer :: &
            nCellsSolve, &
            nCategories, &
@@ -317,17 +320,20 @@ contains
 
                   ! ice layers
                   do iIceLayer = 1, nIceLayers
+
+                     iceEnthalpy_R8 = real(iceEnthalpy( iIceLayer,iCategory,iCell ), kind=R8KIND)
+                     iceSalinity_R8 = real(iceSalinity( iIceLayer,iCategory,iCell ), kind=R8KIND)
                      iceTemperature(iIceLayer, iCategory, iCell) = &
-                          colpkg_ice_temperature(iceEnthalpy(iIceLayer,iCategory,iCell), &
-                                                 iceSalinity(iIceLayer,iCategory,iCell))
+                          colpkg_ice_temperature(iceEnthalpy_R8, iceSalinity_R8)
                   enddo ! iIceLayer
 
                   ! snow layers
                   if (snowVolumeCategory(1,iCategory,iCell) > 1e-11_RKIND) then
 
                      do iSnowLayer = 1, nSnowLayers
+                        snowEnthalpy_R8 = real(snowEnthalpy(iSnowLayer,iCategory,iCell), kind=R8KIND)
                         snowTemperature(iSnowLayer, iCategory, iCell) = &
-                             colpkg_snow_temperature(snowEnthalpy(iSnowLayer,iCategory,iCell))
+                             colpkg_snow_temperature(snowEnthalpy_R8)
                      enddo ! iIceLayer
 
                   endif ! snowVolumeCategory

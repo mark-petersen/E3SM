@@ -113,7 +113,7 @@ contains
         ssh,  seaIcePressure, atmosphericPressure
       real (kind=RKIND), dimension(:,:), pointer :: &
         layerThickness, normalVelocity
-
+   
       real (kind=RKIND), dimension(:,:,:), pointer :: activeTracers
 
       integer :: timeLevel
@@ -165,10 +165,10 @@ contains
       !    used -1e34 so error clearly occurs if these values are used.
       !
 
-      normalVelocity(:,nEdges+1) = -1.0e19_RKIND
-      layerThickness(:,nCells+1) = -1.0e19_RKIND
-      activeTracers(indexTemperature,:,nCells+1) = -1.0e18_RKIND
-      activeTracers(indexSalinity,:,nCells+1) = -1.0e18_RKIND
+      normalVelocity(:,nEdges+1) = -1e18
+      layerThickness(:,nCells+1) = -1e18
+      activeTracers(indexTemperature,:,nCells+1) = -1e18
+      activeTracers(indexSalinity,:,nCells+1) = -1e18
 
 #ifdef MPAS_OPENACC
       !$acc enter data copyin (layerThickness, normalVelocity, &
@@ -489,7 +489,7 @@ contains
         !$omp do schedule(runtime) private(cell1, cell2, k)
         do iEdge = 1, nEdges
           ! initialize layerThicknessEdge to avoid divide by zero and NaN problems.
-          layerThicknessEdge(:, iEdge) = -1.0e24_RKIND
+          layerThicknessEdge(:, iEdge) = -1.0e18_RKIND
           cell1 = cellsOnEdge(1,iEdge)
           cell2 = cellsOnEdge(2,iEdge)
           do k = minLevelEdgeBot(iEdge), maxLevelEdgeTop(iEdge)
@@ -506,7 +506,7 @@ contains
             !$omp do schedule(runtime) private(cell1, cell2, k)
             do iEdge = 1, nEdges
               ! initialize layerThicknessEdge to avoid divide by zero and NaN problems.
-              layerThicknessEdge(:, iEdge) = -1.0e24_RKIND
+              layerThicknessEdge(:, iEdge) = -1.0e18_RKIND
               cell1 = cellsOnEdge(1,iEdge)
               cell2 = cellsOnEdge(2,iEdge)
               do k = minLevelEdgeBot(iEdge), maxLevelEdgeTop(iEdge)
@@ -1092,7 +1092,7 @@ contains
         do iCell=1,nCells
           sumSurfaceLayer=0.0_RKIND
           tracersSurfaceLayerValue(:,iCell) = 0.0_RKIND
-          indexSurfaceLayerDepth(iCell) = -9.e30
+          indexSurfaceLayerDepth(iCell) = -9.e18
           do k = minLevelCell(iCell), maxLevelCell(iCell)
            sumSurfaceLayer = sumSurfaceLayer + layerThickness(k,iCell)
            rSurfaceLayer = maxLevelCell(iCell)

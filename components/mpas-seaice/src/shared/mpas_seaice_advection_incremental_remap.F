@@ -4658,49 +4658,87 @@ contains
   subroutine compute_barycenter_coordinates(&
        geomAvgCell,                     &
        iCell,                           &
-       xBarycenter,    yBarycenter,     &
-       mean0, center0, xGrad0, yGrad0,  &
-       mean1, center1, xGrad1, yGrad1,  &
-       mean2, center2, xGrad2, yGrad2)
+       xBarycenter_R4,    yBarycenter_R4,     &
+       mean0_R4, center0_R4, xGrad0_R4, yGrad0_R4,  &
+       mean1_R4, center1_R4, xGrad1_R4, yGrad1_R4,  &
+       mean2_R4, center2_R4, xGrad2_R4, yGrad2_R4)
 
     type(geometric_avg_cell_type), pointer :: &
          geomAvgCell                       !< Input: derived type holding geometric averages
 
+
+
     integer, intent(in) :: iCell           !< Input: cell for which barycenter quantities are computed
 
     real(kind=RKIND), intent(out) ::  &
-         xBarycenter, yBarycenter          !< Output: coordinates of barycenter relative to cell center
+         xBarycenter_R4, yBarycenter_R4          !< Output: coordinates of barycenter relative to cell center
 
     real(kind=RKIND), intent(in), optional ::  &
-         mean0, center0, xGrad0, yGrad0    !< Input:  mean value, center value, x/y gradients for mass-like quantity
+         mean0_R4, center0_R4, xGrad0_R4, yGrad0_R4    !< Input:  mean value, center value, x/y gradients for mass-like quantity
 
     real(kind=RKIND), intent(in), optional ::  &
-         mean1, center1, xGrad1, yGrad1    !< Input:  mean value, center value, x/y gradients for tracer 1
+         mean1_R4, center1_R4, xGrad1_R4, yGrad1_R4    !< Input:  mean value, center value, x/y gradients for tracer 1
 
     real(kind=RKIND), intent(in), optional ::  &
-         mean2, center2, xGrad2, yGrad2    !< Input:  mean value, center value, x/y gradients for tracer 2
+         mean2_R4, center2_R4, xGrad2_R4, yGrad2_R4    !< Input:  mean value, center value, x/y gradients for tracer 2
 
     ! local variables
 
-    real(kind=RKIND) ::  &
+    real(kind=R8KIND) ::  &
          c0,  &            ! coefficients in barycenter formulas
          cx,    cy,  &
          cxx,   cxy,   cyy,  &
          cxxx,  cxxy,  cxyy,  cyyy,   &
          cxxxx, cxxxy, cxxyy, cxyyy, cyyyy
 
-    real(kind=RKIND) :: reciprocal, massTracerProd
+    real(kind=R8KIND) :: reciprocal, massTracerProd
+   !local double precision copies 
 
+    real(kind=R8KIND) ::  &
+         xBarycenter, yBarycenter          !< Output: coordinates of barycenter relative to cell center
+
+    real(kind=R8KIND), allocatable ::  &
+         mean0, center0, xGrad0, yGrad0    !< Input:  mean value, center value, x/y gradients for mass-like quantity
+
+    real(kind=R8KIND), allocatable ::  &
+         mean1, center1, xGrad1, yGrad1    !< Input:  mean value, center value, x/y gradients for tracer 1
+
+    real(kind=R8KIND), allocatable ::  &
+         mean2, center2, xGrad2, yGrad2    !< Input:  mean value, center value, x/y gradients for tracer 2
     ! compute the barycenter coordinates, depending on how many tracer types were passed in
     ! Note: These formulas become more complex as the tracer hierarchy deepens.  See the model documentation for details.
 
-    if (.not.present(mean0) .and. .not.present(mean1) .and. .not.present(mean2)) then
+    xBarycenter = real(xBarycenter, kind = R8KIND)
+    yBarycenter = real(yBarycenter, kind = R8KIND)          
+
+    if (present(mean0_R4)) then 
+       mean0 = real(mean0_R4, kind=R8KIND)
+       center0 = real(center0_R4, kind=R8KIND)
+       xGrad0 = real(xGrad0_R4, kind=R8KIND) 
+       yGrad0 = real(yGrad0_R4, kind=R8KIND) 
+    endif  
+
+    if (present(mean1_R4)) then 
+      mean1 = real(mean1_R4, kind=R8KIND)
+      center1 = real(center1_R4, kind=R8KIND)
+      xGrad1 = real(xGrad1_R4, kind=R8KIND) 
+      yGrad1 = real(yGrad1_R4, kind=R8KIND) 
+    endif  
+
+    if (present(mean2_R4)) then 
+      mean2 = real(mean2_R4, kind=R8KIND)
+      center2 = real(center2_R4, kind=R8KIND)
+      xGrad2 = real(xGrad2_R4, kind=R8KIND) 
+      yGrad2 = real(yGrad2_R4, kind=R8KIND) 
+    endif  
+
+    if (.not.present(mean0_R4) .and. .not.present(mean1_R4) .and. .not.present(mean2_R4)) then
 
        ! barycenter = centroid
        xBarycenter = geomAvgCell % x(iCell)
        yBarycenter = geomAvgCell % y(iCell)
 
-    elseif (.not.present(mean1) .and. .not.present(mean2)) then
+    elseif (.not.present(mean1_R4) .and. .not.present(mean2_R4)) then
 
        ! barycenter = center of mass
        c0 = center0
@@ -4719,7 +4757,7 @@ contains
                     + cx * geomAvgCell % xy(iCell)  + cy * geomAvgCell % yy(iCell))  &
                     * reciprocal
 
-    elseif (.not.present(mean2)) then
+    elseif (.not.present(mean2_R4)) then
 
        ! barycenter = center of mass*tracer1
 
@@ -4731,7 +4769,7 @@ contains
        cyy = yGrad0  * yGrad1
 
        massTracerProd = mean0 * mean1
-       if (abs(massTracerProd) > 0.0_RKIND) then
+       if ((abs(massTracerProd) > 1.e-18_RKIND) .and.(abs(massTracerProd) < 1.e38_RKIND)) then
           reciprocal = 1.0_RKIND / massTracerProd
        else
           reciprocal = 0.0_RKIND
@@ -4763,7 +4801,7 @@ contains
        cyyy  = yGrad0  * yGrad1  * yGrad2
 
        massTracerProd = mean0 * mean1 * mean2
-       if (abs(massTracerProd) > 0.0_RKIND) then
+       if ((abs(massTracerProd) > 1.e-18_RKIND) .and.(abs(massTracerProd) < 1.e38_RKIND)) then
           reciprocal = 1.0_RKIND / massTracerProd
        else
           reciprocal = 0.0_RKIND
@@ -4783,6 +4821,10 @@ contains
                     * reciprocal
 
     endif
+
+    xBarycenter_R4 = real(xBarycenter, kind = RKIND)
+    yBarycenter_R4 = real(yBarycenter, kind = RKIND)          
+
 
   end subroutine compute_barycenter_coordinates
 

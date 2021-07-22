@@ -68,6 +68,7 @@
            colpkg_print_warnings
 
 
+
 !=======================================================================
 
       contains
@@ -81,7 +82,7 @@
 ! authors: William H. Lipscomb and Elizabeth C. Hunke, LANL
 !          C. M. Bitz, UW
 
-      subroutine colpkg_init_itd(ncat, hin_max_R4, l_stop, stop_label)
+      subroutine colpkg_init_itd(ncat, hin_max, l_stop, stop_label)
 
       use ice_colpkg_shared, only: kcatbound, kitd
       use ice_therm_shared, only: hi_min
@@ -91,10 +92,8 @@
            ncat ! number of thickness categories
 
       real (kind=real_kind), intent(out) :: &
-           hin_max_R4(0:ncat)  ! category limits (m)
-
-      real (kind=dbl_kind) :: &
            hin_max(0:ncat)  ! category limits (m)
+
       logical (kind=log_kind), intent(inout) :: &
          l_stop          ! if true, print diagnostics and abort model
 
@@ -106,7 +105,7 @@
       integer (kind=int_kind) :: &
            n    ! thickness category index
 
-      real (kind=dbl_kind) :: &
+      real (kind=real_kind) :: &
            cc1, cc2, cc3, & ! parameters for kcatbound = 0
            x1           , &
            rn           , & ! real(n)
@@ -117,17 +116,15 @@
            b2           , & !
            b3
 
-      real (kind=dbl_kind), dimension(5) :: wmo5 ! data for wmo itd
-      real (kind=dbl_kind), dimension(6) :: wmo6 ! data for wmo itd
-      real (kind=dbl_kind), dimension(7) :: wmo7 ! data for wmo itd
-
-      hin_max = real(hin_max_R4, kind=dbl_kind)
+      real (kind=real_kind), dimension(5) :: wmo5 ! data for wmo itd
+      real (kind=real_kind), dimension(6) :: wmo6 ! data for wmo itd
+      real (kind=real_kind), dimension(7) :: wmo7 ! data for wmo itd
 
       l_stop = .false.
 
-      rncat = real(ncat, kind=dbl_kind)
-      d1 = 3.0_dbl_kind / rncat
-      d2 = 0.5_dbl_kind / rncat
+      rncat = real(ncat, kind=real_kind)
+      d1 = 3.0_real_kind / rncat
+      d2 = 0.5_real_kind / rncat
       b1 = p1         ! asymptotic category width (m)
       b2 = c3         ! thickness for which participation function is small (m)
       b3 = max(rncat*(rncat-1), c2*b2/b1)
@@ -189,9 +186,9 @@
 #ifndef CCSMCOUPLED
             hi_min = p1    ! minimum ice thickness allowed (m) for thermo
 #endif
-            cc1 = max(1.1_dbl_kind/rncat,hi_min)
+            cc1 = max(1.1_real_kind/rncat,hi_min)
             cc2 = c25*cc1
-            cc3 = 2.25_dbl_kind
+            cc3 = 2.25_real_kind
 
             ! hin_max(0) should not be zero
             ! use some caution in making it less than 0.10
@@ -199,7 +196,7 @@
          endif                  ! kitd
 
          do n = 1, ncat
-            x1 = real(n-1,kind=dbl_kind) / rncat
+            x1 = real(n-1,kind=real_kind) / rncat
             hin_max(n) = hin_max(n-1) &
                        + cc1 + cc2*(c1 + tanh(cc3*(x1-c1)))
          enddo
@@ -208,7 +205,7 @@
 
          hin_max(0) = c0
          do n = 1, ncat
-            rn = real(n, kind=dbl_kind)
+            rn = real(n, kind=real_kind)
             hin_max(n) = rn * (d1 + (rn-c1)*d2)
          enddo
 
@@ -216,24 +213,24 @@
 
         if (ncat == 5) then
          ! thinnest 3 categories combined
-         data wmo5 / 0.30_dbl_kind, 0.70_dbl_kind, &
-                    1.20_dbl_kind, 2.00_dbl_kind,  &
-                    999._dbl_kind  /
+         data wmo5 / 0.30_real_kind, 0.70_real_kind, &
+                    1.20_real_kind, 2.00_real_kind,  &
+                    999._real_kind  /
          hin_max(0) = c0
          do n = 1, ncat
             hin_max(n) = wmo5(n)
          enddo
        elseif (ncat == 6) then
          ! thinnest 2 categories combined
-         data wmo6 / 0.15_dbl_kind, &
-                    0.30_dbl_kind, 0.70_dbl_kind,  &
-                    1.20_dbl_kind, 2.00_dbl_kind,  &
-                    999._dbl_kind /
+         data wmo6 / 0.15_real_kind, &
+                    0.30_real_kind, 0.70_real_kind,  &
+                    1.20_real_kind, 2.00_real_kind,  &
+                    999._real_kind /
 !echmod wmo6a
-!         data wmo6 /0.30_dbl_kind, 0.70_dbl_kind,  &
-!                    1.20_dbl_kind, 2.00_dbl_kind,  &
-!                    4.56729_dbl_kind, &
-!                    999._dbl_kind /
+!         data wmo6 /0.30_real_kind, 0.70_real_kind,  &
+!                    1.20_real_kind, 2.00_real_kind,  &
+!                    4.56729_real_kind, &
+!                    999._real_kind /
 
          hin_max(0) = c0
          do n = 1, ncat
@@ -241,10 +238,10 @@
          enddo
        elseif (ncat == 7) then
          ! all thickness categories 
-         data wmo7 / 0.10_dbl_kind, 0.15_dbl_kind, &
-                    0.30_dbl_kind, 0.70_dbl_kind,  &
-                    1.20_dbl_kind, 2.00_dbl_kind,  &
-                    999._dbl_kind  /
+         data wmo7 / 0.10_real_kind, 0.15_real_kind, &
+                    0.30_real_kind, 0.70_real_kind,  &
+                    1.20_real_kind, 2.00_real_kind,  &
+                    999._real_kind  /
          hin_max(0) = c0
          do n = 1, ncat
             hin_max(n) = wmo7(n)
@@ -259,16 +256,15 @@
 
          hin_max(0) = c0
          do n = 1, ncat
-            rn = real(n, kind=dbl_kind)
+            rn = real(n, kind=real_kind)
             hin_max(n) = b1 * (rn + b3*rn*(rn+c1)/(c2*rncat*(rncat-c1)))
          enddo
 
       endif ! kcatbound
 
       if (kitd == 1) then
-         hin_max(ncat) = 999.9_dbl_kind ! arbitrary big number
+         hin_max(ncat) = 999.9_real_kind ! arbitrary big number
       endif
-      hin_max_R4 = real(hin_max, kind=real_kind)
 
       end subroutine colpkg_init_itd
 
@@ -287,7 +283,7 @@
       integer (kind=int_kind), intent(in) :: &
            ncat ! number of thickness categories
 
-      real (kind=dbl_kind), intent(in) :: &
+      real (kind=real_kind), intent(in) :: &
            hin_max(0:ncat)  ! category limits (m)
 
       character (len=35), intent(out) :: &
@@ -344,15 +340,15 @@
       integer (kind=int_kind), intent(in) :: &
          nilyr                            ! number of ice layers
 
-      real (kind=dbl_kind), dimension(:), intent(out) :: &
+      real (kind=real_kind), dimension(:), intent(out) :: &
          sprofile                         ! vertical salinity profile
 
-      real (kind=dbl_kind), parameter :: &
-         nsal    = 0.407_dbl_kind, &
-         msal    = 0.573_dbl_kind
+      real (kind=real_kind), parameter :: &
+         nsal    = 0.407_real_kind, &
+         msal    = 0.573_real_kind
 
       integer (kind=int_kind) :: k        ! ice layer index
-      real (kind=dbl_kind)    :: zn       ! normalized ice thickness
+      real (kind=real_kind)    :: zn       ! normalized ice thickness
 
       !-----------------------------------------------------------------
       ! Determine l_brine based on saltmax.
@@ -374,8 +370,8 @@
 
       if (l_brine) then
          do k = 1, nilyr
-            zn = (real(k,kind=dbl_kind)-p5) /  &
-                  real(nilyr,kind=dbl_kind)
+            zn = (real(k,kind=real_kind)-p5) /  &
+                  real(nilyr,kind=real_kind)
             sprofile(k)=(saltmax/c2)*(c1-cos(pi*zn**(nsal/(msal+zn))))
             sprofile(k) = max(sprofile(k), min_salin)
          enddo ! k
@@ -400,15 +396,15 @@
         use ice_colpkg_shared, only: saltmax
         use ice_constants_colpkg, only: c1, c2, pi
 
-        real(kind=dbl_kind), intent(in) :: &
+        real(kind=real_kind), intent(in) :: &
              zn ! depth
 
-        real(kind=dbl_kind) :: &
+        real(kind=real_kind) :: &
              salinity ! initial salinity profile
 
-        real (kind=dbl_kind), parameter :: &
-             nsal    = 0.407_dbl_kind, &
-             msal    = 0.573_dbl_kind
+        real (kind=real_kind), parameter :: &
+             nsal    = 0.407_real_kind, &
+             msal    = 0.573_real_kind
 
         salinity = (saltmax/c2)*(c1-cos(pi*zn**(nsal/(msal+zn))))
 
@@ -460,12 +456,12 @@
 #ifdef CCSMCOUPLED
       call shr_orb_params( iyear_AD, eccen_R8 , obliq_R8 , mvelp_R8 , &
                            obliqr_R8  , lambm0_R8, mvelpp_R8, log_print)
-      eccen = real(eccen_R8, kind=dbl_kind) 
-      obliq = real(obliq_R8, kind=dbl_kind)
-      obliqr = real(obliqr_R8, kind=dbl_kind)
-      mvelp = real(mvelp_R8, kind=dbl_kind)
-      mvelpp = real(mvelpp_R8, kind=dbl_kind)
-      lambm0 = real(lambm0_R8, kind=dbl_kind)
+      eccen = real(eccen_R8, kind=real_kind) 
+      obliq = real(obliq_R8, kind=real_kind)
+      obliqr = real(obliqr_R8, kind=real_kind)
+      mvelp = real(mvelp_R8, kind=real_kind)
+      mvelpp = real(mvelpp_R8, kind=real_kind)
+      lambm0 = real(lambm0_R8, kind=real_kind)
 #else
       call shr_orb_params( iyear_AD, eccen , obliq , mvelp    , &
                            obliqr  , lambm0, mvelpp, log_print, &
@@ -476,11 +472,11 @@
  
 !=======================================================================
 
-      subroutine colpkg_init_trcr(Tair_R4,     Tf_R4,       &
-                                  Sprofile_R4, Tprofile_R4, &
-                                  Tsfc_R4,               &
+      subroutine colpkg_init_trcr(Tair,     Tf,       &
+                                  Sprofile, Tprofile, &
+                                  Tsfc,               &
                                   nilyr,    nslyr,    &
-                                  qin_R4,      qsn_R4)
+                                  qin,      qsn)
 
       use ice_colpkg_shared, only: calc_Tsfc
       use ice_constants_colpkg, only: Tsmelt, Tffresh, p5, cp_ice, cp_ocn, &
@@ -492,48 +488,27 @@
          nslyr       ! number of snow layers
 
       real (kind=real_kind), intent(in) :: &
-         Tair_R4, &     ! air temperature (C)
-         Tf_R4          ! freezing temperature (C)
+         Tair, &     ! air temperature (C)
+         Tf          ! freezing temperature (C)
 
       real (kind=real_kind), dimension(:), intent(in) :: &
-         Sprofile_R4, & ! vertical salinity profile (ppt)
-         Tprofile_R4    ! vertical temperature profile (C)
+         Sprofile, & ! vertical salinity profile (ppt)
+         Tprofile    ! vertical temperature profile (C)
 
       real (kind=real_kind), intent(out) :: &
-         Tsfc_R4        ! surface temperature (C)
+         Tsfc        ! surface temperature (C)
 
       real (kind=real_kind), dimension(:), intent(out) :: &
-         qin_R4, &      ! ice enthalpy profile (J/m3)
-         qsn_R4         ! snow enthalpy profile (J/m3)
+         qin, &      ! ice enthalpy profile (J/m3)
+         qsn         ! snow enthalpy profile (J/m3)
 
       ! local variables
 
       integer (kind=int_kind) :: k
 
-      real (kind=dbl_kind) :: & 
-         Tair, &     ! air temperature (C)
-         Tf          ! freezing temperature (C)
-      real (kind=dbl_kind), dimension(:), allocatable :: &
-         Sprofile, & ! vertical salinity profile (ppt)
-         Tprofile    ! vertical temperature profile (C)
-      real (kind=dbl_kind) :: &
-         Tsfc        ! surface temperature (C)
-      real (kind=dbl_kind), dimension(:), allocatable :: &
-         qin, &      ! ice enthalpy profile (J/m3)
-         qsn         ! snow enthalpy profile (J/m3)
-
-      real (kind=dbl_kind) :: &
+      real (kind=real_kind) :: &
          slope, Ti
 
-      Tair = real(Tair_R4, kind = dbl_kind)
-      Tf = real(Tf_R4, kind = dbl_kind)          
-      Tsfc = real(Tsfc_R4, kind = dbl_kind)        
-
-     Sprofile = real(Sprofile_R4, kind = dbl_kind)
-     Tprofile = real(Tprofile_R4, kind = dbl_kind)    
-     qin = real(qin_R4, kind = dbl_kind)
-     qsn = real(qsn_R4, kind = dbl_kind)         
-      
             ! surface temperature
             Tsfc = Tf ! default
             if (calc_Tsfc) Tsfc = min(Tsmelt, Tair - Tffresh) ! deg C
@@ -544,8 +519,8 @@
                do k = 1, nilyr
                   ! assume linear temp profile and compute enthalpy
                   slope = Tf - Tsfc
-                  Ti = Tsfc + slope*(real(k,kind=dbl_kind)-p5) &
-                                    /real(nilyr,kind=dbl_kind)
+                  Ti = Tsfc + slope*(real(k,kind=real_kind)-p5) &
+                                    /real(nilyr,kind=real_kind)
                   if (ktherm == 2) then
                      qin(k) = enthalpy_mush(Ti, Sprofile(k))
                   else
@@ -570,308 +545,11 @@
 
             endif               ! heat_capacity
 
-
-      Tsfc_R4 = real(Tsfc, kind = real_kind)        
-      qin_R4 = real(qin, kind = real_kind)
-      qsn_R4 = real(qsn, kind = real_kind) 
-
-      deallocate(Sprofile)
-      deallocate(Tprofile)
-      deallocate(qin)
-      deallocate(qsn)
       end subroutine colpkg_init_trcr
 
 !=======================================================================
 
-      subroutine colpkg_init_bgc(dt_R4, ncat, nblyr, nilyr, ntrcr_o, cgrid_R4, igrid_R4, &
-         restart_bgc, ntrcr, nbtrcr, sicen_R4, trcrn_R4, &
-         sss_R4, nit_R4, amm_R4, sil_R4, dmsp_R4, dms_R4, algalN_R4, &
-         doc_R4, don_R4, dic_R4, fed_R4, fep_R4, zaeros_R4, hum_R4,  &
-         ocean_bio_all_R4, &
-         max_algae, max_doc, max_dic, max_don,  max_fe, max_nbtrcr, max_aero, &
-         l_stop, stop_label)
-
-      use ice_constants_colpkg, only: c0, c1, c2, p1, p15, p5
-      use ice_zbgc_shared, only: R_S2N, zbgc_frac_init, zbgc_init_frac, remap_zbgc
-
-      ! column package includes
-      use ice_colpkg_tracers, only: nt_fbri, nt_bgc_S, nt_sice, nt_zbgc_frac, &
-         bio_index_o,  bio_index  
-      use ice_colpkg_shared, only: solve_zsal, ktherm, hs_ssl,  &
-         skl_bgc, scale_bgc, grid_o_t,  fe_data_type, &
-         R_C2N, R_chl2N
-
-      real (kind=real_kind), intent(in) :: &
-         dt_R4        ! time step
-
-      integer (kind=int_kind), intent(in) :: &
-         ncat  , & ! number of thickness categories
-         nilyr , & ! number of ice layers
-         nblyr , & ! number of bio layers
-         ntrcr_o, & ! number of tracers not including bgc
-         ntrcr , & ! number of tracers in use
-         nbtrcr, & ! number of bio tracers in use
-         max_algae, &
-         max_doc, &
-         max_dic, &
-         max_don, &
-         max_fe, &
-         max_nbtrcr, &
-         max_aero
- 
-      logical (kind=log_kind), intent(in) :: & 
-         restart_bgc ! if .true., read bgc restart file
-
-
-
-      real (kind=real_kind), dimension (nblyr+1), intent(inout) :: &
-         igrid_R4     ! biology vertical interface points
- 
-      real (kind=real_kind), dimension (nilyr+1), intent(inout) :: &
-         cgrid_R4     ! CICE vertical coordinate   
-
-      real (kind=real_kind), dimension(nilyr, ncat), intent(in) :: &
-         sicen_R4     ! salinity on the cice grid
-
-      real (kind=real_kind), dimension (:,:), intent(inout) :: &
-         trcrn_R4     ! subset of tracer array (only bgc) 
-
-      real (kind=real_kind), intent(in) :: &
-         sss_R4       ! sea surface salinity (ppt)
-
-      real (kind=real_kind), intent(inout) :: &
-         nit_R4   , & ! ocean nitrate (mmol/m^3)          
-         amm_R4   , & ! ammonia/um (mmol/m^3)
-         sil_R4   , & ! silicate (mmol/m^3)
-         dmsp_R4  , & ! dmsp (mmol/m^3)
-         dms_R4   , & ! dms (mmol/m^3)
-         hum_R4       ! hum (mmol/m^3)
-
-      real (kind=real_kind), dimension (max_algae), intent(inout) :: &
-         algalN_R4    ! ocean algal nitrogen (mmol/m^3) (diatoms, pico, phaeocystis)
-
-      real (kind=real_kind), dimension (max_doc), intent(inout) :: &
-         doc_R4       ! ocean doc (mmol/m^3)  (proteins, EPS, lipid)
-
-      real (kind=real_kind), dimension (max_don), intent(inout) :: &
-         don_R4       ! ocean don (mmol/m^3) 
-
-      real (kind=real_kind), dimension (max_dic), intent(inout) :: &
-         dic_R4       ! ocean dic (mmol/m^3) 
-
-      real (kind=real_kind), dimension (max_fe), intent(inout) :: &
-         fed_R4, fep_R4  ! ocean disolved and particulate fe (nM) 
-
-      real (kind=real_kind), dimension (max_aero), intent(inout) :: &
-         zaeros_R4    ! ocean aerosols (mmol/m^3) 
-
-      real (kind=real_kind), dimension (:), intent(inout) :: &
-         ocean_bio_all_R4   ! fixed order, all values even for tracers false
-      logical (kind=log_kind), intent(inout) :: &
-         l_stop            ! if true, print diagnostics and abort on return
-
-      character (len=*), intent(inout) :: stop_label
-
-      ! local variables
-
-      integer (kind=int_kind) :: &
-         k     , & ! vertical index 
-         n     , & ! category index 
-         mm    , & ! bio tracer index
-         ki    , & ! loop index
-         ks    , & ! 
-         ntrcr_bgc
-
-      real (kind=dbl_kind), dimension (ntrcr+2) :: & 
-         trtmp     ! temporary, remapped tracers   
-      
-      real (kind=dbl_kind), dimension (nblyr+1) :: &
-         zspace    ! vertical grid spacing
-
-      real (kind=dbl_kind) :: & 
-         dvssl , & ! volume of snow surface layer (m)
-         dvint , & ! volume of snow interior      (m)
-         nit_dum, &!
-         sil_dum
-
-      real (kind=dbl_kind) :: &
-         dt        ! time step
-      real (kind=dbl_kind), dimension (nblyr+1)  :: &
-         igrid     ! biology vertical interface points
-      real (kind=dbl_kind), dimension (nilyr+1)  :: &
-         cgrid     ! CICE vertical coordinate   
-      real (kind=dbl_kind), dimension(nilyr, ncat) :: &
-         sicen     ! salinity on the cice grid
-      real (kind=dbl_kind), dimension (:,:), allocatable  :: &
-         trcrn     ! subset of tracer array (only bgc) 
-      real (kind=dbl_kind) :: &
-         sss       ! sea surface salinity (ppt)
-      real (kind=dbl_kind) :: &
-         nit,  &
-         amm,  &
-         sil,  &
-         dmsp,  &
-         dms,  &
-         hum       ! hum (mmol/m^3)
-      real (kind=dbl_kind), dimension (max_algae) :: &
-         algalN    ! ocean algal nitrogen (mmol/m^3) (diatoms :: &
-      real (kind=dbl_kind), dimension (max_doc) :: &
-         doc       ! ocean doc (mmol/m^3)  (proteins :: &
-      real (kind=dbl_kind), dimension (max_don) :: &
-         don       ! ocean don (mmol/m^3) 
-      real (kind=dbl_kind), dimension (max_dic) :: &
-         dic       ! ocean dic (mmol/m^3) 
-      real (kind=dbl_kind), dimension (max_fe) :: &
-         fed, fep
-      real (kind=dbl_kind), dimension (max_aero) :: &
-         zaeros    ! ocean aerosols (mmol/m^3) 
-      real (kind=dbl_kind), dimension (:), allocatable :: &
-         ocean_bio_all   ! fixed order :: &
-
-     ocean_bio_all =real(ocean_bio_all_R4, kind = dbl_kind)
-     trcrn =real(trcrn_R4, kind = dbl_kind)
-
-      dt = real(dt_R4, kind = dbl_kind)         
-      igrid = real(igrid_R4, kind = dbl_kind)      
-      cgrid = real(cgrid_R4, kind = dbl_kind)      
-      sicen = real(sicen_R4, kind = dbl_kind)      
-      sss = real(sss_R4, kind = dbl_kind)        
-      nit = real(nit_R4, kind = dbl_kind)     
-      amm = real(amm_R4, kind = dbl_kind)     
-      sil = real(sil_R4, kind = dbl_kind)     
-      dmsp = real(dmsp_R4, kind = dbl_kind)    
-      dms = real(dms_R4, kind = dbl_kind)     
-      hum = real(hum_R4, kind = dbl_kind)        
-      algalN = real(algalN_R4, kind = dbl_kind)     
-      doc = real(doc_R4, kind = dbl_kind)        
-      don = real(don_R4, kind = dbl_kind)        
-      dic = real(dic_R4, kind = dbl_kind)        
-      fed = real(fed_R4, kind = dbl_kind)  
-      fep = real(fep_R4, kind = dbl_kind) 
-      zaeros = real(zaeros_R4, kind = dbl_kind)     
-      ! ocean_bio_all = real(ocean_bio_all_R4, kind = dbl_kind)   
-
-
-      zspace(:)       = c1/real(nblyr,kind=dbl_kind)
-      zspace(1)       = p5*zspace(1)
-      zspace(nblyr+1) = p5*zspace(nblyr+1)
-      ntrcr_bgc       = ntrcr-ntrcr_o
-
-      call colpkg_init_OceanConcArray_double(max_nbtrcr,                &
-                                 max_algae, max_don,  max_doc,   &
-                                 max_dic,   max_aero, max_fe,    &
-                                 nit,       amm,      sil,       &
-                                 dmsp,      dms,      algalN,    &
-                                 doc,       don,      dic,       &  
-                                 fed,       fep,      zaeros,    &
-                                 ocean_bio_all,       hum)
-
-      if (.not. restart_bgc) then  ! not restarting
-
-      !-----------------------------------------------------------------------------   
-      !     Skeletal Layer Model
-      !  All bgc tracers are Bulk quantities in units of mmol or mg per m^3
-      !  The skeletal layer model assumes a constant 
-      !  layer depth (sk_l) and porosity (phi_sk)
-      !-----------------------------------------------------------------------------   
-         if (skl_bgc) then
-       
-            do  n = 1,ncat
-            do mm = 1,nbtrcr
-               ! bulk concentration (mmol or mg per m^3, or 10^-3 mmol/m^3)
-               trcrn(bio_index(mm)-ntrcr_o, n) = ocean_bio_all(bio_index_o(mm))
-            enddo       ! nbtrcr
-            enddo       ! n 
-
-      !-----------------------------------------------------------------------------   
-      !    zbgc Model
-      !  All bgc tracers are Bulk quantities in units of mmol or mg per m^3
-      !  The vertical layer model uses prognosed porosity and layer depth
-      !-----------------------------------------------------------------------------   
-
-         else   ! not skl_bgc
-
-            if (scale_bgc .and. solve_zsal) then ! bulk concentration (mmol or mg per m^3)
-               do n = 1,ncat
-               do mm = 1,nbtrcr
-                  do k = 2, nblyr
-                     trcrn(bio_index(mm)+k-1-ntrcr_o,n) = &
-                          (p5*(trcrn(nt_bgc_S+k-1-ntrcr_o,n)+ trcrn(nt_bgc_S+k-2-ntrcr_o,n)) &
-                         / sss*ocean_bio_all(bio_index_o(mm))) 
-                  enddo  !k
-                  trcrn(nt_zbgc_frac-1+mm-ntrcr_o,n) = zbgc_frac_init(mm)
-                  trcrn(bio_index(mm)-ntrcr_o,n) = (trcrn(nt_bgc_S-ntrcr_o,n) &
-                                         / sss*ocean_bio_all(bio_index_o(mm))) 
-                  trcrn(bio_index(mm)+nblyr-ntrcr_o,n) = (trcrn(nt_bgc_S+nblyr-1-ntrcr_o,n) &
-                                               / sss*ocean_bio_all(bio_index_o(mm)))
-                  trcrn(bio_index(mm)+nblyr+1-ntrcr_o:bio_index(mm)+nblyr+2-ntrcr_o,n) = c0 ! snow
-               enddo ! mm
-               enddo ! n 
-    
-            elseif (scale_bgc .and. ktherm == 2) then
-               trtmp(:) = c0
-               do n = 1,ncat     
-                  call remap_zbgc(nilyr,            nilyr,    &
-                                  1,                          &
-                                  sicen(:,n),       trtmp,    &
-                                  0,                nblyr+1,  &
-                                  c1,               c1,       &
-                                  cgrid(2:nilyr+1),           &
-                                  igrid(1:nblyr+1),           &
-                                  sicen(1,n),                 &
-                                  l_stop,           stop_label)
-                  if (l_stop) return
-
-                  do mm = 1,nbtrcr
-                  do k = 1, nblyr + 1            
-                     trcrn(bio_index(mm)+k-1-ntrcr_o,n) =   &
-                          (trtmp(k)/sss*ocean_bio_all(bio_index_o(mm)))
-                     trcrn(bio_index(mm)+nblyr+1-ntrcr_o:bio_index(mm)+nblyr+2-ntrcr_o,n) = c0 ! snow
-                  enddo  ! k
-                  enddo  ! mm
-               enddo     ! n 
-
-            elseif (nbtrcr > 0 .and. nt_fbri > 0) then ! not scale_bgc         
-     
-               do n = 1,ncat
-               do mm = 1,nbtrcr
-               do k = 1, nblyr+1
-                  trcrn(bio_index(mm)+k-1-ntrcr_o,n) = ocean_bio_all(bio_index_o(mm)) &
-                                             * zbgc_init_frac(mm) 
-                  trcrn(bio_index(mm)+nblyr+1-ntrcr_o:bio_index(mm)+nblyr+2-ntrcr_o,n) = c0 ! snow
-               enddo    ! k
-               trcrn(nt_zbgc_frac-1+mm-ntrcr_o,n) = zbgc_frac_init(mm)
-               enddo    ! mm
-               enddo    ! n 
-              
-            endif  ! scale_bgc
-         endif     ! skl_bgc
-      endif        ! restart
-    
-      igrid_R4 = real(igrid, kind = real_kind)      
-      cgrid_R4 = real(cgrid, kind = real_kind)      
-      trcrn_R4 = real(trcrn, kind = real_kind)      
-      nit_R4 = real(nit, kind = real_kind)     
-      amm_R4 = real(amm, kind = real_kind)     
-      sil_R4 = real(sil, kind = real_kind)     
-      dmsp_R4 = real(dmsp, kind = real_kind)    
-      dms_R4 = real(dms, kind = real_kind)     
-      hum_R4 = real(hum, kind = real_kind)        
-      algalN_R4 = real(algalN, kind = real_kind)     
-      doc_R4 = real(doc, kind = real_kind)        
-      don_R4 = real(don, kind = real_kind)        
-      dic_R4 = real(dic, kind = real_kind)        
-      fed_R4 = real(fed, kind = real_kind)  
-      fep_R4 = real(fep, kind = real_kind) 
-      zaeros_R4 = real(zaeros, kind = real_kind)     
-      ocean_bio_all_R4 = real(ocean_bio_all, kind = real_kind)   
-
-      deallocate(ocean_bio_all)
-      deallocate(trcrn)
-      end subroutine colpkg_init_bgc
-
-   
-      subroutine colpkg_init_bgc_double(dt, ncat, nblyr, nilyr, ntrcr_o, cgrid, igrid, &
+      subroutine colpkg_init_bgc(dt, ncat, nblyr, nilyr, ntrcr_o, cgrid, igrid, &
          restart_bgc, ntrcr, nbtrcr, sicen, trcrn, &
          sss, nit, amm, sil, dmsp, dms, algalN, &
          doc, don, dic, fed, fep, zaeros, hum,  &
@@ -889,7 +567,7 @@
          skl_bgc, scale_bgc, grid_o_t,  fe_data_type, &
          R_C2N, R_chl2N
 
-      real (kind=dbl_kind), intent(in) :: &
+      real (kind=real_kind), intent(in) :: &
          dt        ! time step
 
       integer (kind=int_kind), intent(in) :: &
@@ -907,25 +585,25 @@
          max_nbtrcr, &
          max_aero
  
-      real (kind=dbl_kind), dimension (nblyr+1), intent(inout) :: &
+      real (kind=real_kind), dimension (nblyr+1), intent(inout) :: &
          igrid     ! biology vertical interface points
  
-      real (kind=dbl_kind), dimension (nilyr+1), intent(inout) :: &
+      real (kind=real_kind), dimension (nilyr+1), intent(inout) :: &
          cgrid     ! CICE vertical coordinate   
 
       logical (kind=log_kind), intent(in) :: & 
          restart_bgc ! if .true., read bgc restart file
 
-      real (kind=dbl_kind), dimension(nilyr, ncat), intent(in) :: &
+      real (kind=real_kind), dimension(nilyr, ncat), intent(in) :: &
          sicen     ! salinity on the cice grid
 
-      real (kind=dbl_kind), dimension (:,:), intent(inout) :: &
+      real (kind=real_kind), dimension (:,:), intent(inout) :: &
          trcrn     ! subset of tracer array (only bgc) 
 
-      real (kind=dbl_kind), intent(in) :: &
+      real (kind=real_kind), intent(in) :: &
          sss       ! sea surface salinity (ppt)
 
-      real (kind=dbl_kind), intent(inout) :: &
+      real (kind=real_kind), intent(inout) :: &
          nit   , & ! ocean nitrate (mmol/m^3)          
          amm   , & ! ammonia/um (mmol/m^3)
          sil   , & ! silicate (mmol/m^3)
@@ -933,25 +611,25 @@
          dms   , & ! dms (mmol/m^3)
          hum       ! hum (mmol/m^3)
 
-      real (kind=dbl_kind), dimension (max_algae), intent(inout) :: &
+      real (kind=real_kind), dimension (max_algae), intent(inout) :: &
          algalN    ! ocean algal nitrogen (mmol/m^3) (diatoms, pico, phaeocystis)
 
-      real (kind=dbl_kind), dimension (max_doc), intent(inout) :: &
+      real (kind=real_kind), dimension (max_doc), intent(inout) :: &
          doc       ! ocean doc (mmol/m^3)  (proteins, EPS, lipid)
 
-      real (kind=dbl_kind), dimension (max_don), intent(inout) :: &
+      real (kind=real_kind), dimension (max_don), intent(inout) :: &
          don       ! ocean don (mmol/m^3) 
 
-      real (kind=dbl_kind), dimension (max_dic), intent(inout) :: &
+      real (kind=real_kind), dimension (max_dic), intent(inout) :: &
          dic       ! ocean dic (mmol/m^3) 
 
-      real (kind=dbl_kind), dimension (max_fe), intent(inout) :: &
+      real (kind=real_kind), dimension (max_fe), intent(inout) :: &
          fed, fep  ! ocean disolved and particulate fe (nM) 
 
-      real (kind=dbl_kind), dimension (max_aero), intent(inout) :: &
+      real (kind=real_kind), dimension (max_aero), intent(inout) :: &
          zaeros    ! ocean aerosols (mmol/m^3) 
 
-      real (kind=dbl_kind), dimension (:), intent(inout) :: &
+      real (kind=real_kind), dimension (:), intent(inout) :: &
          ocean_bio_all   ! fixed order, all values even for tracers false
 
       logical (kind=log_kind), intent(inout) :: &
@@ -969,24 +647,24 @@
          ks    , & ! 
          ntrcr_bgc
 
-      real (kind=dbl_kind), dimension (ntrcr+2) :: & 
+      real (kind=real_kind), dimension (ntrcr+2) :: & 
          trtmp     ! temporary, remapped tracers   
       
-      real (kind=dbl_kind), dimension (nblyr+1) :: &
+      real (kind=real_kind), dimension (nblyr+1) :: &
          zspace    ! vertical grid spacing
 
-      real (kind=dbl_kind) :: & 
+      real (kind=real_kind) :: & 
          dvssl , & ! volume of snow surface layer (m)
          dvint , & ! volume of snow interior      (m)
          nit_dum, &!
          sil_dum
 
-      zspace(:)       = c1/real(nblyr,kind=dbl_kind)
+      zspace(:)       = c1/real(nblyr,kind=real_kind)
       zspace(1)       = p5*zspace(1)
       zspace(nblyr+1) = p5*zspace(nblyr+1)
       ntrcr_bgc       = ntrcr-ntrcr_o
 
-      call colpkg_init_OceanConcArray_double(max_nbtrcr,                &
+      call colpkg_init_OceanConcArray(max_nbtrcr,                &
                                  max_algae, max_don,  max_doc,   &
                                  max_dic,   max_aero, max_fe,    &
                                  nit,       amm,      sil,       &
@@ -1077,14 +755,13 @@
          endif     ! skl_bgc
       endif        ! restart
 
-      end subroutine colpkg_init_bgc_double
+      end subroutine colpkg_init_bgc
 
-!=======================================================================
 !=======================================================================
 
       subroutine colpkg_init_zbgc (nblyr, nilyr, nslyr, &
                  n_algae, n_zaero, n_doc, n_dic, n_don, n_fed, n_fep, &
-                 trcr_base_R4, trcr_depend, n_trcr_strata, nt_strata, nbtrcr_sw, &
+                 trcr_base, trcr_depend, n_trcr_strata, nt_strata, nbtrcr_sw, &
                  tr_brine, nt_fbri, ntrcr, nbtrcr, nt_bgc_Nit, nt_bgc_Am, &
                  nt_bgc_Sil, nt_bgc_DMS, nt_bgc_PON, nt_bgc_S, nt_bgc_N, &
                  nt_bgc_C, nt_bgc_chl, nt_bgc_DOC, nt_bgc_DON, nt_bgc_DIC, & 
@@ -1187,7 +864,7 @@
          nt_strata     ! indices of underlying tracer layers
 
       real (kind=real_kind), dimension (:,:), intent(inout) :: &
-         trcr_base_R4     ! = 0 or 1 depending on tracer dependency
+         trcr_base     ! = 0 or 1 depending on tracer dependency
                        ! argument 2:  (1) aice, (2) vice, (3) vsno
 
       logical (kind=log_kind), intent(in) :: &
@@ -1372,29 +1049,13 @@
         ratio_C2N_proteins     ! ratio of C to N in proteins (mol/mol)   
 
       ! local variables
-      real (kind=dbl_kind) :: &
-         nitratetype_R8, &
-         ammoniumtype_R8, &
-         silicatetype_R8, &
-         dmspptype_R8, &
-         dmspdtype_R8, &
-         humtype_R8
-      real (kind=dbl_kind), dimension (:,:), allocatable :: &
-         trcr_base     ! = 0 or 1 depending on tracer dependency
-                       ! argument 2:  (1) aice, (2) vice, (3) vsno
+
       integer (kind=int_kind) :: &
         k, mm    , & ! loop index  
         ntd      , & ! for tracer dependency calculation
         nk       , & !
         nt_depend
 
-     trcr_base =real(trcr_base_R4, kind=dbl_kind)
-      nitratetype_R8 = real(nitratetype, kind = dbl_kind)
-      ammoniumtype_R8 = real(ammoniumtype, kind = dbl_kind)
-      silicatetype_R8 = real(silicatetype, kind = dbl_kind)
-      dmspptype_R8 = real(dmspptype, kind = dbl_kind)
-      dmspdtype_R8 = real(dmspdtype, kind = dbl_kind)
-      humtype_R8 = real(humtype, kind = dbl_kind)
       ntrcr_o = ntrcr
       nt_fbri = 0
       if (tr_brine) then
@@ -1488,125 +1149,125 @@
       !-----------------------------------------------------------------
       ! Define array parameters
       !-----------------------------------------------------------------
-      R_Si2N(1) = real(ratio_Si2N_diatoms, kind = dbl_kind)
-      R_Si2N(2) = real(ratio_Si2N_sp, kind = dbl_kind)
-      R_Si2N(3) = real(ratio_Si2N_phaeo, kind = dbl_kind)
+      R_Si2N(1) = ratio_Si2N_diatoms
+      R_Si2N(2) = ratio_Si2N_sp
+      R_Si2N(3) = ratio_Si2N_phaeo
 
-      R_S2N(1) = real(ratio_S2N_diatoms, kind = dbl_kind)
-      R_S2N(2) = real(ratio_S2N_sp, kind = dbl_kind)
-      R_S2N(3) = real(ratio_S2N_phaeo, kind = dbl_kind)
+      R_S2N(1) = ratio_S2N_diatoms
+      R_S2N(2) = ratio_S2N_sp
+      R_S2N(3) = ratio_S2N_phaeo
 
-      R_Fe2C(1) = real(ratio_Fe2C_diatoms, kind = dbl_kind)
-      R_Fe2C(2) = real(ratio_Fe2C_sp, kind = dbl_kind)
-      R_Fe2C(3) = real(ratio_Fe2C_phaeo, kind = dbl_kind)
+      R_Fe2C(1) = ratio_Fe2C_diatoms
+      R_Fe2C(2) = ratio_Fe2C_sp
+      R_Fe2C(3) = ratio_Fe2C_phaeo
 
-      R_Fe2N(1) = real(ratio_Fe2N_diatoms, kind = dbl_kind)
-      R_Fe2N(2) = real(ratio_Fe2N_sp, kind = dbl_kind)
-      R_Fe2N(3) = real(ratio_Fe2N_phaeo, kind = dbl_kind)
+      R_Fe2N(1) = ratio_Fe2N_diatoms
+      R_Fe2N(2) = ratio_Fe2N_sp
+      R_Fe2N(3) = ratio_Fe2N_phaeo
 
-      R_C2N(1) = real(ratio_C2N_diatoms, kind = dbl_kind)
-      R_C2N(2) = real(ratio_C2N_sp, kind = dbl_kind)
-      R_C2N(3) = real(ratio_C2N_phaeo, kind = dbl_kind)
+      R_C2N(1) = ratio_C2N_diatoms
+      R_C2N(2) = ratio_C2N_sp
+      R_C2N(3) = ratio_C2N_phaeo
 
-      R_chl2N(1) = real(ratio_chl2N_diatoms, kind = dbl_kind)
-      R_chl2N(2) = real(ratio_chl2N_sp, kind = dbl_kind)
-      R_chl2N(3) = real(ratio_chl2N_phaeo, kind = dbl_kind)
+      R_chl2N(1) = ratio_chl2N_diatoms
+      R_chl2N(2) = ratio_chl2N_sp
+      R_chl2N(3) = ratio_chl2N_phaeo
 
-      F_abs_chl(1) = real(F_abs_chl_diatoms, kind = dbl_kind)
-      F_abs_chl(2) = real(F_abs_chl_sp, kind = dbl_kind)
-      F_abs_chl(3) = real(F_abs_chl_phaeo, kind = dbl_kind)
+      F_abs_chl(1) = F_abs_chl_diatoms
+      F_abs_chl(2) = F_abs_chl_sp
+      F_abs_chl(3) = F_abs_chl_phaeo
 
-      R_Fe2DON(1) = real(ratio_Fe2DON, kind = dbl_kind)
-      R_C2N_DON(1) = real(ratio_C2N_proteins, kind = dbl_kind)
+      R_Fe2DON(1) = ratio_Fe2DON
+      R_C2N_DON(1) = ratio_C2N_proteins
      
-      R_Fe2DOC(1) = real(ratio_Fe2DOC_s, kind = dbl_kind)
-      R_Fe2DOC(2) = real(ratio_Fe2DOC_l, kind = dbl_kind)
-      R_Fe2DOC(3) = real(c0, kind = dbl_kind)
+      R_Fe2DOC(1) = ratio_Fe2DOC_s
+      R_Fe2DOC(2) = ratio_Fe2DOC_l
+      R_Fe2DOC(3) = c0
 
-      chlabs(1) = real(chlabs_diatoms, kind = dbl_kind)
-      chlabs(2) = real(chlabs_sp, kind = dbl_kind)
-      chlabs(3) = real(chlabs_phaeo, kind = dbl_kind)
+      chlabs(1) = chlabs_diatoms
+      chlabs(2) = chlabs_sp
+      chlabs(3) = chlabs_phaeo
 
-      alpha2max_low(1) = real(alpha2max_low_diatoms, kind = dbl_kind)
-      alpha2max_low(2) = real(alpha2max_low_sp, kind = dbl_kind)
-      alpha2max_low(3) = real(alpha2max_low_phaeo, kind = dbl_kind)
+      alpha2max_low(1) = alpha2max_low_diatoms
+      alpha2max_low(2) = alpha2max_low_sp
+      alpha2max_low(3) = alpha2max_low_phaeo
 
-      beta2max(1) = real(beta2max_diatoms, kind = dbl_kind)
-      beta2max(2) = real(beta2max_sp, kind = dbl_kind)
-      beta2max(3) = real(beta2max_phaeo, kind = dbl_kind)
+      beta2max(1) = beta2max_diatoms
+      beta2max(2) = beta2max_sp
+      beta2max(3) = beta2max_phaeo
 
-      mu_max(1) = real(mu_max_diatoms, kind = dbl_kind)
-      mu_max(2) = real(mu_max_sp, kind = dbl_kind)
-      mu_max(3) = real(mu_max_phaeo, kind = dbl_kind)
+      mu_max(1) = mu_max_diatoms
+      mu_max(2) = mu_max_sp
+      mu_max(3) = mu_max_phaeo
 
-      grow_Tdep(1) = real(grow_Tdep_diatoms, kind = dbl_kind)
-      grow_Tdep(2) = real(grow_Tdep_sp, kind = dbl_kind)
-      grow_Tdep(3) = real(grow_Tdep_phaeo, kind = dbl_kind)
+      grow_Tdep(1) = grow_Tdep_diatoms
+      grow_Tdep(2) = grow_Tdep_sp
+      grow_Tdep(3) = grow_Tdep_phaeo
 
-      fr_graze(1) = real(fr_graze_diatoms, kind = dbl_kind)
-      fr_graze(2) = real(fr_graze_sp, kind = dbl_kind)
-      fr_graze(3) = real(fr_graze_phaeo, kind = dbl_kind)
+      fr_graze(1) = fr_graze_diatoms
+      fr_graze(2) = fr_graze_sp
+      fr_graze(3) = fr_graze_phaeo
 
-      mort_pre(1) = real(mort_pre_diatoms, kind = dbl_kind)
-      mort_pre(2) = real(mort_pre_sp, kind = dbl_kind)
-      mort_pre(3) = real(mort_pre_phaeo, kind = dbl_kind)
+      mort_pre(1) = mort_pre_diatoms
+      mort_pre(2) = mort_pre_sp
+      mort_pre(3) = mort_pre_phaeo
 
-      mort_Tdep(1) = real(mort_Tdep_diatoms, kind = dbl_kind)
-      mort_Tdep(2) = real(mort_Tdep_sp, kind = dbl_kind)
-      mort_Tdep(3) = real(mort_Tdep_phaeo, kind = dbl_kind)
+      mort_Tdep(1) = mort_Tdep_diatoms
+      mort_Tdep(2) = mort_Tdep_sp
+      mort_Tdep(3) = mort_Tdep_phaeo
 
-      k_exude(1) = real(k_exude_diatoms, kind = dbl_kind)
-      k_exude(2) = real(k_exude_sp, kind = dbl_kind)
-      k_exude(3) = real(k_exude_phaeo, kind = dbl_kind)
+      k_exude(1) = k_exude_diatoms
+      k_exude(2) = k_exude_sp
+      k_exude(3) = k_exude_phaeo
 
-      K_Nit(1) = real(K_Nit_diatoms, kind = dbl_kind)
-      K_Nit(2) = real(K_Nit_sp, kind = dbl_kind)
-      K_Nit(3) = real(K_Nit_phaeo, kind = dbl_kind)
+      K_Nit(1) = K_Nit_diatoms
+      K_Nit(2) = K_Nit_sp
+      K_Nit(3) = K_Nit_phaeo
 
-      K_Am(1) = real(K_Am_diatoms, kind = dbl_kind)
-      K_Am(2) = real(K_Am_sp, kind = dbl_kind)
-      K_Am(3) = real(K_Am_phaeo, kind = dbl_kind)
+      K_Am(1) = K_Am_diatoms
+      K_Am(2) = K_Am_sp
+      K_Am(3) = K_Am_phaeo
 
-      K_Sil(1) = real(K_Sil_diatoms, kind = dbl_kind)
-      K_Sil(2) = real(K_Sil_sp, kind = dbl_kind)
-      K_Sil(3) = real(K_Sil_phaeo, kind = dbl_kind)
+      K_Sil(1) = K_Sil_diatoms
+      K_Sil(2) = K_Sil_sp
+      K_Sil(3) = K_Sil_phaeo
 
-      K_Fe(1) = real(K_Fe_diatoms, kind = dbl_kind)
-      K_Fe(2) = real(K_Fe_sp, kind = dbl_kind)
-      K_Fe(3) = real(K_Fe_phaeo, kind = dbl_kind)
+      K_Fe(1) = K_Fe_diatoms
+      K_Fe(2) = K_Fe_sp
+      K_Fe(3) = K_Fe_phaeo
 
-      f_doc(1) = real(f_doc_s, kind = dbl_kind)
-      f_doc(2) = real(f_doc_l, kind = dbl_kind)
+      f_doc(1) = f_doc_s
+      f_doc(2) = f_doc_l
 
-      f_don(1) = real(f_don_protein, kind = dbl_kind)
-      kn_bac(1) = real(kn_bac_protein, kind = dbl_kind)
-      f_don_Am(1) = real(f_don_Am_protein, kind = dbl_kind)
+      f_don(1) = f_don_protein
+      kn_bac(1) = kn_bac_protein
+      f_don_Am(1) = f_don_Am_protein
 
-      f_exude(1) = real(f_exude_s, kind = dbl_kind)
-      f_exude(2) = real(f_exude_l, kind = dbl_kind)
-      k_bac(1) = real(k_bac_s, kind = dbl_kind)
-      k_bac(2) = real(k_bac_l, kind = dbl_kind)
+      f_exude(1) = f_exude_s
+      f_exude(2) = f_exude_l
+      k_bac(1) = k_bac_s
+      k_bac(2) = k_bac_l
+      
+      algaltype(1) = algaltype_diatoms
+      algaltype(2) = algaltype_sp
+      algaltype(3) = algaltype_phaeo
 
-      algaltype(1) = real(algaltype_diatoms, kind = dbl_kind)
-      algaltype(2) = real(algaltype_sp, kind = dbl_kind)
-      algaltype(3) = real(algaltype_phaeo, kind = dbl_kind)
-
-      doctype(1) = real(doctype_s, kind = dbl_kind)
-      doctype(2) = real(doctype_l, kind = dbl_kind)
+      doctype(1) = doctype_s
+      doctype(2) = doctype_l
  
-      dictype(1) = real(dictype_1, kind = dbl_kind)
+      dictype(1) = dictype_1
 
-      dontype(1) = real(dontype_protein, kind = dbl_kind)
+      dontype(1) = dontype_protein
 
-      fedtype(1) = real(fedtype_1, kind = dbl_kind)
-      feptype(1) = real(feptype_1, kind = dbl_kind)
+      fedtype(1) = fedtype_1
+      feptype(1) = feptype_1
 
-      zaerotype(1) = real(zaerotype_bc1, kind = dbl_kind)
-      zaerotype(2) = real(zaerotype_bc2, kind = dbl_kind)
-      zaerotype(3) = real(zaerotype_dust1, kind = dbl_kind)
-      zaerotype(4) = real(zaerotype_dust2, kind = dbl_kind)
-      zaerotype(5) = real(zaerotype_dust3, kind = dbl_kind)
-      zaerotype(6) = real(zaerotype_dust4, kind = dbl_kind)     
+      zaerotype(1) = zaerotype_bc1
+      zaerotype(2) = zaerotype_bc2
+      zaerotype(3) = zaerotype_dust1
+      zaerotype(4) = zaerotype_dust2
+      zaerotype(5) = zaerotype_dust3
+      zaerotype(6) = zaerotype_dust4     
 
       if (skl_bgc) then
 
@@ -1657,7 +1318,7 @@
       if (tr_bgc_Nit) then
             call colpkg_init_bgc_trcr(nk,              nt_fbri,       &
                                       nt_bgc_Nit,      nlt_bgc_Nit,   &
-                                      nitratetype_R8,     nt_depend,     &
+                                      nitratetype,     nt_depend,     &
                                       ntrcr,           nbtrcr,        &
                                       bgc_tracer_type, trcr_depend,   &
                                       trcr_base,       n_trcr_strata, &
@@ -1720,7 +1381,7 @@
       if (tr_bgc_Am) then
             call colpkg_init_bgc_trcr(nk,              nt_fbri,       &
                                       nt_bgc_Am,       nlt_bgc_Am,    &
-                                      ammoniumtype_R8,    nt_depend,     &
+                                      ammoniumtype,    nt_depend,     &
                                       ntrcr,           nbtrcr,        &
                                       bgc_tracer_type, trcr_depend,   &
                                       trcr_base,       n_trcr_strata, &
@@ -1730,7 +1391,7 @@
       if (tr_bgc_Sil) then
             call colpkg_init_bgc_trcr(nk,              nt_fbri,       &
                                       nt_bgc_Sil,      nlt_bgc_Sil,   &
-                                      silicatetype_R8,    nt_depend,     &
+                                      silicatetype,    nt_depend,     &
                                       ntrcr,           nbtrcr,        &
                                       bgc_tracer_type, trcr_depend,   &
                                       trcr_base,       n_trcr_strata, &
@@ -1740,7 +1401,7 @@
       if (tr_bgc_DMS) then   ! all together
             call colpkg_init_bgc_trcr(nk,              nt_fbri,       &
                                       nt_bgc_DMSPp,    nlt_bgc_DMSPp, &
-                                      dmspptype_R8,       nt_depend,     &
+                                      dmspptype,       nt_depend,     &
                                       ntrcr,           nbtrcr,        &
                                       bgc_tracer_type, trcr_depend,   &
                                       trcr_base,       n_trcr_strata, &
@@ -1749,7 +1410,7 @@
 
             call colpkg_init_bgc_trcr(nk,              nt_fbri,       &
                                       nt_bgc_DMSPd,    nlt_bgc_DMSPd, &
-                                      dmspdtype_R8,       nt_depend,     &
+                                      dmspdtype,       nt_depend,     &
                                       ntrcr,           nbtrcr,        &
                                       bgc_tracer_type, trcr_depend,   &
                                       trcr_base,       n_trcr_strata, &
@@ -1758,7 +1419,7 @@
 
             call colpkg_init_bgc_trcr(nk,              nt_fbri,       &
                                       nt_bgc_DMS,      nlt_bgc_DMS,   &
-                                      dmspdtype_R8,       nt_depend,     &
+                                      dmspdtype,       nt_depend,     &
                                       ntrcr,           nbtrcr,        &
                                       bgc_tracer_type, trcr_depend,   &
                                       trcr_base,       n_trcr_strata, &
@@ -1768,7 +1429,7 @@
       if (tr_bgc_PON) then
             call colpkg_init_bgc_trcr(nk,              nt_fbri,       &
                                       nt_bgc_PON,      nlt_bgc_PON, &
-                                      nitratetype_R8,     nt_depend,     &
+                                      nitratetype,     nt_depend,     &
                                       ntrcr,           nbtrcr,        &
                                       bgc_tracer_type, trcr_depend,   &
                                       trcr_base,       n_trcr_strata, &
@@ -1815,7 +1476,7 @@
       if (tr_bgc_hum) then
             call colpkg_init_bgc_trcr(nk,              nt_fbri,       &
                                       nt_bgc_hum,      nlt_bgc_hum,   &
-                                      humtype_R8,         nt_depend,     &
+                                      humtype,         nt_depend,     &
                                       ntrcr,           nbtrcr,        &
                                       bgc_tracer_type, trcr_depend,   &
                                       trcr_base,       n_trcr_strata, &
@@ -1888,11 +1549,10 @@
       endif ! z_tracers
 
       do k = 1, nbtrcr
-         zbgc_init_frac(k) = real(frazil_scav, kind = dbl_kind)
-         if (bgc_tracer_type(k) < c0)  zbgc_init_frac(k) = real(initbio_frac, kind=dbl_kind)
+         zbgc_init_frac(k) = frazil_scav
+         if (bgc_tracer_type(k) < c0)  zbgc_init_frac(k) = initbio_frac
       enddo  
-      trcr_base_R4 = real(trcr_base, kind=real_kind)
-      deallocate(trcr_base)
+
       end subroutine colpkg_init_zbgc
 
 !=======================================================================
@@ -1926,14 +1586,14 @@
       integer (kind=int_kind), dimension(:,:), intent(inout) :: &
          nt_strata        ! indices of underlying tracer layers
 
-      real (kind=dbl_kind), dimension(:,:), intent(inout) :: &
+      real (kind=real_kind), dimension(:,:), intent(inout) :: &
          trcr_base        ! = 0 or 1 depending on tracer dependency
                           ! argument 2:  (1) aice, (2) vice, (3) vsno
 
-      real (kind=dbl_kind) :: &
+      real (kind=real_kind), intent(in) :: &
          bgctype          ! bio tracer transport type (mobile vs stationary)
 
-      real (kind=dbl_kind), dimension(:), intent(inout) :: &
+      real (kind=real_kind), dimension(:), intent(inout) :: &
          bgc_tracer_type  ! bio tracer transport type array
 
       ! local variables
@@ -1944,15 +1604,16 @@
          nt_strata1, & ! 
          nt_strata2
 
-      real (kind=dbl_kind) :: &
+      real (kind=real_kind) :: &
          trcr_base1, & ! temporary values
          trcr_base2, &
          trcr_base3
+
          nt_bgc = ntrcr + 1 
          nbtrcr = nbtrcr + 1
          nlt_bgc = nbtrcr
          bgc_tracer_type(nbtrcr) = bgctype
-   
+         
          if (nk > 1) then 
             ! include vertical bgc in snow
             do k = nk, nk+1
@@ -2006,8 +1667,8 @@
         use ice_constants_colpkg, only: depressT
         use ice_mushy_physics, only: liquidus_temperature_mush
 
-        real(dbl_kind), intent(in) :: Sin
-        real(dbl_kind) :: Tmlt
+        real(real_kind), intent(in) :: Sin
+        real(real_kind) :: Tmlt
 
         if (ktherm == 2) then
 
@@ -2028,8 +1689,8 @@
         use ice_colpkg_shared, only: tfrz_option
         use ice_constants_colpkg, only: depressT, Tocnfrz
 
-        real(dbl_kind), intent(in) :: sss
-        real(dbl_kind) :: Tf
+        real(real_kind), intent(in) :: sss
+        real(real_kind) :: Tf
 
         if (trim(tfrz_option) == 'mushy') then
 
@@ -2056,10 +1717,10 @@
         use ice_mushy_physics, only: temperature_mush
         use ice_therm_shared, only: calculate_Tin_from_qin
 
-        real(kind=dbl_kind), intent(in) :: qin, Sin
-        real(kind=dbl_kind) :: Tin
+        real(kind=real_kind), intent(in) :: qin, Sin
+        real(kind=real_kind) :: Tin
 
-        real(kind=dbl_kind) :: Tmlts
+        real(kind=real_kind) :: Tmlts
 
         if (ktherm == 2) then
 
@@ -2074,8 +1735,6 @@
 
       end function colpkg_ice_temperature
 
-   
-
 !=======================================================================
 
       function colpkg_snow_temperature(qin) result(Tsn)
@@ -2084,8 +1743,8 @@
         use ice_mushy_physics, only: temperature_snow
         use ice_constants_colpkg, only: Lfresh, rhos, cp_ice
 
-        real(kind=dbl_kind), intent(in) :: qin
-        real(kind=dbl_kind) :: Tsn
+        real(kind=real_kind), intent(in) :: qin
+        real(kind=real_kind) :: Tsn
 
         if (ktherm == 2) then
 
@@ -2107,11 +1766,11 @@
         use ice_mushy_physics, only: enthalpy_mush
         use ice_constants_colpkg, only: depressT, rhoi, cp_ice, Lfresh, cp_ocn, c1
 
-        real(kind=dbl_kind), intent(in) :: zTin
-        real(kind=dbl_kind), intent(in) :: zSin
-        real(kind=dbl_kind) :: qin
+        real(kind=real_kind), intent(in) :: zTin
+        real(kind=real_kind), intent(in) :: zSin
+        real(kind=real_kind) :: qin
 
-        real(kind=dbl_kind) :: Tmlt
+        real(kind=real_kind) :: Tmlt
 
         if (ktherm == 2) then
 
@@ -2132,8 +1791,8 @@
 
         use ice_mushy_physics, only: enthalpy_snow
 
-        real(kind=dbl_kind), intent(in) :: zTsn
-        real(kind=dbl_kind) :: qsn
+        real(kind=real_kind), intent(in) :: zTsn
+        real(kind=real_kind) :: qsn
 
         qsn = enthalpy_snow(zTsn)
 
@@ -2149,74 +1808,74 @@
 ! authors: William H. Lipscomb, LANL
 !          Elizabeth C. Hunke, LANL
 
-      subroutine colpkg_step_therm1(dt_R4, ncat, nilyr, nslyr, n_aero, &
-                                    aice0_R4       ,               &
-                                    aicen_init_R4  ,               &
-                                    vicen_init_R4  , vsnon_init_R4  , &
-                                    aice_R4        , aicen_R4       , &
-                                    vice_R4        , vicen_R4       , &
-                                    vsno_R4        , vsnon_R4       , &
-                                    uvel_R4        , vvel_R4        , &
-                                    Tsfc_R4        , zqsn_R4        , &
-                                    zqin_R4        , zSin_R4        , &
-                                    smice_R4       , smliq_R4       , &
-                                    alvl_R4        , vlvl_R4        , &
-                                    apnd_R4        , hpnd_R4        , &
-                                    ipnd_R4        ,                  &
-                                    iage_R4        , FY_R4          , &
-                                    rsnw_R4        , use_smliq_pnd  , &
-                                    aerosno_R4     , aeroice_R4     , &
-                                    uatm_R4        , vatm_R4        , &
-                                    wind_R4        , zlvl_R4        , &
-                                    Qa_R4          , rhoa_R4        , &
-                                    Tair_R4        , Tref_R4        , &
-                                    Qref_R4        , Uref_R4        , &
-                                    Cdn_atm_ratio_R4,                 &
-                                    Cdn_ocn_R4     , Cdn_ocn_skin_R4, &
-                                    Cdn_ocn_floe_R4, Cdn_ocn_keel_R4, &
-                                    Cdn_atm_R4     , Cdn_atm_skin_R4, &
-                                    Cdn_atm_floe_R4, Cdn_atm_pond_R4, &
-                                    Cdn_atm_rdg_R4 , hfreebd_R4     , &
-                                    hdraft_R4      , hridge_R4      , &
-                                    distrdg_R4     , hkeel_R4       , &
-                                    dkeel_R4       , lfloe_R4       , &
-                                    dfloe_R4       ,                  &
-                                    strax_R4       , stray_R4       , &
-                                    strairxT_R4    , strairyT_R4    , &
-                                    potT_R4        , sst_R4         , &
-                                    sss_R4         , Tf_R4          , &
-                                    strocnxT_R4    , strocnyT_R4    , &
-                                    fbot_R4        ,               &
-                                    frzmlt_R4      , rside_R4       , &
-                                    fsnow_R4       , frain_R4       , &
-                                    fpond_R4       , fsloss_R4      , &
-                                    fsurf_R4       , fsurfn_R4      , &
-                                    fcondtop_R4    , fcondtopn_R4   , &
-                                    fswsfcn_R4     , fswintn_R4     , &
-                                    fswthrun_R4    , fswabs_R4      , &
-                                    flwout_R4      ,               &
-                                    Sswabsn_R4     , Iswabsn_R4     , &
-                                    flw_R4         , coszen_R4      , & 
-                                    fsens_R4       , fsensn_R4      , &
-                                    flat_R4        , flatn_R4       , &
-                                    evap_R4        ,               &
-                                    fresh_R4       , fsalt_R4       , &
-                                    fhocn_R4       , fswthru_R4     , &
-                                    flatn_f_R4     , fsensn_f_R4    , &
-                                    fsurfn_f_R4    , fcondtopn_f_R4 , &
-                                    faero_atm_R4   , faero_ocn_R4   , &
-                                    dhsn_R4        , ffracn_R4      , &
-                                    meltt_R4       , melttn_R4      , &
-                                    meltb_R4       , meltbn_R4      , &
-                                    meltl_R4       ,               &
-                                    melts_R4       , meltsn_R4      , &
-                                    meltsliq_R4   , meltsliqn_R4   , &
-                                    congel_R4      , congeln_R4     , &
-                                    snoice_R4      , snoicen_R4     , &
-                                    dsnown_R4      , frazil_R4      , &
+      subroutine colpkg_step_therm1(dt, ncat, nilyr, nslyr, n_aero, &
+                                    aice0       ,               &
+                                    aicen_init  ,               &
+                                    vicen_init  , vsnon_init  , &
+                                    aice        , aicen       , &
+                                    vice        , vicen       , &
+                                    vsno        , vsnon       , &
+                                    uvel        , vvel        , &
+                                    Tsfc        , zqsn        , &
+                                    zqin        , zSin        , &
+                                    smice       , smliq       , &
+                                    alvl        , vlvl        , &
+                                    apnd        , hpnd        , &
+                                    ipnd        ,               &
+                                    iage        , FY          , &
+                                    rsnw        , use_smliq_pnd,&
+                                    aerosno     , aeroice     , &
+                                    uatm        , vatm        , &
+                                    wind        , zlvl        , &
+                                    Qa          , rhoa        , &
+                                    Tair        , Tref        , &
+                                    Qref        , Uref        , &
+                                    Cdn_atm_ratio,              &
+                                    Cdn_ocn     , Cdn_ocn_skin, &
+                                    Cdn_ocn_floe, Cdn_ocn_keel, &
+                                    Cdn_atm     , Cdn_atm_skin, &
+                                    Cdn_atm_floe, Cdn_atm_pond, &
+                                    Cdn_atm_rdg , hfreebd     , &
+                                    hdraft      , hridge      , &
+                                    distrdg     , hkeel       , &
+                                    dkeel       , lfloe       , &
+                                    dfloe       ,               &
+                                    strax       , stray       , &
+                                    strairxT    , strairyT    , &
+                                    potT        , sst         , &
+                                    sss         , Tf          , &
+                                    strocnxT    , strocnyT    , &
+                                    fbot        ,               &
+                                    frzmlt      , rside       , &
+                                    fsnow       , frain       , &
+                                    fpond       , fsloss      , &
+                                    fsurf       , fsurfn      , &
+                                    fcondtop    , fcondtopn   , &
+                                    fswsfcn     , fswintn     , &
+                                    fswthrun    , fswabs      , &
+                                    flwout      ,               &
+                                    Sswabsn     , Iswabsn     , &
+                                    flw         , coszen      , & 
+                                    fsens       , fsensn      , &
+                                    flat        , flatn       , &
+                                    evap        ,               &
+                                    fresh       , fsalt       , &
+                                    fhocn       , fswthru     , &
+                                    flatn_f     , fsensn_f    , &
+                                    fsurfn_f    , fcondtopn_f , &
+                                    faero_atm   , faero_ocn   , &
+                                    dhsn        , ffracn      , &
+                                    meltt       , melttn      , &
+                                    meltb       , meltbn      , &
+                                    meltl       ,               &
+                                    melts       , meltsn      , &
+                                    meltsliq    , meltsliqn   , &
+                                    congel      , congeln     , &
+                                    snoice      , snoicen     , &
+                                    dsnown      , frazil      , &
                                     lmask_n     , lmask_s     , &
-                                    mlt_onset_R4   , frz_onset_R4   , &
-                                    yday_R4        , l_stop      , &
+                                    mlt_onset   , frz_onset   , &
+                                    yday        , l_stop      , &
                                     stop_label  , prescribed_ice)
 
       use ice_aerosol, only: update_aerosol
@@ -2242,13 +1901,13 @@
          n_aero      ! number of aerosol tracers in use
 
       real (kind=real_kind), intent(in) :: &
-         dt_R4          , & ! time step
-         uvel_R4        , & ! x-component of velocity (m/s)
-         vvel_R4        , & ! y-component of velocity (m/s)
-         strax_R4       , & ! wind stress components (N/m^2)
-         stray_R4       , & ! 
-         yday_R4            ! day of year
-      
+         dt          , & ! time step
+         uvel        , & ! x-component of velocity (m/s)
+         vvel        , & ! y-component of velocity (m/s)
+         strax       , & ! wind stress components (N/m^2)
+         stray       , & ! 
+         yday            ! day of year
+
       logical (kind=log_kind), intent(in) :: &
          lmask_n     , & ! northern hemisphere mask
          lmask_s     , & ! southern hemisphere mask
@@ -2256,184 +1915,8 @@
 
       logical (kind=log_kind), intent(in), optional :: &
          prescribed_ice  ! if .true., use prescribed ice instead of computed
-      
+
       real (kind=real_kind), intent(inout) :: &
-         aice0_R4       , & ! open water fraction
-         aice_R4       , & ! sea ice concentration
-         vice_R4        , & ! volume per unit area of ice          (m)
-         vsno_R4        , & ! volume per unit area of snow         (m)
-         zlvl_R4        , & ! atm level height (m)
-         uatm_R4        , & ! wind velocity components (m/s)
-         vatm_R4        , &
-         wind_R4        , & ! wind speed (m/s)
-         potT_R4        , & ! air potential temperature  (K)
-         Tair_R4        , & ! air temperature  (K)
-         Qa_R4          , & ! specific humidity (kg/kg)
-         rhoa_R4        , & ! air density (kg/m^3)
-         frain_R4       , & ! rainfall rate (kg/m^2 s)
-         fsnow_R4       , & ! snowfall rate (kg/m^2 s)
-         fsloss_R4      , & ! blowing snow loss to leads (kg/m^2/s)
-         fpond_R4       , & ! fresh water flux to ponds (kg/m^2/s)
-         fresh_R4       , & ! fresh water flux to ocean (kg/m^2/s)
-         fsalt_R4       , & ! salt flux to ocean (kg/m^2/s)
-         fhocn_R4      , & ! net heat flux to ocean (W/m^2)
-         fswthru_R4     , & ! shortwave penetrating to ocean (W/m^2)
-         fsurf_R4       , & ! net surface heat flux (excluding fcondtop)(W/m^2)
-         fcondtop_R4    , & ! top surface conductive flux        (W/m^2)
-         fsens_R4       , & ! sensible heat flux (W/m^2)
-         flat_R4        , & ! latent heat flux   (W/m^2)
-         fswabs_R4      , & ! shortwave flux absorbed in ice and ocean (W/m^2)
-         coszen_R4      , & ! cosine solar zenith angle, < 0 for sun below horizon 
-         flw_R4         , & ! incoming longwave radiation (W/m^2)
-         flwout_R4      , & ! outgoing longwave radiation (W/m^2)
-         evap_R4        , & ! evaporative water flux (kg/m^2/s)
-         congel_R4      , & ! basal ice growth         (m/step-->cm/day)
-         frazil_R4      , & ! frazil ice growth        (m/step-->cm/day)
-         snoice_R4      , & ! snow-ice formation       (m/step-->cm/day)
-         Tref_R4        , & ! 2m atm reference temperature (K)
-         Qref_R4        , & ! 2m atm reference spec humidity (kg/kg)
-         Uref_R4        , & ! 10m atm reference wind speed (m/s)
-         Cdn_atm_R4     , & ! atm drag coefficient
-         Cdn_ocn_R4     , & ! ocn drag coefficient
-         hfreebd_R4     , & ! freeboard (m)
-         hdraft_R4      , & ! draft of ice + snow column (Stoessel1993)
-         hridge_R4      , & ! ridge height
-         distrdg_R4     , & ! distance between ridges
-         hkeel_R4       , & ! keel depth
-         dkeel_R4       , & ! distance between keels
-         lfloe_R4       , & ! floe length
-         dfloe_R4       , & ! distance between floes
-         Cdn_atm_skin_R4, & ! neutral skin drag coefficient
-         Cdn_atm_floe_R4, & ! neutral floe edge drag coefficient
-         Cdn_atm_pond_R4, & ! neutral pond edge drag coefficient
-         Cdn_atm_rdg_R4 , & ! neutral ridge drag coefficient
-         Cdn_ocn_skin_R4, & ! skin drag coefficient
-         Cdn_ocn_floe_R4, & ! floe edge drag coefficient
-         Cdn_ocn_keel_R4, & ! keel drag coefficient
-         Cdn_atm_ratio_R4,& ! ratio drag atm / neutral drag atm
-         strairxT_R4    , & ! stress on ice by air, x-direction
-         strairyT_R4    , & ! stress on ice by air, y-direction
-         strocnxT_R4    , & ! ice-ocean stress, x-direction
-         strocnyT_R4    , & ! ice-ocean stress, y-direction
-         fbot_R4        , & ! ice-ocean heat flux at bottom surface (W/m^2)
-         frzmlt_R4      , & ! freezing/melting potential (W/m^2)
-         rside_R4       , & ! fraction of ice that melts laterally
-         sst_R4         , & ! sea surface temperature (C)
-         Tf_R4          , & ! freezing temperature (C)
-         sss_R4         , & ! sea surface salinity (ppt)
-         meltt_R4       , & ! top ice melt             (m/step-->cm/day)
-         melts_R4       , & ! snow melt                (m/step-->cm/day)
-         meltsliq_R4    , & ! snow melt mass           (kg/m^2/step-->kg/m^2/day)
-         meltb_R4       , & ! basal ice melt           (m/step-->cm/day)
-         meltl_R4       , & ! lateral ice melt         (m/step-->cm/day)
-         mlt_onset_R4   , & ! day of year that sfc melting begins
-         frz_onset_R4       ! day of year that freezing begins (congel or frazil)
-
-      real (kind=real_kind), dimension(:), intent(inout) :: &
-         aicen_init_R4  , & ! fractional area of ice
-         vicen_init_R4  , & ! volume per unit area of ice (m)
-         vsnon_init_R4  , & ! volume per unit area of snow (m)
-         aicen_R4       , & ! concentration of ice
-         vicen_R4       , & ! volume per unit area of ice          (m)
-         vsnon_R4       , & ! volume per unit area of snow         (m)
-         Tsfc_R4        , & ! ice/snow surface temperature, Tsfcn
-         alvl_R4        , & ! level ice area fraction
-         vlvl_R4        , & ! level ice volume fraction
-         apnd_R4        , & ! melt pond area fraction
-         hpnd_R4        , & ! melt pond depth (m)
-         ipnd_R4        , & ! melt pond refrozen lid thickness (m)
-         iage_R4        , & ! volume-weighted ice age
-         FY_R4          , & ! area-weighted first-year ice area
-         fsurfn_R4      , & ! net flux to top surface, excluding fcondtop
-         fcondtopn_R4   , & ! downward cond flux at top surface (W m-2)
-         flatn_R4       , & ! latent heat flux (W m-2)
-         fsensn_R4      , & ! sensible heat flux (W m-2)
-         fsurfn_f_R4    , & ! net flux to top surface, excluding fcondtop
-         fcondtopn_f_R4 , & ! downward cond flux at top surface (W m-2)
-         flatn_f_R4     , & ! latent heat flux (W m-2)
-         fsensn_f_R4    , & ! sensible heat flux (W m-2)
-         fswsfcn_R4     , & ! SW absorbed at ice/snow surface (W m-2)
-         fswthrun_R4    , & ! SW through ice to ocean            (W/m^2)
-         fswintn_R4     , & ! SW absorbed in ice interior, below surface (W m-2)
-         faero_atm_R4   , & ! aerosol deposition rate (kg/m^2 s)
-         faero_ocn_R4   , & ! aerosol flux to ocean  (kg/m^2/s)
-         dhsn_R4        , & ! depth difference for snow on sea ice and pond ice
-         ffracn_R4      , & ! fraction of fsurfn used to melt ipond
-         meltsn_R4      , & ! snow melt                       (m)
-         meltsliqn_R4   , & ! snow melt mass                  (kg/m^2)
-         melttn_R4      , & ! top ice melt                    (m)
-         meltbn_R4      , & ! bottom ice melt                 (m)
-         congeln_R4     , & ! congelation ice growth          (m)
-         snoicen_R4     , & ! snow-ice growth                 (m)
-         dsnown_R4          ! change in snow thickness (m/step-->cm/day)
-
-
-
-      real (kind=real_kind), dimension(:,:), intent(inout) :: &
-         zqsn_R4        , & ! snow layer enthalpy (J m-3)
-         zqin_R4        , & ! ice layer enthalpy (J m-3)
-         zSin_R4        , & ! internal ice layer salinities
-         smice_R4       , & ! ice mass tracer in snow (kg/m^3)
-         smliq_R4       , & ! liquid water mass tracer in snow (kg/m^3)
-         Sswabsn_R4     , & ! SW radiation absorbed in snow layers (W m-2)
-         Iswabsn_R4     , & ! SW radiation absorbed in ice layers (W m-2)
-         rsnw_R4           ! snow grain radius (10^-6 m) in snow layers 
-
-      real (kind=real_kind), dimension(:,:,:), intent(inout) :: &
-         aerosno_R4    , &  ! snow aerosol tracer (kg/m^2)
-         aeroice_R4         ! ice aerosol tracer (kg/m^2)
-
-
-
-      logical (kind=log_kind), intent(out) :: &
-         l_stop          ! if true, abort model
-
-      character (len=*), intent(out) :: &
-         stop_label      ! abort error message
-
-      ! local variables
-
-      integer (kind=int_kind) :: &
-         n               ! category index
-
-      real (kind=dbl_kind) :: &
-         worka, workb    ! temporary variables
-
-      ! 2D coupler variables (computed for each category, then aggregated)
-      real (kind=dbl_kind) :: &
-         fswabsn     , & ! shortwave absorbed by ice          (W/m^2)
-         flwoutn     , & ! upward LW at surface               (W/m^2)
-         evapn       , & ! flux of vapor, atmos to ice   (kg m-2 s-1)
-         freshn      , & ! flux of water, ice to ocean     (kg/m^2/s)
-         fsaltn      , & ! flux of salt, ice to ocean      (kg/m^2/s)
-         fhocnn      , & ! fbot corrected for leftover energy (W/m^2)
-         strairxn    , & ! air/ice zonal  stress,             (N/m^2)
-         strairyn    , & ! air/ice meridional stress,         (N/m^2)
-         Cdn_atm_ratio_n, & ! drag coefficient ratio
-         Trefn       , & ! air tmp reference level                (K)
-         Urefn       , & ! air speed reference level            (m/s)
-         Qrefn       , & ! air sp hum reference level         (kg/kg)
-         Tbot        , & ! ice bottom surface temperature (deg C)
-         shcoef      , & ! transfer coefficient for sensible heat
-         lhcoef      , & ! transfer coefficient for latent heat
-         rfrac           ! water fraction retained for melt ponds
-
-      real (kind=dbl_kind) :: &
-         raice       , & ! 1/aice
-         pond            ! water retained in ponds (m)
-      !---------------------------------------------------------------
-      ! Double precision temp vars
-      !---------------------------------------------------------------
-      ! in variables
-      real (kind=dbl_kind) :: &
-         dt          , & ! time step
-         uvel        , & ! x-component of velocity (m/s)
-         vvel        , & ! y-component of velocity (m/s)
-         strax       , & ! wind stress components (N/m^2)
-         stray       , & ! 
-         yday            ! day of year
-      !out and in/out variables must be copied at end of subroutine
-      real (kind=dbl_kind) :: &
          aice0       , & ! open water fraction
          aice        , & ! sea ice concentration
          vice        , & ! volume per unit area of ice          (m)
@@ -2505,7 +1988,7 @@
          mlt_onset   , & ! day of year that sfc melting begins
          frz_onset       ! day of year that freezing begins (congel or frazil)
 
-      real (kind=dbl_kind), dimension(:), allocatable :: &
+      real (kind=real_kind), dimension(:), intent(inout) :: &
          aicen_init  , & ! fractional area of ice
          vicen_init  , & ! volume per unit area of ice (m)
          vsnon_init  , & ! volume per unit area of snow (m)
@@ -2543,7 +2026,7 @@
          snoicen     , & ! snow-ice growth                 (m)
          dsnown          ! change in snow thickness (m/step-->cm/day)
 
-      real (kind=dbl_kind), dimension(:,:), allocatable :: &
+      real (kind=real_kind), dimension(:,:), intent(inout) :: &
          zqsn        , & ! snow layer enthalpy (J m-3)
          zqin        , & ! ice layer enthalpy (J m-3)
          zSin        , & ! internal ice layer salinities
@@ -2552,139 +2035,48 @@
          Sswabsn     , & ! SW radiation absorbed in snow layers (W m-2)
          Iswabsn     , & ! SW radiation absorbed in ice layers (W m-2)
          rsnw            ! snow grain radius (10^-6 m) in snow layers 
-      real (kind=dbl_kind), dimension(:,:,:), allocatable :: &
+
+      real (kind=real_kind), dimension(:,:,:), intent(inout) :: &
          aerosno    , &  ! snow aerosol tracer (kg/m^2)
          aeroice         ! ice aerosol tracer (kg/m^2)
 
-      !---------------------------------------------------------------
-      ! copy values to doubles
-      !---------------------------------------------------------------
+      logical (kind=log_kind), intent(out) :: &
+         l_stop          ! if true, abort model
 
-         dt            = real(dt_R4           , kind= dbl_kind ) 
-         uvel          = real(uvel_R4         , kind= dbl_kind ) 
-         vvel          = real(vvel_R4         , kind= dbl_kind ) 
-         strax         = real(strax_R4        , kind= dbl_kind ) 
-         stray         = real(stray_R4        , kind= dbl_kind ) 
-         yday          = real(yday_R4         , kind= dbl_kind )   
-        
-         aice0         = real(aice0_R4        , kind= dbl_kind ) 
-         aice          = real(aice_R4         , kind= dbl_kind ) 
-         vice          = real(vice_R4         , kind= dbl_kind ) 
-         vsno          = real(vsno_R4         , kind= dbl_kind ) 
-         zlvl          = real(zlvl_R4         , kind= dbl_kind ) 
-         uatm          = real(uatm_R4         , kind= dbl_kind ) 
-         vatm          = real(vatm_R4         , kind= dbl_kind )         
-         wind          = real(wind_R4         , kind= dbl_kind ) 
-         potT          = real(potT_R4         , kind= dbl_kind ) 
-         Tair          = real(Tair_R4         , kind= dbl_kind ) 
-         Qa            = real(Qa_R4           , kind= dbl_kind ) 
-         rhoa          = real(rhoa_R4         , kind= dbl_kind ) 
-         frain         = real(frain_R4        , kind= dbl_kind ) 
-         fsnow         = real(fsnow_R4        , kind= dbl_kind ) 
-         fsloss        = real(fsloss_R4       , kind= dbl_kind ) 
-         fpond         = real(fpond_R4        , kind= dbl_kind ) 
-         fresh         = real(fresh_R4        , kind= dbl_kind ) 
-         fsalt         = real(fsalt_R4        , kind= dbl_kind ) 
-         fhocn         = real(fhocn_R4        , kind= dbl_kind ) 
-         fswthru       = real(fswthru_R4      , kind= dbl_kind ) 
-         fsurf         = real(fsurf_R4        , kind= dbl_kind ) 
-         fcondtop      = real(fcondtop_R4     , kind= dbl_kind ) 
-         fsens         = real(fsens_R4        , kind= dbl_kind ) 
-         flat          = real(flat_R4         , kind= dbl_kind ) 
-         fswabs        = real(fswabs_R4       , kind= dbl_kind ) 
-         coszen        = real(coszen_R4       , kind= dbl_kind ) 
-         flw           = real(flw_R4          , kind= dbl_kind ) 
-         flwout        = real(flwout_R4       , kind= dbl_kind ) 
-         evap          = real(evap_R4         , kind= dbl_kind ) 
-         congel        = real(congel_R4       , kind= dbl_kind ) 
-         frazil        = real(frazil_R4       , kind= dbl_kind ) 
-         snoice        = real(snoice_R4       , kind= dbl_kind ) 
-         Tref          = real(Tref_R4         , kind= dbl_kind ) 
-         Qref          = real(Qref_R4         , kind= dbl_kind ) 
-         Uref          = real(Uref_R4         , kind= dbl_kind ) 
-         Cdn_atm       = real(Cdn_atm_R4      , kind= dbl_kind ) 
-         Cdn_ocn       = real(Cdn_ocn_R4      , kind= dbl_kind ) 
-         hfreebd       = real(hfreebd_R4      , kind= dbl_kind ) 
-         hdraft        = real(hdraft_R4       , kind= dbl_kind ) 
-         hridge        = real(hridge_R4       , kind= dbl_kind ) 
-         distrdg       = real(distrdg_R4      , kind= dbl_kind ) 
-         hkeel         = real(hkeel_R4        , kind= dbl_kind ) 
-         dkeel         = real(dkeel_R4        , kind= dbl_kind ) 
-         lfloe         = real(lfloe_R4        , kind= dbl_kind ) 
-         dfloe         = real(dfloe_R4        , kind= dbl_kind ) 
-         Cdn_atm_skin  = real(Cdn_atm_skin_R4 , kind= dbl_kind ) 
-         Cdn_atm_floe  = real(Cdn_atm_floe_R4 , kind= dbl_kind ) 
-         Cdn_atm_pond  = real(Cdn_atm_pond_R4 , kind= dbl_kind ) 
-         Cdn_atm_rdg   = real(Cdn_atm_rdg_R4  , kind= dbl_kind ) 
-         Cdn_ocn_skin  = real(Cdn_ocn_skin_R4 , kind= dbl_kind ) 
-         Cdn_ocn_floe  = real(Cdn_ocn_floe_R4 , kind= dbl_kind ) 
-         Cdn_ocn_keel  = real(Cdn_ocn_keel_R4 , kind= dbl_kind ) 
-         Cdn_atm_ratio = real(Cdn_atm_ratio_R4, kind= dbl_kind )  
-         strairxT      = real(strairxT_R4     , kind= dbl_kind ) 
-         strairyT      = real(strairyT_R4     , kind= dbl_kind ) 
-         strocnxT      = real(strocnxT_R4     , kind= dbl_kind ) 
-         strocnyT      = real(strocnyT_R4     , kind= dbl_kind ) 
-         fbot          = real(fbot_R4         , kind= dbl_kind ) 
-         frzmlt        = real(frzmlt_R4       , kind= dbl_kind ) 
-         rside         = real(rside_R4        , kind= dbl_kind ) 
-         sst           = real(sst_R4          , kind= dbl_kind ) 
-         Tf            = real(Tf_R4           , kind= dbl_kind ) 
-         sss           = real(sss_R4          , kind= dbl_kind ) 
-         meltt         = real(meltt_R4        , kind= dbl_kind ) 
-         melts         = real(melts_R4        , kind= dbl_kind ) 
-         meltsliq      = real(meltsliq_R4     , kind= dbl_kind ) 
-         meltb         = real(meltb_R4        , kind= dbl_kind ) 
-         meltl         = real(meltl_R4        , kind= dbl_kind ) 
-         mlt_onset     = real(mlt_onset_R4    , kind= dbl_kind ) 
-         frz_onset     = real(frz_onset_R4    , kind= dbl_kind )   
+      character (len=*), intent(out) :: &
+         stop_label      ! abort error message
 
-        
-        aicen_init   = real(aicen_init_R4   , kind= dbl_kind ) 
-        vicen_init   = real(vicen_init_R4   , kind= dbl_kind ) 
-        vsnon_init   = real(vsnon_init_R4   , kind= dbl_kind ) 
-        aicen        = real(aicen_R4        , kind= dbl_kind ) 
-        vicen        = real(vicen_R4        , kind= dbl_kind ) 
-        vsnon        = real(vsnon_R4        , kind= dbl_kind ) 
-        Tsfc         = real(Tsfc_R4         , kind= dbl_kind ) 
-        alvl         = real(alvl_R4         , kind= dbl_kind ) 
-        vlvl         = real(vlvl_R4         , kind= dbl_kind ) 
-        apnd         = real(apnd_R4         , kind= dbl_kind ) 
-        hpnd         = real(hpnd_R4         , kind= dbl_kind ) 
-        ipnd         = real(ipnd_R4         , kind= dbl_kind ) 
-        iage         = real(iage_R4         , kind= dbl_kind ) 
-        FY           = real(FY_R4           , kind= dbl_kind ) 
-        fsurfn       = real(fsurfn_R4       , kind= dbl_kind ) 
-        fcondtopn    = real(fcondtopn_R4    , kind= dbl_kind ) 
-        flatn        = real(flatn_R4        , kind= dbl_kind ) 
-        fsensn       = real(fsensn_R4       , kind= dbl_kind ) 
-        fsurfn_f     = real(fsurfn_f_R4     , kind= dbl_kind ) 
-        fcondtopn_f  = real(fcondtopn_f_R4  , kind= dbl_kind ) 
-        flatn_f      = real(flatn_f_R4      , kind= dbl_kind ) 
-        fsensn_f     = real(fsensn_f_R4     , kind= dbl_kind ) 
-        fswsfcn      = real(fswsfcn_R4      , kind= dbl_kind ) 
-        fswthrun     = real(fswthrun_R4     , kind= dbl_kind ) 
-        fswintn      = real(fswintn_R4      , kind= dbl_kind ) 
-        faero_atm    = real(faero_atm_R4    , kind= dbl_kind ) 
-        faero_ocn    = real(faero_ocn_R4    , kind= dbl_kind ) 
-        dhsn         = real(dhsn_R4         , kind= dbl_kind ) 
-        ffracn       = real(ffracn_R4       , kind= dbl_kind ) 
-        meltsn       = real(meltsn_R4       , kind= dbl_kind ) 
-        meltsliqn    = real(meltsliqn_R4    , kind= dbl_kind ) 
-        melttn       = real(melttn_R4       , kind= dbl_kind ) 
-        meltbn       = real(meltbn_R4       , kind= dbl_kind ) 
-        congeln      = real(congeln_R4      , kind= dbl_kind ) 
-        snoicen      = real(snoicen_R4      , kind= dbl_kind ) 
-        dsnown       = real(dsnown_R4       , kind= dbl_kind )   
-        zqsn         = real(zqsn_R4         , kind= dbl_kind ) 
-        zqin         = real(zqin_R4         , kind= dbl_kind ) 
-        zSin         = real(zSin_R4         , kind= dbl_kind ) 
-        smice        = real(smice_R4        , kind= dbl_kind ) 
-        smliq        = real(smliq_R4        , kind= dbl_kind ) 
-        Sswabsn      = real(Sswabsn_R4      , kind= dbl_kind ) 
-        Iswabsn      = real(Iswabsn_R4      , kind= dbl_kind ) 
-        rsnw         = real(rsnw_R4         , kind= dbl_kind )   
-        aerosno      = real(aerosno_R4      , kind= dbl_kind )
-        aeroice      = real(aeroice_R4      , kind= dbl_kind )  
+      ! local variables
+
+      integer (kind=int_kind) :: &
+         n               ! category index
+
+      real (kind=real_kind) :: &
+         worka, workb    ! temporary variables
+
+      ! 2D coupler variables (computed for each category, then aggregated)
+      real (kind=real_kind) :: &
+         fswabsn     , & ! shortwave absorbed by ice          (W/m^2)
+         flwoutn     , & ! upward LW at surface               (W/m^2)
+         evapn       , & ! flux of vapor, atmos to ice   (kg m-2 s-1)
+         freshn      , & ! flux of water, ice to ocean     (kg/m^2/s)
+         fsaltn      , & ! flux of salt, ice to ocean      (kg/m^2/s)
+         fhocnn      , & ! fbot corrected for leftover energy (W/m^2)
+         strairxn    , & ! air/ice zonal  stress,             (N/m^2)
+         strairyn    , & ! air/ice meridional stress,         (N/m^2)
+         Cdn_atm_ratio_n, & ! drag coefficient ratio
+         Trefn       , & ! air tmp reference level                (K)
+         Urefn       , & ! air speed reference level            (m/s)
+         Qrefn       , & ! air sp hum reference level         (kg/kg)
+         Tbot        , & ! ice bottom surface temperature (deg C)
+         shcoef      , & ! transfer coefficient for sensible heat
+         lhcoef      , & ! transfer coefficient for latent heat
+         rfrac           ! water fraction retained for melt ponds
+
+      real (kind=real_kind) :: &
+         raice       , & ! 1/aice
+         pond            ! water retained in ponds (m)
+
       !---------------------------------------------------------------
       ! Initialize rate of snow loss to leads
       !---------------------------------------------------------------
@@ -2777,7 +2169,7 @@
       !       components are set to the data values.
       !-----------------------------------------------------------------
 
-               call colpkg_atm_boundary_double( 'ice',                  &
+               call colpkg_atm_boundary( 'ice',                  &
                                         Tsfc(n),  potT,          &
                                         uatm,     vatm,          &
                                         wind,     zlvl,          &
@@ -3035,179 +2427,6 @@
       endif
       !call ice_timer_stop(timer_ponds)
 
-      !-----------------------------------------------------------------
-      ! Copy values back to og variables
-      !-----------------------------------------------------------------
-        
-        
-      aice0_R4         = real(aice0        , kind= real_kind ) 
-      aice_R4          = real(aice         , kind= real_kind ) 
-      vice_R4          = real(vice         , kind= real_kind ) 
-      vsno_R4          = real(vsno         , kind= real_kind ) 
-      zlvl_R4           = real(zlvl         , kind= real_kind ) 
-      uatm_R4          = real(uatm         , kind= real_kind ) 
-      vatm_R4          = real(vatm         , kind= real_kind )         
-      wind_R4          = real(wind         , kind= real_kind ) 
-      potT_R4          = real(potT         , kind= real_kind ) 
-      Tair_R4          = real(Tair         , kind= real_kind ) 
-      Qa_R4            = real(Qa           , kind= real_kind ) 
-      rhoa_R4          = real(rhoa         , kind= real_kind ) 
-      frain_R4         = real(frain        , kind= real_kind ) 
-      fsnow_R4         = real(fsnow        , kind= real_kind ) 
-      fsloss_R4        = real(fsloss       , kind= real_kind ) 
-      fpond_R4         = real(fpond        , kind= real_kind ) 
-      fresh_R4         = real(fresh        , kind= real_kind ) 
-      fsalt_R4          = real(fsalt        , kind= real_kind ) 
-      fhocn_R4         = real(fhocn        , kind= real_kind ) 
-      fswthru_R4       = real(fswthru      , kind= real_kind ) 
-      fsurf_R4         = real(fsurf        , kind= real_kind ) 
-      fcondtop_R4      = real(fcondtop     , kind= real_kind ) 
-      fsens_R4         = real(fsens        , kind= real_kind ) 
-      flat_R4           = real(flat         , kind= real_kind ) 
-      fswabs_R4        = real(fswabs       , kind= real_kind ) 
-      coszen_R4        = real(coszen       , kind= real_kind ) 
-      flw_R4           = real(flw          , kind= real_kind ) 
-      flwout_R4        = real(flwout       , kind= real_kind ) 
-      evap_R4          = real(evap         , kind= real_kind ) 
-      congel_R4        = real(congel       , kind= real_kind ) 
-      frazil_R4        = real(frazil       , kind= real_kind ) 
-      snoice_R4        = real(snoice       , kind= real_kind ) 
-      Tref_R4          = real(Tref         , kind= real_kind ) 
-      Qref_R4          = real(Qref         , kind= real_kind ) 
-      Uref_R4          = real(Uref         , kind= real_kind ) 
-      Cdn_atm_R4       = real(Cdn_atm      , kind= real_kind ) 
-      Cdn_ocn_R4       = real(Cdn_ocn      , kind= real_kind ) 
-      hfreebd_R4       = real(hfreebd      , kind= real_kind ) 
-      hdraft_R4        = real(hdraft       , kind= real_kind ) 
-      hridge_R4        = real(hridge       , kind= real_kind ) 
-      distrdg_R4       = real(distrdg      , kind= real_kind ) 
-      hkeel_R4         = real(hkeel        , kind= real_kind ) 
-      dkeel_R4         = real(dkeel        , kind= real_kind ) 
-      lfloe_R4         = real(lfloe        , kind= real_kind ) 
-      dfloe_R4         = real(dfloe        , kind= real_kind ) 
-      Cdn_atm_skin_R4  = real(Cdn_atm_skin , kind= real_kind ) 
-      Cdn_atm_floe_R4  = real(Cdn_atm_floe , kind= real_kind ) 
-      Cdn_atm_pond_R4  = real(Cdn_atm_pond , kind= real_kind ) 
-      Cdn_atm_rdg_R4   = real(Cdn_atm_rdg  , kind= real_kind ) 
-      Cdn_ocn_skin_R4  = real(Cdn_ocn_skin , kind= real_kind ) 
-      Cdn_ocn_floe_R4  = real(Cdn_ocn_floe , kind= real_kind ) 
-      Cdn_ocn_keel_R4  = real(Cdn_ocn_keel , kind= real_kind ) 
-      Cdn_atm_ratio_R4 = real(Cdn_atm_ratio, kind= real_kind )  
-      strairxT_R4      = real(strairxT     , kind= real_kind ) 
-      strairyT_R4      = real(strairyT     , kind= real_kind ) 
-      strocnxT_R4      = real(strocnxT     , kind= real_kind ) 
-      strocnyT_R4      = real(strocnyT     , kind= real_kind ) 
-      fbot_R4           = real(fbot         , kind= real_kind ) 
-      frzmlt_R4        = real(frzmlt       , kind= real_kind ) 
-      rside_R4         = real(rside        , kind= real_kind ) 
-      sst_R4           = real(sst          , kind= real_kind ) 
-      Tf_R4            = real(Tf           , kind= real_kind ) 
-      sss_R4           = real(sss          , kind= real_kind ) 
-      meltt_R4          = real(meltt        , kind= real_kind ) 
-      melts_R4         = real(melts        , kind= real_kind ) 
-      meltsliq_R4      = real(meltsliq     , kind= real_kind ) 
-      meltb_R4         = real(meltb        , kind= real_kind ) 
-      meltl_R4         = real(meltl        , kind= real_kind ) 
-      mlt_onset_R4     = real(mlt_onset    , kind= real_kind ) 
-      frz_onset_R4     = real(frz_onset    , kind= real_kind )   
-
-      
-      aicen_init_R4    = real(aicen_init   , kind= real_kind ) 
-      vicen_init_R4    = real(vicen_init   , kind= real_kind ) 
-      vsnon_init_R4    = real(vsnon_init   , kind= real_kind ) 
-      aicen_R4         = real(aicen        , kind= real_kind ) 
-      vicen_R4         = real(vicen        , kind= real_kind ) 
-      vsnon_R4         = real(vsnon        , kind= real_kind ) 
-      Tsfc_R4          = real(Tsfc         , kind= real_kind ) 
-      alvl_R4           = real(alvl         , kind= real_kind ) 
-      vlvl_R4           = real(vlvl         , kind= real_kind ) 
-      apnd_R4          = real(apnd         , kind= real_kind ) 
-      hpnd_R4          = real(hpnd         , kind= real_kind ) 
-      ipnd_R4          = real(ipnd         , kind= real_kind ) 
-      iage_R4          = real(iage         , kind= real_kind ) 
-      FY_R4            = real(FY           , kind= real_kind ) 
-      fsurfn_R4        = real(fsurfn       , kind= real_kind ) 
-      fcondtopn_R4     = real(fcondtopn    , kind= real_kind ) 
-      flatn_R4         = real(flatn        , kind= real_kind ) 
-      fsensn_R4        = real(fsensn       , kind= real_kind ) 
-      fsurfn_f_R4      = real(fsurfn_f     , kind= real_kind ) 
-      fcondtopn_f_R4   = real(fcondtopn_f  , kind= real_kind ) 
-      flatn_f_R4       = real(flatn_f      , kind= real_kind ) 
-      fsensn_f_R4      = real(fsensn_f     , kind= real_kind ) 
-      fswsfcn_R4       = real(fswsfcn      , kind= real_kind ) 
-      fswthrun_R4      = real(fswthrun     , kind= real_kind ) 
-      fswintn_R4       = real(fswintn      , kind= real_kind ) 
-      faero_atm_R4     = real(faero_atm    , kind= real_kind ) 
-      faero_ocn_R4     = real(faero_ocn    , kind= real_kind ) 
-      dhsn_R4          = real(dhsn         , kind= real_kind ) 
-      ffracn_R4        = real(ffracn       , kind= real_kind ) 
-      meltsn_R4        = real(meltsn       , kind= real_kind ) 
-      meltsliqn_R4     = real(meltsliqn    , kind= real_kind ) 
-      melttn_R4        = real(melttn       , kind= real_kind ) 
-      meltbn_R4        = real(meltbn       , kind= real_kind ) 
-      congeln_R4       = real(congeln      , kind= real_kind ) 
-      snoicen_R4       = real(snoicen      , kind= real_kind ) 
-      dsnown_R4        = real(dsnown       , kind= real_kind )   
-
-      
-      zqsn_R4          = real(zqsn         , kind= real_kind ) 
-      zqin_R4          = real(zqin         , kind= real_kind ) 
-      zSin_R4          = real(zSin         , kind= real_kind ) 
-      smice_R4         = real(smice        , kind= real_kind ) 
-      smliq_R4         = real(smliq        , kind= real_kind ) 
-      Sswabsn_R4       = real(Sswabsn      , kind= real_kind ) 
-      Iswabsn_R4       = real(Iswabsn      , kind= real_kind ) 
-      rsnw_R4          = real(rsnw         , kind= real_kind )   
-      
-      aerosno_R4       = real(aerosno      , kind= real_kind )
-      aeroice_R4       = real(aeroice      , kind= real_kind )     
-      
-      deallocate(aicen_init)
-      deallocate(vicen_init)
-      deallocate(vsnon_init)
-      deallocate(aicen)
-      deallocate(vicen)
-      deallocate(vsnon)
-      deallocate(Tsfc)
-      deallocate(alvl)
-      deallocate(vlvl)
-      deallocate(apnd)
-      deallocate(hpnd)
-      deallocate(ipnd)
-      deallocate(iage)
-      deallocate(FY)
-      deallocate(fsurfn)
-      deallocate(fcondtopn)
-      deallocate(flatn)
-      deallocate(fsensn)
-      deallocate(fsurfn_f)
-      deallocate(fcondtopn_f)
-      deallocate(flatn_f)
-      deallocate(fsensn_f)
-      deallocate(fswsfcn)
-      deallocate(fswthrun)
-      deallocate(fswintn)
-      deallocate(faero_atm)
-      deallocate(faero_ocn)
-      deallocate(dhsn)
-      deallocate(ffracn)
-      deallocate(meltsn)
-      deallocate(meltsliqn)
-      deallocate(melttn)
-      deallocate(meltbn)
-      deallocate(congeln)
-      deallocate(snoicen)
-      deallocate(dsnown)
-      deallocate(zqsn)
-      deallocate(zqin)
-      deallocate(zSin)
-      deallocate(smice)
-      deallocate(smliq)
-      deallocate(Sswabsn)
-      deallocate(Iswabsn)
-      deallocate(rsnw)
-      deallocate(aerosno)
-      deallocate(aeroice)
       end subroutine colpkg_step_therm1
 
 !=======================================================================
@@ -3217,32 +2436,31 @@
 ! authors: William H. Lipscomb, LANL
 !          Elizabeth C. Hunke, LANL
 
-      subroutine colpkg_step_therm2 (dt_R4, ncat, n_aero, nbtrcr,    &
-                                     nilyr,           nslyr,         &
-                                     hin_max_R4,      nblyr,         &
-                                     aicen_R4,                       &
-                                     vicen_R4,        vsnon_R4,      &
-                                     aicen_init_R4,   vicen_init_R4, &
-                                     trcrn_R4,                       &
-                                     aice0_R4,        aice_R4,       &
-                                     trcr_depend,                    &
-                                     trcr_base_R4,    n_trcr_strata, &
-                                     nt_strata,                      &
-                                     Tf_R4,           sss_R4,        &
-                                     salinz_R4,                      &
-                                     rside_R4,        meltl_R4,      &
-                                     frzmlt_R4,       frazil_R4,     &
-                                     frain_R4,        fpond_R4,      &
-                                     fresh_R4,        fsalt_R4,      &
-                                     fhocn_R4,        update_ocn_f,  &
-                                     bgrid_R4,        cgrid_R4,      &
-                                     igrid_R4,        faero_ocn_R4,     &
-                                     first_ice,       fzsal_R4,      &
-                                     flux_bio_R4,     ocean_bio_R4,  &
-                                     l_stop,          stop_label,    &
-                                     frazil_diag_R4,                 &
-                                     frz_onset_R4,    yday_R4)
-
+      subroutine colpkg_step_therm2 (dt, ncat, n_aero, nbtrcr,    &
+                                     nilyr,        nslyr,         &
+                                     hin_max,      nblyr,         &
+                                     aicen,                       &
+                                     vicen,        vsnon,         &
+                                     aicen_init,   vicen_init,    &
+                                     trcrn,                       &
+                                     aice0,        aice,          &
+                                     trcr_depend,                 &
+                                     trcr_base,    n_trcr_strata, &
+                                     nt_strata,                   &
+                                     Tf,           sss,           &
+                                     salinz,                      &
+                                     rside,        meltl,         &
+                                     frzmlt,       frazil,        &
+                                     frain,        fpond,         &
+                                     fresh,        fsalt,         &
+                                     fhocn,        update_ocn_f,  &
+                                     bgrid,        cgrid,         &
+                                     igrid,        faero_ocn,     &
+                                     first_ice,    fzsal,         &
+                                     flux_bio,     ocean_bio,     &
+                                     l_stop,       stop_label,    &
+                                     frazil_diag,                 &
+                                     frz_onset,    yday)
 
       use ice_constants_colpkg, only: puny, c0
       use ice_itd, only: aggregate_area, reduce_area, cleanup_itd
@@ -3261,115 +2479,40 @@
          update_ocn_f     ! if true, update fresh water and salt fluxes
 
       real (kind=real_kind), dimension(0:ncat), intent(in) :: &
-         hin_max_R4      ! category boundaries (m)
-
-      real (kind=real_kind), intent(in) :: &
-         dt_R4       , & ! time step
-         Tf_R4       , & ! freezing temperature (C)
-         sss_R4      , & ! sea surface salinity (ppt)
-         rside_R4    , & ! fraction of ice that melts laterally
-         frzmlt_R4       ! freezing/melting potential (W/m^2)
-
-      integer (kind=int_kind), dimension (:), intent(in) :: &
-         trcr_depend, & ! = 0 for aicen tracers, 1 for vicen, 2 for vsnon
-         n_trcr_strata  ! number of underlying tracer layers
-
-      real (kind=real_kind), dimension (:,:), intent(in) :: &
-         trcr_base_R4      ! = 0 or 1 depending on tracer dependency
-                        ! argument 2:  (1) aice, (2) vice, (3) vsno
-
-      integer (kind=int_kind), dimension (:,:), intent(in) :: &
-         nt_strata      ! indices of underlying tracer layers
-
-      real (kind=real_kind), dimension (nblyr+2), intent(in) :: &
-         bgrid_R4              ! biology nondimensional vertical grid points
-
-      real (kind=real_kind), dimension (nblyr+1), intent(in) :: &
-         igrid_R4              ! biology vertical interface points
- 
-      real (kind=real_kind), dimension (nilyr+1), intent(in) :: &
-         cgrid_R4              ! CICE vertical coordinate   
-
-      real (kind=real_kind), dimension(:), intent(in) :: &
-         salinz_R4   , & ! initial salinity profile
-         ocean_bio_R4    ! ocean concentration of biological tracer
-
-      real (kind=real_kind), intent(inout) :: &
-         aice_R4     , & ! sea ice concentration
-         aice0_R4    , & ! concentration of open water
-         frain_R4    , & ! rainfall rate (kg/m^2 s)
-         fpond_R4    , & ! fresh water flux to ponds (kg/m^2/s)
-         fresh_R4    , & ! fresh water flux to ocean (kg/m^2/s)
-         fsalt_R4    , & ! salt flux to ocean (kg/m^2/s)
-         fhocn_R4    , & ! net heat flux to ocean (W/m^2)
-         fzsal_R4    , & ! salt flux to ocean from zsalinity (kg/m^2/s)
-         meltl_R4    , & ! lateral ice melt         (m/step-->cm/day)
-         frazil_R4   , & ! frazil ice growth        (m/step-->cm/day)
-         frazil_diag_R4  ! frazil ice growth diagnostic (m/step-->cm/day)
-
-      real (kind=real_kind), dimension(:), intent(inout) :: &
-         aicen_init_R4,& ! initial concentration of ice
-         vicen_init_R4,& ! initial volume per unit area of ice          (m)
-         aicen_R4    , & ! concentration of ice
-         vicen_R4    , & ! volume per unit area of ice          (m)
-         vsnon_R4    , & ! volume per unit area of snow         (m)
-         faero_ocn_R4, & ! aerosol flux to ocean  (kg/m^2/s)
-         flux_bio_R4     ! all bio fluxes to ocean
-
-      real (kind=real_kind), dimension(:,:), intent(inout) :: &
-         trcrn_R4        ! tracers
- 
-      logical (kind=log_kind), dimension(:), intent(inout) :: &
-         first_ice      ! true until ice forms
-
-      logical (kind=log_kind), intent(out) :: &
-         l_stop         ! if true, abort model
-
-      character (len=*), intent(out) :: stop_label
-
-      real (kind=real_kind), intent(inout), optional :: &
-         frz_onset_R4    ! day of year that freezing begins (congel or frazil)
-
-      real (kind=real_kind), intent(in), optional :: &
-         yday_R4         ! day of year
-
-
-      !-----------------------------------------------------------------
-      ! Local double variable copies 
-      !-----------------------------------------------------------------
-
-
-      !intent in variables 
-      real (kind=dbl_kind), dimension(0:ncat) :: &
          hin_max      ! category boundaries (m)
 
-      real (kind=dbl_kind) :: &
+      real (kind=real_kind), intent(in) :: &
          dt       , & ! time step
          Tf       , & ! freezing temperature (C)
          sss      , & ! sea surface salinity (ppt)
          rside    , & ! fraction of ice that melts laterally
          frzmlt       ! freezing/melting potential (W/m^2)
 
-      real (kind=dbl_kind), dimension (:,:), allocatable :: &
+      integer (kind=int_kind), dimension (:), intent(in) :: &
+         trcr_depend, & ! = 0 for aicen tracers, 1 for vicen, 2 for vsnon
+         n_trcr_strata  ! number of underlying tracer layers
+
+      real (kind=real_kind), dimension (:,:), intent(in) :: &
          trcr_base      ! = 0 or 1 depending on tracer dependency
                         ! argument 2:  (1) aice, (2) vice, (3) vsno
 
-      real (kind=dbl_kind), dimension (nblyr+2) :: &
+      integer (kind=int_kind), dimension (:,:), intent(in) :: &
+         nt_strata      ! indices of underlying tracer layers
+
+      real (kind=real_kind), dimension (nblyr+2), intent(in) :: &
          bgrid              ! biology nondimensional vertical grid points
 
-      real (kind=dbl_kind), dimension (nblyr+1) :: &
+      real (kind=real_kind), dimension (nblyr+1), intent(in) :: &
          igrid              ! biology vertical interface points
  
-      real (kind=dbl_kind), dimension (nilyr+1) :: &
+      real (kind=real_kind), dimension (nilyr+1), intent(in) :: &
          cgrid              ! CICE vertical coordinate   
 
-      real (kind=dbl_kind), dimension(:), allocatable :: &
+      real (kind=real_kind), dimension(:), intent(in) :: &
          salinz   , & ! initial salinity profile
          ocean_bio    ! ocean concentration of biological tracer
-      real (kind=dbl_kind) :: yday         ! day of year
-         !nothing
-      !intent in/out variables
-      real (kind=dbl_kind) :: &
+
+      real (kind=real_kind), intent(inout) :: &
          aice     , & ! sea ice concentration
          aice0    , & ! concentration of open water
          frain    , & ! rainfall rate (kg/m^2 s)
@@ -3382,7 +2525,7 @@
          frazil   , & ! frazil ice growth        (m/step-->cm/day)
          frazil_diag  ! frazil ice growth diagnostic (m/step-->cm/day)
 
-      real (kind=dbl_kind), dimension(:), allocatable :: &
+      real (kind=real_kind), dimension(:), intent(inout) :: &
          aicen_init,& ! initial concentration of ice
          vicen_init,& ! initial volume per unit area of ice          (m)
          aicen    , & ! concentration of ice
@@ -3391,54 +2534,22 @@
          faero_ocn, & ! aerosol flux to ocean  (kg/m^2/s)
          flux_bio     ! all bio fluxes to ocean
 
-      real (kind=dbl_kind), dimension(:,:), allocatable :: &
+      real (kind=real_kind), dimension(:,:), intent(inout) :: &
          trcrn        ! tracers
-      real (kind=dbl_kind) :: &
+ 
+      logical (kind=log_kind), dimension(:), intent(inout) :: &
+         first_ice      ! true until ice forms
+
+      logical (kind=log_kind), intent(out) :: &
+         l_stop         ! if true, abort model
+
+      character (len=*), intent(out) :: stop_label
+
+      real (kind=real_kind), intent(inout), optional :: &
          frz_onset    ! day of year that freezing begins (congel or frazil)
-      hin_max  = real(      hin_max_R4, kind = dbl_kind)
-      dt       = real(      dt_R4     , kind = dbl_kind)
-      Tf       = real(      Tf_R4     , kind = dbl_kind)
-      sss      = real(      sss_R4    , kind = dbl_kind)
-      rside    = real(      rside_R4  , kind = dbl_kind)
-      frzmlt       = real(  frzmlt_R4     , kind = dbl_kind)
-     trcr_base     = real(  trcr_base_R4  , kind = dbl_kind)
-      bgrid        = real(  bgrid_R4      , kind = dbl_kind)      
-      igrid        = real(  igrid_R4      , kind = dbl_kind)      
-      cgrid        = real(  cgrid_R4      , kind = dbl_kind)      
 
-      if(present(yday_R4)) then
-         yday         = real(  yday_R4       , kind = dbl_kind)
-      endif
-
-      aice     = real(      aice_R4   , kind = dbl_kind)
-      aice0    = real(      aice0_R4  , kind = dbl_kind)
-      frain    = real(      frain_R4  , kind = dbl_kind)
-      fpond    = real(      fpond_R4  , kind = dbl_kind)
-      fresh    = real(      fresh_R4  , kind = dbl_kind)
-      fsalt    = real(      fsalt_R4  , kind = dbl_kind)
-      fhocn    = real(      fhocn_R4  , kind = dbl_kind)
-      fzsal    = real(      fzsal_R4  , kind = dbl_kind)
-      meltl    = real(      meltl_R4  , kind = dbl_kind)
-      frazil   = real(      frazil_R4 , kind = dbl_kind)
-      frazil_diag  = real(  frazil_diag_R4, kind = dbl_kind)
-
-     salinz    = real(      salinz_R4 , kind = dbl_kind)
-     ocean_bio     = real(  ocean_bio_R4  , kind = dbl_kind)
-
-     aicen_init = real(      aicen_init_R4, kind = dbl_kind)
-     vicen_init  = real(    vicen_init_R4, kind = dbl_kind)
-     aicen     = real(      aicen_R4  , kind = dbl_kind)
-     vicen     = real(      vicen_R4  , kind = dbl_kind)
-     vsnon     = real(      vsnon_R4  , kind = dbl_kind)
-     faero_ocn = real(      faero_ocn_R4, kind = dbl_kind)
-     flux_bio      = real(  flux_bio_R4   , kind = dbl_kind)
-     trcrn         = real(  trcrn_R4      , kind = dbl_kind)
-      if (present(frz_onset_R4)) then
-         frz_onset    = real(  frz_onset_R4  , kind = dbl_kind)
-      endif
-
-
-
+      real (kind=real_kind), intent(in), optional :: &
+         yday         ! day of year
 
       l_stop = .false.
 
@@ -3576,41 +2687,7 @@
                         fsalt,                fhocn,            &
                         faero_ocn,            fzsal,            &
                         flux_bio)   
-      
-      aice_R4     = real(      aice   , kind = real_kind)
-      aice0_R4    = real(      aice0  , kind = real_kind)
-      frain_R4    = real(      frain  , kind = real_kind)
-      fpond_R4    = real(      fpond  , kind = real_kind)
-      fresh_R4    = real(      fresh  , kind = real_kind)
-      fsalt_R4    = real(      fsalt  , kind = real_kind)
-      fhocn_R4    = real(      fhocn  , kind = real_kind)
-      fzsal_R4    = real(      fzsal  , kind = real_kind)
-      meltl_R4    = real(      meltl  , kind = real_kind)
-      frazil_R4   = real(      frazil , kind = real_kind)
-      frazil_diag_R4  = real(  frazil_diag, kind = real_kind)
-      aicen_init_R4= real(      aicen_init, kind = real_kind)
-      vicen_init_R4 = real(    vicen_init, kind = real_kind)
-      aicen_R4    = real(      aicen  , kind = real_kind)
-      vicen_R4    = real(      vicen  , kind = real_kind)
-      vsnon_R4    = real(      vsnon  , kind = real_kind)
-      faero_ocn_R4= real(      faero_ocn, kind = real_kind)
-      flux_bio_R4     = real(  flux_bio   , kind = real_kind)
-      trcrn_R4        = real(  trcrn      , kind = real_kind)
-      if (present(frz_onset_R4)) then
-         frz_onset_R4    = real(  frz_onset  , kind = real_kind)
-      endif      
 
-      deallocate(trcr_base)
-      deallocate(salinz)
-      deallocate(ocean_bio)
-      deallocate(aicen_init)
-      deallocate(vicen_init)
-      deallocate(aicen)
-      deallocate(vicen)
-      deallocate(vsnon)
-      deallocate(faero_ocn)
-      deallocate(flux_bio)
-      deallocate(trcrn)
       end subroutine colpkg_step_therm2
 
 !=======================================================================
@@ -3619,16 +2696,16 @@
 !
 ! authors: Elizabeth Hunke, LANL
 
-      subroutine colpkg_prep_radiation (ncat, nilyr, nslyr,          &
-                                        aice_R4,        aicen_R4,    &
-                                        swvdr_R4,       swvdf_R4,    &
-                                        swidr_R4,       swidf_R4,    &
-                                        alvdr_ai_R4,    alvdf_ai_R4, &
-                                        alidr_ai_R4,    alidf_ai_R4, &
-                                        scale_factor_R4,             &
-                                        fswsfcn_R4,     fswintn_R4,  &
-                                        fswthrun_R4,    fswpenln_R4, &
-                                        Sswabsn_R4,     Iswabsn_R4)
+      subroutine colpkg_prep_radiation (ncat, nilyr, nslyr,    &
+                                        aice,        aicen,    &
+                                        swvdr,       swvdf,    &
+                                        swidr,       swidf,    &
+                                        alvdr_ai,    alvdf_ai, &
+                                        alidr_ai,    alidf_ai, &
+                                        scale_factor,          &
+                                        fswsfcn,     fswintn,  &
+                                        fswthrun,    fswpenln, &
+                                        Sswabsn,     Iswabsn)
 
       use ice_constants_colpkg, only: c0, c1, puny
 
@@ -3638,41 +2715,6 @@
          nslyr       ! number of snow layers
 
       real (kind=real_kind), intent(in) :: &
-         aice_R4        , & ! ice area fraction
-         swvdr_R4       , & ! sw down, visible, direct  (W/m^2)
-         swvdf_R4       , & ! sw down, visible, diffuse (W/m^2)
-         swidr_R4       , & ! sw down, near IR, direct  (W/m^2)
-         swidf_R4       , & ! sw down, near IR, diffuse (W/m^2)
-         ! grid-box-mean albedos aggregated over categories (if calc_Tsfc)
-         alvdr_ai_R4    , & ! visible, direct   (fraction)
-         alidr_ai_R4    , & ! near-ir, direct   (fraction)
-         alvdf_ai_R4    , & ! visible, diffuse  (fraction)
-         alidf_ai_R4        ! near-ir, diffuse  (fraction)
-
-      real (kind=real_kind), dimension(:), intent(in) :: &
-         aicen_R4           ! ice area fraction in each category
-
-      real (kind=real_kind), intent(inout) :: &
-         scale_factor_R4    ! shortwave scaling factor, ratio new:old
-
-      real (kind=real_kind), dimension(:), intent(inout) :: &
-         fswsfcn_R4     , & ! SW absorbed at ice/snow surface (W m-2)
-         fswintn_R4     , & ! SW absorbed in ice interior, below surface (W m-2)
-         fswthrun_R4        ! SW through ice to ocean (W/m^2)
-
-      real (kind=real_kind), dimension(:,:), intent(inout) :: &
-         fswpenln_R4    , & ! visible SW entering ice layers (W m-2)
-         Iswabsn_R4     , & ! SW radiation absorbed in ice layers (W m-2)
-         Sswabsn_R4         ! SW radiation absorbed in snow layers (W m-2)
-
-      ! local variables
-      integer (kind=int_kind) :: &
-         k , & ! vertical index       
-         n               ! thickness category index
-      real (kind=dbl_kind) :: netsw 
-      
-      !in variables 
-      real (kind=dbl_kind) :: & 
          aice        , & ! ice area fraction
          swvdr       , & ! sw down, visible, direct  (W/m^2)
          swvdf       , & ! sw down, visible, diffuse (W/m^2)
@@ -3684,43 +2726,29 @@
          alvdf_ai    , & ! visible, diffuse  (fraction)
          alidf_ai        ! near-ir, diffuse  (fraction)
 
-      real (kind=dbl_kind), dimension(:), allocatable :: & 
+      real (kind=real_kind), dimension(:), intent(in) :: &
          aicen           ! ice area fraction in each category
-      !out variables 
-      real (kind=dbl_kind) :: & 
+
+      real (kind=real_kind), intent(inout) :: &
          scale_factor    ! shortwave scaling factor, ratio new:old
 
-      real (kind=dbl_kind), dimension(:), allocatable :: & 
+      real (kind=real_kind), dimension(:), intent(inout) :: &
          fswsfcn     , & ! SW absorbed at ice/snow surface (W m-2)
          fswintn     , & ! SW absorbed in ice interior, below surface (W m-2)
          fswthrun        ! SW through ice to ocean (W/m^2)
 
-      real (kind=dbl_kind), dimension(:,:), allocatable :: & 
+      real (kind=real_kind), dimension(:,:), intent(inout) :: &
          fswpenln    , & ! visible SW entering ice layers (W m-2)
          Iswabsn     , & ! SW radiation absorbed in ice layers (W m-2)
          Sswabsn         ! SW radiation absorbed in snow layers (W m-2)
 
-      !copying R4 to R8
-      aice         = real(aice_R4        , kind=dbl_kind)
-      swvdr        = real(swvdr_R4       , kind=dbl_kind)
-      swvdf        = real(swvdf_R4       , kind=dbl_kind)
-      swidr        = real(swidr_R4       , kind=dbl_kind)
-      swidf        = real(swidf_R4       , kind=dbl_kind)
-      
-      alvdr_ai     = real(alvdr_ai_R4    , kind=dbl_kind)
-      alidr_ai     = real(alidr_ai_R4    , kind=dbl_kind)
-      alvdf_ai     = real(alvdf_ai_R4    , kind=dbl_kind)
-      alidf_ai     = real(alidf_ai_R4    , kind=dbl_kind)    
+      ! local variables
 
-     aicen     = real(aicen_R4       , kind=dbl_kind)    
-     fswsfcn   = real(fswsfcn_R4     , kind=dbl_kind)
-     fswintn   = real(fswintn_R4     , kind=dbl_kind)
-     fswthrun  = real(fswthrun_R4    , kind=dbl_kind)    
-     fswpenln  = real(fswpenln_R4    , kind=dbl_kind)
-     Iswabsn   = real(Iswabsn_R4     , kind=dbl_kind)
-     Sswabsn   = real(Sswabsn_R4     , kind=dbl_kind)    
+      integer (kind=int_kind) :: &
+         k           , & ! vertical index       
+         n               ! thickness category index
 
-      scale_factor = real(scale_factor_R4, kind=dbl_kind)    
+      real (kind=real_kind) :: netsw 
 
       !-----------------------------------------------------------------
       ! Compute netsw scaling factor (new netsw / old netsw)
@@ -3760,22 +2788,6 @@
             endif
          enddo                  ! ncat
 
-         scale_factor_R4 = real(scale_factor, kind=real_kind)    
-         fswsfcn_R4      = real(fswsfcn     , kind=real_kind)
-         fswintn_R4      = real(fswintn     , kind=real_kind)
-         fswthrun_R4     = real(fswthrun    , kind=real_kind)    
-         fswpenln_R4     = real(fswpenln    , kind=real_kind)
-         Iswabsn_R4      = real(Iswabsn     , kind=real_kind)
-         Sswabsn_R4      = real(Sswabsn     , kind=real_kind)  
-
-         deallocate(aicen)
-         deallocate(fswsfcn)
-         deallocate(fswintn)
-         deallocate(fswthrun)
-         deallocate(fswpenln)
-         deallocate(Iswabsn)
-         deallocate(Sswabsn)
-
       end subroutine colpkg_prep_radiation
 
 !=======================================================================
@@ -3786,7 +2798,7 @@
 !          David Bailey, NCAR
 !          Elizabeth C. Hunke, LANL
 
-      subroutine colpkg_step_radiation (dt_R4,       ncat,      & 
+      subroutine colpkg_step_radiation (dt,       ncat,      & 
                                         n_algae,             &
                                         nblyr,    ntrcr,     &
                                         nbtrcr,   nbtrcr_sw, &
@@ -3795,57 +2807,57 @@
                                         dEdd_algae,          &
                                         nlt_chl_sw,          &
                                         nlt_zaero_sw,        &
-                                        swgrid_R4,   igrid_R4,     &
-                                        fbri_R4,                &
-                                        aicen_R4,    vicen_R4,     &
-                                        vsnon_R4,    Tsfcn_R4,     &
-                                        alvln_R4,    apndn_R4,     &
-                                        hpndn_R4,    ipndn_R4,     &
+                                        swgrid,   igrid,     &
+                                        fbri,                &
+                                        aicen,    vicen,     &
+                                        vsnon,    Tsfcn,     &
+                                        alvln,    apndn,     &
+                                        hpndn,    ipndn,     &
                                         snwredist,           &
-                                        rsnow_R4,               &
-                                        aeron_R4,               &
-                                        zbion_R4,               &
-                                        trcrn_R4,               &
-                                        TLAT_R4,     TLON_R4,      &
+                                        rsnow,               &
+                                        aeron,               &
+                                        zbion,               &
+                                        trcrn,               &
+                                        TLAT,     TLON,      &
                                         calendar_type,       &
                                         days_per_year,       &
-                                        nextsw_cday_R4,         &
-                                        yday_R4,     sec,       &
-                                        kaer_tab_R4, waer_tab_R4,  &
-                                        gaer_tab_R4,            &
-                                        kaer_bc_tab_R4,         &
-                                        waer_bc_tab_R4,         &
-                                        gaer_bc_tab_R4,         &
-                                        bcenh_R4,               &
+                                        nextsw_cday,         &
+                                        yday,     sec,       &
+                                        kaer_tab, waer_tab,  &
+                                        gaer_tab,            &
+                                        kaer_bc_tab,         &
+                                        waer_bc_tab,         &
+                                        gaer_bc_tab,         &
+                                        bcenh,               &
                                         modal_aero,          &
-                                        swvdr_R4,    swvdf_R4,     &
-                                        swidr_R4,    swidf_R4,     &
-                                        coszen_R4,   fsnow_R4,     &
-                                        alvdrn_R4,   alvdfn_R4,    &
-                                        alidrn_R4,   alidfn_R4,    &
-                                        fswsfcn_R4,  fswintn_R4,   &
-                                        fswthrun_R4, fswpenln_R4,  &
-                                        Sswabsn_R4,  Iswabsn_R4,   &
-                                        albicen_R4,  albsnon_R4,   &
-                                        albpndn_R4,  apeffn_R4,    &
-                                        snowfracn_R4,           &
-                                        dhsn_R4,     ffracn_R4,    &
+                                        swvdr,    swvdf,     &
+                                        swidr,    swidf,     &
+                                        coszen,   fsnow,     &
+                                        alvdrn,   alvdfn,    &
+                                        alidrn,   alidfn,    &
+                                        fswsfcn,  fswintn,   &
+                                        fswthrun, fswpenln,  &
+                                        Sswabsn,  Iswabsn,   &
+                                        albicen,  albsnon,   &
+                                        albpndn,  apeffn,    &
+                                        snowfracn,           &
+                                        dhsn,     ffracn,    &
                                         l_print_point,       &
                                         initonly,           &
-                                        asm_prm_ice_drc_R4,     &
-                                        asm_prm_ice_dfs_R4,     &
-                                        ss_alb_ice_drc_R4,      &
-                                        ss_alb_ice_dfs_R4,      &
-                                        ext_cff_mss_ice_drc_R4, &
-                                        ext_cff_mss_ice_dfs_R4, &
-                                        kaer_tab_5bd_R4,          &
-                                        waer_tab_5bd_R4,          &
-                                        gaer_tab_5bd_R4,          &
-                                        kaer_bc_tab_5bd_R4,       &
-                                        waer_bc_tab_5bd_R4,       &
-                                        gaer_bc_tab_5bd_R4,       &
-                                        bcenh_5bd_R4,             &
-                                        rsnw_dEddn_R4)
+                                        asm_prm_ice_drc,     &
+                                        asm_prm_ice_dfs,     &
+                                        ss_alb_ice_drc,      &
+                                        ss_alb_ice_dfs,      &
+                                        ext_cff_mss_ice_drc, &
+                                        ext_cff_mss_ice_dfs, &
+                                        kaer_tab_5bd,          &
+                                        waer_tab_5bd,          &
+                                        gaer_tab_5bd,          &
+                                        kaer_bc_tab_5bd,       &
+                                        waer_bc_tab_5bd,       &
+                                        gaer_bc_tab_5bd,       &
+                                        bcenh_5bd,             &
+                                        rsnw_dEddn)
 
       use ice_constants_colpkg, only: c0, puny
       use ice_shortwave, only: run_dEdd, shortwave_ccsm3, compute_shortwave_trcr
@@ -3871,13 +2883,13 @@
         nlt_zaero_sw   ! index for zaerosols
 
       real (kind=real_kind), intent(in) :: &
-         dt_R4        , & ! time step (s)
-         swvdr_R4     , & ! sw down, visible, direct  (W/m^2)
-         swvdf_R4     , & ! sw down, visible, diffuse (W/m^2)
-         swidr_R4     , & ! sw down, near IR, direct  (W/m^2)
-         swidf_R4     , & ! sw down, near IR, diffuse (W/m^2)
-         fsnow_R4     , & ! snowfall rate (kg/m^2 s)
-         TLAT_R4, TLON_R4    ! latitude and longitude (radian)
+         dt        , & ! time step (s)
+         swvdr     , & ! sw down, visible, direct  (W/m^2)
+         swvdf     , & ! sw down, visible, diffuse (W/m^2)
+         swidr     , & ! sw down, near IR, direct  (W/m^2)
+         swidf     , & ! sw down, near IR, diffuse (W/m^2)
+         fsnow     , & ! snowfall rate (kg/m^2 s)
+         TLAT, TLON    ! latitude and longitude (radian)
 
       character (len=char_len), intent(in) :: &
          calendar_type       ! differentiates Gregorian from other calendars
@@ -3887,75 +2899,75 @@
          sec                 ! elapsed seconds into date
 
       real (kind=real_kind), intent(in) :: &
-         nextsw_cday_R4     , & ! julian day of next shortwave calculation
-         yday_R4                ! day of the year
+         nextsw_cday     , & ! julian day of next shortwave calculation
+         yday                ! day of the year
 
       real (kind=real_kind), intent(inout) :: &
-         coszen_R4        ! cosine solar zenith angle, < 0 for sun below horizon_R4 
+         coszen        ! cosine solar zenith angle, < 0 for sun below horizon 
 
       real (kind=real_kind), dimension (:), intent(in) :: &
-         igrid_R4              ! biology vertical interface points
+         igrid              ! biology vertical interface points
  
       real (kind=real_kind), dimension (:), intent(in) :: &
-         swgrid_R4                ! grid for ice tracers used in dEdd scheme
+         swgrid                ! grid for ice tracers used in dEdd scheme
         
       real (kind=real_kind), dimension(:,:), intent(in) :: & 
-         kaer_tab_R4, & ! aerosol mass extinction cross section (m2/kg)
-         waer_tab_R4, & ! aerosol single scatter albedo (fraction)
-         gaer_tab_R4, & ! aerosol asymmetry parameter (cos(theta))
-         rsnow_R4       ! snow grain radius tracer (10^-6 m)
+         kaer_tab, & ! aerosol mass extinction cross section (m2/kg)
+         waer_tab, & ! aerosol single scatter albedo (fraction)
+         gaer_tab, & ! aerosol asymmetry parameter (cos(theta))
+         rsnow       ! snow grain radius tracer (10^-6 m)
 
       real (kind=real_kind), dimension(:,:), intent(in) :: & 
-         kaer_bc_tab_R4, & ! aerosol mass extinction cross section (m2/kg)
-         waer_bc_tab_R4, & ! aerosol single scatter albedo (fraction)
-         gaer_bc_tab_R4    ! aerosol asymmetry parameter (cos(theta))
+         kaer_bc_tab, & ! aerosol mass extinction cross section (m2/kg)
+         waer_bc_tab, & ! aerosol single scatter albedo (fraction)
+         gaer_bc_tab    ! aerosol asymmetry parameter (cos(theta))
 
       real (kind=real_kind), dimension(:,:,:), intent(in) :: & 
-         bcenh_R4 
+         bcenh 
 
       real (kind=real_kind), dimension(:), intent(in) :: &
-         aicen_R4     , & ! ice area fraction in each category
-         vicen_R4     , & ! ice volume in each category (m)
-         vsnon_R4     , & ! snow volume in each category (m)
-         Tsfcn_R4     , & ! surface temperature (deg C)
-         alvln_R4     , & ! level-ice area fraction
-         apndn_R4     , & ! pond area fraction
-         hpndn_R4     , & ! pond depth (m)
-         ipndn_R4     , & ! pond refrozen lid thickness (m)
-         fbri_R4           ! brine fraction 
+         aicen     , & ! ice area fraction in each category
+         vicen     , & ! ice volume in each category (m)
+         vsnon     , & ! snow volume in each category (m)
+         Tsfcn     , & ! surface temperature (deg C)
+         alvln     , & ! level-ice area fraction
+         apndn     , & ! pond area fraction
+         hpndn     , & ! pond depth (m)
+         ipndn     , & ! pond refrozen lid thickness (m)
+         fbri           ! brine fraction 
 
       character(len=char_len), intent(in) :: & 
          snwredist                ! type of snow redistribution
 
       real(kind=real_kind), dimension(:,:), intent(in) :: &
-         aeron_R4     , & ! aerosols (kg/m^3)
-         trcrn_R4         ! tracers
+         aeron     , & ! aerosols (kg/m^3)
+         trcrn         ! tracers
 
       real(kind=real_kind), dimension(:,:), intent(inout) :: &
-         zbion_R4        ! zaerosols (kg/m^3) and chla (mg/m^3)
+         zbion         ! zaerosols (kg/m^3) and chla (mg/m^3)
 
       real (kind=real_kind), dimension(:), intent(inout) :: &
-         alvdrn_R4    , & ! visible, direct  albedo (fraction)
-         alidrn_R4    , & ! near-ir, direct   (fraction)
-         alvdfn_R4    , & ! visible, diffuse  (fraction)
-         alidfn_R4    , & ! near-ir, diffuse  (fraction)
-         fswsfcn_R4   , & ! SW absorbed at ice/snow surface (W m-2)
-         fswintn_R4   , & ! SW absorbed in ice interior, below surface (W m-2)
-         fswthrun_R4  , & ! SW through ice to ocean (W/m^2)
-         snowfracn_R4, & ! snow fraction on each category
-         dhsn_R4      , & ! depth difference for snow on sea ice and pond ice_R4
-         ffracn_R4    , & ! fraction of fsurfn used to melt ipond
+         alvdrn    , & ! visible, direct  albedo (fraction)
+         alidrn    , & ! near-ir, direct   (fraction)
+         alvdfn    , & ! visible, diffuse  (fraction)
+         alidfn    , & ! near-ir, diffuse  (fraction)
+         fswsfcn   , & ! SW absorbed at ice/snow surface (W m-2)
+         fswintn   , & ! SW absorbed in ice interior, below surface (W m-2)
+         fswthrun  , & ! SW through ice to ocean (W/m^2)
+         snowfracn , & ! snow fraction on each category
+         dhsn      , & ! depth difference for snow on sea ice and pond ice
+         ffracn    , & ! fraction of fsurfn used to melt ipond
                        ! albedo components for history
-         albicen_R4   , & ! bare ice 
-         albsnon_R4   , & ! snow 
-         albpndn_R4   , & ! pond 
-         rsnw_dEddn_R4, & ! snow grain radius (um)
-         apeffn_R4        ! effective pond area used for radiation calculation_R4
+         albicen   , & ! bare ice 
+         albsnon   , & ! snow 
+         albpndn   , & ! pond 
+         rsnw_dEddn, & ! snow grain radius (um)
+         apeffn        ! effective pond area used for radiation calculation
 
       real (kind=real_kind), dimension(:,:), intent(inout) :: &
-         fswpenln_R4  , & ! visible SW entering ice layers (W m-2)
-         Iswabsn_R4   , & ! SW radiation absorbed in ice layers (W m-2)
-         Sswabsn_R4       ! SW radiation absorbed in snow layers (W m-2)
+         fswpenln  , & ! visible SW entering ice layers (W m-2)
+         Iswabsn   , & ! SW radiation absorbed in ice layers (W m-2)
+         Sswabsn       ! SW radiation absorbed in snow layers (W m-2)
 
       logical (kind=log_kind), intent(in) :: &
          l_print_point, & ! flag for printing diagnostics
@@ -3969,25 +2981,25 @@
       ! snow grain single-scattering properties for
       ! direct (drc) and diffuse (dfs) shortwave incidents
       real (kind=real_kind), dimension(:,:), intent(in) :: & ! Model SNICAR snow SSP
-        asm_prm_ice_drc_R4,     & ! snow asymmetry factor (cos(theta))
-        asm_prm_ice_dfs_R4,     & ! snow asymmetry factor (cos(theta))
-        ss_alb_ice_drc_R4,      & ! snow single scatter albedo (fraction)
-        ss_alb_ice_dfs_R4,      & ! snow single scatter albedo (fraction)
-        ext_cff_mss_ice_drc_R4, & ! snow mass extinction cross section (m2/kg)
-        ext_cff_mss_ice_dfs_R4    ! snow mass extinction cross section (m2/kg)
+        asm_prm_ice_drc,     & ! snow asymmetry factor (cos(theta))
+        asm_prm_ice_dfs,     & ! snow asymmetry factor (cos(theta))
+        ss_alb_ice_drc,      & ! snow single scatter albedo (fraction)
+        ss_alb_ice_dfs,      & ! snow single scatter albedo (fraction)
+        ext_cff_mss_ice_drc, & ! snow mass extinction cross section (m2/kg)
+        ext_cff_mss_ice_dfs    ! snow mass extinction cross section (m2/kg)
 
       real (kind=real_kind), dimension(:,:), intent(in) :: &
-        kaer_tab_5bd_R4, & ! aerosol mass extinction cross section (m2/kg)
-        waer_tab_5bd_R4, & ! aerosol single scatter albedo (fraction)
-        gaer_tab_5bd_R4    ! aerosol asymmetry parameter (cos(theta))
+        kaer_tab_5bd, & ! aerosol mass extinction cross section (m2/kg)
+        waer_tab_5bd, & ! aerosol single scatter albedo (fraction)
+        gaer_tab_5bd    ! aerosol asymmetry parameter (cos(theta))
 
       real (kind=real_kind), dimension(:,:), intent(in) :: & ! Modal aerosol treatment
-        kaer_bc_tab_5bd_R4, & ! aerosol mass extinction cross section (m2/kg)
-        waer_bc_tab_5bd_R4, & ! aerosol single scatter albedo (fraction)
-        gaer_bc_tab_5bd_R4    ! aerosol asymmetry parameter (cos(theta))
+        kaer_bc_tab_5bd, & ! aerosol mass extinction cross section (m2/kg)
+        waer_bc_tab_5bd, & ! aerosol single scatter albedo (fraction)
+        gaer_bc_tab_5bd    ! aerosol asymmetry parameter (cos(theta))
 
       real (kind=real_kind), dimension(:,:,:), intent(in) :: & ! Modal aerosol treatment
-        bcenh_5bd_R4         ! BC absorption enhancement factor
+        bcenh_5bd         ! BC absorption enhancement factor
 
       ! local variables
 
@@ -4000,198 +3012,10 @@
 
       character (char_len) :: stop_label
 
-      real(kind=dbl_kind) :: &
+      real(kind=real_kind) :: &
         hin,         & ! Ice thickness (m)
         hbri           ! brine thickness (m)
 
-
-      real (kind=dbl_kind) :: &
-         dt        , & ! time step (s)
-         swvdr     , & ! sw down, visible, direct  (W/m^2)
-         swvdf     , & ! sw down, visible, diffuse (W/m^2)
-         swidr     , & ! sw down, near IR, direct  (W/m^2)
-         swidf     , & ! sw down, near IR, diffuse (W/m^2)
-         fsnow     , & ! snowfall rate (kg/m^2 s)
-         TLAT, TLON    ! latitude and longitude (radian)
-
-      !!!!!!!!
-      ! local variables copies 
-      !!!!!!!!
-
-      real (kind=dbl_kind) :: &
-         nextsw_cday     , & ! julian day of next shortwave calculation
-         yday                ! day of the year
-
-      real (kind=dbl_kind):: &
-         coszen        ! cosine solar zenith angle, < 0 for sun below horizon 
-
-      real (kind=dbl_kind), dimension (:), allocatable :: &
-         igrid              ! biology vertical interface points
- 
-      real (kind=dbl_kind), dimension (:), allocatable :: &
-         swgrid                ! grid for ice tracers used in dEdd scheme
-        
-      real (kind=dbl_kind), dimension(:,:), allocatable :: & 
-         kaer_tab, & ! aerosol mass extinction cross section (m2/kg)
-         waer_tab, & ! aerosol single scatter albedo (fraction)
-         gaer_tab, & ! aerosol asymmetry parameter (cos(theta))
-         rsnow       ! snow grain radius tracer (10^-6 m)
-
-      real (kind=dbl_kind), dimension(:,:), allocatable :: & 
-         kaer_bc_tab, & ! aerosol mass extinction cross section (m2/kg)
-         waer_bc_tab, & ! aerosol single scatter albedo (fraction)
-         gaer_bc_tab    ! aerosol asymmetry parameter (cos(theta))
-
-      real (kind=dbl_kind), dimension(:,:,:), allocatable :: & 
-         bcenh 
-
-      real (kind=dbl_kind), dimension(:), allocatable :: &
-         aicen     , & ! ice area fraction in each category
-         vicen     , & ! ice volume in each category (m)
-         vsnon     , & ! snow volume in each category (m)
-         Tsfcn     , & ! surface temperature (deg C)
-         alvln     , & ! level-ice area fraction
-         apndn     , & ! pond area fraction
-         hpndn     , & ! pond depth (m)
-         ipndn     , & ! pond refrozen lid thickness (m)
-         fbri           ! brine fraction 
-
-      real(kind=dbl_kind), dimension(:,:), allocatable :: &
-         aeron     , & ! aerosols (kg/m^3)
-         trcrn         ! tracers
-
-      real(kind=dbl_kind), dimension(:,:), allocatable :: &
-         zbion        ! zaerosols (kg/m^3) and chla (mg/m^3)
-
-      real (kind=dbl_kind), dimension(:), allocatable:: &
-         alvdrn    , & ! visible, direct  albedo (fraction)
-         alidrn    , & ! near-ir, direct   (fraction)
-         alvdfn    , & ! visible, diffuse  (fraction)
-         alidfn    , & ! near-ir, diffuse  (fraction)
-         fswsfcn   , & ! SW absorbed at ice/snow surface (W m-2)
-         fswintn   , & ! SW absorbed in ice interior, below surface (W m-2)
-         fswthrun  , & ! SW through ice to ocean (W/m^2)
-         snowfracn, & ! snow fraction on each category
-         dhsn      , & ! depth difference for snow on sea ice and pond ice
-         ffracn    , & ! fraction of fsurfn used to melt ipond
-                       ! albedo components for history
-         albicen   , & ! bare ice 
-         albsnon   , & ! snow 
-         albpndn   , & ! pond 
-         rsnw_dEddn, & ! snow grain radius (um)
-         apeffn        ! effective pond area used for radiation calculation
-
-      real (kind=dbl_kind), dimension(:,:), allocatable :: &
-         fswpenln  , & ! visible SW entering ice layers (W m-2)
-         Iswabsn   , & ! SW radiation absorbed in ice layers (W m-2)
-         Sswabsn       ! SW radiation absorbed in snow layers (W m-2)
-
-      ! snow grain single-scattering properties for
-      ! direct (drc) and diffuse (dfs) shortwave incidents
-      real (kind=dbl_kind), dimension(:,:), allocatable :: & ! Model SNICAR snow SSP
-        asm_prm_ice_drc,     & ! snow asymmetry factor (cos(theta))
-        asm_prm_ice_dfs,     & ! snow asymmetry factor (cos(theta))
-        ss_alb_ice_drc,      & ! snow single scatter albedo (fraction)
-        ss_alb_ice_dfs,      & ! snow single scatter albedo (fraction)
-        ext_cff_mss_ice_drc, & ! snow mass extinction cross section (m2/kg)
-        ext_cff_mss_ice_dfs    ! snow mass extinction cross section (m2/kg)
-
-      real (kind=dbl_kind), dimension(:,:), allocatable :: &
-        kaer_tab_5bd, & ! aerosol mass extinction cross section (m2/kg)
-        waer_tab_5bd, & ! aerosol single scatter albedo (fraction)
-        gaer_tab_5bd    ! aerosol asymmetry parameter (cos(theta))
-
-      real (kind=dbl_kind), dimension(:,:), allocatable :: & ! Modal aerosol treatment
-        kaer_bc_tab_5bd, & ! aerosol mass extinction cross section (m2/kg)
-        waer_bc_tab_5bd, & ! aerosol single scatter albedo (fraction)
-        gaer_bc_tab_5bd    ! aerosol asymmetry parameter (cos(theta))
-
-      real (kind=dbl_kind), dimension(:,:,:), allocatable :: & ! Modal aerosol treatment
-        bcenh_5bd         ! BC absorption enhancement factor
-
-      swgrid =real(swgrid_R4, kind=dbl_kind)
-      igrid =real(igrid_R4  , kind=dbl_kind)
-
-      dt    = real(dt_R4, kind = dbl_kind)     
-      swvdr = real(swvdr_R4, kind = dbl_kind)     
-      swvdf = real(swvdf_R4, kind = dbl_kind)     
-      swidr = real(swidr_R4, kind = dbl_kind)     
-      swidf = real(swidf_R4, kind = dbl_kind)     
-      fsnow = real(fsnow_R4, kind = dbl_kind)     
-      TLAT  = real(TLAT_R4, kind = dbl_kind)
-      TLON  = real(TLON_R4, kind = dbl_kind)
-      nextsw_cday = real(nextsw_cday_R4, kind=dbl_kind)     
-      yday        = real(yday_R4       , kind=dbl_kind)         
-   
-      coszen      = real(coszen_R4     , kind=dbl_kind)   
-   
-     kaer_tab     = real(kaer_tab_R4   , kind=dbl_kind)
-     waer_tab     = real(waer_tab_R4   , kind=dbl_kind)
-     gaer_tab     = real(gaer_tab_R4   , kind=dbl_kind) 
-     rsnow        = real(rsnow_R4      , kind=dbl_kind) 
-
-     kaer_bc_tab  = real(kaer_bc_tab_R4, kind = dbl_kind)
-     waer_bc_tab  = real(waer_bc_tab_R4, kind = dbl_kind)
-     gaer_bc_tab  = real(gaer_bc_tab_R4, kind = dbl_kind)    
-   
-     bcenh  = real(bcenh_R4, kind = dbl_kind) 
-   
-     aicen  = real(aicen_R4, kind = dbl_kind)     
-     vicen  = real(vicen_R4, kind = dbl_kind)     
-     vsnon  = real(vsnon_R4, kind = dbl_kind)     
-     Tsfcn  = real(Tsfcn_R4, kind = dbl_kind)     
-     alvln  = real(alvln_R4, kind = dbl_kind)     
-     apndn  = real(apndn_R4, kind = dbl_kind)     
-     hpndn  = real(hpndn_R4, kind = dbl_kind)     
-     ipndn  = real(ipndn_R4, kind = dbl_kind)     
-     fbri  = real(fbri_R4, kind = dbl_kind)          
-
-     aeron     = real(aeron_R4    , kind = dbl_kind)       
-     trcrn     = real(trcrn_R4    , kind = dbl_kind)         
-
-     zbion     = real(zbion_R4    , kind = dbl_kind)       
-
-     alvdrn    = real(alvdrn_R4   , kind = dbl_kind)      
-     alidrn    = real(alidrn_R4   , kind = dbl_kind)       
-     alvdfn    = real(alvdfn_R4   , kind = dbl_kind)    
-     alidfn    = real(alidfn_R4   , kind = dbl_kind)      
-     fswsfcn   = real(fswsfcn_R4  , kind = dbl_kind)  
-     fswintn   = real(fswintn_R4  , kind = dbl_kind)  
-     fswthrun  = real(fswthrun_R4 , kind = dbl_kind)  
-     snowfracn  = real(snowfracn_R4, kind = dbl_kind) 
-     dhsn  = real(dhsn_R4     , kind = dbl_kind)    
-     ffracn    = real(ffracn_R4   , kind = dbl_kind)  
-     albicen     = real(albicen_R4   , kind = dbl_kind)
-     albsnon     = real(albsnon_R4   , kind = dbl_kind)
-     albpndn     = real(albpndn_R4   , kind = dbl_kind)
-     rsnw_dEddn  = real(rsnw_dEddn_R4, kind = dbl_kind)
-     apeffn      = real(apeffn_R4    , kind = dbl_kind)    
-   
-     fswpenln    = real(fswpenln_R4, kind = dbl_kind)  
-     Iswabsn     = real(Iswabsn_R4 , kind = dbl_kind)  
-     Sswabsn     = real(Sswabsn_R4 , kind = dbl_kind)      
-
-     asm_prm_ice_drc  = real(asm_prm_ice_drc_R4, kind = dbl_kind)
-     asm_prm_ice_dfs  = real(asm_prm_ice_dfs_R4, kind = dbl_kind)
-     ss_alb_ice_drc  = real(ss_alb_ice_drc_R4, kind = dbl_kind)
-     ss_alb_ice_dfs  = real(ss_alb_ice_dfs_R4, kind = dbl_kind)
-     ext_cff_mss_ice_drc  = real(ext_cff_mss_ice_drc_R4, kind = dbl_kind)
-     ext_cff_mss_ice_dfs  = real(ext_cff_mss_ice_dfs_R4, kind = dbl_kind)    
-
-     kaer_tab_5bd  = real(kaer_tab_5bd_R4, kind = dbl_kind)
-     waer_tab_5bd  = real(waer_tab_5bd_R4, kind = dbl_kind)
-     gaer_tab_5bd  = real(gaer_tab_5bd_R4, kind = dbl_kind)    
-
-     kaer_bc_tab_5bd  = real(kaer_bc_tab_5bd_R4, kind = dbl_kind)
-     waer_bc_tab_5bd  = real(waer_bc_tab_5bd_R4, kind = dbl_kind)
-     gaer_bc_tab_5bd  = real(gaer_bc_tab_5bd_R4, kind = dbl_kind)    
-
-     bcenh_5bd  = real(bcenh_5bd_R4, kind = dbl_kind)         
-
-
-      !!!!!!!!
-      ! local variables copies end
-      !!!!!!!!
         hin = c0
         hbri = c0
         linitonly = .false.
@@ -4359,104 +3183,6 @@
 
       endif    ! calc_Tsfc
 
-      zbion_R4    = real(zbion    , kind = real_kind)       
-
-      alvdrn_R4   = real(alvdrn   , kind = real_kind)      
-      alidrn_R4   = real(alidrn   , kind = real_kind)       
-      alvdfn_R4   = real(alvdfn   , kind = real_kind)    
-      alidfn_R4   = real(alidfn   , kind = real_kind)      
-      fswsfcn_R4  = real(fswsfcn  , kind = real_kind)  
-      fswintn_R4  = real(fswintn  , kind = real_kind)  
-      fswthrun_R4 = real(fswthrun , kind = real_kind)  
-      snowfracn_R4 = real(snowfracn, kind = real_kind) 
-      dhsn_R4     = real(dhsn     , kind = real_kind)    
-      ffracn_R4   = real(ffracn   , kind = real_kind)  
-
-      albicen_R4    = real(albicen   , kind = real_kind)
-      albsnon_R4    = real(albsnon   , kind = real_kind)
-      albpndn_R4    = real(albpndn   , kind = real_kind)
-      rsnw_dEddn_R4 = real(rsnw_dEddn, kind = real_kind)
-      apeffn_R4     = real(apeffn    , kind = real_kind)    
-   
-      fswpenln_R4   = real(fswpenln, kind = real_kind)  
-      Iswabsn_R4    = real(Iswabsn , kind = real_kind)  
-      Sswabsn_R4    = real(Sswabsn , kind = real_kind)      
-
-
-
-      ! asm_prm_ice_drc_R4 = real(asm_prm_ice_drc, kind = real_kind)
-      ! asm_prm_ice_dfs_R4 = real(asm_prm_ice_dfs, kind = real_kind)
-      ! ss_alb_ice_drc_R4 = real(ss_alb_ice_drc, kind = real_kind)
-      ! ss_alb_ice_dfs_R4 = real(ss_alb_ice_dfs, kind = real_kind)
-      ! ext_cff_mss_ice_drc_R4 = real(ext_cff_mss_ice_drc, kind = real_kind)
-      ! ext_cff_mss_ice_dfs_R4 = real(ext_cff_mss_ice_dfs, kind = real_kind)    
-
-   
-      ! kaer_tab_5bd_R4 = real(kaer_tab_5bd, kind = real_kind)
-      ! waer_tab_5bd_R4 = real(waer_tab_5bd, kind = real_kind)
-      ! gaer_tab_5bd_R4 = real(gaer_tab_5bd, kind = real_kind)    
-
-   
-      ! kaer_bc_tab_5bd_R4 = real(kaer_bc_tab_5bd, kind = real_kind)
-      ! waer_bc_tab_5bd_R4 = real(waer_bc_tab_5bd, kind = real_kind)
-      ! gaer_bc_tab_5bd_R4 = real(gaer_bc_tab_5bd, kind = real_kind)    
-
-   
-      ! bcenh_5bd_R4 = real(bcenh_5bd, kind = real_kind)       
-
-      deallocate (swgrid)
-      deallocate (igrid)
-      deallocate(kaer_tab)
-      deallocate(waer_tab)
-      deallocate(gaer_tab)
-      deallocate(rsnow)
-      deallocate(kaer_bc_tab)
-      deallocate(waer_bc_tab)
-      deallocate(gaer_bc_tab)
-      deallocate(bcenh)
-      deallocate(aicen)
-      deallocate(vicen)
-      deallocate(vsnon)
-      deallocate(Tsfcn)
-      deallocate(alvln)
-      deallocate(apndn)
-      deallocate(hpndn)
-      deallocate(ipndn)
-      deallocate(fbri)
-      deallocate(aeron)
-      deallocate(trcrn)
-      deallocate(zbion)
-      deallocate(alvdrn)
-      deallocate(alidrn)
-      deallocate(alvdfn)
-      deallocate(alidfn)
-      deallocate(fswsfcn)
-      deallocate(fswintn)
-      deallocate(fswthrun)
-      deallocate(snowfracn)
-      deallocate(dhsn)
-      deallocate(ffracn)
-      deallocate(albicen)
-      deallocate(albsnon)
-      deallocate(albpndn)
-      deallocate(rsnw_dEddn)
-      deallocate(apeffn)
-      deallocate(fswpenln)
-      deallocate(Iswabsn)
-      deallocate(Sswabsn)
-      deallocate(asm_prm_ice_drc)
-      deallocate(asm_prm_ice_dfs)
-      deallocate(ss_alb_ice_drc)
-      deallocate(ss_alb_ice_dfs)
-      deallocate(ext_cff_mss_ice_drc)
-      deallocate(ext_cff_mss_ice_dfs)
-      deallocate(kaer_tab_5bd)
-      deallocate(waer_tab_5bd)
-      deallocate(gaer_tab_5bd)
-      deallocate(kaer_bc_tab_5bd)
-      deallocate(waer_bc_tab_5bd)
-      deallocate(gaer_bc_tab_5bd)
-      deallocate(bcenh_5bd)
       end subroutine colpkg_step_radiation
 
 !=======================================================================
@@ -4466,32 +3192,32 @@
 ! authors: William H. Lipscomb, LANL
 !          Elizabeth C. Hunke, LANL
 
-      subroutine colpkg_step_ridge (dt_R4,           ndtd,          &
+      subroutine colpkg_step_ridge (dt,           ndtd,          &
                                     nilyr,        nslyr,         &
                                     nblyr,                       &
-                                    ncat,         hin_max_R4,       &
-                                    rdg_conv_R4,     rdg_shear_R4,     &
-                                    Tf_R4,                          &
-                                    aicen_R4,                       &
-                                    trcrn_R4,                       &
-                                    vicen_R4,        vsnon_R4,         &
-                                    aice0_R4,        trcr_depend,   &
-                                    trcr_base_R4,    n_trcr_strata, &
+                                    ncat,         hin_max,       &
+                                    rdg_conv,     rdg_shear,     &
+                                    Tf,                          &
+                                    aicen,                       &
+                                    trcrn,                       &
+                                    vicen,        vsnon,         &
+                                    aice0,        trcr_depend,   &
+                                    trcr_base,    n_trcr_strata, &
                                     nt_strata,                   &
-                                    dardg1dt_R4,     dardg2dt_R4,      &
-                                    dvirdgdt_R4,     opening_R4,       &
-                                    fpond_R4,                       &
-                                    fresh_R4,        fhocn_R4,         &
+                                    dardg1dt,     dardg2dt,      &
+                                    dvirdgdt,     opening,       &
+                                    fpond,                       &
+                                    fresh,        fhocn,         &
                                     n_aero,                      &
-                                    faero_ocn_R4,                   &
-                                    aparticn_R4,     krdgn_R4,         &
-                                    aredistn_R4,     vredistn_R4,      &
-                                    dardg1ndt_R4,    dardg2ndt_R4,     &
-                                    dvirdgndt_R4,                   &
-                                    araftn_R4,       vraftn_R4,        &
-                                    aice_R4,         fsalt_R4,         &
-                                    first_ice,    fzsal_R4,         &
-                                    flux_bio_R4,                    &
+                                    faero_ocn,                   &
+                                    aparticn,     krdgn,         &
+                                    aredistn,     vredistn,      &
+                                    dardg1ndt,    dardg2ndt,     &
+                                    dvirdgndt,                   &
+                                    araftn,       vraftn,        &
+                                    aice,         fsalt,         &
+                                    first_ice,    fzsal,         &
+                                    flux_bio,                    &
                                     l_stop,       stop_label)
 
       use ice_mechred, only: ridge_ice
@@ -4499,8 +3225,8 @@
       use ice_colpkg_tracers, only: tr_pond_topo, tr_aero, tr_brine, ntrcr, nbtrcr
 
       real (kind=real_kind), intent(in) :: &
-         dt_R4    , & ! time step
-         Tf_R4        ! ocean freezing temperature
+         dt    , & ! time step
+         Tf        ! ocean freezing temperature
 
       integer (kind=int_kind), intent(in) :: &
          ncat  , & ! number of thickness categories
@@ -4511,52 +3237,52 @@
          n_aero    ! number of aerosol tracers
 
       real (kind=real_kind), dimension(0:ncat), intent(inout) :: &
-         hin_max_R4   ! category limits (m)
+         hin_max   ! category limits (m)
 
       integer (kind=int_kind), dimension (:), intent(in) :: &
          trcr_depend, & ! = 0 for aicen tracers, 1 for vicen, 2 for vsnon
          n_trcr_strata  ! number of underlying tracer layers
 
       real (kind=real_kind), dimension (:,:), intent(in) :: &
-         trcr_base_R4      ! = 0 or 1 depending on tracer dependency
+         trcr_base      ! = 0 or 1 depending on tracer dependency
                         ! argument 2:  (1) aice, (2) vice, (3) vsno
 
       integer (kind=int_kind), dimension (:,:), intent(in) :: &
          nt_strata      ! indices of underlying tracer layers
 
       real (kind=real_kind), intent(inout) :: &
-         aice_R4     , & ! sea ice concentration
-         aice0_R4    , & ! concentration of open water
-         rdg_conv_R4 , & ! convergence term for ridging (1/s)
-         rdg_shear_R4, & ! shear term for ridging (1/s)
-         dardg1dt_R4 , & ! rate of area loss by ridging ice (1/s)
-         dardg2dt_R4 , & ! rate of area gain by new ridges (1/s)
-         dvirdgdt_R4 , & ! rate of ice volume ridged (m/s)
-         opening_R4  , & ! rate of opening due to divergence/shear (1/s)
-         fpond_R4    , & ! fresh water flux to ponds (kg/m^2/s)
-         fresh_R4    , & ! fresh water flux to ocean (kg/m^2/s)
-         fsalt_R4    , & ! salt flux to ocean (kg/m^2/s)
-         fhocn_R4    , & ! net heat flux to ocean (W/m^2)
-         fzsal_R4        ! zsalinity flux to ocean(kg/m^2/s)
+         aice     , & ! sea ice concentration
+         aice0    , & ! concentration of open water
+         rdg_conv , & ! convergence term for ridging (1/s)
+         rdg_shear, & ! shear term for ridging (1/s)
+         dardg1dt , & ! rate of area loss by ridging ice (1/s)
+         dardg2dt , & ! rate of area gain by new ridges (1/s)
+         dvirdgdt , & ! rate of ice volume ridged (m/s)
+         opening  , & ! rate of opening due to divergence/shear (1/s)
+         fpond    , & ! fresh water flux to ponds (kg/m^2/s)
+         fresh    , & ! fresh water flux to ocean (kg/m^2/s)
+         fsalt    , & ! salt flux to ocean (kg/m^2/s)
+         fhocn    , & ! net heat flux to ocean (W/m^2)
+         fzsal        ! zsalinity flux to ocean(kg/m^2/s)
 
       real (kind=real_kind), dimension(:), intent(inout) :: &
-         aicen_R4    , & ! concentration of ice
-         vicen_R4    , & ! volume per unit area of ice          (m)
-         vsnon_R4    , & ! volume per unit area of snow         (m)
-         dardg1ndt_R4, & ! rate of area loss by ridging ice (1/s)
-         dardg2ndt_R4, & ! rate of area gain by new ridges (1/s)
-         dvirdgndt_R4, & ! rate of ice volume ridged (m/s)
-         aparticn_R4 , & ! participation function
-         krdgn_R4    , & ! mean ridge thickness/thickness of ridging ice
-         araftn_R4   , & ! rafting ice area
-         vraftn_R4   , & ! rafting ice volume 
-         aredistn_R4 , & ! redistribution function: fraction of new ridge area_R4
-         vredistn_R4 , & ! redistribution function: fraction of new ridge volume_R4
-         faero_ocn_R4, & ! aerosol flux to ocean  (kg/m^2/s)
-         flux_bio_R4     ! all bio fluxes to ocean
+         aicen    , & ! concentration of ice
+         vicen    , & ! volume per unit area of ice          (m)
+         vsnon    , & ! volume per unit area of snow         (m)
+         dardg1ndt, & ! rate of area loss by ridging ice (1/s)
+         dardg2ndt, & ! rate of area gain by new ridges (1/s)
+         dvirdgndt, & ! rate of ice volume ridged (m/s)
+         aparticn , & ! participation function
+         krdgn    , & ! mean ridge thickness/thickness of ridging ice
+         araftn   , & ! rafting ice area
+         vraftn   , & ! rafting ice volume 
+         aredistn , & ! redistribution function: fraction of new ridge area
+         vredistn , & ! redistribution function: fraction of new ridge volume
+         faero_ocn, & ! aerosol flux to ocean  (kg/m^2/s)
+         flux_bio     ! all bio fluxes to ocean
 
       real (kind=real_kind), dimension(:,:), intent(inout) :: &
-         trcrn_R4        ! tracers
+         trcrn        ! tracers
 
       !logical (kind=log_kind), intent(in) :: &
          !tr_pond_topo,& ! if .true., use explicit topography-based ponds
@@ -4575,94 +3301,10 @@
 
       ! local variables
 
-      real (kind=dbl_kind) :: &
+      real (kind=real_kind) :: &
          dtt      , & ! thermo time step
          atmp     , & ! temporary ice area
          atmp0        ! temporary open water area
-
-      real (kind=dbl_kind) :: &
-         dt    , & ! time step
-         Tf        ! ocean freezing temperature
-
-      real (kind=dbl_kind), dimension(0:ncat) :: &
-         hin_max   ! category limits (m)
-
-      real (kind=dbl_kind), dimension (:,:), allocatable :: &
-         trcr_base      ! = 0 or 1 depending on tracer dependency
-                        ! argument 2:  (1) aice, (2) vice, (3) vsno
-
-      real (kind=dbl_kind) :: &
-         aice     , & ! sea ice concentration
-         aice0    , & ! concentration of open water
-         rdg_conv , & ! convergence term for ridging (1/s)
-         rdg_shear, & ! shear term for ridging (1/s)
-         dardg1dt , & ! rate of area loss by ridging ice (1/s)
-         dardg2dt , & ! rate of area gain by new ridges (1/s)
-         dvirdgdt , & ! rate of ice volume ridged (m/s)
-         opening  , & ! rate of opening due to divergence/shear (1/s)
-         fpond    , & ! fresh water flux to ponds (kg/m^2/s)
-         fresh    , & ! fresh water flux to ocean (kg/m^2/s)
-         fsalt    , & ! salt flux to ocean (kg/m^2/s)
-         fhocn    , & ! net heat flux to ocean (W/m^2)
-         fzsal        ! zsalinity flux to ocean(kg/m^2/s)
-
-      real (kind=dbl_kind), dimension(:), allocatable:: &
-         aicen    , & ! concentration of ice
-         vicen    , & ! volume per unit area of ice          (m)
-         vsnon    , & ! volume per unit area of snow         (m)
-         dardg1ndt, & ! rate of area loss by ridging ice (1/s)
-         dardg2ndt, & ! rate of area gain by new ridges (1/s)
-         dvirdgndt, & ! rate of ice volume ridged (m/s)
-         aparticn , & ! participation function
-         krdgn    , & ! mean ridge thickness/thickness of ridging ice
-         araftn   , & ! rafting ice area
-         vraftn   , & ! rafting ice volume 
-         aredistn , & ! redistribution function: fraction of new ridge area
-         vredistn , & ! redistribution function: fraction of new ridge volume
-         faero_ocn, & ! aerosol flux to ocean  (kg/m^2/s)
-         flux_bio     ! all bio fluxes to ocean
-
-      real (kind=dbl_kind), dimension(:,:), allocatable :: &
-         trcrn        ! tracers
-
-      dt = real(dt_R4, kind = dbl_kind)    
-      Tf = real(Tf_R4, kind = dbl_kind)        
-
-      hin_max = real(hin_max_R4, kind = dbl_kind)   
-
-     trcr_base  = real(trcr_base_R4, kind = dbl_kind)     
-
-      aice = real(aice_R4, kind = dbl_kind)     
-      aice0 = real(aice0_R4, kind = dbl_kind)    
-      rdg_conv = real(rdg_conv_R4, kind = dbl_kind) 
-      rdg_shear = real(rdg_shear_R4, kind = dbl_kind)
-      dardg1dt = real(dardg1dt_R4, kind = dbl_kind) 
-      dardg2dt = real(dardg2dt_R4, kind = dbl_kind) 
-      dvirdgdt = real(dvirdgdt_R4, kind = dbl_kind) 
-      opening = real(opening_R4, kind = dbl_kind)  
-      fpond = real(fpond_R4, kind = dbl_kind)    
-      fresh = real(fresh_R4, kind = dbl_kind)    
-      fsalt = real(fsalt_R4, kind = dbl_kind)    
-      fhocn = real(fhocn_R4, kind = dbl_kind)    
-      fzsal = real(fzsal_R4, kind = dbl_kind)        
-
-     aicen  = real(aicen_R4, kind = dbl_kind)    
-     vicen  = real(vicen_R4, kind = dbl_kind)    
-     vsnon  = real(vsnon_R4, kind = dbl_kind)    
-     dardg1ndt  = real(dardg1ndt_R4, kind = dbl_kind)
-     dardg2ndt  = real(dardg2ndt_R4, kind = dbl_kind)
-     dvirdgndt  = real(dvirdgndt_R4, kind = dbl_kind)
-     aparticn  = real(aparticn_R4, kind = dbl_kind) 
-     krdgn  = real(krdgn_R4, kind = dbl_kind)    
-     araftn  = real(araftn_R4, kind = dbl_kind)   
-     vraftn  = real(vraftn_R4, kind = dbl_kind)   
-     aredistn  = real(aredistn_R4, kind = dbl_kind) 
-     vredistn  = real(vredistn_R4, kind = dbl_kind) 
-     faero_ocn  = real(faero_ocn_R4, kind = dbl_kind)
-     flux_bio  = real(flux_bio_R4, kind = dbl_kind)     
-
-     trcrn  = real(trcrn_R4, kind = dbl_kind)        
-
 
       l_stop = .false.
 
@@ -4734,60 +3376,6 @@
          stop_label = 'ice: ITD cleanup error in colpkg_step_ridge'
       endif
 
-      ! dt_R4 = real(dt, kind = real_kind)    
-      ! Tf_R4 = real(Tf, kind = real_kind)        
-
-      hin_max_R4 = real(hin_max, kind = real_kind)   
-
-      ! trcr_base_R4 = real(trcr_base, kind = real_kind)      
-
-      aice_R4 = real(aice, kind = real_kind)     
-      aice0_R4 = real(aice0, kind = real_kind)    
-      rdg_conv_R4 = real(rdg_conv, kind = real_kind) 
-      rdg_shear_R4 = real(rdg_shear, kind = real_kind)
-      dardg1dt_R4 = real(dardg1dt, kind = real_kind) 
-      dardg2dt_R4 = real(dardg2dt, kind = real_kind) 
-      dvirdgdt_R4 = real(dvirdgdt, kind = real_kind) 
-      opening_R4 = real(opening, kind = real_kind)  
-      fpond_R4 = real(fpond, kind = real_kind)    
-      fresh_R4 = real(fresh, kind = real_kind)    
-      fsalt_R4 = real(fsalt, kind = real_kind)    
-      fhocn_R4 = real(fhocn, kind = real_kind)    
-      fzsal_R4 = real(fzsal, kind = real_kind)        
-
-      aicen_R4 = real(aicen, kind = real_kind)    
-      vicen_R4 = real(vicen, kind = real_kind)    
-      vsnon_R4 = real(vsnon, kind = real_kind)    
-      dardg1ndt_R4 = real(dardg1ndt, kind = real_kind)
-      dardg2ndt_R4 = real(dardg2ndt, kind = real_kind)
-      dvirdgndt_R4 = real(dvirdgndt, kind = real_kind)
-      aparticn_R4 = real(aparticn, kind = real_kind) 
-      krdgn_R4 = real(krdgn, kind = real_kind)    
-      araftn_R4 = real(araftn, kind = real_kind)   
-      vraftn_R4 = real(vraftn, kind = real_kind)   
-      aredistn_R4 = real(aredistn, kind = real_kind) 
-      vredistn_R4 = real(vredistn, kind = real_kind) 
-      faero_ocn_R4 = real(faero_ocn, kind = real_kind)
-      flux_bio_R4 = real(flux_bio, kind = real_kind)     
-
-      trcrn_R4 = real(trcrn, kind = real_kind)        
-
-      deallocate(trcr_base)
-      deallocate(aicen)
-      deallocate(vicen)
-      deallocate(vsnon)
-      deallocate(dardg1ndt)
-      deallocate(dardg2ndt)
-      deallocate(dvirdgndt)
-      deallocate(aparticn)
-      deallocate(krdgn)
-      deallocate(araftn)
-      deallocate(vraftn)
-      deallocate(aredistn)
-      deallocate(vredistn)
-      deallocate(faero_ocn)
-      deallocate(flux_bio)
-      deallocate(trcrn)
       end subroutine colpkg_step_ridge
 
 !=======================================================================
@@ -4797,15 +3385,15 @@
 ! authors: C. M. Bitz, UW
 !          W. H. Lipscomb, LANL
 
-      subroutine colpkg_aggregate (ncat,     Tf_R4,       &
-                                   aicen_R4,    trcrn_R4,    &
-                                   vicen_R4,    vsnon_R4,    &
-                                   aice_R4,     trcr_R4,     &
-                                   vice_R4,     vsno_R4,     &
-                                   aice0_R4,              &
+      subroutine colpkg_aggregate (ncat,     Tf,       &
+                                   aicen,    trcrn,    &
+                                   vicen,    vsnon,    &
+                                   aice,     trcr,     &
+                                   vice,     vsno,     &
+                                   aice0,              &
                                    ntrcr,              &
                                    trcr_depend,        &
-                                   trcr_base_R4,          & 
+                                   trcr_base,          & 
                                    n_trcr_strata,      &
                                    nt_strata)
 
@@ -4817,37 +3405,37 @@
          ntrcr     ! number of tracers in use
 
       real (kind=real_kind), intent(in) :: &
-         Tf_R4        ! ocean freezing temperature           (Celsius)
+         Tf        ! ocean freezing temperature           (Celsius)
 
       real (kind=real_kind), dimension (:), intent(in) :: &
-         aicen_R4 , & ! concentration of ice
-         vicen_R4 , & ! volume per unit area of ice          (m)
-         vsnon_R4     ! volume per unit area of snow         (m)
+         aicen , & ! concentration of ice
+         vicen , & ! volume per unit area of ice          (m)
+         vsnon     ! volume per unit area of snow         (m)
 
       real (kind=real_kind), dimension (:,:), &
          intent(inout) :: &
-         trcrn_R4     ! ice tracers
+         trcrn     ! ice tracers
 
       integer (kind=int_kind), dimension (:), intent(in) :: &
          trcr_depend, & ! = 0 for aicen tracers, 1 for vicen, 2 for vsnon
          n_trcr_strata  ! number of underlying tracer layers
 
       real (kind=real_kind), dimension (:,:), intent(in) :: &
-         trcr_base_R4      ! = 0 or 1 depending on tracer dependency
+         trcr_base      ! = 0 or 1 depending on tracer dependency
                         ! argument 2:  (1) aice, (2) vice, (3) vsno
 
       integer (kind=int_kind), dimension (:,:), intent(in) :: &
          nt_strata      ! indices of underlying tracer layers
 
       real (kind=real_kind), intent(out) :: &
-         aice_R4  , & ! concentration of ice
-         vice_R4  , & ! volume per unit area of ice          (m)
-         vsno_R4  , & ! volume per unit area of snow         (m)
-         aice0_R4     ! concentration of open water
+         aice  , & ! concentration of ice
+         vice  , & ! volume per unit area of ice          (m)
+         vsno  , & ! volume per unit area of snow         (m)
+         aice0     ! concentration of open water
 
       real (kind=real_kind), dimension (:),  &
          intent(out) :: &
-         trcr_R4      ! ice tracers
+         trcr      ! ice tracers
 
       ! local variables
 
@@ -4855,53 +3443,12 @@
          n, it, itl, & ! loop indices
          ntr           ! tracer index
 
-      real (kind=dbl_kind), dimension (:), allocatable :: &
+      real (kind=real_kind), dimension (:), allocatable :: &
          atrcr     ! sum of aicen*trcrn or vicen*trcrn or vsnon*trcrn
 
-      real (kind=dbl_kind) :: &
+      real (kind=real_kind) :: &
          atrcrn    ! category value
-      !-----------------------------------------------------------------
-      ! local double copies
-      !-----------------------------------------------------------------
 
-      real (kind=dbl_kind) :: &
-         Tf        ! ocean freezing temperature           (Celsius)
-
-      real (kind=dbl_kind), dimension (:), allocatable :: &
-         aicen , & ! concentration of ice
-         vicen , & ! volume per unit area of ice          (m)
-         vsnon     ! volume per unit area of snow         (m)
-
-      real (kind=dbl_kind), dimension (:,:), allocatable :: &
-         trcrn     ! ice tracers
-
-      real (kind=dbl_kind), dimension (:,:), allocatable :: &
-         trcr_base      ! = 0 or 1 depending on tracer dependency
-                        ! argument 2:  (1) aice, (2) vice, (3) vsno
-      !intent out vars 
-      real (kind=dbl_kind) :: &
-         aice  , & ! concentration of ice
-         vice  , & ! volume per unit area of ice          (m)
-         vsno  , & ! volume per unit area of snow         (m)
-         aice0     ! concentration of open water
-
-      real (kind=dbl_kind), dimension (:), allocatable :: &
-         trcr      ! ice tracers
-
-      Tf = real(Tf_R4, kind = dbl_kind)            
-   
-      trcrn  = real(trcrn_R4, kind = dbl_kind)      
-      trcr_base  = real(trcr_base_R4, kind = dbl_kind)       
-      vicen =real(vicen_R4, kind = dbl_kind)
-      vsnon =real(vsnon_R4, kind = dbl_kind) 
-      trcr =real(trcr_R4, kind = dbl_kind) 
-
-      aice = real(aice_R4, kind = dbl_kind)   
-      vice = real(vice_R4, kind = dbl_kind)   
-      vsno = real(vsno_R4, kind = dbl_kind)   
-      aice0 = real(aice0_R4, kind = dbl_kind)      
-   
-      trcr = real(trcr_R4, kind = dbl_kind)       
       !-----------------------------------------------------------------
       ! Initialize
       !-----------------------------------------------------------------
@@ -4913,12 +3460,6 @@
 
       allocate (atrcr(ntrcr))
 
-      aicen =real(aicen_R4, kind = dbl_kind)
-
-
-      ! aicen = real(aicen_R4, kind = dbl_kind)  
-      ! vicen = real(vicen_R4, kind = dbl_kind)  
-      ! vsnon = real(vsnon_R4, kind = dbl_kind)   
       !-----------------------------------------------------------------
       ! Aggregate
       !-----------------------------------------------------------------
@@ -4958,22 +3499,6 @@
 
       deallocate (atrcr)
 
-   
-
-      trcrn_R4 = real(trcrn, kind = real_kind)      
-      aice_R4 = real(aice, kind = real_kind)   
-      vice_R4 = real(vice, kind = real_kind)   
-      vsno_R4 = real(vsno, kind = real_kind)   
-      aice0_R4 = real(aice0, kind = real_kind)      
-      trcr_R4 = real(trcr, kind = real_kind)     
-
-      deallocate (aicen) 
-      deallocate(trcrn)
-      deallocate(trcr_base)
-      deallocate (vicen)
-      deallocate (vsnon)  
-      deallocate (trcr)  
-
       end subroutine colpkg_aggregate
 
 !=======================================================================
@@ -4993,10 +3518,10 @@
 !          Elizabeth C. Hunke, LANL
 
       subroutine colpkg_ice_strength (ncat,               &
-                                      aice_R4,     vice_R4,     &
-                                      aice0_R4,    aicen_R4,    &
-                                      vicen_R4,    &
-                                      strength_R4)
+                                      aice,     vice,     &
+                                      aice0,    aicen,    &
+                                      vicen,    &
+                                      strength)
 
       use ice_constants_colpkg, only: p333, c0, c1, c2, Cf, Cp, Pstar, Cstar, &
           rhoi, puny
@@ -5006,40 +3531,28 @@
          ncat       ! number of thickness categories
 
       real (kind=real_kind), intent(in) :: &
-         aice_R4   , & ! concentration of ice
-         vice_R4  , & ! volume per unit area of ice  (m)
-         aice0_R4      ! concentration of open water
-
-      real (kind=real_kind), dimension(:), intent(in) :: &
-         aicen_R4  , & ! concentration of ice
-         vicen_R4      ! volume per unit area of ice  (m)
-
-      real (kind=real_kind), intent(inout) :: &
-         strength_R4   ! ice strength (N/m)
-
-      ! local variables
-
-      real (kind=dbl_kind) :: &
          aice   , & ! concentration of ice
          vice   , & ! volume per unit area of ice  (m)
          aice0      ! concentration of open water
 
-      real (kind=dbl_kind), dimension(:), allocatable :: &
+      real (kind=real_kind), dimension(:), intent(in) :: &
          aicen  , & ! concentration of ice
          vicen      ! volume per unit area of ice  (m)
 
-      real (kind=dbl_kind)  :: &
+      real (kind=real_kind), intent(inout) :: &
          strength   ! ice strength (N/m)
 
-      real (kind=dbl_kind) :: &
+      ! local variables
+
+      real (kind=real_kind) :: &
          asum   , & ! sum of ice and open water area
          aksum      ! ratio of area removed to area ridged
 
-      real (kind=dbl_kind), dimension (0:ncat) :: &
+      real (kind=real_kind), dimension (0:ncat) :: &
          apartic    ! participation function; fraction of ridging
                     ! and closing associated w/ category n
 
-      real (kind=dbl_kind), dimension (ncat) :: &
+      real (kind=real_kind), dimension (ncat) :: &
          hrmin  , & ! minimum ridge thickness
          hrmax  , & ! maximum ridge thickness (krdg_redist = 0)
          hrexp  , & ! ridge e-folding thickness (krdg_redist = 1) 
@@ -5048,17 +3561,11 @@
       integer (kind=int_kind) :: &
          n          ! thickness category index
 
-      real (kind=dbl_kind) :: &
+      real (kind=real_kind) :: &
          hi     , & ! ice thickness (m)
          h2rdg  , & ! mean value of h^2 for new ridge
          dh2rdg     ! change in mean value of h^2 per unit area
                     ! consumed by ridging 
-      aice = real(aice_R4, kind = dbl_kind)
-      vice = real(vice_R4, kind = dbl_kind)
-      aice0 = real(aice0_R4, kind = dbl_kind)
-      aicen  = real(aicen_R4, kind = dbl_kind)
-      vicen  = real(vicen_R4, kind = dbl_kind)
-      strength = real(strength_R4, kind = dbl_kind)
 
       if (kstrength == 1) then  ! Rothrock '75 formulation
 
@@ -5121,71 +3628,32 @@
          strength = Pstar*vice*exp(-Cstar*(c1-aice))
 
       endif                     ! kstrength
-      deallocate(aicen)
-      deallocate(vicen)
-      strength_R4 = real(strength, kind = real_kind)
 
       end subroutine colpkg_ice_strength
 
 !=======================================================================
 
       subroutine colpkg_atm_boundary(sfctype,                    &
-                                     Tsf_R4,         potT_R4,          &
-                                     uatm_R4,        vatm_R4,          &
-                                     wind_R4,        zlvl_R4,          &
-                                     Qa_R4,          rhoa_R4,          &
-                                     strx_R4,        stry_R4,          &
-                                     Tref_R4,        Qref_R4,          &
-                                     delt_R4,        delq_R4,          &
-                                     lhcoef_R4,      shcoef_R4,        &
-                                     Cdn_atm_R4,                    &
-                                     Cdn_atm_ratio_n_R4,            &
-                                     uvel_R4,        vvel_R4,          &
-                                     Uref_R4)
+                                     Tsf,         potT,          &
+                                     uatm,        vatm,          &
+                                     wind,        zlvl,          &
+                                     Qa,          rhoa,          &
+                                     strx,        stry,          &
+                                     Tref,        Qref,          &
+                                     delt,        delq,          &
+                                     lhcoef,      shcoef,        &
+                                     Cdn_atm,                    &
+                                     Cdn_atm_ratio_n,            &
+                                     uvel,        vvel,          &
+                                     Uref)
 
       use ice_atmo, only: atmo_boundary_const, atmo_boundary_layer
       use ice_constants_colpkg, only: c0
 
       character (len=3), intent(in) :: &
          sfctype      ! ice or ocean
+
       real (kind=real_kind), intent(in) :: &
-         Tsf_R4      , & ! surface temperature of ice or ocean
-         potT_R4     , & ! air potential temperature  (K)
-         uatm_R4     , & ! x-direction wind speed (m/s)
-         vatm_R4     , & ! y-direction wind speed (m/s)
-         wind_R4     , & ! wind speed (m/s)
-         zlvl_R4     , & ! atm level height (m)
-         Qa_R4       , & ! specific humidity (kg/kg)
-         rhoa_R4         ! air density (kg/m^3)
-
-      real (kind=real_kind), intent(inout) :: &
-         Cdn_atm_R4  , &    ! neutral drag coefficient
-         Cdn_atm_ratio_n_R4 ! ratio drag coeff / neutral drag coeff
-
-      real (kind=real_kind), &
-         intent(inout) :: &
-         strx_R4     , & ! x surface stress (N)
-         stry_R4        ! y surface stress (N)
-
-      real (kind=real_kind), intent(inout) :: &
-         Tref_R4     , & ! reference height temperature  (K)
-         Qref_R4     , & ! reference height specific humidity (kg/kg)
-         delt_R4     , & ! potential T difference   (K)
-         delq_R4     , & ! humidity difference      (kg/kg)
-         shcoef_R4   , & ! transfer coefficient for sensible heat
-         lhcoef_R4       ! transfer coefficient for latent heat
-
-      real (kind=real_kind), optional, intent(in) :: &
-         uvel_R4     , & ! x-direction ice speed (m/s)
-         vvel_R4         ! y-direction ice speed (m/s)
-
-      real (kind=real_kind), optional, intent(out) :: &
-         Uref_R4         ! reference height wind speed (m/s)
-
-      real (kind=dbl_kind) :: &
-         worku, workv, workr
-
-      real (kind=dbl_kind) :: &
          Tsf      , & ! surface temperature of ice or ocean
          potT     , & ! air potential temperature  (K)
          uatm     , & ! x-direction wind speed (m/s)
@@ -5195,15 +3663,16 @@
          Qa       , & ! specific humidity (kg/kg)
          rhoa         ! air density (kg/m^3)
 
-      real (kind=dbl_kind) :: &
+      real (kind=real_kind), intent(inout) :: &
          Cdn_atm  , &    ! neutral drag coefficient
          Cdn_atm_ratio_n ! ratio drag coeff / neutral drag coeff
 
-      real (kind=dbl_kind) :: &
+      real (kind=real_kind), &
+         intent(inout) :: &
          strx     , & ! x surface stress (N)
-         stry        ! y surface stress (N)
+         stry         ! y surface stress (N)
 
-      real (kind=dbl_kind) :: &
+      real (kind=real_kind), intent(inout) :: &
          Tref     , & ! reference height temperature  (K)
          Qref     , & ! reference height specific humidity (kg/kg)
          delt     , & ! potential T difference   (K)
@@ -5211,66 +3680,25 @@
          shcoef   , & ! transfer coefficient for sensible heat
          lhcoef       ! transfer coefficient for latent heat
 
-      real (kind=dbl_kind) :: &
+      real (kind=real_kind), optional, intent(in) :: &
          uvel     , & ! x-direction ice speed (m/s)
          vvel         ! y-direction ice speed (m/s)
 
-      real (kind=dbl_kind) :: &
-         Uref         ! reference height wind speed (m/s)     
+      real (kind=real_kind), optional, intent(out) :: &
+         Uref         ! reference height wind speed (m/s)
 
-      
-      Tsf = real(Tsf_R4, kind = dbl_kind)      
-      potT = real(potT_R4, kind = dbl_kind)     
-      uatm = real(uatm_R4, kind = dbl_kind)     
-      vatm = real(vatm_R4, kind = dbl_kind)     
-      wind = real(wind_R4, kind = dbl_kind)     
-      zlvl = real(zlvl_R4, kind = dbl_kind)     
-      Qa = real(Qa_R4, kind = dbl_kind)       
-      rhoa = real(rhoa_R4, kind = dbl_kind)         
-
-   
-      Cdn_atm = real(Cdn_atm_R4, kind = dbl_kind)  
-      Cdn_atm_ratio_n = real(Cdn_atm_ratio_n_R4, kind = dbl_kind) 
-
-   
-      strx = real(strx_R4, kind = dbl_kind)     
-      stry = real(stry_R4, kind = dbl_kind)        
-
-   
-      Tref = real(Tref_R4, kind = dbl_kind)     
-      Qref = real(Qref_R4, kind = dbl_kind)     
-      delt = real(delt_R4, kind = dbl_kind)     
-      delq = real(delq_R4, kind = dbl_kind)     
-      shcoef = real(shcoef_R4, kind = dbl_kind)   
-      lhcoef = real(lhcoef_R4, kind = dbl_kind)       
-
-      
-      uvel = real(uvel_R4, kind = dbl_kind)     
-      vvel = real(vvel_R4, kind = dbl_kind)         
-
-   
-      Uref = real(Uref_R4, kind = dbl_kind)         
+      real (kind=real_kind) :: &
+         worku, workv, workr
 
       worku = c0
       workv = c0
       workr = c0
-      if (present(uvel_R4)) then
-         uvel = real(uvel_R4, kind = dbl_kind)     
+      if (present(uvel)) then
+         worku = uvel
       endif
       ! should this be for vvel,workv?
-      if (present(vvel_R4)) then
-         vvel = real(vvel_R4, kind = dbl_kind)         
-      endif
-      if (present(Uref_R4)) then
-         Uref = real(Uref_R4, kind = dbl_kind)         
-      endif
-
-      if (present(uvel_R4)) then
-         worku = uvel_R4
-      endif
-      ! should this be for vvel,workv?
-      if (present(uvel_R4)) then
-         worku = uvel_R4
+      if (present(uvel)) then
+         worku = uvel
       endif
 
                if (trim(atmbndy) == 'constant') then
@@ -5301,194 +3729,36 @@
                                             workr)
                endif ! atmbndy
 
-      if (present(Uref_R4)) then
-         Uref_R4 = real(workr, kind=real_kind)
-      endif
-
-      Cdn_atm_R4 = real(Cdn_atm, kind = real_kind)  
-      Cdn_atm_ratio_n_R4 = real(Cdn_atm_ratio_n, kind = real_kind) 
-
-      strx_R4 = real(strx, kind = real_kind)     
-      stry_R4 = real(stry, kind = real_kind)        
-
-      Tref_R4 = real(Tref, kind = real_kind)     
-      Qref_R4 = real(Qref, kind = real_kind)     
-      delt_R4 = real(delt, kind = real_kind)     
-      delq_R4 = real(delq, kind = real_kind)     
-      shcoef_R4 = real(shcoef, kind = real_kind)   
-      lhcoef_R4 = real(lhcoef, kind = real_kind)      
-   
-      if (present(Uref_R4)) then
-         Uref_R4 = real(Uref, kind = real_kind)         
-      endif
-      end subroutine colpkg_atm_boundary
-!=======================================================================
-
-      subroutine colpkg_atm_boundary_double(sfctype,                    &
-         Tsf,         potT,          &
-         uatm,        vatm,          &
-         wind,        zlvl,          &
-         Qa,          rhoa,          &
-         strx,        stry,          &
-         Tref,        Qref,          &
-         delt,        delq,          &
-         lhcoef,      shcoef,        &
-         Cdn_atm,                    &
-         Cdn_atm_ratio_n,            &
-         uvel,        vvel,          &
-         Uref)
-
-      use ice_atmo, only: atmo_boundary_const, atmo_boundary_layer
-      use ice_constants_colpkg, only: c0
-
-      character (len=3), intent(in) :: &
-      sfctype      ! ice or ocean
-
-      real (kind=dbl_kind), intent(in) :: &
-      Tsf      , & ! surface temperature of ice or ocean
-      potT     , & ! air potential temperature  (K)
-      uatm     , & ! x-direction wind speed (m/s)
-      vatm     , & ! y-direction wind speed (m/s)
-      wind     , & ! wind speed (m/s)
-      zlvl     , & ! atm level height (m)
-      Qa       , & ! specific humidity (kg/kg)
-      rhoa         ! air density (kg/m^3)
-
-      real (kind=dbl_kind), intent(inout) :: &
-      Cdn_atm  , &    ! neutral drag coefficient
-      Cdn_atm_ratio_n ! ratio drag coeff / neutral drag coeff
-
-      real (kind=dbl_kind), &
-      intent(inout) :: &
-      strx     , & ! x surface stress (N)
-      stry         ! y surface stress (N)
-
-      real (kind=dbl_kind), intent(inout) :: &
-      Tref     , & ! reference height temperature  (K)
-      Qref     , & ! reference height specific humidity (kg/kg)
-      delt     , & ! potential T difference   (K)
-      delq     , & ! humidity difference      (kg/kg)
-      shcoef   , & ! transfer coefficient for sensible heat
-      lhcoef       ! transfer coefficient for latent heat
-
-      real (kind=dbl_kind), optional, intent(in) :: &
-      uvel     , & ! x-direction ice speed (m/s)
-      vvel         ! y-direction ice speed (m/s)
-
-      real (kind=dbl_kind), optional, intent(out) :: &
-      Uref         ! reference height wind speed (m/s)
-
-      real (kind=dbl_kind) :: &
-      worku, workv, workr
-
-      worku = c0
-      workv = c0
-      workr = c0
-      if (present(uvel)) then
-      worku = uvel
-      endif
-      ! should this be for vvel,workv?
-      if (present(uvel)) then
-      worku = uvel
-      endif
-
-      if (trim(atmbndy) == 'constant') then
-      call atmo_boundary_const (sfctype,  calc_strair, &
-                     uatm,     vatm,     &
-                     wind,     rhoa,     &
-                     strx,     stry,     &
-                     Tsf,      potT,     &
-                     Qa,                 &
-                     delt,     delq,     &
-                     lhcoef,   shcoef,   &
-                     Cdn_atm)
-      else ! default
-      call atmo_boundary_layer (sfctype,                 &
-                     calc_strair, formdrag,   &
-                     highfreq, natmiter,      &
-                     Tsf,      potT,          &
-                     uatm,     vatm,          &
-                     wind,     zlvl,          &
-                     Qa,       rhoa,          &
-                     strx,     stry,          &
-                     Tref,     Qref,          &
-                     delt,     delq,          &
-                     lhcoef,   shcoef,        &
-                     Cdn_atm,                 &
-                     Cdn_atm_ratio_n,         &
-                     worku,    workv,         &
-                     workr)
-      endif ! atmbndy
-
       if (present(Uref)) then
-      Uref = workr
+         Uref = workr
       endif
 
-      end subroutine colpkg_atm_boundary_double
+      end subroutine colpkg_atm_boundary
 
 !=======================================================================
-
+! Compute the mixed layer heat balance and update the SST.
 ! Compute the energy available to freeze or melt ice.
 ! NOTE: SST changes due to fluxes through the ice are computed in
 !       ice_therm_vertical.
 
-      subroutine colpkg_ocn_mixed_layer (alvdr_ocn_R4, swvdr_R4,      &
-                                         alidr_ocn_R4, swidr_R4,      &
-                                         alvdf_ocn_R4, swvdf_R4,      &
-                                         alidf_ocn_R4, swidf_R4,      &
-                                         sst_R4,       flwout_ocn_R4, &
-                                         fsens_ocn_R4, shcoef_R4,     &
-                                         flat_ocn_R4,  lhcoef_R4,     &
-                                         evap_ocn_R4,  flw_R4,        &
-                                         delt_R4,      delq_R4,       &
-                                         aice_R4,      fhocn_R4,      &
-                                         fswthru_R4,   hmix_R4,       &
-                                         Tf_R4,        qdp_R4,        &
-                                         frzmlt_R4,    dt_R4)
+      subroutine colpkg_ocn_mixed_layer (alvdr_ocn, swvdr,      &
+                                         alidr_ocn, swidr,      &
+                                         alvdf_ocn, swvdf,      &
+                                         alidf_ocn, swidf,      &
+                                         sst,       flwout_ocn, &
+                                         fsens_ocn, shcoef,     &
+                                         flat_ocn,  lhcoef,     &
+                                         evap_ocn,  flw,        &
+                                         delt,      delq,       &
+                                         aice,      fhocn,      &
+                                         fswthru,   hmix,       &
+                                         Tf,        qdp,        &
+                                         frzmlt,    dt)
 
       use ice_constants_colpkg, only: c0, c1, c1000, &
           cp_ocn, Tffresh, stefan_boltzmann, Lvap, cprho
 
       real (kind=real_kind), intent(in) :: &
-         alvdr_ocn_R4 , & ! visible, direct   (fraction)
-         alidr_ocn_R4 , & ! near-ir, direct   (fraction)
-         alvdf_ocn_R4 , & ! visible, diffuse  (fraction)
-         alidf_ocn_R4 , & ! near-ir, diffuse  (fraction)
-         swvdr_R4     , & ! sw down, visible, direct  (W/m^2)
-         swvdf_R4     , & ! sw down, visible, diffuse (W/m^2)
-         swidr_R4     , & ! sw down, near IR, direct  (W/m^2)
-         swidf_R4     , & ! sw down, near IR, diffuse (W/m^2)
-         flw_R4       , & ! incoming longwave radiation (W/m^2)
-         Tf_R4        , & ! freezing temperature (C)
-         hmix_R4      , & ! mixed layer depth (m)
-         delt_R4      , & ! potential temperature difference   (K)
-         delq_R4      , & ! specific humidity difference   (kg/kg)
-         shcoef_R4    , & ! transfer coefficient for sensible heat
-         lhcoef_R4    , & ! transfer coefficient for latent heat
-         fhocn_R4     , & ! net heat flux to ocean (W/m^2)
-         fswthru_R4   , & ! shortwave penetrating to ocean (W/m^2)
-         aice_R4      , & ! ice area fraction
-         dt_R4            ! time step (s)
-
-      real (kind=real_kind), intent(inout) :: &
-         flwout_ocn_R4, & ! outgoing longwave radiation (W/m^2)
-         fsens_ocn_R4 , & ! sensible heat flux (W/m^2)
-         flat_ocn_R4  , & ! latent heat flux   (W/m^2)
-         evap_ocn_R4  , & ! evaporative water flux (kg/m^2/s)
-         qdp_R4       , & ! deep ocean heat flux (W/m^2), negative upward
-         sst_R4       , & ! sea surface temperature (C)
-         frzmlt_R4        ! freezing/melting potential (W/m^2)
-
-      ! local variables
-
-      real (kind=dbl_kind), parameter :: &
-         frzmlt_max = c1000   ! max magnitude of frzmlt (W/m^2)
-
-      real (kind=dbl_kind) :: &
-         TsfK , & ! surface temperature (K)
-         swabs    ! surface absorbed shortwave heat flux (W/m^2)
-
-      real (kind=dbl_kind) :: &
          alvdr_ocn , & ! visible, direct   (fraction)
          alidr_ocn , & ! near-ir, direct   (fraction)
          alvdf_ocn , & ! visible, diffuse  (fraction)
@@ -5509,7 +3779,7 @@
          aice      , & ! ice area fraction
          dt            ! time step (s)
 
-      real (kind=dbl_kind) :: &
+      real (kind=real_kind), intent(inout) :: &
          flwout_ocn, & ! outgoing longwave radiation (W/m^2)
          fsens_ocn , & ! sensible heat flux (W/m^2)
          flat_ocn  , & ! latent heat flux   (W/m^2)
@@ -5518,34 +3788,14 @@
          sst       , & ! sea surface temperature (C)
          frzmlt        ! freezing/melting potential (W/m^2)
 
+      ! local variables
 
-      alvdr_ocn = real(alvdr_ocn_R4, kind = dbl_kind) 
-      alidr_ocn = real(alidr_ocn_R4, kind = dbl_kind) 
-      alvdf_ocn = real(alvdf_ocn_R4, kind = dbl_kind) 
-      alidf_ocn = real(alidf_ocn_R4, kind = dbl_kind) 
-      swvdr = real(swvdr_R4, kind = dbl_kind)     
-      swvdf = real(swvdf_R4, kind = dbl_kind)     
-      swidr = real(swidr_R4, kind = dbl_kind)     
-      swidf = real(swidf_R4, kind = dbl_kind)     
-      flw = real(flw_R4, kind = dbl_kind)       
-      Tf = real(Tf_R4, kind = dbl_kind)        
-      hmix = real(hmix_R4, kind = dbl_kind)      
-      delt = real(delt_R4, kind = dbl_kind)      
-      delq = real(delq_R4, kind = dbl_kind)      
-      shcoef = real(shcoef_R4, kind = dbl_kind)    
-      lhcoef = real(lhcoef_R4, kind = dbl_kind)    
-      fhocn = real(fhocn_R4, kind = dbl_kind)     
-      fswthru = real(fswthru_R4, kind = dbl_kind)   
-      aice = real(aice_R4, kind = dbl_kind)      
-      dt = real(dt_R4, kind = dbl_kind)            
+      real (kind=real_kind), parameter :: &
+         frzmlt_max = c1000   ! max magnitude of frzmlt (W/m^2)
 
-      flwout_ocn = real(flwout_ocn_R4, kind = dbl_kind)
-      fsens_ocn = real(fsens_ocn_R4, kind = dbl_kind) 
-      flat_ocn = real(flat_ocn_R4, kind = dbl_kind)  
-      evap_ocn = real(evap_ocn_R4, kind = dbl_kind)  
-      qdp = real(qdp_R4, kind = dbl_kind)       
-      sst = real(sst_R4, kind = dbl_kind)       
-      frzmlt = real(frzmlt_R4, kind = dbl_kind)        
+      real (kind=real_kind) :: &
+         TsfK , & ! surface temperature (K)
+         swabs    ! surface absorbed shortwave heat flux (W/m^2)
 
       ! shortwave radiative flux
       swabs = (c1-alvdr_ocn) * swvdr + (c1-alidr_ocn) * swidr &
@@ -5581,15 +3831,6 @@
       ! if sst is below freezing, reset sst to Tf
       if (sst <= Tf) sst = Tf
 
-
-      flwout_ocn_R4 = real(flwout_ocn, kind = real_kind)
-      fsens_ocn_R4 = real(fsens_ocn, kind = real_kind) 
-      flat_ocn_R4 = real(flat_ocn, kind = real_kind)  
-      evap_ocn_R4 = real(evap_ocn, kind = real_kind)  
-      qdp_R4 = real(qdp, kind = real_kind)       
-      sst_R4 = real(sst, kind = real_kind)       
-      frzmlt_R4 = real(frzmlt, kind = real_kind)        
-
       end subroutine colpkg_ocn_mixed_layer
 
 !=======================================================================
@@ -5599,29 +3840,29 @@
 ! authors: Elizabeth C. Hunke, LANL
 !          Nicole Jeffery, LANL
 
-      subroutine colpkg_step_snow (dt_R4,       wind_R4,   &
-                                   nilyr,              &
-                                   nslyr,    ncat,    &
-                                   aice_R4,     aicen_R4,   &
-                                   vicen_R4,    vsnon_R4,   &
-                                   alvl_R4,     vlvl_R4,    &
-                                   smice_R4,    smliq_R4,   &
-                                   rhos_effn_R4,rhos_eff_R4,&
-                                   rhos_cmpn_R4,rhos_cmp_R4,&
-                                   rsnw_R4,     zqin1_R4,   &
-                                   zSin1_R4,    Tsfc_R4,    &
-                                   zqsn_R4,               &
-                                   fresh_R4,    fhocn_R4,   &
-                                   fsloss_R4,   fsnow_R4,   &
-                                   rhosnew_R4,  rhosmax_R4, &
-                                   windmin_R4,  drhosdwind_R4,&
-                                   snowage_tau_R4,&
-                                   snowage_kappa_R4,&
-                                   snowage_drdt0_R4,&
-                                   idx_T_max,&
-                                   idx_Tgrd_max,&
-                                   idx_rhos_max,&
-                                   l_stop,&
+      subroutine colpkg_step_snow (dt,        wind,     &
+                                   nilyr,               &
+                                   nslyr,     ncat,     &
+                                   aice,      aicen,    &
+                                   vicen,     vsnon,    &
+                                   alvl,      vlvl,     &
+                                   smice,     smliq,    &
+                                   rhos_effn, rhos_eff, &
+                                   rhos_cmpn, rhos_cmp, &
+                                   rsnw,      zqin1,    &
+                                   zSin1,     Tsfc,     &
+                                   zqsn,                &
+                                   fresh,     fhocn,    &
+                                   fsloss,    fsnow,    &
+                                   rhosnew,   rhosmax,  &
+                                   windmin,   drhosdwind, &
+                                   snowage_tau, &
+                                   snowage_kappa, &
+                                   snowage_drdt0, &
+                                   idx_T_max, &
+                                   idx_Tgrd_max, &
+                                   idx_rhos_max, &
+                                   l_stop, &
                                    stop_label)
 
       use ice_colpkg_tracers, only: tr_snow, tr_rsnw
@@ -5638,49 +3879,49 @@
          idx_rhos_max
 
       real (kind=real_kind), intent(in) :: &
-         dt_R4     , & ! time step
-         wind_R4   , & ! wind speed (m/s)
-         fsnow_R4  , & ! snowfall rate (kg m-2 s-1)
-         aice_R4   , & ! ice area fraction
-         rhosnew_R4, & ! new snow density (kg/m^3)
-         rhosmax_R4, & ! maximum snow density (kg/m^3)
-         windmin_R4, & ! minimum wind speed to compact snow (m/s)
-         drhosdwind_R4 ! wind compaction factor (kg s/m^4)
+         dt     , & ! time step
+         wind   , & ! wind speed (m/s)
+         fsnow  , & ! snowfall rate (kg m-2 s-1)
+         aice   , & ! ice area fraction
+         rhosnew, & ! new snow density (kg/m^3)
+         rhosmax, & ! maximum snow density (kg/m^3)
+         windmin, & ! minimum wind speed to compact snow (m/s)
+         drhosdwind ! wind compaction factor (kg s/m^4)
 
       real (kind=real_kind), dimension(:), intent(in) :: &
-         aicen_R4, & ! ice area fraction
-         vicen_R4, & ! ice volume (m)
-         Tsfc_R4 , & ! surface temperature (C)
-         zqin1_R4, & ! ice upper layer enthalpy
-         zSin1_R4, & ! ice upper layer salinity
-         alvl_R4,  & ! level ice area tracer
-         vlvl_R4     ! level ice volume tracer
+         aicen, & ! ice area fraction
+         vicen, & ! ice volume (m)
+         Tsfc , & ! surface temperature (C)
+         zqin1, & ! ice upper layer enthalpy
+         zSin1, & ! ice upper layer salinity
+         alvl,  & ! level ice area tracer
+         vlvl     ! level ice volume tracer
 
       real (kind=real_kind), intent(inout) :: &
-         fresh_R4    , & ! fresh water flux to ocean (kg/m^2/s)
-         fhocn_R4    , & ! net heat flux to ocean (W/m^2)
-         fsloss_R4       ! snow loss to leads (kg/m^2/s)
+         fresh    , & ! fresh water flux to ocean (kg/m^2/s)
+         fhocn    , & ! net heat flux to ocean (W/m^2)
+         fsloss       ! snow loss to leads (kg/m^2/s)
 
       real (kind=real_kind), dimension(:), intent(inout) :: &
-         vsnon_R4    ! snow volume (m)
+         vsnon    ! snow volume (m)
 
       real (kind=real_kind), dimension(:,:), intent(inout) :: &
-         zqsn_R4     , & ! snow enthalpy (J/m^3)
-         smice_R4    , & ! mass of ice in snow (kg/m^3)
-         smliq_R4    , & ! mass of liquid in snow (kg/m^3)
-         rsnw_R4     , & ! snow grain radius (10^-6 m)
-         rhos_effn_R4, & ! effective snow density: content (kg/m^3)
-         rhos_cmpn_R4    ! effective snow density: compaction (kg/m^3)
+         zqsn     , & ! snow enthalpy (J/m^3)
+         smice    , & ! mass of ice in snow (kg/m^3)
+         smliq    , & ! mass of liquid in snow (kg/m^3)
+         rsnw     , & ! snow grain radius (10^-6 m)
+         rhos_effn, & ! effective snow density: content (kg/m^3)
+         rhos_cmpn    ! effective snow density: compaction (kg/m^3)
 
       real (kind=real_kind), intent(inout) :: &
-         rhos_eff_R4 , & ! mean effective snow density: content (kg/m^3)
-         rhos_cmp_R4     ! mean effective snow density: compaction (kg/m^3)
+         rhos_eff , & ! mean effective snow density: content (kg/m^3)
+         rhos_cmp     ! mean effective snow density: compaction (kg/m^3)
 
       ! dry snow aging parameters
       real (kind=real_kind), dimension(idx_rhos_max,idx_Tgrd_max,idx_T_max), intent(in) :: &  
-         snowage_tau_R4,   & ! (10^-6 m)
-         snowage_kappa_R4, & ! 
-         snowage_drdt0_R4    ! (10^-6 m/hr)
+         snowage_tau,   & ! (10^-6 m)
+         snowage_kappa, & ! 
+         snowage_drdt0    ! (10^-6 m/hr)
 
       logical (kind=log_kind), intent(inout) :: &
          l_stop          ! if true, print diagnostics and abort model
@@ -5692,102 +3933,17 @@
 
       integer (kind=int_kind) :: n
 
-      real (kind=dbl_kind), dimension(ncat) :: &
+      real (kind=real_kind), dimension(ncat) :: &
          zTin,  & ! ice upper layer temperature (oC)
          hsn ,  & ! snow thickness (m)
          hin      ! ice thickness
 
-      real (kind=dbl_kind) :: &
+      real (kind=real_kind) :: &
          vsno,  & ! snow volume (m)
          tmp1, tmp2
 
       character(len=char_len_long) :: &
            warning ! warning message
-
-      real (kind=dbl_kind) :: &
-         dt     , & ! time step
-         wind   , & ! wind speed (m/s)
-         fsnow  , & ! snowfall rate (kg m-2 s-1)
-         aice   , & ! ice area fraction
-         rhosnew, & ! new snow density (kg/m^3)
-         rhosmax, & ! maximum snow density (kg/m^3)
-         windmin, & ! minimum wind speed to compact snow (m/s)
-         drhosdwind ! wind compaction factor (kg s/m^4)
-
-      real (kind=dbl_kind), dimension(:), allocatable :: &
-         aicen, & ! ice area fraction
-         vicen, & ! ice volume (m)
-         Tsfc , & ! surface temperature (C)
-         zqin1, & ! ice upper layer enthalpy
-         zSin1, & ! ice upper layer salinity
-         alvl,  & ! level ice area tracer
-         vlvl     ! level ice volume tracer
-
-      real (kind=dbl_kind) :: &
-         fresh    , & ! fresh water flux to ocean (kg/m^2/s)
-         fhocn    , & ! net heat flux to ocean (W/m^2)
-         fsloss       ! snow loss to leads (kg/m^2/s)
-
-      real (kind=dbl_kind), dimension(:), allocatable :: &
-         vsnon    ! snow volume (m)
-
-      real (kind=dbl_kind), dimension(:,:), allocatable :: &
-         zqsn     , & ! snow enthalpy (J/m^3)
-         smice    , & ! mass of ice in snow (kg/m^3)
-         smliq    , & ! mass of liquid in snow (kg/m^3)
-         rsnw     , & ! snow grain radius (10^-6 m)
-         rhos_effn, & ! effective snow density: content (kg/m^3)
-         rhos_cmpn    ! effective snow density: compaction (kg/m^3)
-
-      real (kind=dbl_kind) :: &
-         rhos_eff , & ! mean effective snow density: content (kg/m^3)
-         rhos_cmp     ! mean effective snow density: compaction (kg/m^3)
-
-      ! dry snow aging parameters
-      real (kind=dbl_kind), dimension(idx_rhos_max,idx_Tgrd_max,idx_T_max) :: &
-         snowage_tau,   & ! (10^-6 m)
-         snowage_kappa, & ! 
-         snowage_drdt0    ! (10^-6 m/hr)
-
-
-      dt      = real(dt_R4     , kind = dbl_kind)
-      wind    = real(wind_R4   , kind = dbl_kind)
-      fsnow   = real(fsnow_R4  , kind = dbl_kind)
-      aice    = real(aice_R4   , kind = dbl_kind)
-      rhosnew = real(rhosnew_R4, kind = dbl_kind)
-      rhosmax = real(rhosmax_R4, kind = dbl_kind)
-      windmin = real(windmin_R4, kind = dbl_kind)
-      drhosdwind  = real(drhosdwind_R4 , kind = dbl_kind)
-
-
-      fresh     = real(fresh_R4    , kind = dbl_kind)
-      fhocn     = real(fhocn_R4    , kind = dbl_kind)
-      fsloss        = real(fsloss_R4       , kind = dbl_kind)
-
-     aicen  = real(aicen_R4, kind = dbl_kind)
-     vicen  = real(vicen_R4, kind = dbl_kind)
-     Tsfc   = real(Tsfc_R4 , kind = dbl_kind)
-     zqin1  = real(zqin1_R4, kind = dbl_kind)
-     zSin1  = real(zSin1_R4, kind = dbl_kind)
-     alvl  = real(alvl_R4, kind = dbl_kind)
-     vlvl       = real(vlvl_R4     , kind = dbl_kind)
-
-     vsnon      = real(vsnon_R4    , kind = dbl_kind)
-
-     zqsn       = real(zqsn_R4     , kind = dbl_kind)
-     smice      = real(smice_R4    , kind = dbl_kind)
-     smliq      = real(smliq_R4    , kind = dbl_kind)
-     rsnw       = real(rsnw_R4     , kind = dbl_kind)
-     rhos_effn  = real(rhos_effn_R4, kind = dbl_kind)
-     rhos_cmpn      = real(rhos_cmpn_R4    , kind = dbl_kind)
-
-      rhos_eff  = real(rhos_eff_R4 , kind = dbl_kind)
-      rhos_cmp      = real(rhos_cmp_R4     , kind = dbl_kind)
-
-
-      snowage_tau = real(snowage_tau_R4, kind = dbl_kind)
-      snowage_kappa = real(snowage_kappa_R4, kind = dbl_kind)
-      snowage_drdt0 = real(snowage_drdt0_R4, kind = dbl_kind)    
 
       l_stop = .false.
       stop_label = ''
@@ -5876,59 +4032,6 @@
                                       idx_Tgrd_max, &
                                       idx_rhos_max)
       endif
-
-      ! dt_R4      = real(dt     , kind = real_kind)
-      ! wind_R4    = real(wind   , kind = real_kind)
-      ! fsnow_R4   = real(fsnow  , kind = real_kind)
-      ! aice_R4    = real(aice   , kind = real_kind)
-      ! rhosnew_R4 = real(rhosnew, kind = real_kind)
-      ! rhosmax_R4 = real(rhosmax, kind = real_kind)
-      ! windmin_R4 = real(windmin, kind = real_kind)
-      ! drhosdwind_R4  = real(drhosdwind , kind = real_kind)
-
-      ! aicen_R4 = real(aicen, kind = real_kind)
-      ! vicen_R4 = real(vicen, kind = real_kind)
-      ! Tsfc_R4  = real(Tsfc , kind = real_kind)
-      ! zqin1_R4 = real(zqin1, kind = real_kind)
-      ! zSin1_R4 = real(zSin1, kind = real_kind)
-      ! alvl_R4 = real(alvl, kind = real_kind)
-      ! vlvl_R4      = real(vlvl     , kind = real_kind)
-
-      fresh_R4     = real(fresh    , kind = real_kind)
-      fhocn_R4     = real(fhocn    , kind = real_kind)
-      fsloss_R4        = real(fsloss       , kind = real_kind)
-
-      vsnon_R4     = real(vsnon    , kind = real_kind)
-
-      zqsn_R4      = real(zqsn     , kind = real_kind)
-      smice_R4     = real(smice    , kind = real_kind)
-      smliq_R4     = real(smliq    , kind = real_kind)
-      rsnw_R4      = real(rsnw     , kind = real_kind)
-      rhos_effn_R4 = real(rhos_effn, kind = real_kind)
-      rhos_cmpn_R4     = real(rhos_cmpn    , kind = real_kind)
-
-      rhos_eff_R4  = real(rhos_eff , kind = real_kind)
-      rhos_cmp_R4      = real(rhos_cmp     , kind = real_kind)
-
-
-      ! snowage_tau_R4 = real(snowage_tau, kind = real_kind)
-      ! snowage_kappa_R4 = real(snowage_kappa, kind = real_kind)
-      ! snowage_drdt0_R4 = real(snowage_drdt0, kind = real_kind)    
-
-      deallocate(aicen)
-      deallocate(vicen)
-      deallocate(Tsfc)
-      deallocate(zqin1)
-      deallocate(zSin1)
-      deallocate(alvl)
-      deallocate(vlvl)
-      deallocate(vsnon)
-      deallocate(zqsn)
-      deallocate(smice)
-      deallocate(smliq)
-      deallocate(rsnw)
-      deallocate(rhos_effn)
-      deallocate(rhos_cmpn)
 
       end subroutine colpkg_step_snow
 
@@ -7290,26 +5393,26 @@
 
 !=======================================================================
 
-      subroutine colpkg_biogeochemistry(dt_R4,   &
-                           ntrcr,  nbtrcr,   &
-                           upNO_R4,  upNH_R4,  iDi_R4,  iki_R4,  zfswin_R4,  &
-                           zsal_tot_R4,  darcy_V_R4,  grow_net_R4,   &
-                           PP_net_R4,  hbri_R4, dhbr_bot_R4,  dhbr_top_R4,  Zoo_R4, &
-                           fbio_snoice_R4,  fbio_atmice_R4,  ocean_bio_R4,  &
-                           first_ice,  fswpenln_R4,  bphi_R4,  bTiz_R4,  ice_bio_net_R4,   &
-                           snow_bio_net_R4,  totalChla_R4,  fswthrun_R4,  Rayleigh_criteria,  &
-                           sice_rho_R4,  fzsal_R4,  fzsal_g_R4,  &
-                           bgrid_R4,  igrid_R4,  icgrid_R4,  cgrid_R4,   &
-                           nblyr,  nilyr,  nslyr,  n_algae,  n_zaero,  ncat,  &
-                           n_doc,  n_dic,   n_don,  n_fed,  n_fep,   &
-                           meltbn_R4,  melttn_R4,  congeln_R4,  snoicen_R4,  &
-                           sst_R4,  sss_R4,  Tf_R4,  fsnow_R4,  meltsn_R4,  hmix_R4,  salinz_R4,  &
-                           hin_old_R4,  flux_bio_R4,  flux_bio_atm_R4,  &
-                           aicen_init_R4,  vicen_init_R4,  aicen_R4,  vicen_R4,  vsnon_R4,  &
-                           aice0_R4,  trcrn_R4,  vsnon_init_R4,  skl_bgc,  &
-                           max_algae,  max_nbtrcr,  &
-                           flux_bion_R4,  &
-                           l_stop,  stop_label)
+      subroutine colpkg_biogeochemistry(dt, &
+                           ntrcr, nbtrcr,  &
+                           upNO, upNH, iDi, iki, zfswin, &
+                           zsal_tot, darcy_V, grow_net,  &
+                           PP_net, hbri,dhbr_bot, dhbr_top, Zoo,&
+                           fbio_snoice, fbio_atmice, ocean_bio, &
+                           first_ice, fswpenln, bphi, bTiz, ice_bio_net,  &
+                           snow_bio_net, totalChla, fswthrun, Rayleigh_criteria, &
+                           sice_rho, fzsal, fzsal_g, &
+                           bgrid, igrid, icgrid, cgrid,  &
+                           nblyr, nilyr, nslyr, n_algae, n_zaero, ncat, &
+                           n_doc, n_dic,  n_don, n_fed, n_fep,  &
+                           meltbn, melttn, congeln, snoicen, &
+                           sst, sss, Tf, fsnow, meltsn, hmix, salinz, &
+                           hin_old, flux_bio, flux_bio_atm, &
+                           aicen_init, vicen_init, aicen, vicen, vsnon, &
+                           aice0, trcrn, vsnon_init, skl_bgc, &
+                           max_algae, max_nbtrcr, &
+                           flux_bion, &
+                           l_stop, stop_label)
 
       use ice_algae, only: zbio, sklbio
       use ice_brine, only: preflushing_changes, compute_microS_mushy, &
@@ -7322,7 +5425,7 @@
       use ice_zbgc_shared, only:  zbgc_frac_init
 
       real (kind=real_kind), intent(in) :: &
-         dt_R4      ! time step
+         dt      ! time step
 
       integer (kind=int_kind), intent(in) :: &
          ncat, &
@@ -7336,141 +5439,6 @@
          max_algae, max_nbtrcr
 
       real (kind=real_kind), dimension (:), intent(inout) :: &
-         bgrid_R4         , &  ! biology nondimensional vertical grid points_R4
-         igrid_R4         , &  ! biology vertical interface points
-         cgrid_R4         , &  ! CICE vertical coordinate
-         icgrid_R4        , &  ! interface grid for CICE (shortwave variable_R4)
-         ocean_bio_R4     , &  ! contains all the ocean bgc tracer concentrations_R4
-         fbio_snoice_R4   , &  ! fluxes from snow to ice
-         fbio_atmice_R4   , &  ! fluxes from atm to ice
-         dhbr_top_R4      , &  ! brine top change
-         dhbr_bot_R4      , &  ! brine bottom change
-         darcy_V_R4       , &  ! darcy velocity positive up (m/s)
-         hin_old_R4       , &  ! old ice thickness
-         sice_rho_R4      , &  ! avg sea ice density  (kg/m^3)
-         ice_bio_net_R4   , &  ! depth integrated tracer (mmol/m^2)
-         snow_bio_net_R4  , &  ! depth integrated snow tracer (mmol/m^2)
-         flux_bio_R4           ! all bio fluxes to ocean
-
-      logical (kind=log_kind), dimension (:), intent(inout) :: &
-         first_ice      ! distinguishes ice that disappears (e.g. melts)
-                        ! and reappears (e.g. transport) in a grid cell
-                        ! during a single time step from ice that was
-                        ! there the entire time step (true until ice forms)
-
-      real (kind=real_kind), dimension (:,:), intent(out) :: &
-         flux_bion_R4      ! per categeory ice to ocean biogeochemistry flux (mmol/m2/s)
-
-      real (kind=real_kind), dimension (:,:), intent(inout) :: &
-         Zoo_R4            , & ! N losses accumulated in timestep (ie. zooplankton/bacteria)
-                            ! mmol/m^3
-         bphi_R4           , & ! porosity of layers
-         bTiz_R4           , & ! layer temperatures interpolated on bio grid (C)
-         zfswin_R4         , & ! Shortwave flux into layers interpolated on bio grid  (W/m^2)
-         iDi_R4            , & ! igrid Diffusivity (m^2/s)
-         iki_R4            , & ! Ice permeability (m^2)
-         trcrn_R4     ! tracers
-
-      real (kind=real_kind), intent(inout) :: &
-         grow_net_R4       , & ! Specific growth rate (/s) per grid cell
-         PP_net_R4         , & ! Total production (mg C/m^2/s) per grid cell
-         hbri_R4           , & ! brine height, area-averaged for comparison with hi (m)
-         zsal_tot_R4       , & ! Total ice salinity in per grid cell (g/m^2)
-         fzsal_R4          , & ! Total flux  of salt to ocean at time step for conservation
-         fzsal_g_R4        , & ! Total gravity drainage flux
-         upNO_R4           , & ! nitrate uptake rate (mmol/m^2/d) times aice
-         upNH_R4           , & ! ammonium uptake rate (mmol/m^2/d) times aice
-         totalChla_R4          ! ice integrated chla and summed over all algal groups (mg/m^2)
-
-      logical (kind=log_kind), intent(inout) :: &
-         Rayleigh_criteria    ! .true. means Ra_c was reached
-
-      real (kind=real_kind), dimension (:,:), intent(in) :: &
-         fswpenln_R4        ! visible SW entering ice layers (W m-2)
-
-      real (kind=real_kind), dimension (:), intent(in) :: &
-         fswthrun_R4    , & ! SW through ice to ocean            (W/m^2)
-         meltsn_R4      , & ! snow melt in category n (m)
-         melttn_R4      , & ! top melt in category n (m)
-         meltbn_R4      , & ! bottom melt in category n (m)
-         congeln_R4     , & ! congelation ice formation in category n (m)
-         snoicen_R4     , & ! snow-ice formation in category n (m)
-         salinz_R4      , & ! initial salinity  profile (ppt)
-         flux_bio_atm_R4, & ! all bio fluxes to ice from atmosphere
-         aicen_init_R4  , & ! initial ice concentration, for linear ITD
-         vicen_init_R4  , & ! initial ice volume (m), for linear ITD
-         vsnon_init_R4  , & ! initial snow volume (m), for aerosol
-         aicen_R4 , & ! concentration of ice
-         vicen_R4 , & ! volume per unit area of ice          (m)
-         vsnon_R4     ! volume per unit area of snow         (m)
-
-      real (kind=real_kind), intent(in) :: &
-         aice0_R4   , & ! open water area fraction
-         sss_R4     , & ! sea surface salinity (ppt)
-         sst_R4     , & ! sea surface temperature (C)
-         hmix_R4    , & ! mixed layer depth (m)
-         Tf_R4      , & ! basal freezing temperature (C)
-         fsnow_R4       ! snowfall rate (kg/m^2 s)
-
-      logical (kind=log_kind), intent(in) :: &
-         skl_bgc       ! if true, solve skeletal biochemistry
-
-      logical (kind=log_kind), intent(inout) :: &
-         l_stop          ! if true, abort the model
-
-      character (len=*), intent(inout) :: stop_label
-
-
-      ! local variables
-
-      integer (kind=int_kind) :: &
-         k              , & ! vertical index
-         n, mm              ! thickness category index
-
-      real (kind=dbl_kind) :: &
-         hin         , & ! new ice thickness
-         hsn         , & ! snow thickness  (m)
-         hbr_old     , & ! old brine thickness before growh/melt
-         dhice       , & ! change due to sublimation/condensation (m)
-         kavg        , & ! average ice permeability (m^2)
-         bphi_o      , & ! surface ice porosity
-         hbrin       , & ! brine height
-         dh_direct       ! surface flooding or runoff
-
-      real (kind=dbl_kind), dimension (nblyr+2) :: &
-      ! Defined on Bio Grid points
-         bSin        , & ! salinity on the bio grid  (ppt)
-         brine_sal   , & ! brine salinity (ppt)
-         brine_rho       ! brine_density (kg/m^3)
-
-      real (kind=dbl_kind), dimension (nblyr+1) :: &
-      ! Defined on Bio Grid interfaces
-         iphin       , & ! porosity
-         ibrine_sal  , & ! brine salinity  (ppt)
-         ibrine_rho  , & ! brine_density (kg/m^3)
-         iTin            ! Temperature on the interface grid (oC)
-
-      real (kind=dbl_kind) :: &
-         sloss            ! brine flux contribution from surface runoff (g/m^2)
-
-      real (kind=dbl_kind), dimension (ncat) :: &
-         hbrnInitial, & ! inital brine height
-         hbrnFinal      ! category initial and final brine heights
-
-      ! for bgc sk
-      real (kind=dbl_kind) :: &
-         dh_bot_chl  , & ! Chlorophyll may or may not flush
-         dh_top_chl  , & ! Chlorophyll may or may not flush
-         darcy_V_chl
-
-      real (kind=dbl_kind), dimension (nblyr+1) :: &
-         zspace    ! vertical grid spacing
-
-
-      real (kind=dbl_kind) :: &
-         dt      ! time step
-
-      real (kind=dbl_kind), dimension (:), allocatable :: &
          bgrid         , &  ! biology nondimensional vertical grid points
          igrid         , &  ! biology vertical interface points
          cgrid         , &  ! CICE vertical coordinate
@@ -7487,10 +5455,16 @@
          snow_bio_net  , &  ! depth integrated snow tracer (mmol/m^2)
          flux_bio           ! all bio fluxes to ocean
 
-      real (kind=dbl_kind), dimension (:,:), allocatable :: &
+      logical (kind=log_kind), dimension (:), intent(inout) :: &
+         first_ice      ! distinguishes ice that disappears (e.g. melts)
+                        ! and reappears (e.g. transport) in a grid cell
+                        ! during a single time step from ice that was
+                        ! there the entire time step (true until ice forms)
+
+      real (kind=real_kind), dimension (:,:), intent(out) :: &
          flux_bion      ! per categeory ice to ocean biogeochemistry flux (mmol/m2/s)
 
-      real (kind=dbl_kind), dimension (:,:), allocatable :: &
+      real (kind=real_kind), dimension (:,:), intent(inout) :: &
          Zoo            , & ! N losses accumulated in timestep (ie. zooplankton/bacteria)
                             ! mmol/m^3
          bphi           , & ! porosity of layers
@@ -7500,7 +5474,7 @@
          iki            , & ! Ice permeability (m^2)
          trcrn     ! tracers
 
-      real (kind=dbl_kind) :: &
+      real (kind=real_kind), intent(inout) :: &
          grow_net       , & ! Specific growth rate (/s) per grid cell
          PP_net         , & ! Total production (mg C/m^2/s) per grid cell
          hbri           , & ! brine height, area-averaged for comparison with hi (m)
@@ -7511,11 +5485,13 @@
          upNH           , & ! ammonium uptake rate (mmol/m^2/d) times aice
          totalChla          ! ice integrated chla and summed over all algal groups (mg/m^2)
 
+      logical (kind=log_kind), intent(inout) :: &
+         Rayleigh_criteria    ! .true. means Ra_c was reached
 
-      real (kind=dbl_kind), dimension (:,:), allocatable :: &
+      real (kind=real_kind), dimension (:,:), intent(in) :: &
          fswpenln        ! visible SW entering ice layers (W m-2)
 
-      real (kind=dbl_kind), dimension (:), allocatable :: &
+      real (kind=real_kind), dimension (:), intent(in) :: &
          fswthrun    , & ! SW through ice to ocean            (W/m^2)
          meltsn      , & ! snow melt in category n (m)
          melttn      , & ! top melt in category n (m)
@@ -7531,7 +5507,7 @@
          vicen , & ! volume per unit area of ice          (m)
          vsnon     ! volume per unit area of snow         (m)
 
-      real (kind=dbl_kind) :: &
+      real (kind=real_kind), intent(in) :: &
          aice0   , & ! open water area fraction
          sss     , & ! sea surface salinity (ppt)
          sst     , & ! sea surface temperature (C)
@@ -7539,73 +5515,60 @@
          Tf      , & ! basal freezing temperature (C)
          fsnow       ! snowfall rate (kg/m^2 s)
 
-      
+      logical (kind=log_kind), intent(in) :: &
+         skl_bgc       ! if true, solve skeletal biochemistry
 
+      logical (kind=log_kind), intent(inout) :: &
+         l_stop          ! if true, abort the model
 
-      
-         
-      dt = real(dt_R4, kind = dbl_kind)         
+      character (len=*), intent(inout) :: stop_label
 
-     bgrid =real(bgrid_R4, kind = dbl_kind)         
-     igrid =real(igrid_R4, kind = dbl_kind)         
-     cgrid =real(cgrid_R4, kind = dbl_kind)         
-     icgrid =real(icgrid_R4, kind = dbl_kind)        
-     ocean_bio =real(ocean_bio_R4, kind = dbl_kind)     
-     fbio_snoice =real(fbio_snoice_R4, kind = dbl_kind)   
-     fbio_atmice =real(fbio_atmice_R4, kind = dbl_kind)   
-     dhbr_top =real(dhbr_top_R4, kind = dbl_kind)      
-     dhbr_bot =real(dhbr_bot_R4, kind = dbl_kind)      
-     darcy_V =real(darcy_V_R4, kind = dbl_kind)       
-     hin_old =real(hin_old_R4, kind = dbl_kind)       
-     sice_rho =real(sice_rho_R4, kind = dbl_kind)      
-     ice_bio_net =real(ice_bio_net_R4, kind = dbl_kind)   
-     snow_bio_net =real(snow_bio_net_R4, kind = dbl_kind)  
-     flux_bio =real(flux_bio_R4, kind = dbl_kind)           
+      ! local variables
 
-     flux_bion  = real(flux_bion_R4, kind = dbl_kind)      
+      integer (kind=int_kind) :: &
+         k              , & ! vertical index
+         n, mm              ! thickness category index
 
-     Zoo  = real(Zoo_R4, kind = dbl_kind)            
-     bphi  = real(bphi_R4, kind = dbl_kind)           
-     bTiz  = real(bTiz_R4, kind = dbl_kind)           
-     zfswin  = real(zfswin_R4, kind = dbl_kind)         
-     iDi  = real(iDi_R4, kind = dbl_kind)            
-     iki  = real(iki_R4, kind = dbl_kind)            
-     trcrn  = real(trcrn_R4, kind = dbl_kind)     
-     fswpenln  = real(fswpenln_R4, kind = dbl_kind)        
-   
-      grow_net = real(grow_net_R4, kind = dbl_kind)       
-      PP_net = real(PP_net_R4, kind = dbl_kind)         
-      hbri = real(hbri_R4, kind = dbl_kind)           
-      zsal_tot = real(zsal_tot_R4, kind = dbl_kind)       
-      fzsal = real(fzsal_R4, kind = dbl_kind)          
-      fzsal_g = real(fzsal_g_R4, kind = dbl_kind)        
-      upNO = real(upNO_R4, kind = dbl_kind)           
-      upNH = real(upNH_R4, kind = dbl_kind)           
-      totalChla = real(totalChla_R4, kind = dbl_kind) 
+      real (kind=real_kind) :: &
+         hin         , & ! new ice thickness
+         hsn         , & ! snow thickness  (m)
+         hbr_old     , & ! old brine thickness before growh/melt
+         dhice       , & ! change due to sublimation/condensation (m)
+         kavg        , & ! average ice permeability (m^2)
+         bphi_o      , & ! surface ice porosity
+         hbrin       , & ! brine height
+         dh_direct       ! surface flooding or runoff
 
-     fswthrun  = real(fswthrun_R4, kind = dbl_kind)    
-     meltsn  = real(meltsn_R4, kind = dbl_kind)      
-     melttn  = real(melttn_R4, kind = dbl_kind)      
-     meltbn  = real(meltbn_R4, kind = dbl_kind)      
-     congeln  = real(congeln_R4, kind = dbl_kind)     
-     snoicen  = real(snoicen_R4, kind = dbl_kind)     
-     salinz  = real(salinz_R4, kind = dbl_kind)      
-     flux_bio_atm  = real(flux_bio_atm_R4, kind = dbl_kind)
-     aicen_init  = real(aicen_init_R4, kind = dbl_kind)  
-     vicen_init  = real(vicen_init_R4, kind = dbl_kind)  
-     vsnon_init  = real(vsnon_init_R4, kind = dbl_kind)  
-     aicen  = real(aicen_R4, kind = dbl_kind) 
-     vicen  = real(vicen_R4, kind = dbl_kind) 
-     vsnon  = real(vsnon_R4, kind = dbl_kind)     
+      real (kind=real_kind), dimension (nblyr+2) :: &
+      ! Defined on Bio Grid points
+         bSin        , & ! salinity on the bio grid  (ppt)
+         brine_sal   , & ! brine salinity (ppt)
+         brine_rho       ! brine_density (kg/m^3)
 
-      aice0 = real(aice0_R4, kind = dbl_kind)   
-      sss = real(sss_R4, kind = dbl_kind)     
-      sst = real(sst_R4, kind = dbl_kind)     
-      hmix = real(hmix_R4, kind = dbl_kind)    
-      Tf = real(Tf_R4, kind = dbl_kind)      
-      fsnow = real(fsnow_R4, kind = dbl_kind)       
+      real (kind=real_kind), dimension (nblyr+1) :: &
+      ! Defined on Bio Grid interfaces
+         iphin       , & ! porosity
+         ibrine_sal  , & ! brine salinity  (ppt)
+         ibrine_rho  , & ! brine_density (kg/m^3)
+         iTin            ! Temperature on the interface grid (oC)
 
-      zspace(:)       = c1/real(nblyr,kind=dbl_kind)
+      real (kind=real_kind) :: &
+         sloss            ! brine flux contribution from surface runoff (g/m^2)
+
+      real (kind=real_kind), dimension (ncat) :: &
+         hbrnInitial, & ! inital brine height
+         hbrnFinal      ! category initial and final brine heights
+
+      ! for bgc sk
+      real (kind=real_kind) :: &
+         dh_bot_chl  , & ! Chlorophyll may or may not flush
+         dh_top_chl  , & ! Chlorophyll may or may not flush
+         darcy_V_chl
+
+      real (kind=real_kind), dimension (nblyr+1) :: &
+         zspace    ! vertical grid spacing
+
+      zspace(:)       = c1/real(nblyr,kind=real_kind)
       zspace(1)       = p5*zspace(1)
       zspace(nblyr+1) = p5*zspace(nblyr+1)
 
@@ -7842,124 +5805,14 @@
          endif             ! aicen > puny
       enddo                ! ncat
 
-      
-      ! dt_R4 = real(dt, kind = real_kind)      
-      
-      bgrid_R4 = real(bgrid, kind = real_kind)         
-      igrid_R4 = real(igrid, kind = real_kind)         
-      cgrid_R4 = real(cgrid, kind = real_kind)         
-      icgrid_R4 = real(icgrid, kind = real_kind)        
-      ocean_bio_R4 = real(ocean_bio, kind = real_kind)     
-      fbio_snoice_R4 = real(fbio_snoice, kind = real_kind)   
-      fbio_atmice_R4 = real(fbio_atmice, kind = real_kind)   
-      dhbr_top_R4 = real(dhbr_top, kind = real_kind)      
-      dhbr_bot_R4 = real(dhbr_bot, kind = real_kind)      
-      darcy_V_R4 = real(darcy_V, kind = real_kind)       
-      hin_old_R4 = real(hin_old, kind = real_kind)       
-      sice_rho_R4 = real(sice_rho, kind = real_kind)      
-      ice_bio_net_R4 = real(ice_bio_net, kind = real_kind)   
-      snow_bio_net_R4 = real(snow_bio_net, kind = real_kind)  
-      flux_bio_R4 = real(flux_bio, kind = real_kind)           
-
-   
-      flux_bion_R4 = real(flux_bion, kind = real_kind)      
-
-   
-      Zoo_R4 = real(Zoo, kind = real_kind)            
-      bphi_R4 = real(bphi, kind = real_kind)           
-      bTiz_R4 = real(bTiz, kind = real_kind)           
-      zfswin_R4 = real(zfswin, kind = real_kind)         
-      iDi_R4 = real(iDi, kind = real_kind)            
-      iki_R4 = real(iki, kind = real_kind)            
-      trcrn_R4 = real(trcrn, kind = real_kind)     
-
-   
-      grow_net_R4 = real(grow_net, kind = real_kind)       
-      PP_net_R4 = real(PP_net, kind = real_kind)         
-      hbri_R4 = real(hbri, kind = real_kind)           
-      zsal_tot_R4 = real(zsal_tot, kind = real_kind)       
-      fzsal_R4 = real(fzsal, kind = real_kind)          
-      fzsal_g_R4 = real(fzsal_g, kind = real_kind)        
-      upNO_R4 = real(upNO, kind = real_kind)           
-      upNH_R4 = real(upNH, kind = real_kind)           
-      totalChla_R4 = real(totalChla, kind = real_kind)          
-
-
-
-   
-      ! fswpenln_R4 = real(fswpenln, kind = real_kind)        
-
-   
-      ! fswthrun_R4 = real(fswthrun, kind = real_kind)    
-      ! meltsn_R4 = real(meltsn, kind = real_kind)      
-      ! melttn_R4 = real(melttn, kind = real_kind)      
-      ! meltbn_R4 = real(meltbn, kind = real_kind)      
-      ! congeln_R4 = real(congeln, kind = real_kind)     
-      ! snoicen_R4 = real(snoicen, kind = real_kind)     
-      ! salinz_R4 = real(salinz, kind = real_kind)      
-      ! flux_bio_atm_R4 = real(flux_bio_atm, kind = real_kind)
-      ! aicen_init_R4 = real(aicen_init, kind = real_kind)  
-      ! vicen_init_R4 = real(vicen_init, kind = real_kind)  
-      ! vsnon_init_R4 = real(vsnon_init, kind = real_kind)  
-      ! aicen_R4 = real(aicen, kind = real_kind) 
-      ! vicen_R4 = real(vicen, kind = real_kind) 
-      ! vsnon_R4 = real(vsnon, kind = real_kind)     
-
-   
-      ! aice0_R4 = real(aice0, kind = real_kind)   
-      ! sss_R4 = real(sss, kind = real_kind)     
-      ! sst_R4 = real(sst, kind = real_kind)     
-      ! hmix_R4 = real(hmix, kind = real_kind)    
-      ! Tf_R4 = real(Tf, kind = real_kind)      
-      ! fsnow_R4 = real(fsnow, kind = real_kind)       
-
-      deallocate(bgrid)
-      deallocate(igrid)
-      deallocate(cgrid)
-      deallocate(icgrid)
-      deallocate(ocean_bio)
-      deallocate(fbio_snoice)
-      deallocate(fbio_atmice)
-      deallocate(dhbr_top)
-      deallocate(dhbr_bot)
-      deallocate(darcy_V)
-      deallocate(hin_old)
-      deallocate(sice_rho)
-      deallocate(ice_bio_net)
-      deallocate(snow_bio_net)
-      deallocate(flux_bio)
-
-      deallocate(flux_bion)
-      deallocate(Zoo)
-      deallocate(bphi)
-      deallocate(bTiz)
-      deallocate(zfswin)
-      deallocate(iDi)
-      deallocate(iki)
-      deallocate(trcrn)
-      deallocate(fswpenln)
-      deallocate(fswthrun)
-      deallocate(meltsn)
-      deallocate(melttn)
-      deallocate(meltbn)
-      deallocate(congeln)
-      deallocate(snoicen)
-      deallocate(salinz)
-      deallocate(flux_bio_atm)
-      deallocate(aicen_init)
-      deallocate(vicen_init)
-      deallocate(vsnon_init)
-      deallocate(aicen)
-      deallocate(vicen)
-      deallocate(vsnon)
       end subroutine colpkg_biogeochemistry
 
 !=======================================================================
 
 !  Initialize brine height tracer
 
-      subroutine colpkg_init_hbrine(bgrid_R4, igrid_R4, cgrid_R4, &
-          icgrid_R4, swgrid_R4, nblyr, nilyr, phi_snow_R4)
+      subroutine colpkg_init_hbrine(bgrid, igrid, cgrid, &
+          icgrid, swgrid, nblyr, nilyr, phi_snow)
 
       use ice_constants_colpkg, only: c1, c1p5, c2, p5, c0, rhoi, rhos, p25
 
@@ -7968,48 +5821,25 @@
          nblyr    ! number of bio layers
 
       real (kind=real_kind), intent(inout) :: &
-         phi_snow_R4           !porosity at the ice-snow interface
+         phi_snow           !porosity at the ice-snow interface
 
       real (kind=real_kind), dimension (nblyr+2), intent(out) :: &
-         bgrid_R4              ! biology nondimensional vertical grid points
+         bgrid              ! biology nondimensional vertical grid points
 
       real (kind=real_kind), dimension (nblyr+1), intent(out) :: &
-         igrid_R4              ! biology vertical interface points
+         igrid              ! biology vertical interface points
 
       real (kind=real_kind), dimension (nilyr+1), intent(out) :: &
-         cgrid_R4            , &  ! CICE vertical coordinate
-         icgrid_R4           , &  ! interface grid for CICE (shortwave variable)
-         swgrid_R4                ! grid for ice tracers used in dEdd scheme
-
+         cgrid            , &  ! CICE vertical coordinate
+         icgrid           , &  ! interface grid for CICE (shortwave variable)
+         swgrid                ! grid for ice tracers used in dEdd scheme
 
       integer (kind=int_kind) :: &
          k           , & ! vertical index
          n               ! thickness category index
 
-      real (kind=dbl_kind) :: &
+      real (kind=real_kind) :: &
          zspace            ! grid spacing for CICE vertical grid
-
-      real (kind=dbl_kind) :: &
-         phi_snow           !porosity at the ice-snow interface
-
-      real (kind=dbl_kind), dimension (nblyr+2) :: &
-         bgrid              ! biology nondimensional vertical grid points
-
-      real (kind=dbl_kind), dimension (nblyr+1) :: &
-         igrid              ! biology vertical interface points
-
-      real (kind=dbl_kind), dimension (nilyr+1) :: &
-         cgrid            , &  ! CICE vertical coordinate
-         icgrid           , &  ! interface grid for CICE (shortwave variable)
-         swgrid                ! grid for ice tracers used in dEdd scheme
-
-      phi_snow = real(phi_snow_R4, kind = dbl_kind)           
-      bgrid = real(bgrid_R4, kind = dbl_kind)              
-      igrid = real(igrid_R4, kind = dbl_kind)              
-      cgrid = real(cgrid_R4, kind = dbl_kind)            
-      icgrid = real(icgrid_R4, kind = dbl_kind)           
-      swgrid = real(swgrid_R4, kind = dbl_kind)                
-
 
 
       if (phi_snow .le. c0) phi_snow = c1-rhos/rhoi
@@ -8024,9 +5854,9 @@
       igrid(1)       = c0 ! ice top
       igrid(nblyr+1) = c1 ! ice bottom
 
-      zspace = c1/max(c1,(real(nblyr,kind=dbl_kind)))
+      zspace = c1/max(c1,(real(nblyr,kind=real_kind)))
       do k = 2, nblyr+1
-         bgrid(k) = zspace*(real(k,kind=dbl_kind) - c1p5)
+         bgrid(k) = zspace*(real(k,kind=real_kind) - c1p5)
       enddo
 
       do k = 2, nblyr
@@ -8038,10 +5868,10 @@
       !-----------------------------------------------------------------
 
       cgrid(1) = c0                           ! CICE vertical grid top point
-      zspace = c1/(real(nilyr,kind=dbl_kind)) ! CICE grid spacing
+      zspace = c1/(real(nilyr,kind=real_kind)) ! CICE grid spacing
 
       do k = 2, nilyr+1
-         cgrid(k) = zspace * (real(k,kind=dbl_kind) - c1p5)
+         cgrid(k) = zspace * (real(k,kind=real_kind) - c1p5)
       enddo
 
       !-----------------------------------------------------------------
@@ -8049,10 +5879,10 @@
       !-----------------------------------------------------------------
 
       icgrid(1) = c0
-      zspace = c1/(real(nilyr,kind=dbl_kind)) ! CICE grid spacing
+      zspace = c1/(real(nilyr,kind=real_kind)) ! CICE grid spacing
 
       do k = 2, nilyr+1
-         icgrid(k) = zspace * (real(k,kind=dbl_kind)-c1)
+         icgrid(k) = zspace * (real(k,kind=real_kind)-c1)
       enddo
 
       !------------------------------------------------------------------------
@@ -8061,21 +5891,12 @@
       ! see ice_shortwave.F90
       ! swgrid represents the layer index of the delta-eddington ice layer index
       !------------------------------------------------------------------------
-      zspace = c1/(real(nilyr,kind=dbl_kind)) ! CICE grid spacing
-      swgrid(1) = min(c1/60.0_dbl_kind, zspace*p25)
+      zspace = c1/(real(nilyr,kind=real_kind)) ! CICE grid spacing
+      swgrid(1) = min(c1/60.0_real_kind, zspace*p25)
       swgrid(2) = zspace/c2                   !+ swgrid(1)
       do k = 3, nilyr+1
-         swgrid(k) = zspace * (real(k,kind=dbl_kind)-c1p5)
+         swgrid(k) = zspace * (real(k,kind=real_kind)-c1p5)
       enddo
-
-      phi_snow_R4 = real(phi_snow, kind = real_kind)           
-      bgrid_R4 = real(bgrid, kind = real_kind)              
-      igrid_R4 = real(igrid, kind = real_kind)              
-      cgrid_R4 = real(cgrid, kind = real_kind)            
-      icgrid_R4 = real(icgrid, kind = real_kind)           
-      swgrid_R4 = real(swgrid, kind = real_kind)                
-
-
 
       end subroutine colpkg_init_hbrine
 
@@ -8121,25 +5942,25 @@
         k 
 
        if (present(CToN)) then
-         CToN(1) = real(R_C2N(1), kind = real_kind)
-         CToN(2) = real(R_C2N(2), kind = real_kind)    
-         CToN(3) = real(R_C2N(3), kind = real_kind)     
+         CToN(1) = R_C2N(1)
+         CToN(2) = R_C2N(2)    
+         CToN(3) = R_C2N(3)     
        endif
 
        if (present(CToN_DON)) then
-         CToN_DON(1) = real(R_C2N_DON(1), kind=real_kind)
+         CToN_DON(1) = R_C2N_DON(1)
        endif
 
-       amm  = real(c1, kind=real_kind) ! ISPOL < 1 mmol/m^3 
-       dmsp = real(p1, kind=real_kind)  
-       dms  = real(p1, kind=real_kind)    
+       amm  = c1 ! ISPOL < 1 mmol/m^3 
+       dmsp = p1  
+       dms  = p1    
        algalN(1) = c1  !0.0026_real_kind ! ISPOL, Lannuzel 2013(pennate) 
        algalN(2) = 0.0057_real_kind ! ISPOL, Lannuzel 2013(small plankton)
        algalN(3) = 0.0027_real_kind ! ISPOL, Lannuzel 2013(Phaeocystis)
                                      ! 0.024_real_kind ! 5% of 1 mgchl/m^3 
        doc(1) = 16.2_real_kind ! 18% saccharides
        doc(2) = 9.0_real_kind  ! lipids
-       doc(3) = real(c1, kind=real_kind) ! 
+       doc(3) = c1 ! 
        do k = 1, max_dic
             dic(k) = 1950.0_real_kind  ! 1950-2260 mmol C/m3 (Tynan et al. 2015)
        enddo  
@@ -8153,107 +5974,25 @@
             fed(k) = 0.4_real_kind ! c1 (nM) Lannuzel2007 DFe, 
                                   ! range 0.14-2.6 (nM) van der Merwe 2011
                                   ! Tagliabue 2012 (0.4 nM)
-            fep(k) = real(c2, kind=real_kind)  ! (nM) van der Merwe 2011
+            fep(k) = c2 ! (nM) van der Merwe 2011
                         ! (0.6 to 2.9 nM ocean)
        enddo 
-       hum  = real(c1, kind=real_kind)         ! mmol C/m^3
+       hum  = c1        ! mmol C/m^3
        nit  = 12.0_real_kind
        sil  = 25.0_real_kind
        do k = 1, max_aero
-         zaeros(k) = real(c0, kind=real_kind) 
+         zaeros(k) = c0
        enddo
  
 
       end subroutine colpkg_init_ocean_conc
 
-      subroutine colpkg_init_ocean_conc_double (amm, dmsp, dms, algalN, doc, dic, don, &
-         fed, fep, hum, nit, sil, zaeros, max_dic, max_don, max_fe, max_aero,&
-         CToN, CToN_DON)
-
-      use ice_constants_colpkg, only: c1,  c2, p5, c0, p1
-      use ice_colpkg_shared, only: R_C2N, R_C2N_DON
-
-      integer (kind=int_kind), intent(in) :: &
-         max_dic, &
-         max_don, &
-         max_fe, &
-         max_aero
-
-      real (kind=dbl_kind), intent(out):: &
-         amm      , & ! ammonium
-         dmsp     , & ! DMSPp
-         dms      , & ! DMS
-         hum      , & ! humic material
-         nit      , & ! nitrate
-         sil          ! silicate
-
-      real (kind=dbl_kind), dimension(:), intent(out):: &
-         algalN   , & ! algae
-         doc      , & ! DOC
-         dic      , & ! DIC
-         don      , & ! DON
-         fed      , & ! Dissolved Iron
-         fep      , & ! Particulate Iron
-         zaeros       ! BC and dust
-
-      real (kind=dbl_kind), dimension(:), intent(inout), optional :: &
-         CToN     , & ! carbon to nitrogen ratio for algae
-         CToN_DON     ! nitrogen to carbon ratio for proteins
-
-      integer (kind=int_kind) :: &
-         k 
-
-         if (present(CToN)) then
-         CToN(1) = R_C2N(1)
-         CToN(2) = R_C2N(2)    
-         CToN(3) = R_C2N(3)     
-         endif
-
-         if (present(CToN_DON)) then
-         CToN_DON(1) = R_C2N_DON(1)
-         endif
-
-         amm  = c1 ! ISPOL < 1 mmol/m^3 
-         dmsp = p1  
-         dms  = p1    
-         algalN(1) = c1  !0.0026_dbl_kind ! ISPOL, Lannuzel 2013(pennate) 
-         algalN(2) = 0.0057_dbl_kind ! ISPOL, Lannuzel 2013(small plankton)
-         algalN(3) = 0.0027_dbl_kind ! ISPOL, Lannuzel 2013(Phaeocystis)
-                                       ! 0.024_dbl_kind ! 5% of 1 mgchl/m^3 
-         doc(1) = 16.2_dbl_kind ! 18% saccharides
-         doc(2) = 9.0_dbl_kind  ! lipids
-         doc(3) = c1 ! 
-         do k = 1, max_dic
-            dic(k) = 1950.0_dbl_kind  ! 1950-2260 mmol C/m3 (Tynan et al. 2015)
-         enddo  
-         do k = 1, max_don
-            don(k) = 12.9_dbl_kind              
-            ! 64.3_dbl_kind ! 72% Total DOC~90 mmolC/m^3  ISPOL with N:C of 0.2
-         enddo  
-         !ki = 1
-         !if (trim(fe_data_type) == 'clim') ki = 2
-         do k = 1, max_fe ! ki, max_fe
-            fed(k) = 0.4_dbl_kind ! c1 (nM) Lannuzel2007 DFe, 
-                                    ! range 0.14-2.6 (nM) van der Merwe 2011
-                                    ! Tagliabue 2012 (0.4 nM)
-            fep(k) = c2 ! (nM) van der Merwe 2011
-                        ! (0.6 to 2.9 nM ocean)
-         enddo 
-         hum  = c1        ! mmol C/m^3
-         nit  = 12.0_dbl_kind
-         sil  = 25.0_dbl_kind
-         do k = 1, max_aero
-         zaeros(k) = c0
-         enddo
-
-
-      end subroutine colpkg_init_ocean_conc_double
 !=======================================================================
 
 !  Initialize zSalinity
 
       subroutine colpkg_init_zsalinity(nblyr,ntrcr_o, restart_zsal,  Rayleigh_criteria, &
-               Rayleigh_real_R4, trcrn_R4, nt_bgc_S, ncat, sss_R4)
+               Rayleigh_real, trcrn, nt_bgc_S, ncat, sss)
 
       use ice_constants_colpkg, only: c1,  c2, p5, c0, p1
       use ice_colpkg_shared, only: dts_b, salt_loss
@@ -8271,34 +6010,21 @@
        Rayleigh_criteria
 
       real (kind=real_kind), intent(inout):: &
-       Rayleigh_real_R4
+       Rayleigh_real
 
       real (kind=real_kind), intent(in):: &
-       sss_R4
+       sss
 
       real (kind=real_kind), dimension(:,:), intent(inout):: &
-       trcrn_R4 ! bgc subset of trcrn
-
-      real (kind=dbl_kind), dimension(:,:), allocatable:: &
        trcrn ! bgc subset of trcrn
 
       integer (kind=int_kind) :: &
         k , n
-
-      real (kind=dbl_kind):: &
-       Rayleigh_real
-
-      real (kind=dbl_kind):: &
-       sss
-
-      Rayleigh_real = real(Rayleigh_real_R4, kind = dbl_kind)
-      sss = real(sss_R4, kind = dbl_kind)
-      trcrn  = real(trcrn_R4, kind = dbl_kind)
-
+      
       if (nblyr .LE. 7) then
-          dts_b = 300.0_dbl_kind
+          dts_b = 300.0_real_kind
       else
-          dts_b = 50.0_dbl_kind 
+          dts_b = 50.0_real_kind 
       endif
 
       if (.not. restart_zsal) then
@@ -8311,8 +6037,6 @@
          enddo      ! n
       endif
 
-      trcrn_R4 = real(trcrn, kind = real_kind)
-      deallocate(trcrn)
       end subroutine colpkg_init_zsalinity
 
 !=======================================================================
@@ -8322,7 +6046,7 @@
       subroutine colpkg_init_OceanConcArray(max_nbtrcr, &
           max_algae, max_don, max_doc, max_dic, max_aero, max_fe, &
           nit, amm, sil, dmsp, dms, algalN, &
-          doc, don, dic, fed, fep, zaeros, ocean_bio_all_R4, hum)
+          doc, don, dic, fed, fep, zaeros, ocean_bio_all, hum)
 
       use ice_constants_colpkg, only: c0
       use ice_colpkg_shared, only:  R_C2N, R_chl2N
@@ -8364,18 +6088,14 @@
          zaeros          ! ocean aerosols (mmol/m^3) 
 
       real (kind=real_kind), dimension (max_nbtrcr), intent(inout) :: &
-         ocean_bio_all_R4   ! fixed order, all values even for tracers false
-
-      real (kind=dbl_kind), dimension (max_nbtrcr) :: &
          ocean_bio_all   ! fixed order, all values even for tracers false
+
       ! local variables
 
       integer (kind=int_kind) :: &
          k, ks           ! tracer indices
 
       ocean_bio_all(:) = c0
-
-      ocean_bio_all = real(ocean_bio_all_R4, kind=dbl_kind)
 
       do k = 1, max_algae           
          ocean_bio_all(k)      = algalN(k)           ! N
@@ -8428,117 +6148,9 @@
       enddo
       ks = ks + max_aero + 1 
       ocean_bio_all(ks)  = hum                       ! humics
-      ocean_bio_all_R4 = real(ocean_bio_all, kind=real_kind)
 
       end subroutine colpkg_init_OceanConcArray
 
-      subroutine colpkg_init_OceanConcArray_double(max_nbtrcr, &
-         max_algae, max_don, max_doc, max_dic, max_aero, max_fe, &
-         nit, amm, sil, dmsp, dms, algalN, &
-         doc, don, dic, fed, fep, zaeros, ocean_bio_all, hum)
-
-      use ice_constants_colpkg, only: c0
-      use ice_colpkg_shared, only:  R_C2N, R_chl2N
-      use ice_zbgc_shared, only: R_S2N
-
-      integer (kind=int_kind), intent(in) :: &
-         max_algae   , & ! maximum number of algal types 
-         max_dic     , & ! maximum number of dissolved inorganic carbon types 
-         max_doc     , & ! maximum number of dissolved organic carbon types
-         max_don     , & ! maximum number of dissolved organic nitrogen types
-         max_fe      , & ! maximum number of iron types
-         max_aero    , & ! maximum number of aerosols 
-         max_nbtrcr      ! maximum number of bio tracers
-
-      real (kind=dbl_kind), intent(in) :: &
-         nit         , & ! ocean nitrate (mmol/m^3)          
-         amm         , & ! ammonia/um (mmol/m^3)
-         sil         , & ! silicate (mmol/m^3)
-         dmsp        , & ! dmsp (mmol/m^3)
-         dms         , & ! dms (mmol/m^3)
-         hum             ! humic material (mmol/m^3)
-
-      real (kind=dbl_kind), dimension (max_algae), intent(in) :: &
-         algalN          ! ocean algal nitrogen (mmol/m^3) (diatoms, phaeo, pico)
-
-      real (kind=dbl_kind), dimension (max_doc), intent(in) :: &
-         doc             ! ocean doc (mmol/m^3)  (proteins, EPS, lipid)
-
-      real (kind=dbl_kind), dimension (max_don), intent(in) :: &
-         don             ! ocean don (mmol/m^3) 
-
-      real (kind=dbl_kind), dimension (max_dic), intent(in) :: &
-         dic             ! ocean dic (mmol/m^3) 
-
-      real (kind=dbl_kind), dimension (max_fe), intent(in) :: &
-         fed, fep        ! ocean disolved and particulate fe (nM) 
-
-      real (kind=dbl_kind), dimension (max_aero), intent(in) :: &
-         zaeros          ! ocean aerosols (mmol/m^3) 
-
-      real (kind=dbl_kind), dimension (max_nbtrcr), intent(inout) :: &
-         ocean_bio_all   ! fixed order, all values even for tracers false
-
-      ! local variables
-
-      integer (kind=int_kind) :: &
-         k, ks           ! tracer indices
-
-      ocean_bio_all(:) = c0
-
-      do k = 1, max_algae           
-         ocean_bio_all(k)      = algalN(k)           ! N
-         ks = max_algae + max_doc + max_dic + 1
-         ocean_bio_all(ks + k) = R_chl2N(k)*algalN(k)!chl
-      enddo   
-
-      ks = max_algae + 1
-      do k = 1, max_doc
-         ocean_bio_all(ks + k) = doc(k)              ! doc
-      enddo  
-      ks = ks + max_doc
-      do k = 1, max_dic
-         ocean_bio_all(ks + k) = dic(k)              ! dic
-      enddo 
-
-      ks = 2*max_algae + max_doc + max_dic + 7
-      do k = 1, max_don
-         ocean_bio_all(ks + k) = don(k)              ! don
-      enddo  
-
-      ks = max_algae + 1
-      ocean_bio_all(ks) = nit                        ! nit
-
-      ks = 2*max_algae + max_doc + 2 + max_dic
-      ocean_bio_all(ks) = amm                        ! Am
-      ks = ks + 1
-      ocean_bio_all(ks) = sil                        ! Sil
-      ks = ks + 1
-      ocean_bio_all(ks) =  R_S2N(1)*algalN(1) &      ! DMSPp
-                        +  R_S2N(2)*algalN(2) &
-                        +  R_S2N(3)*algalN(3) 
-      ks = ks + 1
-      ocean_bio_all(ks) = dmsp                       ! DMSPd
-      ks = ks + 1
-      ocean_bio_all(ks) = dms                        ! DMS
-      ks = ks + 1
-      ocean_bio_all(ks) = nit                        ! PON
-      ks = 2*max_algae + max_doc + 7 + max_dic + max_don
-      do k = 1, max_fe
-         ocean_bio_all(ks + k) = fed(k)              ! fed
-      enddo  
-      ks = ks + max_fe
-      do k = 1, max_fe
-         ocean_bio_all(ks + k) = fep(k)              ! fep
-      enddo  
-      ks = ks + max_fe
-      do k = 1, max_aero
-         ocean_bio_all(ks+k) = zaeros(k)             ! zaero
-      enddo
-      ks = ks + max_aero + 1 
-      ocean_bio_all(ks)  = hum                       ! humics
-
-      end subroutine colpkg_init_OceanConcArray_double 
 !=======================================================================
 ! Warning messages
 !=======================================================================

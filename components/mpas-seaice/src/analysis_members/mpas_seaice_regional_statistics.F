@@ -1056,7 +1056,7 @@ contains
       allocate(globalSumsIn(nRegions*nSums))
       allocate(globalMaxsIn(nRegions*nMaxs))
       globalSumsIn = 0.0_RKIND
-      globalMaxsIn = -1.0e30_RKIND
+      globalMaxsIn = -1.0e34_RKIND
 
       block => domain % blocklist
       do while (associated(block))

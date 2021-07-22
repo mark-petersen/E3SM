@@ -1455,7 +1455,7 @@ contains
          seaSurfaceSalinity, &
          oceanMixedLayerDepth, &
          seaFreezingTemperature
-
+    real(kind=R8KIND) :: seaSurfaceSalinity_R8
     character(len=strKIND), pointer :: &
          config_sea_freezing_temperature_type
 
@@ -1488,9 +1488,9 @@ contains
        ! ensure physical realism
        seaSurfaceSalinity(iCell)   = max(seaSurfaceSalinity(iCell), 0.0_RKIND)
        oceanMixedLayerDepth(iCell) = max(oceanMixedLayerDepth(iCell), 0.0_RKIND)
-
+       seaSurfaceSalinity_R8 = real(seaSurfaceSalinity(iCell), kind=R8KIND)
        ! sea freezing temperature
-       seaFreezingTemperature(iCell) = colpkg_sea_freezing_temperature(seaSurfaceSalinity(iCell))
+       seaFreezingTemperature(iCell) = colpkg_sea_freezing_temperature(seaSurfaceSalinity_R8)
 
     enddo ! iCell
 

@@ -3602,8 +3602,8 @@ contains
 
     else
 
-       principalStress1 = 1.0e30_RKIND
-       principalStress2 = 1.0e30_RKIND
+       principalStress1 = 1.0e24_RKIND
+       principalStress2 = 1.0e24_RKIND
 
     endif
 
