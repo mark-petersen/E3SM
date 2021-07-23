@@ -6951,7 +6951,7 @@ contains
                    do iqp = 1, nQuadPoints
                       do iCat = 1, nCategories
                          if (thisTracer % ndims == 2) then
-                            if (thisTracer % triangleValue2D(iCat,iqp,iTri,iEdge) < 0.0_RKIND) then
+                            if (thisTracer % triangleValue2D(iCat,iqp,iTri,iEdge) < -1.e-6_RKIND) then
                                call mpas_log_write('MPAS-seaice: IR negative reconstructed ice area', messageType=MPAS_LOG_ERR)
                                call mpas_log_write('nCells, iCat, iCell, global iCell: $i $i $i $i',  messageType=MPAS_LOG_ERR, &
                                     intArgs=(/nCells, iCat, iCell, indexToCellID(iCell)/))
@@ -6964,10 +6964,12 @@ contains
                                                thisTracer%center2D(iCat,iCell), &
                                                thisTracer% xGrad2D(iCat,iCell), &
                                                thisTracer% yGrad2D(iCat,iCell) /))
+                            elseif (thisTracer % triangleValue2D(iCat,iqp,iTri,iEdge) < 0.0_RKIND) then
+                               thisTracer % triangleValue2D(iCat,iqp,iTri,iEdge) = 0.0_RKIND
                             endif  ! negative 2D area
                          elseif (thisTracer % ndims == 3) then
                             do iLayer = 1, nLayers
-                               if (thisTracer % triangleValue3D(iLayer,iCat,iqp,iTri,iEdge) < 0.0_RKIND) then
+                               if (thisTracer % triangleValue3D(iLayer,iCat,iqp,iTri,iEdge) < -1.0e-6_RKIND) then
                                   call mpas_log_write('MPAS-seaice: IR negative reconstructed ice area', messageType=MPAS_LOG_ERR)
                                   call mpas_log_write('nCells, iLayer, iCat, iCell, global iCell: $i $i $i $i $i', &
                                        messageType=MPAS_LOG_ERR, &
@@ -6982,6 +6984,8 @@ contains
                                                   thisTracer%center3D(iLayer,iCat,iCell), &
                                                   thisTracer% xGrad3D(iLayer,iCat,iCell), &
                                                   thisTracer% yGrad3D(iLayer,iCat,iCell) /))
+                               elseif (thisTracer % triangleValue3D(iLayer,iCat,iqp,iTri,iEdge) < 0.0_RKIND) then
+                                   thisTracer % triangleValue3D(iLayer,iCat,iqp,iTri,iEdge) = 0.0_RKIND
                                endif  ! negative 3D area
                             enddo   ! iLayer
                          endif   ! ndims
