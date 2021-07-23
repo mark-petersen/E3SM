@@ -166,7 +166,7 @@
         p75  = 0.75_dbl_kind, &
         p333 = c1/c3, &
         p666 = c2/c3, &
-        puny   = 1.0e-11_dbl_kind, &
+        puny   = 1.0e-12_dbl_kind, &
         bignum = 1.0e+30_dbl_kind, &
         pi     = SHR_CONST_PI    ,&! pi
         pih    = p5*pi

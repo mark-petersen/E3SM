@@ -876,7 +876,7 @@
       if (present(limit_aice_in)) then
          limit_aice = limit_aice_in
       else
-         limit_aice = .true.
+         limit_aice = .false.
       endif
 
       l_stop = .false.
