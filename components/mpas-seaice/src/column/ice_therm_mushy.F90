@@ -1252,7 +1252,7 @@ contains
          nit               ! Picard iteration count
 
     integer, parameter :: &
-         nit_max = 1000     ! maximum number of Picard iterations
+         nit_max = 1500     ! maximum number of Picard iterations
 
     lconverged = .false.
 

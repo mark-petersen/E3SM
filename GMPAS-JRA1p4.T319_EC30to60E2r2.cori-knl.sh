@@ -64,7 +64,7 @@ fi
 export COMPSET=GMPAS-JRA1p4
 export GRID=TL319_EC30to60E2r2
 export COMPILER=intel
-export TAG=3monthtest_single
+export TAG=2yearstest_single_higher_picard_tolerance5eminus4
 export E3SM_CASE=`date +"%Y%m%d"`.${COMPSET}.${GRID}.${TAG}.${MACHINE}
 
 #####################################################################
@@ -202,9 +202,9 @@ export ROOTPE_WAV=0
 
 ./xmlchange -file env_run.xml -id BUDGETS -val TRUE
 
-./xmlchange -file env_run.xml -id STOP_OPTION -val nmonths
-./xmlchange -file env_run.xml -id STOP_N -val 3
-./xmlchange -file env_run.xml -id REST_OPTION -val nmonths
+./xmlchange -file env_run.xml -id STOP_OPTION -val nyears
+./xmlchange -file env_run.xml -id STOP_N -val 2
+./xmlchange -file env_run.xml -id REST_OPTION -val years
 ./xmlchange -file env_run.xml -id REST_N -val 1
 #./xmlchange -file env_run.xml -id HIST_OPTION -val nyears
 #./xmlchange -file env_run.xml -id HIST_N -val 5
@@ -213,7 +213,7 @@ export ROOTPE_WAV=0
 #regular queue for 13 horus for 3 years of simulation
 ./xmlchange -file env_workflow.xml -subgroup case.run -id JOB_QUEUE -val regular
 #./xmlchange -file env_workflow.xml -subgroup case.run -id JOB_WALLCLOCK_TIME -val "13:00:02"
-./xmlchange -file env_workflow.xml -subgroup case.run -id JOB_WALLCLOCK_TIME -val "03:30:00"
+./xmlchange -file env_workflow.xml -subgroup case.run -id JOB_WALLCLOCK_TIME -val "23:00:00"
 
 
 

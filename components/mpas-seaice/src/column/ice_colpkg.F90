@@ -429,14 +429,14 @@
 #else
       use ice_orbital, only: shr_orb_params
 #endif
-       real (kind=8)    :: obliq_R8
-       real (kind=8)    :: mvelp_R8
-       real (kind=8)    :: eccen_R8
-       real (kind=8)    :: mvelpp_R8
-       real (kind=8)    :: lambm0_R8
-       real (kind=8)    :: obliqr_R8
-       real (kind=8)    :: decln_R8
-       real (kind=8)    :: eccf_R8
+      !  real (kind=8)    :: obliq_R8
+      !  real (kind=8)    :: mvelp_R8
+      !  real (kind=8)    :: eccen_R8
+      !  real (kind=8)    :: mvelpp_R8
+      !  real (kind=8)    :: lambm0_R8
+      !  real (kind=8)    :: obliqr_R8
+      !  real (kind=8)    :: decln_R8
+      !  real (kind=8)    :: eccf_R8
 
 
       logical (kind=log_kind), intent(out) :: &
@@ -444,12 +444,12 @@
 
       character (len=*), intent(out) :: stop_label
 
-      eccen_R8 = real(eccen, kind = 8)
-      mvelpp_R8 = real(mvelpp, kind = 8)
-      mvelp_R8 = real(mvelp, kind = 8)
-      obliq_R8  = real(obliq, kind =8)
-      lambm0_R8  = real(lambm0, kind =8)
-      obliqr_R8  = real(obliqr, kind =8)
+      ! eccen_R8 = real(eccen, kind = 8)
+      ! mvelpp_R8 = real(mvelpp, kind = 8)
+      ! mvelp_R8 = real(mvelp, kind = 8)
+      ! obliq_R8  = real(obliq, kind =8)
+      ! lambm0_R8  = real(lambm0, kind =8)
+      ! obliqr_R8  = real(obliqr, kind =8)
       !decln_R8  = real(decln, kind = R8KIND)
       !eccf_R8  = real(eccf, kind = R8KIND)
       l_stop = .false.      ! initialized for CCSMCOUPLED
@@ -458,14 +458,14 @@
       log_print = .false.   ! if true, write out orbital parameters
 
 #ifdef CCSMCOUPLED
-      call shr_orb_params( iyear_AD, eccen_R8 , obliq_R8 , mvelp_R8 , &
-                           obliqr_R8  , lambm0_R8, mvelpp_R8, log_print)
-      eccen = real(eccen_R8, kind=dbl_kind) 
-      obliq = real(obliq_R8, kind=dbl_kind)
-      obliqr = real(obliqr_R8, kind=dbl_kind)
-      mvelp = real(mvelp_R8, kind=dbl_kind)
-      mvelpp = real(mvelpp_R8, kind=dbl_kind)
-      lambm0 = real(lambm0_R8, kind=dbl_kind)
+      call shr_orb_params( iyear_AD, eccen , obliq , mvelp , &
+                           obliqr  , lambm0, mvelpp, log_print)
+      ! eccen = real(eccen_R8, kind=dbl_kind) 
+      ! obliq = real(obliq_R8, kind=dbl_kind)
+      ! obliqr = real(obliqr_R8, kind=dbl_kind)
+      ! mvelp = real(mvelp_R8, kind=dbl_kind)
+      ! mvelpp = real(mvelpp_R8, kind=dbl_kind)
+      ! lambm0 = real(lambm0_R8, kind=dbl_kind)
 #else
       call shr_orb_params( iyear_AD, eccen , obliq , mvelp    , &
                            obliqr  , lambm0, mvelpp, log_print, &

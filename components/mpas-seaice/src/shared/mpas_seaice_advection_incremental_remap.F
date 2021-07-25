@@ -59,22 +59,22 @@ module seaice_advection_incremental_remap
    real(kind=RKIND), parameter :: &
         eps11 = 1.0e-11_RKIND           ! small number (= puny in CICE)
 
-   real(kind=RKIND), parameter :: &
-        w1TriangleQP = 1.09951743655321885e-01_RKIND, &  ! weighting factors for triangle quadrature
-        w2TriangleQP = 2.23381589678011389e-01_RKIND     ! (3rd and 4th degree polynomials)
+   real(kind=R8KIND), parameter :: &
+        w1TriangleQP = 1.09951743655321885e-01_R8KIND, &  ! weighting factors for triangle quadrature
+        w2TriangleQP = 2.23381589678011389e-01_R8KIND     ! (3rd and 4th degree polynomials)
 
-   real(kind=RKIND), parameter :: &                      ! geometric factors for triangle quadrature
-        q1TriangleQP = 9.15762135097710761e-02_RKIND, &  ! (3rd and 4th degree polynomials)
-        q2TriangleQP = 8.16847572980458514e-01_RKIND, &
-        q3TriangleQP = 1.08103018168070275e-01_RKIND, &
-        q4TriangleQP = 4.45948490915965612e-01_RKIND
+   real(kind=R8KIND), parameter :: &                      ! geometric factors for triangle quadrature
+        q1TriangleQP = 9.15762135097710761e-02_R8KIND, &  ! (3rd and 4th degree polynomials)
+        q2TriangleQP = 8.16847572980458514e-01_R8KIND, &
+        q3TriangleQP = 1.08103018168070275e-01_R8KIND, &
+        q4TriangleQP = 4.45948490915965612e-01_R8KIND
 
    integer, pointer :: &
         nQuadPoints   ! number of triangle quadrature points
                       ! = 6 for exact integration of polynomials up to degree 4
                       ! = 3 for exact integration of polynomials up to degree 2
 
-   real(kind=RKIND), dimension(:), allocatable ::   &
+   real(kind=R8KIND), dimension(:), allocatable ::   &
         weightQuadPoint                               ! weighting factor for each quadrature point
 
    ! local diagnostic indices and IDs
@@ -778,7 +778,7 @@ contains
 
     allocate(weightQuadPoint(nQuadPoints))
     if (nQuadPoints == 3) then
-       weightQuadPoint(:) = 1.0_RKIND / 3.0_RKIND
+       weightQuadPoint(:) = 1.0_R8KIND / 3.0_R8KIND
     elseif (nQuadPoints == 6) then
        weightQuadPoint(1:3) = w1TriangleQP    ! 0.010995...
        weightQuadPoint(4:6) = w2TriangleQP    ! 0.022338...
@@ -3655,11 +3655,11 @@ contains
 
     integer :: iCell, iCat, iLayer
 
-    real(kind=RKIND) :: &
+    real(kind=R8KIND) :: &
          c0, cx, cy, cxx, cxy, cyy,  &   ! coefficients in equations for barycentric coordinates
          cxxx, cxxy, cxyy, cyyy
 
-    real(kind=RKIND) :: reciprocal
+    real(kind=R8KIND) :: reciprocal
 
     integer :: nCategories   ! number of categories
     integer :: nLayers       ! number of layers
@@ -4281,6 +4281,10 @@ contains
     real(kind=RKIND), dimension(:,:), allocatable ::   &
          normalGrad,     & ! normal components of the gradient, defined on cell edges
          globalGrad        ! gradient at cell center, in global x/y/z coordinates
+    !real(kind=RKIND), dimension(:,:), allocatable ::   &
+    !     normalGrad_R8,     & ! normal components of the gradient, defined on cell edges
+    !     globalGrad        ! gradient at cell center, in global x/y/z coordinates
+
 
     !real(kind=RKIND), dimension(:), allocatable ::   &
     !     zGrad             ! diagnostic only; should be much smaller than xGrad and yGrad
@@ -4290,7 +4294,8 @@ contains
     !allocate(zGrad(nCategories))
     allocate(normalGrad(nCategories,maxEdges))
     allocate(globalGrad(nCategories,3))
-
+    !allocate(normalGrad_R8(nCategories,maxEdges))
+    
     ! initialize the gradient
     xGrad(:,:) = 0.0_RKIND
     yGrad(:,:) = 0.0_RKIND
@@ -4328,7 +4333,8 @@ contains
                          signGradient = -1.0_RKIND
                       end if
 
-                      normalGrad(iCat,iEdgeOnCell) = signGradient * (field(iCat,iCellNeighbor) - field(iCat,iCell)) / dcEdge(iEdge)
+                      normalGrad(iCat,iEdgeOnCell) = signGradient * (field(iCat,iCellNeighbor) - field(iCat,iCell)) / & 
+                                                        dcEdge(iEdge)
 
                    endif
 
@@ -4343,7 +4349,7 @@ contains
              globalGrad(:,3) = globalGrad(:,3) + coeffsReconstruct(3,iEdgeOnCell,iCell) * normalGrad(:,iEdgeOnCell)
 
           enddo  ! iEdgeOnCell
-
+          !normalGrad = real(normalGrad_R8, kind=RKIND)
           ! The global gradient vector lives in Cartesian x/y/z space.
           ! If on a rotated grid, then rotate the vector by 90 degrees, such that
           !  the true North Pole goes to (-1,0,0) and the true South Pole to (1,0,0).
@@ -4408,6 +4414,7 @@ contains
 
     ! cleanup
     !deallocate(zGrad)
+    !deallocate(normalGrad_R8)
     deallocate(normalGrad)
     deallocate(globalGrad)
 
@@ -4500,7 +4507,7 @@ contains
     integer :: iCell, iEdge, iEdgeOnCell, iCellNeighbor
 
     real(kind=RKIND), dimension(:,:,:), allocatable ::   &
-         normalGrad,     & ! normal components of the gradient, defined on cell edges
+         normalGrad, &      ! normal components of the gradient, defined on cell edges
          globalGrad        ! gradient at cell center, in global x/y/z coordinates
 
     real(kind=RKIND) :: &
@@ -4515,6 +4522,7 @@ contains
     !allocate(zGrad(nLayers,nCategories))
     allocate(normalGrad(nLayers,nCategories,maxEdges))
     allocate(globalGrad(nLayers,nCategories,3))
+
 
     ! initialize the gradient
     xGrad(:,:,:) = 0.0_RKIND
@@ -4556,7 +4564,8 @@ contains
                          end if
 
                          normalGrad(iLayer,iCat,iEdgeOnCell) = &
-                              signGradient * (field(iLayer,iCat,iCellNeighbor) - field(iLayer,iCat,iCell)) / dcEdge(iEdge)
+                              signGradient * (field(iLayer,iCat,iCellNeighbor) - field(iLayer,iCat,iCell)) / &
+                              dcEdge(iEdge)
 
                       endif
 
@@ -4578,7 +4587,7 @@ contains
           !  the true North Pole goes to (-1,0,0) and the true South Pole to (1,0,0).
 
           !TODO - Rotate the gradient vector if on a plane?
-
+          !normalGrad = real(normalGrad_R8, kind=RKIND)
           if (config_rotate_cartesian_grid .and. on_a_sphere) then
              ! reusing normalGrad as a temporary variable to rotate globalGrad
              normalGrad(:,:,1) =  globalGrad(:,:,1)   ! temp
@@ -4636,7 +4645,8 @@ contains
 
     ! cleanup
     !deallocate(zGrad)
-    deallocate(normalGrad)
+    deallocate(normalGrad) 
+    !deallocate(normalGrad_R8)   
     deallocate(globalGrad)
 
   end subroutine compute_gradient_3d
@@ -6775,6 +6785,15 @@ contains
          tracerIntegral3D         ! integral over a triangle of mass, mass*tracer, etc.
                                   ! for each category and layer
 
+   ! real(kind=RKIND), dimension(:), allocatable ::   &
+    !     tracerIntegral2D_R8         ! integral over a triangle of mass, mass*tracer, etc.
+                                  ! for each category
+
+   ! real(kind=R8KIND), dimension(:,:), allocatable ::   &
+   !      tracerIntegral3D_R8         ! integral over a triangle of mass, mass*tracer, etc.
+                                  ! for each category and layer
+
+
     nTriPerEdgeRemap = size(triangleArea,1)
 
     ! loop through linked list of tracers
@@ -6798,6 +6817,7 @@ contains
           thisTracer % edgeFlux2D(:,:) = 0.0_RKIND
           nCategories = size(thisTracer % array2D, 1)
           allocate(tracerIntegral2D(nCategories))
+          !allocate(tracerIntegral2D_R8(nCategories))
 
        elseif (thisTracer % ndims == 3) then
 
@@ -6805,6 +6825,7 @@ contains
           nLayers = size(thisTracer % array3D, 1)
           nCategories = size(thisTracer % array3D, 2)
           allocate(tracerIntegral3D(nLayers,nCategories))
+          !allocate(tracerIntegral3D_R8(nLayers,nCategories))
 
        endif
 
@@ -6868,8 +6889,8 @@ contains
                             thisTracer % triangleValue2D(iCat,iqp,iTri,iEdge) = &
                                parentTracer % triangleValue2D(iCat,iqp,iTri,iEdge) * &
                                ( thisTracer % center2D(iCat,iCell)                              &
-                               + thisTracer %  xGrad2D(iCat,iCell) * xTriangle(iqp,iTri,iEdge)  &
-                               + thisTracer %  yGrad2D(iCat,iCell) * yTriangle(iqp,iTri,iEdge)  &
+                               + thisTracer %  xGrad2D(iCat,iCell) * xTriangle(iqp,iTri,iEdge) &
+                               + thisTracer %  yGrad2D(iCat,iCell) * yTriangle(iqp,iTri,iEdge) &
                                )
                             ! integrate over the triangle by summing over quadrature points
                             tracerIntegral2D(iCat) = tracerIntegral2D(iCat) &
@@ -6914,15 +6935,15 @@ contains
                                   thisTracer % triangleValue3D(iLayer,iCat,iqp,iTri,iEdge) = &
                                      parentTracer % triangleValue2D(iCat,iqp,iTri,iEdge) * &
                                      ( thisTracer % center3D(iLayer,iCat,iCell) &
-                                     + thisTracer %  xGrad3D(iLayer,iCat,iCell) * xTriangle(iqp,iTri,iEdge)  &
-                                     + thisTracer %  yGrad3D(iLayer,iCat,iCell) * yTriangle(iqp,iTri,iEdge)  &
+                                     + thisTracer %  xGrad3D(iLayer,iCat,iCell) * xTriangle(iqp,iTri,iEdge) &
+                                     + thisTracer %  yGrad3D(iLayer,iCat,iCell) * yTriangle(iqp,iTri,iEdge) &
                                      )
                                else  ! parents has ndims = 3
                                   thisTracer % triangleValue3D(iLayer,iCat,iqp,iTri,iEdge) = &
                                      parentTracer % triangleValue3D(iLayer,iCat,iqp,iTri,iEdge) * &
                                      ( thisTracer % center3D(iLayer,iCat,iCell) &
-                                     + thisTracer %  xGrad3D(iLayer,iCat,iCell) * xTriangle(iqp,iTri,iEdge)  &
-                                     + thisTracer %  yGrad3D(iLayer,iCat,iCell) * yTriangle(iqp,iTri,iEdge)  &
+                                     + thisTracer %  xGrad3D(iLayer,iCat,iCell) * xTriangle(iqp,iTri,iEdge) &
+                                     + thisTracer %  yGrad3D(iLayer,iCat,iCell) * yTriangle(iqp,iTri,iEdge) &
                                      )
                                endif
                                ! integrate over the triangle by summing over quadrature points
@@ -6965,6 +6986,14 @@ contains
                                                thisTracer% xGrad2D(iCat,iCell), &
                                                thisTracer% yGrad2D(iCat,iCell) /))
                             elseif (thisTracer % triangleValue2D(iCat,iqp,iTri,iEdge) < 0.0_RKIND) then
+                               call mpas_log_write('triangleValue2D within error tolerance, zeroing out', messageType=MPAS_LOG_ERR)
+                               call mpas_log_write('triangle area, tracer, center, xGrad2D, yGrad2D: $r $r $r $r $r', &
+                                    messageType=MPAS_LOG_ERR, & ! abort
+                                    realArgs=(/triangleArea(iTri,iEdge), &
+                                               thisTracer%triangleValue2D(iCat,iqp,iTri,iEdge), &
+                                               thisTracer%center2D(iCat,iCell), &
+                                               thisTracer% xGrad2D(iCat,iCell), &
+                                               thisTracer% yGrad2D(iCat,iCell) /))
                                thisTracer % triangleValue2D(iCat,iqp,iTri,iEdge) = 0.0_RKIND
                             endif  ! negative 2D area
                          elseif (thisTracer % ndims == 3) then
@@ -6985,6 +7014,14 @@ contains
                                                   thisTracer% xGrad3D(iLayer,iCat,iCell), &
                                                   thisTracer% yGrad3D(iLayer,iCat,iCell) /))
                                elseif (thisTracer % triangleValue3D(iLayer,iCat,iqp,iTri,iEdge) < 0.0_RKIND) then
+                                   call mpas_log_write('triangleValueDD within error tolerance, zeroing out', messageType=MPAS_LOG_ERR)
+                                   call mpas_log_write('triangle area, tracer, center, xGrad2D, yGrad2D: $r $r $r $r $r', &
+                                        messageType=MPAS_LOG_ERR, & ! abort
+                                        realArgs=(/triangleArea(iTri,iEdge), &
+                                                   thisTracer%triangleValue2D(iCat,iqp,iTri,iEdge), &
+                                                   thisTracer%center2D(iCat,iCell), &
+                                                   thisTracer% xGrad2D(iCat,iCell), &
+                                                   thisTracer% yGrad2D(iCat,iCell) /))
                                    thisTracer % triangleValue3D(iLayer,iCat,iqp,iTri,iEdge) = 0.0_RKIND
                                endif  ! negative 3D area
                             enddo   ! iLayer
