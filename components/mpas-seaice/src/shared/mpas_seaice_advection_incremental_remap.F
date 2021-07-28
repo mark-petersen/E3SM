@@ -1970,7 +1970,7 @@ contains
 
              call dot_product_3d(workVector, workVector3, dotProduct)
 
-             if (dotProduct >= 0.0_RKIND) then
+             if (dotProduct >= -1.e-6_RKIND) then
                 continue
              else
                 call mpas_log_write('IR requires convex cells with vertices arranged CCW around the cell', MPAS_LOG_ERR)
@@ -2013,7 +2013,7 @@ contains
           ! cross product of vector1 and vector 2
           call cross_product_2d(workVector1(1:2), workVector2(1:2), crossProduct)
 
-          if (crossProduct >= 0.0_RKIND) then
+          if (crossProduct >= -1.e-6_RKIND) then
              continue
           else
              call mpas_log_write('ERROR: IR requires convex cells with vertices arranged CCW around the cell', MPAS_LOG_ERR)
@@ -2970,7 +2970,7 @@ contains
           call mpas_log_write('iCell (local), iCell(global), ice area, xCell, yCell, zCell:')
           if (thisTracer % ndims == 2) then  ! the pointer to iceAreaCategory should always be 2D, but check just in case
              do iCell = 1, nCellsSolve
-                if (thisTracer % array2D(iCatTest,iCell) > 0.0_RKIND) then
+                if (thisTracer % array2D(iCatTest,iCell) > -1.e-6_RKIND) then
                    call mpas_log_write("$i $i $r $r $r $r", &
                         intArgs=(/iCell, indexToCellID(iCell)/), &
                         realArgs=(/thisTracer % array2D(iCatTest,iCell), xCell(iCell), yCell(iCell), zCell(iCell)/))
@@ -3377,7 +3377,7 @@ contains
        call mpas_log_write('iCell (local), iCell(global), ice area, xCell, yCell, zCell:')
        if (thisTracer % ndims == 2) then  ! the pointer to iceAreaCategory should always be 2D, but check just in case
           do iCell = 1, nCellsSolve
-             if (thisTracer % array2D(iCatTest,iCell) > 0.0_RKIND) then
+             if (thisTracer % array2D(iCatTest,iCell) > -1.e-6_RKIND) then
                 call mpas_log_write("$i $i $f $f $f $f", &
                      intArgs=(/iCell, indexToCellID(iCell)/), &
                      realArgs=(/thisTracer % array2D(iCatTest,iCell), xCell(iCell), yCell(iCell), zCell(iCell)/))
@@ -3485,7 +3485,7 @@ contains
 
                 ! Set maskCell = 1 if ice exists in any category or layer; else set maskCell = 0
                 massSumCell = sum(thisTracer%array2D(:,iCell))
-                if (massSumCell > 0.0_RKIND) then
+                if (massSumCell >-1.e-6_RKIND) then
                    maskCell(iCell) = 1
                 else
                    maskCell(iCell) = 0
@@ -3502,7 +3502,7 @@ contains
 
                 ! Set maskCell = 1 if ice exists in any category or layer; else set maskCell = 0
                 massSumCell = sum(thisTracer%array3D(:,:,iCell))
-                if (massSumCell > 0.0_RKIND) then
+                if (massSumCell > -1.e-6_RKIND) then
                    maskCell(iCell) = 1
                 else
                    maskCell(iCell) = 0
@@ -6106,7 +6106,7 @@ contains
 
              call quadrilateral_area(edgeVertex(:,1), edgeVertex(:,2), departurePoint(:,2), departurePoint(:,1), quadArea)
 
-             if (quadArea > 0.0_RKIND) then  !TODO - change minimum quad area to eps11 or eps11**2?
+             if (quadArea > -1.e-6_RKIND) then  !TODO - change minimum quad area to eps11 or eps11**2?
 
                 ! add triangle with vertices V1, V2 and D1
                 triangleCount = triangleCount + 1
@@ -6474,7 +6474,7 @@ contains
           call mpas_log_write('IR: Critical error', MPAS_LOG_CRIT)
        endif
 
-       if (crossProduct > 0.0_RKIND) then
+       if (crossProduct > -1.e-6_RKIND) then
           edgeVectorTemp(:) = edgeVector1(:)
           edgeVector1(:)    = edgeVector2(:)
           edgeVector2(:)    = edgeVectorTemp(:)
@@ -7389,7 +7389,7 @@ contains
              ! Note: This expression uses the old value of massTracerProduct for this tracer,
              ! but the new value for the parent tracer
              do iCat = 1, nCategories
-                if (parentTracer % massTracerProduct2D(iCat,iCell) > 0.0_RKIND) then
+                if (parentTracer % massTracerProduct2D(iCat,iCell) > -1.e-6_RKIND) then
                    thisTracer % array2D(iCat,iCell) = &
                         (thisTracer % massTracerProduct2D(iCat,iCell) - (fluxFromCell2D(iCat) / areaCell(iCell))) / &
                         parentTracer % massTracerProduct2D(iCat,iCell)
@@ -7476,7 +7476,7 @@ contains
 
                 do iCat = 1, nCategories
                    do iLayer = 1, nLayers
-                      if (parentTracer % massTracerProduct2D(iCat,iCell) > 0.0_RKIND) then
+                      if (parentTracer % massTracerProduct2D(iCat,iCell) > -1.e-6_RKIND) then
                          thisTracer % array3D(iLayer,iCat,iCell) = (thisTracer % massTracerProduct3D(iLayer,iCat,iCell) &
                                                                        - (fluxFromCell3D(iLayer,iCat) / areaCell(iCell))) &
                                                                   / parentTracer % massTracerProduct2D(iCat,iCell)
@@ -7509,7 +7509,7 @@ contains
 
                 do iCat = 1, nCategories
                    do iLayer = 1, nLayers
-                      if (parentTracer % massTracerProduct3D(iLayer,iCat,iCell) > 0.0_RKIND) then
+                      if (parentTracer % massTracerProduct3D(iLayer,iCat,iCell) > -1.e-6_RKIND) then
                          thisTracer % array3D(iLayer,iCat,iCell) = (thisTracer % massTracerProduct3D(iLayer,iCat,iCell) &
                                                                        - (fluxFromCell3D(iLayer,iCat) / areaCell(iCell))) &
                                                                   / parentTracer % massTracerProduct3D(iLayer,iCat,iCell)
@@ -7551,14 +7551,14 @@ contains
 
              do iCell = 1, nCellsSolve
                 do iCat = 1, nCategories
-                   if (thisTracer % array2D(iCat,iCell) < -seaicePuny*seaicePuny) then
+                   if (thisTracer % array2D(iCat,iCell) < -1.e-6_RKIND) then
                       call mpas_log_write('IR: Negative mass in IR: iCat, iCell, global iCell, value: $i $i $i $r', &
                            messageType=MPAS_LOG_ERR, &
                            intArgs=(/iCat, iCell, indexToCellID(iCell)/), &
                            realArgs=(/thisTracer % array2D(iCat,iCell)/))
                       abortFlag = .true.
                       return
-                   else if (thisTracer % array2D(iCat,iCell) >= -seaicePuny*seaicePuny .and. &
+                   else if (thisTracer % array2D(iCat,iCell) >= -1.e-6_RKIND .and. &
                             thisTracer % array2D(iCat,iCell) < 0.0_RKIND) then
                       thisTracer % array2D(iCat,iCell) = 0.0_RKIND
                    endif
@@ -7570,14 +7570,14 @@ contains
              do iCell = 1, nCellsSolve
                 do iCat = 1, nCategories
                    do iLayer = 1, nLayers
-                      if (thisTracer % array3D(iLayer,iCat,iCell) < -seaicePuny*seaicePuny) then
+                      if (thisTracer % array3D(iLayer,iCat,iCell) < -1.e-6_RKIND) then
                          call mpas_log_write('IR: Negative mass in IR: iLayer, iCat, iCell, global iCell, value: $i $i $i $i $r', &
                               messageType=MPAS_LOG_ERR, &
                               intArgs=(/iLayer, iCat, iCell, indexToCellID(iCell)/), &
                               realArgs=(/thisTracer % array3D(iLayer,iCat,iCell)/))
                          abortFlag = .true.
                          return
-                      else if (thisTracer % array3D(iLayer,iCat,iCell) >= -seaicePuny*seaicePuny .and. &
+                      else if (thisTracer % array3D(iLayer,iCat,iCell) >= -1.e-6_RKIND .and. &
                                thisTracer % array3D(iLayer,iCat,iCell) < 0.0_RKIND) then
                          thisTracer % array3D(iLayer,iCat,iCell) = 0.0_RKIND
                       endif
@@ -8888,7 +8888,7 @@ contains
        do iCell = 1, nCellsSolve
           do iCat = 1, nCategories
 
-             if (thisTracer % array2D(iCat,iCell) > 0.0_RKIND .and. &
+             if (thisTracer % array2D(iCat,iCell) > -1.e-6_RKIND .and. &
                  thisTracer % array2D(iCat,iCell) < smallMassThreshold) then
 
 !!                call mpas_log_write('Zap mass: iCell, iCat = $i $i', intArgs=(/iCell, iCat/))
@@ -9308,7 +9308,7 @@ contains
     call cross_product_2d(vector1, vector2, crossProduct)
 
     ! determine whether the point is in the half plane of the line
-    if (crossProduct >= 0.0_RKIND) then
+    if (crossProduct >= -1.e-6_RKIND) then
        point_in_half_plane = .true.
     else
        point_in_half_plane = .false.
@@ -9352,7 +9352,7 @@ contains
     do iCell = 1, nCells
        do iCat = 1, nCategories
 
-          if (area(iCat,iCell) > 0.0_RKIND) then
+          if (area(iCat,iCell) > -1.e-6_RKIND) then
              volumeToThickness(iCat,iCell) = volumeToThickness(iCat,iCell) / area(iCat,iCell)
           else
              volumeToThickness(iCat,iCell) = 0.0_RKIND
