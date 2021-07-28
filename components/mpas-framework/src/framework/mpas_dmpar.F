@@ -6521,7 +6521,7 @@ subroutine mpas_dmpar_get_exch_list(haloLayer, ownedListField, neededListField, 
 #else
       call system_clock(count=clock)
       call system_clock(count_rate=hz)
-      curTime = real(clock, kind=RKIND) / real(hz, kind=RKIND)
+      curTime = real(clock, kind=R8KIND) / real(hz, kind=R8KIND)
 #endif
 
    end subroutine mpas_dmpar_get_time!}}}

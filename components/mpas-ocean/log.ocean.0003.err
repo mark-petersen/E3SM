@@ -1,0 +1,7 @@
+----------------------------------------------------------------------
+Beginning MPAS-ocean Error Log File for task       3 of       8
+    Opened at 2021/07/28 13:26:27
+----------------------------------------------------------------------
+
+CRITICAL ERROR: Could not open input file 'mesh.nc' to read mesh fields
+Logging complete.  Closing file at 2021/07/28 13:26:27

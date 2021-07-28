@@ -7570,14 +7570,14 @@ contains
              do iCell = 1, nCellsSolve
                 do iCat = 1, nCategories
                    do iLayer = 1, nLayers
-                      if (thisTracer % array3D(iLayer,iCat,iCell) < -seaicePuny) then
+                      if (thisTracer % array3D(iLayer,iCat,iCell) < -seaicePuny*seaicePuny) then
                          call mpas_log_write('IR: Negative mass in IR: iLayer, iCat, iCell, global iCell, value: $i $i $i $i $r', &
                               messageType=MPAS_LOG_ERR, &
                               intArgs=(/iLayer, iCat, iCell, indexToCellID(iCell)/), &
                               realArgs=(/thisTracer % array3D(iLayer,iCat,iCell)/))
                          abortFlag = .true.
                          return
-                      else if (thisTracer % array3D(iLayer,iCat,iCell) >= -seaicePuny .and. &
+                      else if (thisTracer % array3D(iLayer,iCat,iCell) >= -seaicePuny*seaicePuny.and. &
                                thisTracer % array3D(iLayer,iCat,iCell) < 0.0_RKIND) then
                          thisTracer % array3D(iLayer,iCat,iCell) = 0.0_RKIND
                       endif
