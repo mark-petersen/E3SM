@@ -38,7 +38,7 @@ fi
 
 #get project output from master repository 
 #export REPO_NAME=master.`date +"%Y%m%d"`
-export REPO_NAME="E3SM_single_precision"
+export REPO_NAME="E3SM_playground"
 export E3SM_ROOT=$REPO_ROOT/$REPO_NAME
 
 if [ ! -d "$REPO_ROOT/$REPO_NAME" ]; then
@@ -64,7 +64,7 @@ fi
 export COMPSET=GMPAS-JRA1p4
 export GRID=TL319_EC30to60E2r2
 export COMPILER=intel
-export TAG=3yearstest_single
+export TAG=2yearstest_single_higher_picard_tolerance5eminus4
 export E3SM_CASE=`date +"%Y%m%d"`.${COMPSET}.${GRID}.${TAG}.${MACHINE}
 
 #####################################################################
@@ -203,7 +203,7 @@ export ROOTPE_WAV=0
 ./xmlchange -file env_run.xml -id BUDGETS -val TRUE
 
 ./xmlchange -file env_run.xml -id STOP_OPTION -val nyears
-./xmlchange -file env_run.xml -id STOP_N -val 3
+./xmlchange -file env_run.xml -id STOP_N -val 2
 ./xmlchange -file env_run.xml -id REST_OPTION -val years
 ./xmlchange -file env_run.xml -id REST_N -val 1
 #./xmlchange -file env_run.xml -id HIST_OPTION -val nyears
