@@ -459,7 +459,7 @@
 
       tmp2 = tmp2 + (mlost/rhos)
 
-      if (abs(tmp1-tmp2) > puny) then
+      if (abs(tmp1-tmp2) > 1.e-7) then
          write(warning,*)'mass conservation error in snow_redist', tmp1, tmp2
          call add_warning(warning)
          write(warning,*)'klyr',klyr

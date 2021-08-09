@@ -102,6 +102,10 @@ include 'mpif.h'
    public :: mpas_dmpar_destroy_mulithalo_exchange_list
    public :: mpas_dmpar_destroy_communication_list
    public :: mpas_dmpar_destroy_exchange_list
+   interface mpas_dmpar_get_time
+      module procedure mpas_dmpar_get_time_R4
+      module procedure mpas_dmpar_get_time_R8
+   end interface
    public :: mpas_dmpar_get_time
    public :: mpas_dmpar_exch_group_create
    public :: mpas_dmpar_exch_group_destroy
@@ -6509,7 +6513,7 @@ subroutine mpas_dmpar_get_exch_list(haloLayer, ownedListField, neededListField, 
 !
 !-----------------------------------------------------------------------
 
-   subroutine mpas_dmpar_get_time(curTime)!{{{
+   subroutine mpas_dmpar_get_time_R4(curTime)!{{{
 
       implicit none
 
@@ -6524,7 +6528,25 @@ subroutine mpas_dmpar_get_exch_list(haloLayer, ownedListField, neededListField, 
       curTime = real(clock, kind=R8KIND) / real(hz, kind=R8KIND)
 #endif
 
-   end subroutine mpas_dmpar_get_time!}}}
+   end subroutine mpas_dmpar_get_time_R4!}}}
+
+
+   subroutine mpas_dmpar_get_time_R8(curTime)!{{{
+
+      implicit none
+
+      real (kind=R8KIND), intent(out) :: curTime !< Output: Current time
+      integer :: clock, hz, threadNum
+
+#ifdef _MPI
+      curTime = MPI_WTime()
+#else
+      call system_clock(count=clock)
+      call system_clock(count_rate=hz)
+      curTime = real(clock, kind=R8KIND) / real(hz, kind=R8KIND)
+#endif
+
+   end subroutine mpas_dmpar_get_time_R8!}}}
 
 
 !-----------------------------------------------------------------------
