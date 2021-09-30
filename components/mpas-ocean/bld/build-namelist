@@ -55,6 +55,10 @@ OPTIONS
                            fluxes
                            Options are: false, true
      -decomp_prefix        decomp_prefix variable
+     -ocn_tides            variable for defining how the ocn model will include tidal forcing
+                           Options are: false, true
+     -ocn_1layer           variable for defining how the ocn model will use one layer
+                           Options are: false, true
      -date_stamp           date_stamp variable
      -cfg_grid             Directory containing MPASO configuration scripts.
                            If not defined, location is set as \$ProgDir or \$cwd
@@ -108,6 +112,8 @@ my %opts = ( help          => 0,
              ocn_forcing   => undef,
              ocn_iceberg   => undef,
              ocn_ismf      => undef,
+             ocn_tides     => undef,
+             ocn_1layer    => undef,
              decomp_prefix => undef,
              date_stamp    => undef,
              ocn_bgc       => undef,
@@ -132,6 +138,8 @@ GetOptions(
     "ocn_forcing=s"   => \$opts{'ocn_forcing'},
     "ocn_iceberg=s"   => \$opts{'ocn_iceberg'},
     "ocn_ismf=s"      => \$opts{'ocn_ismf'},
+    "ocn_tides=s"     => \$opts{'ocn_tides'},
+    "ocn_1layer=s"    => \$opts{'ocn_1layer'},
     "decomp_prefix=s" => \$opts{'decomp_prefix'},
     "date_stamp=s"    => \$opts{'date_stamp'},
     "ocn_bgc=s"       => \$opts{'ocn_bgc'},
@@ -173,6 +181,8 @@ my $OCN_GRID      = $opts{'ocn_grid'};
 my $OCN_FORCING   = $opts{'ocn_forcing'};
 my $OCN_ICEBERG   = $opts{'ocn_iceberg'};
 my $OCN_ISMF      = $opts{'ocn_ismf'};
+my $OCN_TIDES     = $opts{'ocn_tides'};
+my $OCN_1LAYER    = $opts{'ocn_1layer'};
 my $decomp_prefix = $opts{'decomp_prefix'};
 my $date_stamp    = $opts{'date_stamp'};
 my $ocn_bgc       = $opts{'ocn_bgc'};
@@ -692,7 +702,11 @@ add_default($nl, 'config_enable_shortwave_energy_fixer');
 # Namelist group: tidal_potential_forcing #
 ###########################################
 
-add_default($nl, 'config_use_tidal_potential_forcing');
+if ($OCN_TIDES eq 'true') {
+	add_default($nl, 'config_use_tidal_potential_forcing', 'val'=>".true.");
+} else {
+	add_default($nl, 'config_use_tidal_potential_forcing', 'val'=>".false.");
+}
 add_default($nl, 'config_tidal_potential_reference_time');
 add_default($nl, 'config_use_tidal_potential_forcing_M2');
 add_default($nl, 'config_use_tidal_potential_forcing_S2');
@@ -885,7 +899,11 @@ add_default($nl, 'config_check_tracer_monotonicity');
 add_default($nl, 'config_compute_active_tracer_budgets');
 add_default($nl, 'config_disable_thick_all_tend');
 add_default($nl, 'config_disable_thick_hadv');
-add_default($nl, 'config_disable_thick_vadv');
+if ($OCN_1LAYER eq 'true') {
+	add_default($nl, 'config_disable_thick_vadv', 'val'=>".true.");
+} else {
+	add_default($nl, 'config_disable_thick_vadv', 'val'=>".false.");
+}
 add_default($nl, 'config_disable_thick_sflux');
 add_default($nl, 'config_disable_vel_all_tend');
 add_default($nl, 'config_disable_vel_coriolis');
@@ -894,10 +912,15 @@ add_default($nl, 'config_disable_vel_hmix');
 add_default($nl, 'config_disable_vel_surface_stress');
 add_default($nl, 'config_disable_vel_topographic_wave_drag');
 add_default($nl, 'config_disable_vel_explicit_bottom_drag');
-add_default($nl, 'config_disable_vel_vmix');
-add_default($nl, 'config_disable_vel_vadv');
-add_default($nl, 'config_disable_tr_all_tend');
-add_default($nl, 'config_disable_tr_adv');
+if ($OCN_1LAYER eq 'true') {
+	add_default($nl, 'config_disable_vel_vmix', 'val'=>".true.");
+	add_default($nl, 'config_disable_vel_vadv', 'val'=>".true.");
+	add_default($nl, 'config_disable_tr_all_tend', 'val'=>".true.");
+} else {
+	add_default($nl, 'config_disable_vel_vmix', 'val'=>".false.");
+	add_default($nl, 'config_disable_vel_vadv', 'val'=>".false.");
+	add_default($nl, 'config_disable_tr_all_tend', 'val'=>".false.");
+}
 add_default($nl, 'config_disable_tr_hmix');
 add_default($nl, 'config_disable_tr_vmix');
 add_default($nl, 'config_disable_tr_sflux');

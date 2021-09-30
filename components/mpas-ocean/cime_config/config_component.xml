@@ -102,6 +102,32 @@
         <desc>Option to specify how atmospheric CO2 is set in MPASO</desc>
  </entry>
 
+  <entry id="MPASO_TIDES">
+        <type>char</type>
+        <valid_values>false,true</valid_values>
+        <default_value>false</default_value>
+        <values>
+           <value compset="MPASO_">false</value>
+           <value compset="_MPASO%.*TIDES">true</value>
+        </values>
+        <group>case_comp</group>
+        <file>env_case.xml</file>
+        <desc>Option to describe the MPASO tidal forcing</desc>
+  </entry>
+
+  <entry id="MPASO_1LAYER">
+        <type>char</type>
+        <valid_values>false,true</valid_values>
+        <default_value>false</default_value>
+        <values>
+           <value compset="MPASO_">false</value>
+           <value compset="_MPASO%.*1LAYER">true</value>
+        </values>
+        <group>case_comp</group>
+        <file>env_case.xml</file>
+        <desc>Option to describe the MPASO setting for one layer</desc>
+  </entry>
+
   <entry id="MPASI_BGC">
         <type>char</type>
         <valid_values></valid_values>
