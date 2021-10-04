@@ -347,6 +347,38 @@
 			description="Number of smoothing iterations on ecosystem variables."
 			possible_values="Any positive integer value greater or equal to 0."
 		/>
+		<nml_option name="config_global_ocean_sigmaz_wt_depth1" type="real" default_value="100.0" units="m"
+			description="Depth of first point for the sigma-z weight function definition"
+			possible_values="Any positive real value greater than 0."
+		/>
+		<nml_option name="config_global_ocean_sigmaz_wt_depth2" type="real" default_value="200.0" units="m"
+			description="Depth of point for the sigma-z weight function definition"
+			possible_values="Any positive real value greater than 0."
+		/>
+		<nml_option name="config_global_ocean_sigmaz_weight2" type="real" default_value="0.75" units="dimensionless"
+			description="Weight of point for the sigma-z weight function definition"
+			possible_values="value between 1.0 (fully z-level) and 0.0 (fully sigma), but typically between 0.5 and 1.0."
+		/>
+		<nml_option name="config_global_ocean_sigmaz_wt_depth3" type="real" default_value="1000.0" units="m"
+			description="Depth of point for the sigma-z weight function definition"
+			possible_values="Any positive real value greater than 0."
+		/>
+		<nml_option name="config_global_ocean_sigmaz_weight3" type="real" default_value="0.75" units="dimensionless"
+			description="Weight of point for the sigma-z weight function definition"
+			possible_values="value between 1.0 (fully z-level) and 0.0 (fully sigma), but typically between 0.5 and 1.0."
+		/>
+		<nml_option name="config_global_ocean_sigmaz_wt_depth4" type="real" default_value="2000.0" units="m"
+			description="Depth of point for the sigma-z weight function definition"
+			possible_values="Any positive real value greater than 0."
+		/>
+		<nml_option name="config_global_ocean_sigmaz_weight4" type="real" default_value="0.5" units="dimensionless"
+			description="Weight of point for the sigma-z weight function definition"
+			possible_values="value between 1.0 (fully z-level) and 0.0 (fully sigma), but typically between 0.5 and 1.0."
+		/>
+		<nml_option name="config_global_ocean_sigmaz_smooth_iterations" type="integer" default_value="3" units="unitless"
+			description="Number of smoothing iterations on bathymetry for sigma-z weights"
+			possible_values="Any positive integer value greater or equal to 0."
+		/>
 	</nml_record>
 	<var_struct name="scratch" time_levs="1">
 		<var name="cullStack" type="integer" dimensions="nCells" persistence="scratch"

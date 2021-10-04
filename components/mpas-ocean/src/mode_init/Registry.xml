@@ -79,7 +79,7 @@
 	<nml_record name="init_vertical_grid" mode="init">
 		<nml_option name="config_init_vertical_grid_type" type="character" default_value="z-star" units="unitless"
 					description="Which vertical grid to initialize with.  Without ice-shelf cavities (i.e. ssh=0 everywhere), 'z-star' and 'z-level' are the same."
-					possible_values="'z-star', 'z-level', or 'haney-number'"
+					possible_values="'z-star', 'z-level', 'sigma-z', or 'haney-number'"
 		/>
 	</nml_record>
 	<nml_record name="constrain_Haney_number" mode="init">
