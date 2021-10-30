@@ -347,6 +347,14 @@
 			description="Number of smoothing iterations on ecosystem variables."
 			possible_values="Any positive integer value greater or equal to 0."
 		/>
+		<nml_option name="config_global_ocean_sigmaz_n_layers_fixed_top" type="integer" default_value="10" units="unitless"
+			description="Depth of first point for the sigma-z weight function definition"
+			possible_values="Any positive integer value greater than 0."
+		/>
+		<nml_option name="config_global_ocean_sigmaz_min_bot_layerThickness" type="real" default_value="100.0" units="m"
+			description="minimum layer thickness along bottom"
+			possible_values="Any positive real value greater than 0."
+		/>
 		<nml_option name="config_global_ocean_sigmaz_wt_depth1" type="real" default_value="100.0" units="m"
 			description="Depth of first point for the sigma-z weight function definition"
 			possible_values="Any positive real value greater than 0."
