@@ -26,11 +26,12 @@ print('zTopRef',zTopRef)
 print('hRef',np.array_repr(hRef[:]).replace('\n', '').replace(' ','').replace('MaskedArray',''))
 
 # flags:
-c = 0.5 # config_bottom_layer_compression
+cDeep= 0.5 # config_bottom_layer_compression
+cShallow= 0.1 # config_bottom_layer_compression usually cShallow < cDeep ? 
 
-nCells = 110 
+nCells = 55 
 for iCell in range(nCells):
-    D = min(zBotRef) + iCell*50.0 # zDepth
+    D = min(zBotRef) + iCell*100.0 # zDepth
 # determine z-level index number for this depth
     kZLevelRef = nVertLevels-1
     for k in range(nVertLevels):
@@ -38,7 +39,7 @@ for iCell in range(nCells):
             kZLevelRef = k
             break
     # add linear interpolation to hminBath later
-    hminBath = max(c*hRef[kZLevelRef],hRef[0])
+    #hminBath = max(c*hRef[kZLevelRef],hRef[0])
     #print('D',D)
     #print('kZLevelRef',kZLevelRef)
     #print('hminBath',hminBath)
@@ -48,7 +49,7 @@ for iCell in range(nCells):
     zTop[nVertLevels+1] = D
     for k in range(nVertLevels,0,-1):
         #zTop[k] = max(zTopRef[k], zTop[k+1] + max(hRef[0],min(hminBath,c*hRef[k-1])))
-        zTop[k] = max(zTopRef[k], zTop[k+1] + max(hRef[0],c*min(hRef[kZLevelRef],hRef[k-1])))
+        zTop[k] = max(zTopRef[k], zTop[k+1] + max(hRef[0],min(cDeep*hRef[kZLevelRef],cShallow*hRef[k-1])))
         h[k] = zTop[k] - zTop[k+1]
 
     #print('zTop',np.array_repr(zTop).replace('\n', '').replace(' ','').replace('array',''))
