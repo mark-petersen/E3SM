@@ -879,7 +879,8 @@ contains
 
      if (config_init_vertical_grid_type /= 'z-level' .and. &
          config_init_vertical_grid_type /= 'z-star' .and. &
-         config_init_vertical_grid_type /= 'sigma-z' .and. &
+         config_init_vertical_grid_type /= 'sigma-z-proporational' .and. &
+         config_init_vertical_grid_type /= 'sigma-z-min-bottom' .and. &
          config_init_vertical_grid_type /= 'haney-number') then
 
          call mpas_log_write('Unexpected value for config_init_vertical_grid_type ' // &
@@ -1058,7 +1059,7 @@ contains
          block_ptr => block_ptr % next
        end do !block_ptr
 
-     else if(config_init_vertical_grid_type == 'sigma-z') then
+     else if(config_init_vertical_grid_type == 'sigma-z-proportional') then
 
        block_ptr => domain % blocklist
        do while(associated(block_ptr))
@@ -1130,6 +1131,158 @@ contains
          end if
 
          ! compute minLevelCell and maxLevelCell based on refBottomDepth, ssh and bottomDepth
+         do iCell = 1, nCells
+           do k = 1, nVertLevels-1
+             depthCellBot(k) = refBottomDepth(k)*( weight_sigma_z(k) &
+                + (1.0_RKIND - weight_sigma_z(k)) * bottomDepthSmooth(iCell) / refBottomDepth(nVertLevels))
+           end do
+           depthCellBot(nVertLevels) = refBottomDepth(nVertLevels)+0.1_RKIND
+
+           if ((bottomDepth(iCell) == 0.0_RKIND) .or. (bottomDepth(iCell) <= -ssh(iCell))) then
+              cycle
+           end if
+
+           maxLevelCell(iCell) = -1
+           do k = 1, nVertLevels
+             depth = depthCellBot(k)
+             if (depth >= bottomDepth(iCell)) then
+               maxLevelCell(iCell) = k
+               exit
+             end if
+           end do
+
+           minLevelCell(iCell) = -1
+           do k = 1, nVertLevels
+             depth = depthCellBot(k)
+             if (-depth < ssh(iCell)) then
+               minLevelCell(iCell) = k
+               exit
+             end if
+           end do
+
+           ! alter pbcs
+           call ocn_alter_bottomDepth_for_pbcs(bottomDepth(iCell), depthCellBot, maxLevelCell(iCell), iErr)
+           if(iErr .ne. 0) then
+             call mpas_log_write( 'ocn_alter_bottomDepth_for_pbcs failed.', MPAS_LOG_CRIT)
+             return
+           end if
+
+           ! alter ptcs
+           call ocn_alter_ssh_for_ptcs(ssh(iCell), refBottomDepth, minLevelCell(iCell), iErr)
+           if(iErr .ne. 0) then
+             call mpas_log_write( 'ocn_alter_ssh_for_ptcs failed.', MPAS_LOG_CRIT)
+             return
+           end if
+
+           ! layerThickness is z-level
+           call ocn_compute_z_level_layerThickness(layerThickness(:,iCell), depthCellBot, ssh(iCell), &
+                                                   bottomDepth(iCell), minLevelCell(iCell),             &
+                                                   maxLevelCell(iCell), nVertLevels, iErr)
+
+           if(iErr .ne. 0) then
+             call mpas_log_write( 'ocn_compute_z_level_layerThickness failed.', MPAS_LOG_CRIT)
+             return
+           end if
+
+           ! cases with SSH > 0 require a resting thickness that is stretched to compensate for the SSH
+           restingThickness(:, iCell) = 0.0_RKIND
+
+           if (maxLevelCell(iCell)  > 0) then
+             layerStretch = (ssh(iCell) + bottomDepth(iCell))/bottomDepth(iCell)
+             do k = minLevelCell(iCell), maxLevelCell(iCell)
+               restingThickness(k, iCell) = layerThickness(k, iCell)/layerStretch
+             end do
+           end if
+
+           ! compute zMid
+           call ocn_compute_zMid_from_layerThickness(zMid(:,iCell), layerThickness(:,iCell), ssh(iCell),    &
+                                                     minLevelCell(iCell), maxLevelCell(iCell), nVertLevels, &
+                                                     iErr)
+
+           if(iErr .ne. 0) then
+             call mpas_log_write( 'ocn_compute_zMid_from_layerThickness failed.', MPAS_LOG_CRIT)
+             return
+           end if
+         end do !iCell
+
+         deallocate(weight_sigma_z, depthCellBot)
+
+         block_ptr => block_ptr % next
+       end do !block_ptr
+
+     else if(config_init_vertical_grid_type == 'sigma-z-min-bottom') then
+
+       block_ptr => domain % blocklist
+       do while(associated(block_ptr))
+
+         call mpas_pool_get_subpool(block_ptr % structs, 'mesh', meshPool)
+         call mpas_pool_get_subpool(block_ptr % structs, 'state', statePool)
+         call mpas_pool_get_subpool(block_ptr % structs, 'verticalMesh', verticalMeshPool)
+
+         call mpas_pool_get_dimension(meshPool, 'nCells', nCells)
+         call mpas_pool_get_dimension(meshPool, 'nVertLevels', nVertLevels)
+
+         call mpas_pool_get_array(meshPool, 'refBottomDepth', refBottomDepth)
+         call mpas_pool_get_array(meshPool, 'bottomDepth', bottomDepth)
+         call mpas_pool_get_array(meshPool, 'minLevelCell', minLevelCell)
+         call mpas_pool_get_array(meshPool, 'maxLevelCell', maxLevelCell)
+
+         call mpas_pool_get_array(statePool, 'layerThickness', layerThickness, 1)
+         call mpas_pool_get_array(statePool, 'ssh', ssh, 1)
+
+         call mpas_pool_get_array(verticalMeshPool, 'restingThickness', restingThickness)
+
+         allocate(weight_sigma_z(nVertLevels))
+         allocate(depthCellBot(nVertLevels))
+         allocate(bottomDepthSmooth(nCells))
+         allocate(bottomDepthSmoothNew(nCells))
+         ! create sigma-z weight function
+!         do k = 1, nVertLevels
+!           x1= config_global_ocean_sigmaz_wt_depth1; y1=1.0_RKIND
+!           x2= config_global_ocean_sigmaz_wt_depth2; y2=config_global_ocean_sigmaz_weight2
+!           x3= config_global_ocean_sigmaz_wt_depth3; y3=config_global_ocean_sigmaz_weight3
+!           x4= config_global_ocean_sigmaz_wt_depth4; y4=config_global_ocean_sigmaz_weight4
+!           if (refBottomDepth(k) < x1) then
+!             weight_sigma_z(k) = y1
+!           elseif (refBottomDepth(k) < x2) then
+!             weight_sigma_z(k) = y1 + (refBottomDepth(k) - x1)/(x2-x1)*(y2-y1)
+!           elseif (refBottomDepth(k) < x3) then
+!             weight_sigma_z(k) = y2 + (refBottomDepth(k) - x2)/(x3-x2)*(y3-y2)
+!           elseif (refBottomDepth(k) < x4) then
+!             weight_sigma_z(k) = y3 + (refBottomDepth(k) - x3)/(x4-x3)*(y4-y3)
+!           else
+!             weight_sigma_z(k) = y4
+!           endif
+!         end do
+
+         ! smooth bottom depth for sigma-z coordinate calculation
+         bottomDepthSmooth = bottomDepth
+         if (config_global_ocean_sigmaz_smooth_iterations>0) then
+           call mpas_pool_get_array(meshPool, 'nEdgesOnCell', nEdgesOnCell)
+           call mpas_pool_get_array(meshPool, 'cellsOnCell', cellsOnCell)
+
+           ! create smoothed bottom depth variable, so sigma-z layers are smoothed
+           do iSmooth = 1, config_global_ocean_sigmaz_smooth_iterations
+             do iCell = 1, nCells
+               bottomDepthSmoothNew(iCell) = bottomDepthSmooth(iCell)
+                     counter = 1
+                     do j = 1, nEdgesOnCell(iCell)
+                        coc = cellsOnCell(j, iCell)
+                        if (coc<nCells+1) then
+                           bottomDepthSmoothNew(iCell) = bottomDepthSmoothNew(iCell) + bottomDepthSmooth (coc)
+                           counter = counter + 1
+                        end if
+                     end do ! edgesOnCell
+
+               bottomDepthSmoothNew(iCell) = bottomDepthSmoothNew(iCell) / counter
+             end do
+             bottomDepthSmooth = bottomDepthSmoothNew
+           end do
+         end if
+
+         ! compute minLevelCell and maxLevelCell based on refBottomDepth, ssh and bottomDepth
+! config_global_ocean_sigmaz_n_layers_fixed_top
+! config_global_ocean_sigmaz_min_bot_layerThickness
          do iCell = 1, nCells
            do k = 1, nVertLevels-1
              depthCellBot(k) = refBottomDepth(k)*( weight_sigma_z(k) &
