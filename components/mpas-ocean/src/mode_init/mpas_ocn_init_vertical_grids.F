@@ -864,14 +864,14 @@ contains
       integer, dimension(:), pointer :: nEdgesOnCell
       integer, dimension(:, :), pointer :: cellsOnCell
 
-     integer :: iCell, k, j, iSmooth, coc, counter
+     integer :: iCell, k, j, iSmooth, coc, counter, maxLevelCellZRef
 
      logical :: useZStar, useZLevel
 
      real (kind=RKIND) :: depth, layerStretch
       real (kind=RKIND) :: x1,x2,x3,x4,y1,y2,y3,y4
       real (kind=RKIND), dimension(:), allocatable :: weight_sigma_z, depthCellBot, &
-         bottomDepthSmooth, bottomDepthSmoothNew
+         bottomDepthSmooth, bottomDepthSmoothNew, zTop, zTopRef, hRef
 
    !--------------------------------------------------------------------
 
@@ -1234,26 +1234,11 @@ contains
 
          allocate(weight_sigma_z(nVertLevels))
          allocate(depthCellBot(nVertLevels))
+         allocate(zTop(nVertLevels+1))
+         allocate(zTopRef(nVertLevels+1))
+         allocate(hRef(nVertLevels))
          allocate(bottomDepthSmooth(nCells))
          allocate(bottomDepthSmoothNew(nCells))
-         ! create sigma-z weight function
-!         do k = 1, nVertLevels
-!           x1= config_global_ocean_sigmaz_wt_depth1; y1=1.0_RKIND
-!           x2= config_global_ocean_sigmaz_wt_depth2; y2=config_global_ocean_sigmaz_weight2
-!           x3= config_global_ocean_sigmaz_wt_depth3; y3=config_global_ocean_sigmaz_weight3
-!           x4= config_global_ocean_sigmaz_wt_depth4; y4=config_global_ocean_sigmaz_weight4
-!           if (refBottomDepth(k) < x1) then
-!             weight_sigma_z(k) = y1
-!           elseif (refBottomDepth(k) < x2) then
-!             weight_sigma_z(k) = y1 + (refBottomDepth(k) - x1)/(x2-x1)*(y2-y1)
-!           elseif (refBottomDepth(k) < x3) then
-!             weight_sigma_z(k) = y2 + (refBottomDepth(k) - x2)/(x3-x2)*(y3-y2)
-!           elseif (refBottomDepth(k) < x4) then
-!             weight_sigma_z(k) = y3 + (refBottomDepth(k) - x3)/(x4-x3)*(y4-y3)
-!           else
-!             weight_sigma_z(k) = y4
-!           endif
-!         end do
 
          ! smooth bottom depth for sigma-z coordinate calculation
          bottomDepthSmooth = bottomDepth
@@ -1280,13 +1265,31 @@ contains
            end do
          end if
 
-         ! compute minLevelCell and maxLevelCell based on refBottomDepth, ssh and bottomDepth
-! config_global_ocean_sigmaz_n_layers_fixed_top
-! config_global_ocean_sigmaz_min_bot_layerThickness
+         zTopRef(1) = 0.0_RKIND
+         do k = 1, nVertLevels
+            zTopRef(k+1) = - refBottomDepth(k)
+            hRef(k) = zTopRef(k) - zTopRef(k+1) 
+         end do
+         
+         ! Compute zTop
+         zTop(1) = 0.0_RKIND
          do iCell = 1, nCells
-           do k = 1, nVertLevels-1
-             depthCellBot(k) = refBottomDepth(k)*( weight_sigma_z(k) &
-                + (1.0_RKIND - weight_sigma_z(k)) * bottomDepthSmooth(iCell) / refBottomDepth(nVertLevels))
+           zTop(k+1) = bottomDepth(iCell)
+
+
+           ! Determine maxLevelCellZRef, the index of the bottom cell in the reference z-level coordinate. This would be the same as
+           ! maxLevelCell if this were in z-level.
+           do k = 1, nVertLevels
+             if (refBottomDepth(k) >= bottomDepth(iCell)) then
+               maxLevelCellZRef = k
+               exit
+             end if
+           end do
+
+           do k = nVertLevels-1, 1, -1
+              zTop(k) = max( zTopRef(k), & ! Do not go below z-level interface
+                 zTop(k+1) + max( hRef(1), & ! no thinner than top layer
+                 config_global_ocean_sigmaz_layer_compression*min(hRef(k), hRef(maxLevelCellZRef))))
            end do
            depthCellBot(nVertLevels) = refBottomDepth(nVertLevels)+0.1_RKIND
 
@@ -1358,6 +1361,7 @@ contains
          end do !iCell
 
          deallocate(weight_sigma_z, depthCellBot)
+         deallocate(zTop, zTopRef, hRef)
 
          block_ptr => block_ptr % next
        end do !block_ptr
