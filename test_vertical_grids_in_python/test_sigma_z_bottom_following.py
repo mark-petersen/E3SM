@@ -26,8 +26,7 @@ print('zTopRef',zTopRef)
 print('hRef',np.array_repr(hRef[:]).replace('\n', '').replace(' ','').replace('MaskedArray',''))
 
 # flags:
-cDeep= 0.5 # config_bottom_layer_compression
-cShallow= 0.1 # config_bottom_layer_compression usually cShallow < cDeep ? 
+c = 0.5 # config_bottom_layer_compression usually cShallow < cDeep ? 
 
 nCells = 55 
 for iCell in range(nCells):
@@ -49,7 +48,7 @@ for iCell in range(nCells):
     zTop[nVertLevels+1] = D
     for k in range(nVertLevels,0,-1):
         #zTop[k] = max(zTopRef[k], zTop[k+1] + max(hRef[0],min(hminBath,c*hRef[k-1])))
-        zTop[k] = max(zTopRef[k], zTop[k+1] + max(hRef[0],min(cDeep*hRef[kZLevelRef],cShallow*hRef[k-1])))
+        zTop[k] = max(zTopRef[k], zTop[k+1] + max(hRef[0],c*min(hRef[kZLevelRef],hRef[k-1])))
         h[k] = zTop[k] - zTop[k+1]
 
     #print('zTop',np.array_repr(zTop).replace('\n', '').replace(' ','').replace('array',''))
