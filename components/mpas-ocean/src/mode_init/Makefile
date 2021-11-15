@@ -50,7 +50,7 @@ mpas_ocn_init_smoothing.o:
 
 mpas_ocn_init_spherical_utils.o:
 
-mpas_ocn_init_vertical_grids.o:
+mpas_ocn_init_vertical_grids.o: mpas_ocn_init_interpolation.o
 
 mpas_ocn_init_seaSurfaceHeightAndPressure.o:
 

@@ -29,6 +29,7 @@ module ocn_init_vertical_grids
    use ocn_constants
    use ocn_config
    use ocn_diagnostics_variables
+   use ocn_init_interpolation
 
    implicit none
    private
@@ -863,17 +864,18 @@ contains
      integer, dimension(:), pointer :: minLevelCell, maxLevelCell
      real (kind=RKIND), dimension(:), pointer :: refBottomDepth, bottomDepth, ssh
      real (kind=RKIND), dimension(:,:), pointer :: layerThickness, restingThickness
-      integer, dimension(:), pointer :: nEdgesOnCell
-      integer, dimension(:, :), pointer :: cellsOnCell
+     integer, dimension(:), pointer :: nEdgesOnCell
+     integer, dimension(:, :), pointer :: cellsOnCell
 
-     integer :: iCell, k, j, iSmooth, coc, counter, maxLevelCellZRef
+     integer :: iCell, k, j, iSmooth, coc, counter
 
      logical :: useZStar, useZLevel
 
      real (kind=RKIND) :: depth, layerStretch
-      real (kind=RKIND) :: x1,x2,x3,x4,y1,y2,y3,y4
-      real (kind=RKIND), dimension(:), allocatable :: weight_sigma_z, depthCellBot, &
-         bottomDepthSmooth, bottomDepthSmoothNew, zTop, zTopRef, hRef
+     real (kind=RKIND), dimension(1) :: hRefAtFloor, zFloor
+     real (kind=RKIND) :: x1,x2,x3,x4,y1,y2,y3,y4
+     real (kind=RKIND), dimension(:), allocatable :: weight_sigma_z, depthCellBot, &
+         bottomDepthSmooth, bottomDepthSmoothNew, hMin, hRef, refZMidLocal
 
    !--------------------------------------------------------------------
 
@@ -1236,9 +1238,9 @@ contains
 
          allocate(weight_sigma_z(nVertLevels))
          allocate(depthCellBot(nVertLevels))
-         allocate(zTop(nVertLevels+1))
-         allocate(zTopRef(nVertLevels+1))
+         allocate(hMin(nVertLevels))
          allocate(hRef(nVertLevels))
+         allocate(refZMidLocal(nVertLevels))
          allocate(bottomDepthSmooth(nCells))
          allocate(bottomDepthSmoothNew(nCells))
 
@@ -1267,33 +1269,43 @@ contains
            end do
          end if
 
-         zTopRef(1) = 0.0_RKIND
-         do k = 1, nVertLevels
-            zTopRef(k+1) = - refBottomDepth(k)
-            hRef(k) = zTopRef(k) - zTopRef(k+1) 
+         ! hRef is local version of refLayerThickness
+         ! refZMidLocal is local version of refZMid
+         hRef(1) = refBottomDepth(1)
+         refZMidLocal(1) = refBottomDepth(1)/2.0_RKIND
+         do k = 2, nVertLevels
+            hRef(k) = refBottomDepth(k) - refBottomDepth(k-1)
+            refZMidLocal(k) = refZMidLocal(k) - (hRef(k) + hRef(k-1))/2.0_RKIND
          end do
          
-         ! Compute zTop
-         zTop(1) = 0.0_RKIND
          do iCell = 1, nCells
-           zTop(k+1) = bottomDepth(iCell)
 
+           ! compute hRefAtFloor: hRef interpolated to bottomDepthSmooth
+           ! subroutine ocn_init_interpolation_linear_vert(inZ, inField, inNVertLevels, outZ, outField, outNVertLevels, extrapolate)
+           zFloor(1) = - bottomDepthSmooth(iCell)
+           call ocn_init_interpolation_linear_vert(refZMidLocal, hRef, nVertLevels, zFloor, hRefAtFloor, 1, extrapolate=.false.)
 
-           ! Determine maxLevelCellZRef, the index of the bottom cell in the reference z-level coordinate. This would be the same as
-           ! maxLevelCell if this were in z-level.
+           ! compute hMin, the minimum allowed layer thickness
            do k = 1, nVertLevels
-             if (refBottomDepth(k) >= bottomDepth(iCell)) then
-               maxLevelCellZRef = k
-               exit
-             end if
+              hMin(k) =  max( hRef(1), & ! no thinner than top layer
+                 config_global_ocean_sigmaz_layer_compression*min(hRef(k), hRefAtFloor(1)))
            end do
 
-           do k = nVertLevels-1, 1, -1
-              zTop(k) = max( zTopRef(k), & ! Do not go below z-level interface
-                 zTop(k+1) + max( hRef(1), & ! no thinner than top layer
-                 config_global_ocean_sigmaz_layer_compression*min(hRef(k), hRef(maxLevelCellZRef))))
-           end do
-           depthCellBot(nVertLevels) = refBottomDepth(nVertLevels)+0.1_RKIND
+           ! This is the main workings of sigma-z-min-bottom.
+           if (bottomDepthSmooth(iCell) < sum(hMin)) then
+              ! Use straight hMin, the minimum layer thickness allowed
+              depthCellBot(1) = hMin(1)
+              do k = 2, nVertLevels
+                 depthCellBot(k) = depthCellBot(k-1) + hMin(k)
+              end do
+           else
+              ! start at bottom, only use hMin if required
+              depthCellBot(nVertLevels) = bottomDepthSmooth(iCell)
+              do k = nVertLevels, 2, -1
+                 depthCellBot(k-1) = min( refBottomDepth(k-1), & ! Do not go below z-level interface
+                    depthCellBot(k) - hMin(k)) ! next interface using minimum thickness
+              end do
+           endif 
 
            if ((bottomDepth(iCell) == 0.0_RKIND) .or. (bottomDepth(iCell) <= -ssh(iCell))) then
               cycle
@@ -1363,7 +1375,7 @@ contains
          end do !iCell
 
          deallocate(weight_sigma_z, depthCellBot)
-         deallocate(zTop, zTopRef, hRef)
+         deallocate(hMin, hRef, refZMidLocal)
 
          block_ptr => block_ptr % next
        end do !block_ptr
@@ -1425,7 +1437,6 @@ contains
                            zMidNext, frac, stretch, localMaxRx1Edge, &
                            localStretchMax, localStretchMin
       real (kind=RKIND) :: x1,x2,x3,x4,y1,y2,y3,y4
-      real (kind=RKIND), dimension(:), allocatable :: weight_sigma_z
 
       logical :: moveInterface
 
