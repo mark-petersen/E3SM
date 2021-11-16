@@ -1276,7 +1276,10 @@ contains
             refZMidLocal(k) = refZMidLocal(k) - (hRef(k) + hRef(k-1))/2.0_RKIND
          end do
          
-         do iCell = 1, nCells
+         !do iCell = 1, nCells
+         do iCell = 1, 55
+             bottomDepthSmooth(iCell) = iCell*100.0_RKIND ! delete later
+             bottomDepth(iCell) = iCell*100.0_RKIND ! delete later
 
            ! compute hRefAtFloor: hRef interpolated to bottomDepthSmooth
            ! subroutine ocn_init_interpolation_linear_vert(inZ, inField, inNVertLevels, outZ, outField, outNVertLevels, extrapolate)
@@ -1305,6 +1308,7 @@ contains
               end do
            endif 
 
+print '(100f5.0)', depthCellBot
            if ((bottomDepth(iCell) == 0.0_RKIND) .or. (bottomDepth(iCell) <= -ssh(iCell))) then
               cycle
            end if
@@ -1372,12 +1376,18 @@ contains
            end if
          end do !iCell
 
+print *, 'layerThickness'
+         do iCell = 1, 55 ! delete later
+print '(100f5.0)', layerThickness(:,iCell)
+         end do !iCell
+
          deallocate(weight_sigma_z, depthCellBot)
          deallocate(hMin, hRef, refZMidLocal)
 
          block_ptr => block_ptr % next
        end do !block_ptr
      end if
+     stop ! delete later
 
    end subroutine ocn_init_vertical_grid
 
