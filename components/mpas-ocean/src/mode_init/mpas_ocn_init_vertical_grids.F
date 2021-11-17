@@ -1270,21 +1270,24 @@ contains
          ! hRef is local version of refLayerThickness
          ! refZMidLocal is local version of refZMid
          hRef(1) = refBottomDepth(1)
-         refZMidLocal(1) = refBottomDepth(1)/2.0_RKIND
+         refZMidLocal(1) = - refBottomDepth(1)/2.0_RKIND
          do k = 2, nVertLevels
             hRef(k) = refBottomDepth(k) - refBottomDepth(k-1)
-            refZMidLocal(k) = refZMidLocal(k) - (hRef(k) + hRef(k-1))/2.0_RKIND
+            refZMidLocal(k) = refZMidLocal(k-1) - (hRef(k) + hRef(k-1))/2.0_RKIND
          end do
+         !print *, 'hRef',hRef
+         !print *, 'refZMidLocal',refZMidLocal
          
          !do iCell = 1, nCells
-         do iCell = 1, 55
-             bottomDepthSmooth(iCell) = iCell*100.0_RKIND ! delete later
-             bottomDepth(iCell) = iCell*100.0_RKIND ! delete later
+         do iCell = 1, 550
+             bottomDepthSmooth(iCell) = iCell*10.0_RKIND ! delete later
+             bottomDepth(iCell) = iCell*10.0_RKIND ! delete later
 
            ! compute hRefAtFloor: hRef interpolated to bottomDepthSmooth
            ! subroutine ocn_init_interpolation_linear_vert(inZ, inField, inNVertLevels, outZ, outField, outNVertLevels, extrapolate)
            zFloor(1) = - bottomDepthSmooth(iCell)
            call ocn_init_interpolation_linear_vert(refZMidLocal, hRef, nVertLevels, zFloor, hRefAtFloor, 1, extrapolate=.false.)
+           !print *, 'iCell, zFloor, hRefAtFloor(1)',iCell, zFloor, hRefAtFloor(1)
 
            ! compute hMin, the minimum allowed layer thickness
            do k = 1, nVertLevels
@@ -1294,10 +1297,12 @@ contains
 
            ! This is the main workings of sigma-z-min-bottom.
            if (bottomDepthSmooth(iCell) < sum(hMin)) then
+           !if (bottomDepthSmooth(iCell) < nVertLevels*hRef(1)) then
               ! Use straight hMin, the minimum layer thickness allowed
               depthCellBot(1) = hMin(1)
               do k = 2, nVertLevels
                  depthCellBot(k) = depthCellBot(k-1) + hMin(k)
+                 !depthCellBot(k) = depthCellBot(k-1) + hMin(1)
               end do
            else
               ! start at bottom, only use hMin if required
@@ -1308,7 +1313,7 @@ contains
               end do
            endif 
 
-print '(100f5.0)', depthCellBot
+!print '(100f5.0)', depthCellBot
            if ((bottomDepth(iCell) == 0.0_RKIND) .or. (bottomDepth(iCell) <= -ssh(iCell))) then
               cycle
            end if
@@ -1376,10 +1381,10 @@ print '(100f5.0)', depthCellBot
            end if
          end do !iCell
 
-print *, 'layerThickness'
-         do iCell = 1, 55 ! delete later
-print '(100f5.0)', layerThickness(:,iCell)
-         end do !iCell
+!print *, 'layerThickness'
+!         do iCell = 1, 55 ! delete later
+!print '(100f5.0)', layerThickness(:,iCell)
+!         end do !iCell
 
          deallocate(weight_sigma_z, depthCellBot)
          deallocate(hMin, hRef, refZMidLocal)
@@ -1387,7 +1392,7 @@ print '(100f5.0)', layerThickness(:,iCell)
          block_ptr => block_ptr % next
        end do !block_ptr
      end if
-     stop ! delete later
+!     stop ! delete later
 
    end subroutine ocn_init_vertical_grid
 
