@@ -1278,10 +1278,10 @@ contains
          !print *, 'hRef',hRef
          !print *, 'refZMidLocal',refZMidLocal
          
-         !do iCell = 1, nCells
-         do iCell = 1, 550
-             bottomDepthSmooth(iCell) = iCell*10.0_RKIND ! delete later
-             bottomDepth(iCell) = iCell*10.0_RKIND ! delete later
+         do iCell = 1, nCells
+         !do iCell = 1, 550
+         !    bottomDepthSmooth(iCell) = iCell*10.0_RKIND ! delete later
+         !    bottomDepth(iCell) = iCell*10.0_RKIND ! delete later
 
            ! compute hRefAtFloor: hRef interpolated to bottomDepthSmooth
            ! subroutine ocn_init_interpolation_linear_vert(inZ, inField, inNVertLevels, outZ, outField, outNVertLevels, extrapolate)
@@ -1298,7 +1298,7 @@ contains
            ! This is the main workings of sigma-z-min-bottom.
            !depthCellBot(nVertLevels) = (0.95*bottomDepthSmooth(iCell) + 0.05*refBottomDepth(nVertLevels))
            depthCellBot(nVertLevels) = bottomDepthSmooth(iCell) + 0.2*bottomDepthSmooth(iCell) *(refBottomDepth(nVertLevels) - bottomDepthSmooth(iCell)) / refBottomDepth(nVertLevels)
-           print *, 'b, r, d', bottomDepthSmooth(iCell), refBottomDepth(nVertLevels), depthCellBot(nVertLevels)
+           !print *, 'b, r, d', bottomDepthSmooth(iCell), refBottomDepth(nVertLevels), depthCellBot(nVertLevels)
            if (depthCellBot(nVertLevels) < sum(hMin)) then
            !if (bottomDepthSmooth(iCell) < nVertLevels*hRef(1)) then
               ! Use straight hMin, the minimum layer thickness allowed
