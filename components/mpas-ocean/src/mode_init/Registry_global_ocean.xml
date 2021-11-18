@@ -379,8 +379,12 @@
 			description="Number of smoothing iterations on bathymetry for sigma-z weights"
 			possible_values="Any positive integer value greater or equal to 0."
 		/>
-		<nml_option name="config_global_ocean_sigmaz_layer_compression" type="real" default_value="0.2" units="dimensionless"
+		<nml_option name="config_global_ocean_sigmaz_layer_compression" type="real" default_value="0.3" units="dimensionless"
 			description="for sigma-z-min-bottom, the most layers can compress relative to the reference layer thickness at that depth"
+			possible_values="value between 0.0 and 1.0, but typically between 0.2 and 0.5."
+		/>
+		<nml_option name="config_global_ocean_sigmaz_parabola_floor_factor" type="real" default_value="0.2" units="dimensionless"
+			description="for sigma-z-min-bottom, parabola factor to deepen the floor" 
 			possible_values="value between 0.0 and 1.0, but typically between 0.2 and 0.5."
 		/>
 	</nml_record>
