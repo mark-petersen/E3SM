@@ -1296,7 +1296,8 @@ contains
            end do
 
            ! This is the main workings of sigma-z-min-bottom.
-           if (bottomDepthSmooth(iCell) < sum(hMin)) then
+           depthCellBot(nVertLevels) = (0.95*bottomDepthSmooth(iCell) + 0.05*refBottomDepth(nVertLevels))
+           if (depthCellBot(nVertLevels) < sum(hMin)) then
            !if (bottomDepthSmooth(iCell) < nVertLevels*hRef(1)) then
               ! Use straight hMin, the minimum layer thickness allowed
               depthCellBot(1) = hMin(1)
@@ -1306,7 +1307,7 @@ contains
               end do
            else
               ! start at bottom, only use hMin if required
-              depthCellBot(nVertLevels) = bottomDepthSmooth(iCell)
+              !depthCellBot(nVertLevels) = bottomDepthSmooth(iCell)
               do k = nVertLevels, 2, -1
                  depthCellBot(k-1) = min( refBottomDepth(k-1), & ! Do not go below z-level interface
                     depthCellBot(k) - hMin(k)) ! next interface using minimum thickness
