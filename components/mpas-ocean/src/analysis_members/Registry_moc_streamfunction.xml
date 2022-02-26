@@ -39,6 +39,10 @@
 			description="The name of the transect group that holds the boundaries for the regions in the region group, configured in 'config_AM_mocStreamfunction_region_group'. Please note, that these two should have the same amount of entries."
 			possible_values="Any valid transect group name."
 		/>
+		<nml_option name="config_AM_mocStreamfunction_vert_interp" type="logical" default_value=".false." units="unitless"
+			description="If true, interpolate relevant variables in the vertical to refZMid"
+			possible_values=".true. or .false."
+		/>
 	</nml_record>
 	<dims>
 		<dim name="nMocStreamfunctionBins" definition="namelist:config_AM_mocStreamfunction_num_bins" units="unitless"
@@ -46,6 +50,9 @@
 		/>
 		<dim name="nMocStreamfunctionBinsP1" definition="nMocStreamfunctionBins+1" units="unitless"
 			 description="Maximum number of Lat bins for moc streamfunction, plus one."
+		/>
+		<dim name="nMocInterpVertLevels" definition="500" units="unitless"
+			 description="Number of vertical levels for moc streamfunction with vertical interpolation."
 		/>
 	</dims>
 	<packages>
@@ -69,6 +76,18 @@
 		/>
 		<var name="minMaxLatRegion" type="real" dimensions="TWO nRegions" units="varies"
 			 description="Coordinates of the southern and northern boundaries of each region (for drawing)."
+		/>
+		<var name="mocInterpBottomDepth" type="real" dimensions="nMocInterpVertLevels" units="m"
+			 description="bottom depth of layers used when config_AM_mocStreamfunction_vert_interp=.true."
+		/>
+		<var name="mocInterpZMid" type="real" dimensions="nMocInterpVertLevels" units="m"
+			 description="Z middle of layers used when config_AM_mocStreamfunction_vert_interp=.true."
+		/>
+		<var name="mocInterpLayerThickness" type="real" dimensions="nMocInterpVertLevels" units="m"
+			 description="layer thickness of layers used when config_AM_mocStreamfunction_vert_interp=.true."
+		/>
+		<var name="mocStreamvalLatAndDepthRegionInterp" type="real" dimensions="nMocStreamfunctionBinsP1 nMocInterpVertLevels nRegions Time" units="sverdrups"
+			description="The value of the MOC streamfunction for each latitude-bin (first dimension) and moc-interpolated-depth (second dimension)"
 		/>
 	</var_struct>
 	<streams>

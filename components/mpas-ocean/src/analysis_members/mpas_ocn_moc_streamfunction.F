@@ -28,6 +28,8 @@ module ocn_moc_streamfunction
    use ocn_config
    use ocn_diagnostics_variables
 
+   use ppr_1d
+
    implicit none
    private
    save
@@ -37,6 +39,8 @@ module ocn_moc_streamfunction
    ! Public parameters
    !
    !--------------------------------------------------------------------
+   type(rmap_opts) :: opts
+   integer :: bc_upper, bc_lower
 
    !--------------------------------------------------------------------
    !
@@ -109,13 +113,14 @@ contains
       type (mpas_pool_type), pointer :: mocStreamfunctionAMPool
       type (mpas_pool_type), pointer :: meshPool
 
-      integer ::  iBin
+      integer ::  iBin, k
 
       real (kind=RKIND) :: binWidth
       ! These are array size 1 because mpas_dmpar_min_real_array calls require arrays.
       real (kind=RKIND), dimension(1) :: minBin, maxBin, minBinDomain, maxBinDomain
       ! the variable used to discriminate cells into Bins (either the y-value or the latitude)
       real (kind=RKIND), dimension(:), pointer :: binVariable, binBoundaryMocStreamfunction
+      real (kind=RKIND), dimension(:), pointer :: mocInterpBottomDepth, mocInterpZMid, mocInterpLayerThickness
 
       !determines if the simulation was run on a sphere or on a plane
       logical, pointer :: on_a_sphere
@@ -129,6 +134,7 @@ contains
       integer, dimension(:, :), pointer :: regionCellMasks, regionsInGroup
       integer, dimension(:), pointer ::  nRegionsInGroup
       integer, pointer :: nRegions, nRegionGroups, maxRegionsInGroup, nCellsSolve
+      integer, pointer :: nMocInterpVertLevels
       real (kind=RKIND), dimension(:,:), pointer :: minMaxLatRegion
       real (kind=RKIND), dimension(:)  , pointer :: minLatRegionLocal, maxLatRegionLocal, tminLatRegionLocal, tmaxLatRegionLocal
 
@@ -265,6 +271,55 @@ contains
          binBoundaryMocStreamfunction(iBin) = binBoundaryMocStreamfunction(iBin-1) + binWidth
       end do
 
+      if (config_AM_mocStreamfunction_vert_interp) then
+         call mpas_pool_get_dimension(block % dimensions, 'nMocInterpVertLevels', nMocInterpVertLevels)
+         call mpas_pool_get_array(mocStreamfunctionAMPool, 'mocInterpBottomDepth', mocInterpBottomDepth)
+         call mpas_pool_get_array(mocStreamfunctionAMPool, 'mocInterpZMid', mocInterpZMid)
+         call mpas_pool_get_array(mocStreamfunctionAMPool, 'mocInterpLayerThickness', mocInterpLayerThickness)
+
+         mocInterpLayerThickness(1:100) = 10.0_RKIND
+         mocInterpLayerThickness(101:150) = 20.0_RKIND
+         mocInterpLayerThickness(151:nMocInterpVertLevels) = 50.0_RKIND
+
+         mocInterpBottomDepth(1) = mocInterpLayerThickness(1)
+         mocInterpZMid(1) = -0.5_RKIND*mocInterpLayerThickness(1)
+         do k = 2,nMocInterpVertLevels
+            mocInterpBottomDepth(k) = mocInterpBottomDepth(k-1) + mocInterpLayerThickness(k)
+            mocInterpZMid(k) = -mocInterpBottomDepth(k) + 0.5_RKIND*mocInterpLayerThickness(k)
+         end do
+         
+         print '(A)', 'mocInterpLayerThickness'
+         print '(1000F6.0)', mocInterpLayerThickness
+         print '(A)', 'mocInterpBottomDepth'
+         print '(1000F6.0)', mocInterpBottomDepth
+         print '(A)', 'mocInterpZMid'
+         print '(1000F6.0)', mocInterpZMid
+
+stop
+         ! Options for remapping
+         !if ( config_vert_remap_order == 1 ) then
+         !   opts%cell_meth = pcm_method ! PCM method
+         !elseif ( config_vert_remap_order == 2 ) then
+            opts%cell_meth = plm_method ! PLM method
+         !elseif ( config_vert_remap_order == 3 ) then
+         !   opts%cell_meth = ppm_method ! PPM method
+         !   opts%edge_meth = p3e_method ! 3rd-order edge interp.
+         !elseif ( config_vert_remap_order == 5 ) then
+         !   opts%cell_meth = pqm_method ! PPM method
+         !   opts%edge_meth = p5e_method ! 3rd-order edge interp.
+         !endif
+         !if ( config_limiter == 'monotonic' ) then
+         !   opts%cell_lims = mono_limit ! monotone slope limits
+         !elseif ( config_limiter == 'weno' ) then
+         !   opts%cell_lims = weno_limit ! WENO slope limits
+         !   opts%wall_lims = mono_limit ! WENO slope limits
+         !else
+            opts%cell_lims = null_limit ! no slope limits
+         !endif
+         bc_upper = bcon_loose
+         bc_lower = bcon_loose
+      end if
+
    end subroutine ocn_init_moc_streamfunction!}}}
 
 !***********************************************************************
@@ -321,6 +376,7 @@ contains
       type (mpas_pool_type), pointer :: transectPool
 
       integer, pointer :: nVertLevels, nCellsSolve
+      integer, pointer :: nMocInterpVertLevels
       integer :: iCell, iBin, genericCounter, k
       real (kind=RKIND) :: binWidth
       real (kind=RKIND), dimension(:,:), pointer :: mocStreamValLatAndDepthLocal
@@ -484,6 +540,65 @@ contains
          call mpas_pool_get_array(meshPool, 'maxLevelCell', maxLevelCell)
          call mpas_pool_get_array(statePool, 'layerThickness', layerThickness, timeLevel)
 
+!         if (config_AM_mocStreamfunction_vert_interp) then
+            ! mrp
+!            print *, 'config_AM_mocStreamfunction_vert_interp is true'
+
+!            !$omp parallel
+!            !$omp do schedule(runtime) private(iEdge, kTop, kBot, nLayers, nLevels, dataNow, dataNew)
+!            do iEdge = 1, nEdges
+!
+!               kTop = minLevelEdgeBot(iEdge)
+!               kBot = maxLevelEdgeTop(iEdge)
+!
+!               nLayers = kBot - kTop + 1
+!               nLevels = nLayers + 1
+!
+!               if (nLevels .lt. 2) cycle
+!
+!               dataNow(1, 1, 1:nLayers) = normalVelocity(kTop:kBot, iEdge)
+!
+!               call rmap1d(nLevels, nLevels, nVars ,nDoFs, &
+!                  heightEdgeNow(kTop:kBot+1, iEdge), &
+!                  heightEdgeNew(kTop:kBot+1, iEdge), &
+!                  dataNow, dataNew, &
+!                  bcUpper, bcLower, work, opts)
+
+!               call rmap1d(nLevels, nLevels, nVars ,nDoFs, &
+!                  heightEdgeNow(kTop:kBot+1, iEdge), &
+!                  heightEdgeNew(kTop:kBot+1, iEdge), &
+!                  dataNow, dataNew, &
+!                  bcUpper, bcLower, work, opts)
+               
+!    !subroutine rmap1d(npos,nnew,nvar,ndof,xpos, &
+!    !    &             xnew,fdat,fnew,bclo,bcup, &
+!    !    &             work,opts,tCPU)
+!    !
+!    ! NPOS  no. edges in old grid.
+!    ! NNEW  no. edges in new grid.
+!    ! NVAR  no. discrete variables to remap.
+!    ! NDOF  no. degrees-of-freedom per cell.
+!    ! XPOS  old grid edge positions. XPOS is a length NPOS
+!    !       array .
+!    ! XNEW  new grid edge positions. XNEW is a length NNEW
+!    !       array .
+!    ! FDAT  grid-cell moments on old grid. FNEW has SIZE = 
+!    !       NDOF-by-NVAR-by-NNEW-1 .
+!    ! FNEW  grid-cell moments on new grid. FNEW has SIZE = 
+!    !       NDOF-by-NVAR-by-NNEW-1 .
+!    ! BCLO  boundary condition at lower endpoint .
+!    ! BCHI  boundary condition at upper endpoint . 
+!    ! WORK  method work-space. See RCON-WORK for details .
+!    ! OPTS  method parameters. See RCON-OPTS for details .
+!    ! TCPU  method tcpu-timer.
+!    !
+!
+!               normalVelocity   (kTop:kBot, iEdge) = dataNew(1, 1, 1:nLayers)
+!            
+!            end do
+!            !$omp end do
+!            !$omp end parallel
+!         end if
 
          !!!! TRANSECT CALCULATION
          sumTransport = 0.0_RKIND
@@ -499,6 +614,13 @@ contains
             do iEdge = 1,nEdgesSolve
                c1 = cellsOnEdge(1,iEdge)
                c2 = cellsOnEdge(2,iEdge)
+               ! Interpolate normalVelocity and layerThickness here
+               if (config_AM_mocStreamfunction_vert_interp) then
+                  if (transectEdgeMaskSigns(currentTransect,iEdge).eq.1) then
+
+
+                  end if
+               end if
                do k = 1, maxLevelEdgeTop(iEdge)
                   sumTransport(k,iTransect) = sumTransport(k,iTransect) + &
                      transectEdgeMaskSigns(currentTransect,iEdge) &
@@ -518,6 +640,10 @@ contains
 
          do iCell = 1,nCellsSolve
             iBin = MAX(int((latCell(iCell) - binBoundaryMocStreamfunction(1)) / binWidth), 2)
+            ! mrp
+            ! Interpolate vertVelocityTop here
+
+
             do k = 1,maxLevelCell(iCell)
                do i = 1, regionsInAddGroup
                   currentRegion = regionsInGroup(i, regionGroupNumber)

@@ -99,7 +99,7 @@ libgotm:
 
 libppr:
 	if [ -e ppr/.git ]; then \
-		(cd ppr/src; $(CPP) $(CPPFLAGS) $(CPPINCLUDES) ppr_1d.F90 > ppr_1d.F; $(FC) $(FFLAGS) -c ppr_1d.F -o ppr_1d.o) \
+		(cd ppr/src; $(CPP) $(CPPFLAGS) $(CPPINCLUDES) ppr_1d.f90 > ppr_1d.F; $(FC) $(FFLAGS) -c ppr_1d.F -o ppr_1d.o) \
 	else \
 		(pwd ; echo "Missing core_ocean/ppr/.git, did you forget to 'git submodule update --init --recursive' ?"; exit 1) \
 	fi

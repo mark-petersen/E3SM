@@ -224,7 +224,7 @@ if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/core_ocean/ppr/.git)
   message(FATAL_ERROR "Missing core_ocean/ppr/.git, did you forget to 'git submodule update --init --recursive' ?")
 endif()
 set(PPR_FILES
-  core_ocean/ppr/src/ppr_1d.F90
+  core_ocean/ppr/src/ppr_1d.f90
 )
 
 list(APPEND RAW_SOURCES ${CVMIX_FILES} ${BGC_FILES} ${MARBL_FILES} ${GOTM_FILES} ${PPR_FILES})
