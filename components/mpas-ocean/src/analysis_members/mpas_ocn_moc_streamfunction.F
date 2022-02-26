@@ -27,7 +27,7 @@ module ocn_moc_streamfunction
    use ocn_constants
    use ocn_config
    use ocn_diagnostics_variables
-   use ocn_diagnostics_variables
+   use ocn_mesh
 
    use ppr_1d
 
@@ -112,7 +112,6 @@ contains
       type (dm_info) :: dminfo
       type (block_type), pointer :: block
       type (mpas_pool_type), pointer :: mocStreamfunctionAMPool
-      type (mpas_pool_type), pointer :: meshPool
 
       integer ::  iBin, k
 
@@ -120,7 +119,7 @@ contains
       ! These are array size 1 because mpas_dmpar_min_real_array calls require arrays.
       real (kind=RKIND), dimension(1) :: minBin, maxBin, minBinDomain, maxBinDomain
       ! the variable used to discriminate cells into Bins (either the y-value or the latitude)
-      real (kind=RKIND), dimension(:), pointer :: binVariable, binBoundaryMocStreamfunction
+      real (kind=RKIND), dimension(:), pointer :: binBoundaryMocStreamfunction
       real (kind=RKIND), dimension(:), pointer :: mocInterpBottomDepth, mocInterpZMid, mocInterpLayerThickness
 
       !determines if the simulation was run on a sphere or on a plane
@@ -200,28 +199,19 @@ contains
       ! in the current region group.
       block => domain % blocklist
       do while (associated(block))
-         call mpas_pool_get_subpool(block % structs, 'mesh', meshPool)
          call mpas_pool_get_dimension(block % dimensions, 'nCellsSolve', nCellsSolve)
 
          call mpas_pool_get_array(regionPool, 'regionCellMasks', regionCellMasks)
-         call mpas_pool_get_config(meshPool, 'on_a_sphere', on_a_sphere)
 
-         ! Bin by latitude on a sphere, by yCell otherwise.
-         if (on_a_sphere) then
-            call mpas_pool_get_array(meshPool, 'latCell', binVariable)
-         else
-            call mpas_pool_get_array(meshPool, 'yCell', binVariable)
-         end if
-
-         minBin = min(minBin, minval(binVariable) )
-         maxBin = max(maxBin, maxval(binVariable) )
+         minBin = min(minBin, minval(latCell) )
+         maxBin = max(maxBin, maxval(latCell) )
 
          do i = 1, regionsInAddGroup
             currentRegion = regionsInGroup(i, regionGroupNumber)
             do iCell = 1, nCellsSolve
                if (regionCellMasks(currentRegion, iCell) .eq. 1) then
-                  minLatRegionLocal(i) = min(minLatRegionLocal(i), binVariable(iCell))
-                  maxLatRegionLocal(i) = max(maxLatRegionLocal(i), binVariable(iCell))
+                  minLatRegionLocal(i) = min(minLatRegionLocal(i), latCell(iCell))
+                  maxLatRegionLocal(i) = max(maxLatRegionLocal(i), latCell(iCell))
                end if
             end do
          end do
@@ -346,7 +336,6 @@ contains
       type (mpas_pool_type), pointer :: mocStreamfunctionAMPool
       type (dm_info) :: dminfo
       type (block_type), pointer :: block
-      type (mpas_pool_type), pointer :: meshPool
       type (mpas_pool_type), pointer :: statePool
       type (mpas_pool_type), pointer :: regionPool
       type (mpas_pool_type), pointer :: transectPool
@@ -494,7 +483,6 @@ contains
 
       block => domain % blocklist
       do while (associated(block))
-         call mpas_pool_get_subpool(block % structs, 'mesh', meshPool)
          call mpas_pool_get_subpool(block % structs, 'mocStreamfunctionAM', mocStreamfunctionAMPool)
 
          call mpas_pool_get_array(mocStreamfunctionAMPool, 'binBoundaryMocStreamfunction', binBoundaryMocStreamfunction)
@@ -504,21 +492,14 @@ contains
 
          call mpas_pool_get_dimension(block % dimensions, 'nCellsSolve', nCellsSolve)
 
-         call mpas_pool_get_array(meshPool, 'latCell', latCell)
-         call mpas_pool_get_array(meshPool, 'areaCell', areaCell)
-
          call mpas_pool_get_array(regionPool, 'regionCellMasks', regionCellMasks)
 
          !!!! TRANSECT DOMAINSPLIT VARIABLES
-         call mpas_pool_get_array(meshPool, 'dvEdge', dvEdge)
          call mpas_pool_get_dimension(block % dimensions, 'nEdgesSolve', nEdgesSolve)
          call mpas_pool_get_array(transectPool,'transectEdgeMaskSigns',transectEdgeMaskSigns)
          call mpas_pool_get_array(transectPool,'transectEdgeMasks',transectEdgeMasks)
          call mpas_pool_get_subpool(block % structs, 'state', statePool)
          call mpas_pool_get_array(statePool, 'normalVelocity', normalVelocity, timeLevel)
-         call mpas_pool_get_array(meshPool, 'cellsOnEdge', cellsOnEdge)
-         call mpas_pool_get_array(meshPool, 'maxLevelEdgeTop', maxLevelEdgeTop)
-         call mpas_pool_get_array(meshPool, 'maxLevelCell', maxLevelCell)
          call mpas_pool_get_array(statePool, 'layerThickness', layerThickness, timeLevel)
 
 !         if (config_AM_mocStreamfunction_vert_interp) then
@@ -708,7 +689,6 @@ contains
      if(config_use_GM) THEN !compute GM bolus contribution to the streamfunction
        block => domain % blocklist
        do while (associated(block))
-           call mpas_pool_get_subpool(block % structs, 'mesh', meshPool)
            call mpas_pool_get_subpool(block % structs, 'mocStreamfunctionAM', mocStreamfunctionAMPool)
 
            call mpas_pool_get_array(mocStreamfunctionAMPool, 'binBoundaryMocStreamfunction', binBoundaryMocStreamfunction)
@@ -718,20 +698,13 @@ contains
 
            call mpas_pool_get_dimension(block % dimensions, 'nCellsSolve', nCellsSolve)
 
-           call mpas_pool_get_array(meshPool, 'latCell', latCell)
-           call mpas_pool_get_array(meshPool, 'areaCell', areaCell)
-
            call mpas_pool_get_array(regionPool, 'regionCellMasks', regionCellMasks)
 
            !!!! TRANSECT DOMAINSPLIT VARIABLES
-           call mpas_pool_get_array(meshPool, 'dvEdge', dvEdge)
            call mpas_pool_get_dimension(block % dimensions, 'nEdgesSolve', nEdgesSolve)
            call mpas_pool_get_array(transectPool,'transectEdgeMaskSigns',transectEdgeMaskSigns)
            call mpas_pool_get_array(transectPool,'transectEdgeMasks',transectEdgeMasks)
            normalVelocity => normalGMBolusVelocity
-           call mpas_pool_get_array(meshPool, 'cellsOnEdge', cellsOnEdge)
-           call mpas_pool_get_array(meshPool, 'maxLevelEdgeTop', maxLevelEdgeTop)
-           call mpas_pool_get_array(meshPool, 'maxLevelCell', maxLevelCell)
            call mpas_pool_get_array(statePool, 'layerThickness', layerThickness, timeLevel)
 
            !!!! TRANSECT CALCULATION
