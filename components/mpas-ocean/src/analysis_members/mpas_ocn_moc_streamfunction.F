@@ -381,7 +381,8 @@ contains
       !!!! END REGION VARIABLES
     
       ! interpolation variables
-      real (kind=RKIND), dimension(:), allocatable :: zMidEdge, refZMid, normalVelocityZL
+      real (kind=RKIND) :: bottomDepthEdge
+      real (kind=RKIND), dimension(:), allocatable :: zMidEdge, zTopEdge, refZMid, transportZL, layerThicknessEdge
       real (kind=RKIND), dimension(:), allocatable :: refZTop, vertVelocityTopZL
 
       call mpas_pool_get_dimension(domain % blocklist % dimensions, 'nVertLevels', nVertLevels)
@@ -420,8 +421,14 @@ contains
       allocate(mocStreamValLatAndDepthRegionLocal(nMocStreamfunctionBinsUsed + 1, nVertLevels, maxRegionsInGroup))
       allocate(sumVertBinVelocityRegion(nMocStreamfunctionBinsUsed + 1, nVertLevels, maxRegionsInGroup))
       allocate(mocStreamValLatAndDepthRegionTotal(nMocStreamfunctionBinsUsed + 1, nVertLevels, maxRegionsInGroup))
-      allocate(zMidEdge(nVertLevels), refZMid(nVertLevels), normalVelocityZL(nVertLevels))
+      allocate(zMidEdge(nVertLevels), zTopEdge(nVertLevelsP1), refZMid(nVertLevels), transportZL(nVertLevels), layerThicknessEdge(nVertLevels))
       allocate(refZTop(nVertLevelsP1), vertVelocityTopZL(nVertLevelsP1))
+
+      ! compute refZTop. This could be moved to the mesh later.
+      refZTop(1) = 0.0_RKIND
+      do k = 1,nVertLevels
+         refZTop(k+1) = refZTop(k) - refLayerThickness(k)
+      end do
 
       mocStreamValLatAndDepthRegionLocal = 0.0_RKIND
       mocStreamValLatAndDepthRegionTotal = 0.0_RKIND
@@ -576,18 +583,44 @@ contains
             if (config_AM_mocStreamfunction_vert_interp) then
                ! vertical interpolation, for general vertical coordinates
                do iEdge = 1,nEdgesSolve
+                if (transectEdgeMasks(currentTransect, iEdge) .eq. 1) then
                   c1 = cellsOnEdge(1,iEdge)
                   c2 = cellsOnEdge(2,iEdge)
-                  ! Interpolate normalVelocity:
-                  ! (zMidEdge, normalVelocity) -> (refZMid, normalVelocityZL)
-      allocate(zMidEdge(nVertLevels), refZMid(nVertLevels), normalVelocityZL(nVertLevels))
+                  bottomDepthEdge = 0.5_RKIND*(bottomDepth(c1) + bottomDepth(c2))
                   do k = 1, maxLevelEdgeTop(iEdge)
+                      layerThicknessEdge(k) = 0.5_RKIND*(layerThickness(k,c1) + layerThickness(k,c2))
+                  end do
+                  zTopEdge(1) = 0.0_RKIND
+                  zMidEdge(1) = -0.5_RKIND*layerThicknessEdge(1)
+                  do k = 2, maxLevelEdgeTop(iEdge)
+                     zTopEdge(k) = zTopEdge(k-1) - layerThicknessEdge(k-1)
+                     zMidEdge(k) = zMidEdge(k-1) - 0.5_RKIND*(layerThicknessEdge(k-1) + layerThicknessEdge(k))
+                  end do
+                  k = maxLevelEdgeTop(iEdge) + 1
+                  zTopEdge(k) = zTopEdge(k-1) - layerThicknessEdge(k-1)
+                  ! Integrate normalVelocity:
+                  ! (zTopEdge, normalVelocity) -> (refZTop, transportZL)
+                  transportZL(:) = 0.0_RKIND
+                  kZL = 1
+                  ! loop through general coordinate levels
+                  do kGC = 1,maxLevelEdgeTop(iEdge)
+                     if (zTopEdge(kGC+1) > refZTop(kZL+1)) then
+                        ! if GC layer is full within z-level, give the whole thing
+                        transportZL(kZL) = transportZL(kZL) + normalVelocity(kGC,iEdge) * layerThicknessEdge(kGC)
+                     else
+                        ! if GC layer is partially within z-level, give just part.
+                        transportZL(kZL) = transportZL(kZL) + normalVelocity(kGC,iEdge) * (zTopEdge(kGC) - refZTop(kZL+1))
+                        ! and give the rest to the next level
+                        kZL = kZL + 1
+                        transportZL(kZL) = transportZL(kZL) + normalVelocity(kGC,iEdge) * (refZTop(kZL) - zTopEdge(kGC+1))
+                     endif
+                  end do
+                  do k = 1, nVertLevels
                      sumTransport(k,iTransect) = sumTransport(k,iTransect) + &
                         transectEdgeMaskSigns(currentTransect,iEdge) &
-                        * transectEdgeMasks(currentTransect, iEdge) &
-                        * normalVelocity(k,iEdge)*dvEdge(iEdge) &
-                        * 0.5_RKIND*(layerThickness(k,c1) + layerThickness(k,c2))
+                        * transportZL(k)*dvEdge(iEdge)
                   end do
+                 endif !(transectEdgeMasks(currentTransect, iEdge) .eq. 1)
                end do
             else
                ! no vertical interpolation, for z-level runs
@@ -615,12 +648,6 @@ contains
          if (config_AM_mocStreamfunction_vert_interp) then
             ! vertical interpolation, for general vertical coordinates
 
-            ! compute refZTop. This could be moved to the mesh later.
-            refZTop(1) = 0.0_RKIND
-            do k = 1,nVertLevels
-               refZTop(k+1) = refZTop(k) - refLayerThickness(k)
-            end do
-
             do iCell = 1,nCellsSolve
                iBin = MAX(int((latCell(iCell) - binBoundaryMocStreamfunction(1)) / binWidth), 2)
                ! Interpolate vertVelocityTop:
@@ -628,13 +655,14 @@ contains
                kGC = 1 
                kZL = 1
                do while (zTop(kZL,iCell) > -bottomDepth(iCell) - 1.0e-8_RKIND)
-                  do while (zTop(kGC,iCell) > refZtop(kZL))
+                  do while (zTop(kGC,iCell) > refZTop(kZL))
                      kGC = kGC + 1
                   end do
                   vertVelocityTopZL(kZL) = vertVelocityTop(kGC,iCell) + &
-                     vertVelocityTop(kGC-1,iCell)*(refZtop(kZL) - zTop(kGC,iCell)) / layerThickness(KGC,iCell)
+                     vertVelocityTop(kGC-1,iCell)*(refZTop(kZL) - zTop(kGC,iCell)) / layerThickness(KGC,iCell)
                   kZL = kZL + 1
                end do
+               ! mrp kZL might be one too high here
                do k = 1,kZL
                   do i = 1, regionsInAddGroup
                      currentRegion = regionsInGroup(i, regionGroupNumber)
@@ -790,7 +818,7 @@ contains
      deallocate(mocStreamvalLatAndDepthRegionTotal)
      deallocate(mocStreamvalLatAndDepthRegionLocal)
      deallocate(sumVertBinVelocityRegion)
-     deallocate(zMidEdge, refZMid, normalVelocityZL)
+     deallocate(zMidEdge, refZMid, transportZL, layerThicknessEdge)
      deallocate(refZTop, vertVelocityTopZL)
 
      !!!! TRANSECT CELANUP
