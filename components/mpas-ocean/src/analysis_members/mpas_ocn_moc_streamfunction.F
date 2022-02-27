@@ -133,7 +133,7 @@ contains
       character (len=StrKIND), dimension(:), pointer :: regionGroupNames
       integer, dimension(:, :), pointer :: regionCellMasks, regionsInGroup
       integer, dimension(:), pointer ::  nRegionsInGroup
-      integer, pointer :: nRegions, nRegionGroups, maxRegionsInGroup, nCellsSolve
+      integer, pointer :: nRegions, nRegionGroups, maxRegionsInGroup
       real (kind=RKIND), dimension(:,:), pointer :: minMaxLatRegion
       real (kind=RKIND), dimension(:)  , pointer :: minLatRegionLocal, maxLatRegionLocal, tminLatRegionLocal, tmaxLatRegionLocal
 
@@ -199,8 +199,6 @@ contains
       ! in the current region group.
       block => domain % blocklist
       do while (associated(block))
-         call mpas_pool_get_dimension(block % dimensions, 'nCellsSolve', nCellsSolve)
-
          call mpas_pool_get_array(regionPool, 'regionCellMasks', regionCellMasks)
 
          minBin = min(minBin, minval(latCell) )
@@ -208,7 +206,7 @@ contains
 
          do i = 1, regionsInAddGroup
             currentRegion = regionsInGroup(i, regionGroupNumber)
-            do iCell = 1, nCellsSolve
+            do iCell = 1, nCellsOwned
                if (regionCellMasks(currentRegion, iCell) .eq. 1) then
                   minLatRegionLocal(i) = min(minLatRegionLocal(i), latCell(iCell))
                   maxLatRegionLocal(i) = max(maxLatRegionLocal(i), latCell(iCell))
@@ -340,25 +338,21 @@ contains
       type (mpas_pool_type), pointer :: regionPool
       type (mpas_pool_type), pointer :: transectPool
 
-      integer, pointer :: nVertLevels, nVertLevelsP1, nCellsSolve
       integer :: iCell, iBin, genericCounter, k, kGC, kZL
       real (kind=RKIND) :: binWidth
       real (kind=RKIND), dimension(:,:), pointer :: mocStreamValLatAndDepthLocal
-      real (kind=RKIND), dimension(:), pointer :: latCell
-      real (kind=RKIND), dimension(:), pointer ::  areaCell, binBoundaryMocStreamfunction
+      real (kind=RKIND), dimension(:), pointer ::  binBoundaryMocStreamfunction
       real (kind=RKIND), dimension(:,:), pointer :: mocStreamvalLatAndDepth, mocStreamValLatAndDepthTotal
       real (kind=RKIND), dimension(:,:), pointer :: mocStreamvalLatAndDepthGM
       real (kind=RKIND), dimension(:,:), pointer :: sumVertBinVelocity
 
       !!!! TRANSECT VARIABLES !!!!
-      integer, pointer :: nEdgesSolve, num_tracers
+      integer, pointer :: num_tracers
       integer :: iEdge, iTransect, c1, c2, currentTransect
-      integer, dimension(:), pointer :: maxLevelCell, maxLevelEdgeTop
-      integer, dimension(:,:), pointer :: transectEdgeMasks, transectEdgeMaskSigns, cellsOnEdge, &
+      integer, dimension(:,:), pointer :: transectEdgeMasks, transectEdgeMaskSigns, &
             transectsInGroup
 
       real (kind=RKIND) :: m3ps_to_Sv
-      real (kind=RKIND), dimension(:), pointer ::  dvEdge, refLayerThickness
       real (kind=RKIND), dimension(:,:), pointer :: layerThickness, normalVelocity
       real (kind=RKIND), dimension(:,:), allocatable ::  sumTransport, totalSumTransport
       character (len=STRKIND), dimension(:), pointer :: transectNames, transectGroupNames
@@ -381,12 +375,9 @@ contains
       !!!! END REGION VARIABLES
     
       ! interpolation variables
-      real (kind=RKIND) :: bottomDepthEdge
+      real (kind=RKIND) :: bottomDepthEdge, dzUpper, dzLower
       real (kind=RKIND), dimension(:), allocatable :: zMidEdge, zTopEdge, refZMid, transportZL, layerThicknessEdge
       real (kind=RKIND), dimension(:), allocatable :: refZTop, vertVelocityTopZL
-
-      call mpas_pool_get_dimension(domain % blocklist % dimensions, 'nVertLevels', nVertLevels)
-      call mpas_pool_get_dimension(domain % blocklist % dimensions, 'nVertLevelsP1', nVertLevelsP1)
 
       !!!! REGION INITIALIZATION
       !! region dimensions
@@ -497,12 +488,9 @@ contains
          binWidth = (binBoundaryMocStreamfunction(nMocStreamfunctionBinsUsed + 1) - binBoundaryMocStreamfunction(1)) &
          / nMocStreamfunctionBinsUsed
 
-         call mpas_pool_get_dimension(block % dimensions, 'nCellsSolve', nCellsSolve)
-
          call mpas_pool_get_array(regionPool, 'regionCellMasks', regionCellMasks)
 
          !!!! TRANSECT DOMAINSPLIT VARIABLES
-         call mpas_pool_get_dimension(block % dimensions, 'nEdgesSolve', nEdgesSolve)
          call mpas_pool_get_array(transectPool,'transectEdgeMaskSigns',transectEdgeMaskSigns)
          call mpas_pool_get_array(transectPool,'transectEdgeMasks',transectEdgeMasks)
          call mpas_pool_get_subpool(block % structs, 'state', statePool)
@@ -582,8 +570,8 @@ contains
             currentTransect = transectsInGroup(iTransect, transectGroupNumber)
             if (config_AM_mocStreamfunction_vert_interp) then
                ! vertical interpolation, for general vertical coordinates
-               do iEdge = 1,nEdgesSolve
-                if (transectEdgeMasks(currentTransect, iEdge) .eq. 1) then
+               do iEdge = 1,nEdgesOwned
+                if (transectEdgeMasks(currentTransect,iEdge).eq.1.and.maxLevelEdgeTop(iEdge).gt.0) then
                   c1 = cellsOnEdge(1,iEdge)
                   c2 = cellsOnEdge(2,iEdge)
                   bottomDepthEdge = 0.5_RKIND*(bottomDepth(c1) + bottomDepth(c2))
@@ -603,15 +591,17 @@ contains
                   transportZL(:) = 0.0_RKIND
                   kZL = 1
                   ! loop through general coordinate levels
+            !print *, 'iEdge',iEdge
                   do kGC = 1,maxLevelEdgeTop(iEdge)
-                     if (zTopEdge(kGC+1) > refZTop(kZL+1)) then
+            !print *, 'kGC, kZL, zTopEdge(kGC+1), refZTop(kZL+1)',kGC, kZL, zTopEdge(kGC+1), refZTop(kZL+1)
+                     if (zTopEdge(kGC+1) > refZTop(kZL+1) - 1.0e-8) then
                         ! if GC layer is full within z-level, give the whole thing
                         transportZL(kZL) = transportZL(kZL) + normalVelocity(kGC,iEdge) * layerThicknessEdge(kGC)
                      else
                         ! if GC layer is partially within z-level, give just part.
                         transportZL(kZL) = transportZL(kZL) + normalVelocity(kGC,iEdge) * (zTopEdge(kGC) - refZTop(kZL+1))
                         ! and give the rest to the next level
-                        kZL = kZL + 1
+                        kZL = min(nVertLevels, kZL + 1)
                         transportZL(kZL) = transportZL(kZL) + normalVelocity(kGC,iEdge) * (refZTop(kZL) - zTopEdge(kGC+1))
                      endif
                   end do
@@ -624,7 +614,7 @@ contains
                end do
             else
                ! no vertical interpolation, for z-level runs
-               do iEdge = 1,nEdgesSolve
+               do iEdge = 1,nEdgesOwned
                   c1 = cellsOnEdge(1,iEdge)
                   c2 = cellsOnEdge(2,iEdge)
                   do k = 1, maxLevelEdgeTop(iEdge)
@@ -645,47 +635,58 @@ contains
 
          !!!! END TRANSECT CALCULATION
 
-         if (config_AM_mocStreamfunction_vert_interp) then
+         do i = 1, regionsInAddGroup
+         currentRegion = regionsInGroup(i, regionGroupNumber)
+          if (config_AM_mocStreamfunction_vert_interp) then
             ! vertical interpolation, for general vertical coordinates
-
-            do iCell = 1,nCellsSolve
+            do iCell = 1,nCellsOwned
+             if (regionCellMasks(currentRegion, iCell).eq.1) then
                iBin = MAX(int((latCell(iCell) - binBoundaryMocStreamfunction(1)) / binWidth), 2)
                ! Interpolate vertVelocityTop:
-               ! (zTop, vertVelocityTop) -> (refZTop, vertVelocityTopZL)
-               kGC = 1 
-               kZL = 1
-               do while (zTop(kZL,iCell) > -bottomDepth(iCell) - 1.0e-8_RKIND)
-                  do while (zTop(kGC,iCell) > refZTop(kZL))
+               ! (zTop(:,iCell), vertVelocityTop(:,iCell)) -> (refZTop(:), vertVelocityTopZL(:))
+               kGC = 2 
+               ! mrp getting an error I do not understand, adding -1 here:
+               !print *, 'maxLevelCell(iCell)',maxLevelCell(iCell)
+               do kZL = 1,nVertLevels
+            !print *, 'b4 while kGC, kZL, zTop(kGC,iCell) ,refZTop(kZL)',kGC, kZL, zTop(kGC,iCell) ,refZTop(kZL)
+                  do while (zTop(kGC,iCell) > refZTop(kZL)+1.0e-4_RKIND)
+            !print *, 'in while kGC, kZL, zTop(kGC,iCell) ,refZTop(kZL)',kGC, kZL, zTop(kGC,iCell) ,refZTop(kZL)
                      kGC = kGC + 1
+                     if (kGC.eq.maxLevelCell(iCell)) exit
                   end do
-                  vertVelocityTopZL(kZL) = vertVelocityTop(kGC,iCell) + &
-                     vertVelocityTop(kGC-1,iCell)*(refZTop(kZL) - zTop(kGC,iCell)) / layerThickness(KGC,iCell)
-                  kZL = kZL + 1
+            !print *, 'af while kGC, kZL, zTop(kGC,iCell) ,refZTop(kZL)',kGC, kZL, zTop(kGC,iCell) ,refZTop(kZL)
+                  dzUpper = zTop(kGC-1,iCell) - refZTop(kZL) 
+                  dzLower = refZTop(kZL) - zTop(kGC,iCell)
+                  ! note this is linear interpolation, not a weighted average,
+                  ! so dzLower is the coefficient for the top value.
+                  vertVelocityTopZL(kZL) = &
+                    (  dzLower * vertVelocityTop(kGC-1,iCell)  &
+                     + dzUpper * vertVelocityTop(kGC  ,iCell) ) / layerThickness(KGC,iCell)
+            !print *, 'ed while kGC, kZL, zTop(kGC,iCell) ,refZTop(kZL)',kGC, kZL, zTop(kGC,iCell) ,refZTop(kZL)
+                  if (kGC.eq.maxLevelCell(iCell)) exit
                end do
                ! mrp kZL might be one too high here
+               !!!!!!!! this should be opposite!
                do k = 1,kZL
-                  do i = 1, regionsInAddGroup
-                     currentRegion = regionsInGroup(i, regionGroupNumber)
-                     sumVertBinVelocityRegion(iBin, k, i) = sumVertBinVelocityRegion(iBin, k, i) + (vertVelocityTopZL(k) * &
-                           areaCell(iCell) * regionCellMasks(currentRegion, iCell))
-                  end do
+                  sumVertBinVelocityRegion(iBin, k, i) = sumVertBinVelocityRegion(iBin, k, i) + vertVelocityTopZL(k) * &
+                           areaCell(iCell) 
                   sumVertBinVelocity(iBin, k) = sumVertBinVelocity(iBin, k) + (vertVelocityTopZL(k) * areaCell(iCell))
                end do
+             endif
             end do
-         else
-            ! no vertical interpolation, for z-level runs
-            do iCell = 1,nCellsSolve
+          else ! no vertical interpolation, for z-level runs
+            do iCell = 1,nCellsOwned
+             if (regionCellMasks(currentRegion, iCell).eq.1) then
                iBin = MAX(int((latCell(iCell) - binBoundaryMocStreamfunction(1)) / binWidth), 2)
                do k = 1,maxLevelCell(iCell)
-                  do i = 1, regionsInAddGroup
-                     currentRegion = regionsInGroup(i, regionGroupNumber)
-                     sumVertBinVelocityRegion(iBin, k, i) = sumVertBinVelocityRegion(iBin, k, i) + (vertVelocityTop(k, iCell) * &
-                           areaCell(iCell) * regionCellMasks(currentRegion, iCell))
-                  end do
+                  sumVertBinVelocityRegion(iBin, k, i) = sumVertBinVelocityRegion(iBin, k, i) + vertVelocityTop(k, iCell) * &
+                     areaCell(iCell) 
                   sumVertBinVelocity(iBin, k) = sumVertBinVelocity(iBin, k) + (vertVelocityTop(k, iCell) * areaCell(iCell))
                end do
+             endif
             end do
-         endif
+          endif
+         end do
 
          do i = 1, regionsInAddGroup
             do k = 1,nVertLevels
@@ -713,6 +714,7 @@ contains
 
      call mpas_pool_get_array(mocStreamfunctionAMPool, 'mocStreamvalLatAndDepthRegion', mocStreamvalLatAndDepthRegion)
      mocStreamvalLatAndDepthRegion = mocStreamvalLatAndDepthRegionTotal * m3ps_to_Sv
+     !print *, 'mocStreamvalLatAndDepthRegion max min',maxval(mocStreamvalLatAndDepthRegion), minval(mocStreamvalLatAndDepthRegion)
 
      if(config_use_GM) THEN !compute GM bolus contribution to the streamfunction
        block => domain % blocklist
@@ -724,12 +726,9 @@ contains
            binWidth = (binBoundaryMocStreamfunction(nMocStreamfunctionBinsUsed + 1) - binBoundaryMocStreamfunction(1)) &
            / nMocStreamfunctionBinsUsed
 
-           call mpas_pool_get_dimension(block % dimensions, 'nCellsSolve', nCellsSolve)
-
            call mpas_pool_get_array(regionPool, 'regionCellMasks', regionCellMasks)
 
            !!!! TRANSECT DOMAINSPLIT VARIABLES
-           call mpas_pool_get_dimension(block % dimensions, 'nEdgesSolve', nEdgesSolve)
            call mpas_pool_get_array(transectPool,'transectEdgeMaskSigns',transectEdgeMaskSigns)
            call mpas_pool_get_array(transectPool,'transectEdgeMasks',transectEdgeMasks)
            normalVelocity => normalGMBolusVelocity
@@ -746,7 +745,7 @@ contains
 
            do iTransect = 1,transectsInAddGroup
               currentTransect = transectsInGroup(iTransect, transectGroupNumber)
-              do iEdge = 1,nEdgesSolve
+              do iEdge = 1,nEdgesOwned
                  c1 = cellsOnEdge(1,iEdge)
                  c2 = cellsOnEdge(2,iEdge)
                  do k = 1, maxLevelEdgeTop(iEdge)
@@ -766,7 +765,7 @@ contains
 
            !!!! END TRANSECT CALCULATION
 
-           do iCell = 1,nCellsSolve
+           do iCell = 1,nCellsOwned
               iBin = MAX(int((latCell(iCell) - binBoundaryMocStreamfunction(1)) / binWidth), 2)
               do k = 1,maxLevelCell(iCell)
                  do i = 1, regionsInAddGroup

@@ -121,6 +121,8 @@ module ocn_mesh
       areaTriangle, &! area of each cell on dual grid
       bottomDepth, &! ocean bottom depth at each cell center
       refBottomDepth, &! ocean depth at bottom of cell for reference profile
+      refZMid, &! ocean depth at bottom of cell for reference profile
+      refLayerThickness, &! ocean depth at bottom of cell for reference profile
       refBottomDepthTopOfCell, &! depth at top of cell for reference profile
       vertCoordMovementWeights, &! weights for distributing height perturb
       meshScalingDel2, &! mesh scaling factor for use in del2 diffusion
@@ -206,6 +208,7 @@ contains
          block                    ! variables in current subblock
 
       type(mpas_pool_type), pointer :: &
+         verticalMeshPool, &! vertical mesh data
          meshPool                 ! mesh variables in MPAS pool structure
 
       real (kind=RKIND) :: &
@@ -268,6 +271,7 @@ contains
 
       ! retrieve the mpas mesh pool
       call mpas_pool_get_subpool(block%structs, 'mesh', meshPool)
+      call mpas_pool_get_subpool(block%structs, 'verticalMesh', verticalMeshPool)
 
       !-----------------------------------------------------------------
       ! first set pointers/values for all mesh variables
@@ -440,6 +444,9 @@ contains
                                bottomDepth)
       call mpas_pool_get_array(meshPool, 'refBottomDepth', &
                                refBottomDepth)
+      call mpas_pool_get_array(verticalMeshPool, 'refZMid', refZMid)
+      call mpas_pool_get_array(verticalMeshPool, 'refLayerThickness', &
+                                                  refLayerThickness)
       call mpas_pool_get_array(meshPool, 'refBottomDepthTopOfCell', &
                                refBottomDepthTopOfCell)
       call mpas_pool_get_array(meshPool, 'vertCoordMovementWeights', &
