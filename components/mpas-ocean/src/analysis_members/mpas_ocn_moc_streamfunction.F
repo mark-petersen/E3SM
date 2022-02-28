@@ -231,9 +231,6 @@ contains
       deallocate(tminLatRegionLocal)
       deallocate(tmaxLatRegionLocal)
 
-      !print *, 'mins:', minMaxLatRegion(1,:)
-      !print *, 'maxs:', minMaxLatRegion(2,:)
-
       ! Set up bins.
       binBoundaryMocStreamfunction = -1.0e34_RKIND
 
@@ -502,10 +499,8 @@ contains
          call mpas_pool_get_array(statePool, 'normalVelocity', normalVelocity, timeLevel)
          call mpas_pool_get_array(statePool, 'layerThickness', layerThickness, timeLevel)
 
+! example of calling rmap1d
 !         if (config_AM_mocStreamfunction_vert_interp) then
-            ! mrp
-!            print *, 'config_AM_mocStreamfunction_vert_interp is true'
-
 !            !$omp parallel
 !            !$omp do schedule(runtime) private(iEdge, kTop, kBot, nLayers, nLevels, dataNow, dataNew)
 !            do iEdge = 1, nEdges
@@ -526,12 +521,6 @@ contains
 !                  dataNow, dataNew, &
 !                  bcUpper, bcLower, work, opts)
 
-!               call rmap1d(nLevels, nLevels, nVars ,nDoFs, &
-!                  heightEdgeNow(kTop:kBot+1, iEdge), &
-!                  heightEdgeNew(kTop:kBot+1, iEdge), &
-!                  dataNow, dataNew, &
-!                  bcUpper, bcLower, work, opts)
-               
 !    !subroutine rmap1d(npos,nnew,nvar,ndof,xpos, &
 !    !    &             xnew,fdat,fnew,bclo,bcup, &
 !    !    &             work,opts,tCPU)
@@ -596,9 +585,7 @@ contains
                   transportZL(:) = 0.0_RKIND
                   kZL = 1
                   ! loop through general coordinate levels
-            !print *, 'iEdge',iEdge
                   do kGC = 1,maxLevelEdgeTop(iEdge)
-            !print *, 'kGC, kZL, zTopEdge(kGC+1), refZTop(kZL+1)',kGC, kZL, zTopEdge(kGC+1), refZTop(kZL+1)
                      if (zTopEdge(kGC+1) > refZTop(kZL+1) - 1.0e-8) then
                         ! if GC layer is full within z-level, give the whole thing
                         transportZL(kZL) = transportZL(kZL) + normalVelocity(kGC,iEdge) * layerThicknessEdge(kGC)
@@ -646,26 +633,16 @@ contains
             ! vertical interpolation, for general vertical coordinates
             do iCell = 1,nCellsOwned
              if (regionCellMasks(currentRegion, iCell).eq.1) then
-               iBin = MAX(int((latCell(iCell) - binBoundaryMocStreamfunction(1)) / binWidth), 2)
-!>  Given the arrays x(1:n) and y(1:n), which tabulate a function,
-!>  this routine returns the linear interpolated values of yOut(1:nOut)
-!>  at xOut(1:nOut).
-!>  This subroutine assumes that both x and xOut are monotonically
-!>  increasing, and that all values of xOut are within the first and
-!>  last values of x.
-!
-!-----------------------------------------------------------------------
-! subroutine mpas_interpolate_linear( &!{{{
-!    xIn,yIn,nIn, &
-!    xOut,yOut,nOut)  
+               iBin = max(int((latCell(iCell) - binBoundaryMocStreamfunction(1)) / binWidth), 2)
+
                ! Interpolate vertVelocityTop:
                ! (zTop(:,iCell), vertVelocityTop(:,iCell)) -> (refZTop(:), vertVelocityTopZL(:))
-               !  xIn            yIn size: nIn=maxLevelCell+1  xOut        yOut  need new field maxLevelCellZL
+               !  xIn            yIn size: nIn=maxLevelCell+2  xOut        yOut  nVertLevels
 
                nIn = maxLevelCell(iCell) + 2
-               !print *, 'nIn, size(xIn), size(yIn)',nIn, size(xIn), size(yIn)
                xIn(1:nIn-2) = -zTop(1:nIn-2,iCell)
                yIn(1:nIn-2) = vertVelocityTop(1:nIn-2,iCell)
+               ! Add two extra points so all velocities are zero below bottom
                xIn(nIn-1) = bottomDepth(iCell)
                yIn(nIn-1) = 0.0_RKIND
                xIn(nIn) = 6000 ! deepest ocean cell in m
@@ -675,29 +652,7 @@ contains
                xIn(1) = 0.0_RKIND ! set SSH to match xOut
                call mpas_interpolate_linear(xIn,yIn,nIn, &
                   xOut,vertVelocityTopZL,nOut)
-!               kGC = 2 
-!               ! mrp getting an error I do not understand, adding -1 here:
-!               !print *, 'maxLevelCell(iCell)',maxLevelCell(iCell)
-!               do kZL = 1,nVertLevels
-!            !print *, 'b4 while kGC, kZL, zTop(kGC,iCell) ,refZTop(kZL)',kGC, kZL, zTop(kGC,iCell) ,refZTop(kZL)
-!                  do while (zTop(kGC,iCell) > refZTop(kZL)+1.0e-4_RKIND)
-!            !print *, 'in while kGC, kZL, zTop(kGC,iCell) ,refZTop(kZL)',kGC, kZL, zTop(kGC,iCell) ,refZTop(kZL)
-!                     kGC = kGC + 1
-!                     if (kGC.eq.maxLevelCell(iCell)) exit
-!                  end do
-!            !print *, 'af while kGC, kZL, zTop(kGC,iCell) ,refZTop(kZL)',kGC, kZL, zTop(kGC,iCell) ,refZTop(kZL)
-!                  dzUpper = zTop(kGC-1,iCell) - refZTop(kZL) 
-!                  dzLower = refZTop(kZL) - zTop(kGC,iCell)
-!                  ! note this is linear interpolation, not a weighted average,
-!                  ! so dzLower is the coefficient for the top value.
-!                  vertVelocityTopZL(kZL) = &
-!                    (  dzLower * vertVelocityTop(kGC-1,iCell)  &
-!                     + dzUpper * vertVelocityTop(kGC  ,iCell) ) / layerThickness(KGC,iCell)
-!            !print *, 'ed while kGC, kZL, zTop(kGC,iCell) ,refZTop(kZL)',kGC, kZL, zTop(kGC,iCell) ,refZTop(kZL)
-!                  if (kGC.eq.maxLevelCell(iCell)) exit
-!               end do
-               ! mrp kZL might be one too high here
-               !!!!!!!! this should be opposite!
+
                do k = 1,nVertLevels
                   sumVertBinVelocityRegion(iBin, k, i) = sumVertBinVelocityRegion(iBin, k, i) + vertVelocityTopZL(k) * &
                            areaCell(iCell) 
@@ -705,10 +660,11 @@ contains
                end do
              endif
             end do
+
           else ! no vertical interpolation, for z-level runs
             do iCell = 1,nCellsOwned
              if (regionCellMasks(currentRegion, iCell).eq.1) then
-               iBin = MAX(int((latCell(iCell) - binBoundaryMocStreamfunction(1)) / binWidth), 2)
+               iBin = max(int((latCell(iCell) - binBoundaryMocStreamfunction(1)) / binWidth), 2)
                do k = 1,maxLevelCell(iCell)
                   sumVertBinVelocityRegion(iBin, k, i) = sumVertBinVelocityRegion(iBin, k, i) + vertVelocityTop(k, iCell) * &
                      areaCell(iCell) 
@@ -745,7 +701,6 @@ contains
 
      call mpas_pool_get_array(mocStreamfunctionAMPool, 'mocStreamvalLatAndDepthRegion', mocStreamvalLatAndDepthRegion)
      mocStreamvalLatAndDepthRegion = mocStreamvalLatAndDepthRegionTotal * m3ps_to_Sv
-     !print *, 'mocStreamvalLatAndDepthRegion max min',maxval(mocStreamvalLatAndDepthRegion), minval(mocStreamvalLatAndDepthRegion)
 
      if(config_use_GM) THEN !compute GM bolus contribution to the streamfunction
        block => domain % blocklist
@@ -797,7 +752,7 @@ contains
            !!!! END TRANSECT CALCULATION
 
            do iCell = 1,nCellsOwned
-              iBin = MAX(int((latCell(iCell) - binBoundaryMocStreamfunction(1)) / binWidth), 2)
+              iBin = max(int((latCell(iCell) - binBoundaryMocStreamfunction(1)) / binWidth), 2)
               do k = 1,maxLevelCell(iCell)
                  do i = 1, regionsInAddGroup
                     currentRegion = regionsInGroup(i, regionGroupNumber)
