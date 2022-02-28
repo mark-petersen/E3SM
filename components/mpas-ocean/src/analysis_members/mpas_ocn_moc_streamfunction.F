@@ -30,7 +30,7 @@ module ocn_moc_streamfunction
    use ocn_diagnostics_variables
    use ocn_mesh
 
-   use ppr_1d
+   !use ppr_1d
 
    implicit none
    private
@@ -41,8 +41,8 @@ module ocn_moc_streamfunction
    ! Public parameters
    !
    !--------------------------------------------------------------------
-   type(rmap_opts) :: opts
-   integer :: bc_upper, bc_lower
+   !type(rmap_opts) :: opts
+   !integer :: bc_upper, bc_lower
 
    !--------------------------------------------------------------------
    !
