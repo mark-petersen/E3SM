@@ -949,6 +949,7 @@
 <config_AM_mocStreamfunction_num_bins>180</config_AM_mocStreamfunction_num_bins>
 <config_AM_mocStreamfunction_region_group>'all'</config_AM_mocStreamfunction_region_group>
 <config_AM_mocStreamfunction_transect_group>'all'</config_AM_mocStreamfunction_transect_group>
+<config_AM_mocStreamfunction_vert_interp>.true.</config_AM_mocStreamfunction_vert_interp>
 
 <!-- AM_oceanHeatContent -->
 <config_AM_oceanHeatContent_enable>.true.</config_AM_oceanHeatContent_enable>

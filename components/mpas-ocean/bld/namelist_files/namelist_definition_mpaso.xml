@@ -5484,6 +5484,13 @@ Valid values: Any valid transect group name.
 Default: Defined in namelist_defaults.xml
 </entry>
 
+<entry id="config_AM_mocStreamfunction_vert_interp" type="logical"
+	category="AM_mocStreamfunction" group="AM_mocStreamfunction">
+If true, interpolate in vertical
+
+Valid values: .true. or .false.
+Default: Defined in namelist_defaults.xml
+</entry>
 
 <!-- AM_oceanHeatContent -->
 
