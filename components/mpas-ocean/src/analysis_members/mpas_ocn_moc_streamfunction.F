@@ -23,6 +23,7 @@ module ocn_moc_streamfunction
    use mpas_dmpar
    use mpas_timekeeping
    use mpas_stream_manager
+   use mpas_spline_interpolation
 
    use ocn_constants
    use ocn_config
@@ -377,7 +378,8 @@ contains
       ! interpolation variables
       real (kind=RKIND) :: bottomDepthEdge, dzUpper, dzLower
       real (kind=RKIND), dimension(:), allocatable :: zMidEdge, zTopEdge, refZMid, transportZL, layerThicknessEdge
-      real (kind=RKIND), dimension(:), allocatable :: refZTop, vertVelocityTopZL
+      real (kind=RKIND), dimension(:), allocatable :: refZTop, vertVelocityTopZL, xIn, xOut, yIn, yOut
+      integer :: nIn, nOut
 
       !!!! REGION INITIALIZATION
       !! region dimensions
@@ -414,12 +416,15 @@ contains
       allocate(mocStreamValLatAndDepthRegionTotal(nMocStreamfunctionBinsUsed + 1, nVertLevels, maxRegionsInGroup))
       allocate(zMidEdge(nVertLevels), zTopEdge(nVertLevelsP1), refZMid(nVertLevels), transportZL(nVertLevels), layerThicknessEdge(nVertLevels))
       allocate(refZTop(nVertLevelsP1), vertVelocityTopZL(nVertLevelsP1))
+      allocate(xIn(nVertLevels+2), xOut(nVertLevelsP1), yIn(nVertLevels+2), yOut(nVertLevelsP1))
 
       ! compute refZTop. This could be moved to the mesh later.
       refZTop(1) = 0.0_RKIND
       do k = 1,nVertLevels
          refZTop(k+1) = refZTop(k) - refLayerThickness(k)
       end do
+      xOut = -refZTop
+      nOut = nVertLevels + 1
 
       mocStreamValLatAndDepthRegionLocal = 0.0_RKIND
       mocStreamValLatAndDepthRegionTotal = 0.0_RKIND
@@ -642,32 +647,58 @@ contains
             do iCell = 1,nCellsOwned
              if (regionCellMasks(currentRegion, iCell).eq.1) then
                iBin = MAX(int((latCell(iCell) - binBoundaryMocStreamfunction(1)) / binWidth), 2)
+!>  Given the arrays x(1:n) and y(1:n), which tabulate a function,
+!>  this routine returns the linear interpolated values of yOut(1:nOut)
+!>  at xOut(1:nOut).
+!>  This subroutine assumes that both x and xOut are monotonically
+!>  increasing, and that all values of xOut are within the first and
+!>  last values of x.
+!
+!-----------------------------------------------------------------------
+! subroutine mpas_interpolate_linear( &!{{{
+!    xIn,yIn,nIn, &
+!    xOut,yOut,nOut)  
                ! Interpolate vertVelocityTop:
                ! (zTop(:,iCell), vertVelocityTop(:,iCell)) -> (refZTop(:), vertVelocityTopZL(:))
-               kGC = 2 
-               ! mrp getting an error I do not understand, adding -1 here:
-               !print *, 'maxLevelCell(iCell)',maxLevelCell(iCell)
-               do kZL = 1,nVertLevels
-            !print *, 'b4 while kGC, kZL, zTop(kGC,iCell) ,refZTop(kZL)',kGC, kZL, zTop(kGC,iCell) ,refZTop(kZL)
-                  do while (zTop(kGC,iCell) > refZTop(kZL)+1.0e-4_RKIND)
-            !print *, 'in while kGC, kZL, zTop(kGC,iCell) ,refZTop(kZL)',kGC, kZL, zTop(kGC,iCell) ,refZTop(kZL)
-                     kGC = kGC + 1
-                     if (kGC.eq.maxLevelCell(iCell)) exit
-                  end do
-            !print *, 'af while kGC, kZL, zTop(kGC,iCell) ,refZTop(kZL)',kGC, kZL, zTop(kGC,iCell) ,refZTop(kZL)
-                  dzUpper = zTop(kGC-1,iCell) - refZTop(kZL) 
-                  dzLower = refZTop(kZL) - zTop(kGC,iCell)
-                  ! note this is linear interpolation, not a weighted average,
-                  ! so dzLower is the coefficient for the top value.
-                  vertVelocityTopZL(kZL) = &
-                    (  dzLower * vertVelocityTop(kGC-1,iCell)  &
-                     + dzUpper * vertVelocityTop(kGC  ,iCell) ) / layerThickness(KGC,iCell)
-            !print *, 'ed while kGC, kZL, zTop(kGC,iCell) ,refZTop(kZL)',kGC, kZL, zTop(kGC,iCell) ,refZTop(kZL)
-                  if (kGC.eq.maxLevelCell(iCell)) exit
-               end do
+               !  xIn            yIn size: nIn=maxLevelCell+1  xOut        yOut  need new field maxLevelCellZL
+
+               nIn = maxLevelCell(iCell) + 2
+               !print *, 'nIn, size(xIn), size(yIn)',nIn, size(xIn), size(yIn)
+               xIn(1:nIn-2) = -zTop(1:nIn-2,iCell)
+               yIn(1:nIn-2) = vertVelocityTop(1:nIn-2,iCell)
+               xIn(nIn-1) = bottomDepth(iCell)
+               yIn(nIn-1) = 0.0_RKIND
+               xIn(nIn) = 6000 ! deepest ocean cell in m
+               yIn(nIn) = 0.0_RKIND
+               ! xOut = -refZTop (set above)
+               ! nOut = nVertLevels + 1 (set above)
+               xIn(1) = 0.0_RKIND ! set SSH to match xOut
+               call mpas_interpolate_linear(xIn,yIn,nIn, &
+                  xOut,vertVelocityTopZL,nOut)
+!               kGC = 2 
+!               ! mrp getting an error I do not understand, adding -1 here:
+!               !print *, 'maxLevelCell(iCell)',maxLevelCell(iCell)
+!               do kZL = 1,nVertLevels
+!            !print *, 'b4 while kGC, kZL, zTop(kGC,iCell) ,refZTop(kZL)',kGC, kZL, zTop(kGC,iCell) ,refZTop(kZL)
+!                  do while (zTop(kGC,iCell) > refZTop(kZL)+1.0e-4_RKIND)
+!            !print *, 'in while kGC, kZL, zTop(kGC,iCell) ,refZTop(kZL)',kGC, kZL, zTop(kGC,iCell) ,refZTop(kZL)
+!                     kGC = kGC + 1
+!                     if (kGC.eq.maxLevelCell(iCell)) exit
+!                  end do
+!            !print *, 'af while kGC, kZL, zTop(kGC,iCell) ,refZTop(kZL)',kGC, kZL, zTop(kGC,iCell) ,refZTop(kZL)
+!                  dzUpper = zTop(kGC-1,iCell) - refZTop(kZL) 
+!                  dzLower = refZTop(kZL) - zTop(kGC,iCell)
+!                  ! note this is linear interpolation, not a weighted average,
+!                  ! so dzLower is the coefficient for the top value.
+!                  vertVelocityTopZL(kZL) = &
+!                    (  dzLower * vertVelocityTop(kGC-1,iCell)  &
+!                     + dzUpper * vertVelocityTop(kGC  ,iCell) ) / layerThickness(KGC,iCell)
+!            !print *, 'ed while kGC, kZL, zTop(kGC,iCell) ,refZTop(kZL)',kGC, kZL, zTop(kGC,iCell) ,refZTop(kZL)
+!                  if (kGC.eq.maxLevelCell(iCell)) exit
+!               end do
                ! mrp kZL might be one too high here
                !!!!!!!! this should be opposite!
-               do k = 1,kZL
+               do k = 1,nVertLevels
                   sumVertBinVelocityRegion(iBin, k, i) = sumVertBinVelocityRegion(iBin, k, i) + vertVelocityTopZL(k) * &
                            areaCell(iCell) 
                   sumVertBinVelocity(iBin, k) = sumVertBinVelocity(iBin, k) + (vertVelocityTopZL(k) * areaCell(iCell))
