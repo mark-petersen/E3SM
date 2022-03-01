@@ -375,7 +375,7 @@ contains
       ! interpolation variables
       real (kind=RKIND) :: bottomDepthEdge, dzUpper, dzLower
       real (kind=RKIND), dimension(:), allocatable :: zMidEdge, zTopEdge, refZMid, transportZL, layerThicknessEdge
-      real (kind=RKIND), dimension(:), allocatable :: refZTop, vertVelocityTopZL, xIn, xOut, yIn, yOut
+      real (kind=RKIND), dimension(:), allocatable :: refZTop, vertVelocityTopZL, xIn, xOut, yIn
       integer :: nIn, nOut
 
       !!!! REGION INITIALIZATION
@@ -413,7 +413,7 @@ contains
       allocate(mocStreamValLatAndDepthRegionTotal(nMocStreamfunctionBinsUsed + 1, nVertLevels, maxRegionsInGroup))
       allocate(zMidEdge(nVertLevels), zTopEdge(nVertLevelsP1), refZMid(nVertLevels), transportZL(nVertLevels), layerThicknessEdge(nVertLevels))
       allocate(refZTop(nVertLevelsP1), vertVelocityTopZL(nVertLevelsP1))
-      allocate(xIn(nVertLevels+2), xOut(nVertLevelsP1), yIn(nVertLevels+2), yOut(nVertLevelsP1))
+      allocate(xIn(nVertLevels+2), xOut(nVertLevelsP1), yIn(nVertLevels+2))
 
       ! compute refZTop. This could be moved to the mesh later.
       refZTop(1) = 0.0_RKIND
@@ -627,12 +627,9 @@ contains
 
          !!!! END TRANSECT CALCULATION
 
-         do i = 1, regionsInAddGroup
-         currentRegion = regionsInGroup(i, regionGroupNumber)
           if (config_AM_mocStreamfunction_vert_interp) then
             ! vertical interpolation, for general vertical coordinates
             do iCell = 1,nCellsOwned
-             if (regionCellMasks(currentRegion, iCell).eq.1) then
                iBin = max(int((latCell(iCell) - binBoundaryMocStreamfunction(1)) / binWidth), 2)
 
                ! Interpolate vertVelocityTop:
@@ -652,28 +649,37 @@ contains
                xIn(1) = 0.0_RKIND ! set SSH to match xOut
                call mpas_interpolate_linear(xIn,yIn,nIn, &
                   xOut,vertVelocityTopZL,nOut)
+               !if (iCell < 10000) then
+               !    print *, 'iCell, nIn, nOut',iCell, nIn, nOut
+               !print *, 'xIn',xIn
+               !print *, 'yIn',yIn
+               !print *, 'xOut',xOut
+               !print *, 'yOut',vertVelocityTopZL
+               !endif
 
                do k = 1,nVertLevels
-                  sumVertBinVelocityRegion(iBin, k, i) = sumVertBinVelocityRegion(iBin, k, i) + vertVelocityTopZL(k) * &
-                           areaCell(iCell) 
+                  do i = 1, regionsInAddGroup
+                     currentRegion = regionsInGroup(i, regionGroupNumber)
+                     sumVertBinVelocityRegion(iBin, k, i) = sumVertBinVelocityRegion(iBin, k, i) + vertVelocityTopZL(k) * &
+                           areaCell(iCell) * regionCellMasks(currentRegion, iCell)
+                  end do
                   sumVertBinVelocity(iBin, k) = sumVertBinVelocity(iBin, k) + (vertVelocityTopZL(k) * areaCell(iCell))
                end do
-             endif
             end do
 
-          else ! no vertical interpolation, for z-level runs
-            do iCell = 1,nCellsOwned
-             if (regionCellMasks(currentRegion, iCell).eq.1) then
-               iBin = max(int((latCell(iCell) - binBoundaryMocStreamfunction(1)) / binWidth), 2)
-               do k = 1,maxLevelCell(iCell)
-                  sumVertBinVelocityRegion(iBin, k, i) = sumVertBinVelocityRegion(iBin, k, i) + vertVelocityTop(k, iCell) * &
-                     areaCell(iCell) 
-                  sumVertBinVelocity(iBin, k) = sumVertBinVelocity(iBin, k) + (vertVelocityTop(k, iCell) * areaCell(iCell))
+         else ! no vertical interpolation, for z-level runs
+          do iCell = 1,nCellsOwned
+            iBin = MAX(int((latCell(iCell) - binBoundaryMocStreamfunction(1)) / binWidth), 2)
+            do k = 1,maxLevelCell(iCell)
+               do i = 1, regionsInAddGroup
+                  currentRegion = regionsInGroup(i, regionGroupNumber)
+                  sumVertBinVelocityRegion(iBin, k, i) = sumVertBinVelocityRegion(iBin, k, i) + (vertVelocityTop(k, iCell) * &
+                        areaCell(iCell) * regionCellMasks(currentRegion, iCell))
                end do
-             endif
+               sumVertBinVelocity(iBin, k) = sumVertBinVelocity(iBin, k) + (vertVelocityTop(k, iCell) * areaCell(iCell))
             end do
-          endif
-         end do
+          end do
+         endif
 
          do i = 1, regionsInAddGroup
             do k = 1,nVertLevels
