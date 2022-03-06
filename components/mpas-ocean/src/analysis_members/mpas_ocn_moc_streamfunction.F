@@ -351,7 +351,7 @@ contains
             transectsInGroup
 
       real (kind=RKIND) :: m3ps_to_Sv
-      real (kind=RKIND), dimension(:,:), pointer :: layerThickness, normalVelocity
+      real (kind=RKIND), dimension(:,:), pointer :: layerThickness
       real (kind=RKIND), dimension(:,:), allocatable ::  sumTransport, totalSumTransport
       character (len=STRKIND), dimension(:), pointer :: transectNames, transectGroupNames
       integer, dimension(:), pointer ::  nTransectsInGroup
@@ -376,7 +376,7 @@ contains
       real (kind=RKIND) :: bottomDepthEdge, dzUpper, dzLower
       real (kind=RKIND), dimension(:), allocatable :: zMidEdge, zTopEdge, refZMid, transportZL, layerThicknessEdge
       real (kind=RKIND), dimension(:), allocatable :: refZTop, vertVelocityTopZL, xIn, xOut, yIn
-      real (kind=RKIND), dimension(:,:), allocatable :: normalVelocityHZLAll
+      real (kind=RKIND), dimension(:,:), allocatable :: trVelHZALL
       integer :: nIn, nOut
       real(kind=RKIND) :: invAreaCell1, edgeNorm
       real (kind=RKIND), dimension(:), allocatable:: div_hu,div_huTransport,div_huGMBolus
@@ -415,7 +415,7 @@ contains
       allocate(sumVertBinVelocityRegion(nMocStreamfunctionBinsUsed + 1, nVertLevels, maxRegionsInGroup))
       allocate(mocStreamValLatAndDepthRegionTotal(nMocStreamfunctionBinsUsed + 1, nVertLevels, maxRegionsInGroup))
       allocate(zMidEdge(nVertLevels), zTopEdge(nVertLevelsP1), refZMid(nVertLevels), transportZL(nVertLevels), layerThicknessEdge(nVertLevels))
-      allocate(normalVelocityHZLAll(nVertLevels, nEdgesAll))
+      allocate(trVelHZALL(nVertLevels, nEdgesAll))
       allocate(refZTop(nVertLevelsP1), vertVelocityTopZL(nVertLevelsP1))
       allocate(xIn(nVertLevels+2), xOut(nVertLevelsP1), yIn(nVertLevels+2))
       allocate(div_hu(nVertLevels),div_huTransport(nVertLevels),div_huGMBolus(nVertLevels))
@@ -501,7 +501,6 @@ contains
          call mpas_pool_get_array(transectPool,'transectEdgeMaskSigns',transectEdgeMaskSigns)
          call mpas_pool_get_array(transectPool,'transectEdgeMasks',transectEdgeMasks)
          call mpas_pool_get_subpool(block % structs, 'state', statePool)
-         call mpas_pool_get_array(statePool, 'normalVelocity', normalVelocity, timeLevel)
          call mpas_pool_get_array(statePool, 'layerThickness', layerThickness, timeLevel)
 
 ! example of calling rmap1d
@@ -518,7 +517,7 @@ contains
 !
 !               if (nLevels .lt. 2) cycle
 !
-!               dataNow(1, 1, 1:nLayers) = normalVelocity(kTop:kBot, iEdge)
+!               dataNow(1, 1, 1:nLayers) = normalTransportVelocity(kTop:kBot, iEdge)
 !
 !               call rmap1d(nLevels, nLevels, nVars ,nDoFs, &
 !                  heightEdgeNow(kTop:kBot+1, iEdge), &
@@ -549,7 +548,7 @@ contains
 !    ! TCPU  method tcpu-timer.
 !    !
 !
-!               normalVelocity   (kTop:kBot, iEdge) = dataNew(1, 1, 1:nLayers)
+!               normalTransportVelocity   (kTop:kBot, iEdge) = dataNew(1, 1, 1:nLayers)
 !            
 !            end do
 !            !$omp end do
@@ -557,11 +556,11 @@ contains
 !         end if
 
 
-            !  Compute normalVelocityHZLAll for all edges
+            !  Compute trVelHZALL for all edges
             if (config_AM_mocStreamfunction_vert_interp) then
                ! vertical interpolation, for general vertical coordinates
                do iEdge = 1,nEdgesAll
-                  normalVelocityHZLAll(:,iEdge) = 0.0_RKIND
+                  trVelHZALL(:,iEdge) = 0.0_RKIND
                   if (maxLevelEdgeTop(iEdge).le.1) cycle
                   c1 = cellsOnEdge(1,iEdge)
                   c2 = cellsOnEdge(2,iEdge)
@@ -577,20 +576,20 @@ contains
                   end do
                   k = maxLevelEdgeTop(iEdge) + 1
                   zTopEdge(k) = zTopEdge(k-1) - layerThicknessEdge(k-1)
-                  ! Integrate normalVelocity:
-                  ! (zTopEdge, normalVelocity) -> (refZTop, normalVelocityHZLAll)
+                  ! Integrate normalTransportVelocity:
+                  ! (zTopEdge, normalTransportVelocity) -> (refZTop, trVelHZALL)
                   kZL = 1
                   ! loop through general coordinate levels
                   do kGC = 1,maxLevelEdgeTop(iEdge)
                      if (zTopEdge(kGC+1) > refZTop(kZL+1) - 1.0e-8) then
                         ! if GC layer is full within z-level, give the whole thing
-                        normalVelocityHZLAll(kZL,iEdge) = normalVelocityHZLAll(kZL,iEdge) + normalVelocity(kGC,iEdge) * layerThicknessEdge(kGC)
+                        trVelHZALL(kZL,iEdge) = trVelHZALL(kZL,iEdge) + normalTransportVelocity(kGC,iEdge) * layerThicknessEdge(kGC)
                      else
                         ! if GC layer is partially within z-level, give just part.
-                        normalVelocityHZLAll(kZL,iEdge) = normalVelocityHZLAll(kZL,iEdge) + normalVelocity(kGC,iEdge) * (zTopEdge(kGC) - refZTop(kZL+1))
+                        trVelHZALL(kZL,iEdge) = trVelHZALL(kZL,iEdge) + normalTransportVelocity(kGC,iEdge) * (zTopEdge(kGC) - refZTop(kZL+1))
                         ! and give the rest to the next level
                         kZL = min(nVertLevels, kZL + 1)
-                        normalVelocityHZLAll(kZL,iEdge) = normalVelocityHZLAll(kZL,iEdge) + normalVelocity(kGC,iEdge) * (refZTop(kZL) - zTopEdge(kGC+1))
+                        trVelHZALL(kZL,iEdge) = trVelHZALL(kZL,iEdge) + normalTransportVelocity(kGC,iEdge) * (refZTop(kZL) - zTopEdge(kGC+1))
                      endif
                   end do
                end do
@@ -625,21 +624,21 @@ contains
                   end do
                   k = maxLevelEdgeTop(iEdge) + 1
                   zTopEdge(k) = zTopEdge(k-1) - layerThicknessEdge(k-1)
-                  ! Integrate normalVelocity:
-                  ! (zTopEdge, normalVelocity) -> (refZTop, transportZL)
+                  ! Integrate normalTransportVelocity:
+                  ! (zTopEdge, normalTransportVelocity) -> (refZTop, transportZL)
                   transportZL(:) = 0.0_RKIND
                   kZL = 1
                   ! loop through general coordinate levels
                   do kGC = 1,maxLevelEdgeTop(iEdge)
                      if (zTopEdge(kGC+1) > refZTop(kZL+1) - 1.0e-8) then
                         ! if GC layer is full within z-level, give the whole thing
-                        transportZL(kZL) = transportZL(kZL) + normalVelocity(kGC,iEdge) * layerThicknessEdge(kGC)
+                        transportZL(kZL) = transportZL(kZL) + normalTransportVelocity(kGC,iEdge) * layerThicknessEdge(kGC)
                      else
                         ! if GC layer is partially within z-level, give just part.
-                        transportZL(kZL) = transportZL(kZL) + normalVelocity(kGC,iEdge) * (zTopEdge(kGC) - refZTop(kZL+1))
+                        transportZL(kZL) = transportZL(kZL) + normalTransportVelocity(kGC,iEdge) * (zTopEdge(kGC) - refZTop(kZL+1))
                         ! and give the rest to the next level
                         kZL = min(nVertLevels, kZL + 1)
-                        transportZL(kZL) = transportZL(kZL) + normalVelocity(kGC,iEdge) * (refZTop(kZL) - zTopEdge(kGC+1))
+                        transportZL(kZL) = transportZL(kZL) + normalTransportVelocity(kGC,iEdge) * (refZTop(kZL) - zTopEdge(kGC+1))
                      endif
                   end do
                   do k = 1, nVertLevels
@@ -658,7 +657,7 @@ contains
                      sumTransport(k,iTransect) = sumTransport(k,iTransect) + &
                         transectEdgeMaskSigns(currentTransect,iEdge) &
                         * transectEdgeMasks(currentTransect, iEdge) &
-                        * normalVelocity(k,iEdge)*dvEdge(iEdge) &
+                        * normalTransportVelocity(k,iEdge)*dvEdge(iEdge) &
                         * 0.5_RKIND*(layerThickness(k,c1) + layerThickness(k,c2))
                   end do
                end do
@@ -712,7 +711,7 @@ contains
                   iEdge = edgesOnCell(i, iCell)
                   edgeNorm = dvEdge(iEdge) * invAreaCell1 * edgeSignOnCell(i, iCell)
                   do k = 1,nVertLevels
-                     div_hu(k) = div_hu(k) - normalVelocityHZLAll(k, iEdge) * edgeNorm
+                     div_hu(k) = div_hu(k) - trVelHZALL(k, iEdge) * edgeNorm
                      !div_huTransport(k) = div_huTransport(k) - normalTransportVelocity(k, iEdge) * edgeNorm * refLayerThickness(k)
                      !div_huGMBolus(k) = div_huGMBolus(k) - normalGMBolusVelocity(k, iEdge) * edgeNorm * refLayerThickness(k)
                   end do
@@ -776,99 +775,99 @@ contains
      call mpas_pool_get_array(mocStreamfunctionAMPool, 'mocStreamvalLatAndDepthRegion', mocStreamvalLatAndDepthRegion)
      mocStreamvalLatAndDepthRegion = mocStreamvalLatAndDepthRegionTotal * m3ps_to_Sv
 
-     if(config_use_GM) THEN !compute GM bolus contribution to the streamfunction
-       block => domain % blocklist
-       do while (associated(block))
-           call mpas_pool_get_subpool(block % structs, 'mocStreamfunctionAM', mocStreamfunctionAMPool)
+     !if(config_use_GM) THEN !compute GM bolus contribution to the streamfunction
+     !  block => domain % blocklist
+     !  do while (associated(block))
+     !      call mpas_pool_get_subpool(block % structs, 'mocStreamfunctionAM', mocStreamfunctionAMPool)
 
-           call mpas_pool_get_array(mocStreamfunctionAMPool, 'binBoundaryMocStreamfunction', binBoundaryMocStreamfunction)
+     !      call mpas_pool_get_array(mocStreamfunctionAMPool, 'binBoundaryMocStreamfunction', binBoundaryMocStreamfunction)
 
-           binWidth = (binBoundaryMocStreamfunction(nMocStreamfunctionBinsUsed + 1) - binBoundaryMocStreamfunction(1)) &
-           / nMocStreamfunctionBinsUsed
+     !      binWidth = (binBoundaryMocStreamfunction(nMocStreamfunctionBinsUsed + 1) - binBoundaryMocStreamfunction(1)) &
+     !      / nMocStreamfunctionBinsUsed
 
-           call mpas_pool_get_array(regionPool, 'regionCellMasks', regionCellMasks)
+     !      call mpas_pool_get_array(regionPool, 'regionCellMasks', regionCellMasks)
 
-           !!!! TRANSECT DOMAINSPLIT VARIABLES
-           call mpas_pool_get_array(transectPool,'transectEdgeMaskSigns',transectEdgeMaskSigns)
-           call mpas_pool_get_array(transectPool,'transectEdgeMasks',transectEdgeMasks)
-           normalVelocity => normalGMBolusVelocity
-           call mpas_pool_get_array(statePool, 'layerThickness', layerThickness, timeLevel)
+     !      !!!! TRANSECT DOMAINSPLIT VARIABLES
+     !      call mpas_pool_get_array(transectPool,'transectEdgeMaskSigns',transectEdgeMaskSigns)
+     !      call mpas_pool_get_array(transectPool,'transectEdgeMasks',transectEdgeMasks)
+     !      normalTransportVelocity => normalGMBolusVelocity
+     !      call mpas_pool_get_array(statePool, 'layerThickness', layerThickness, timeLevel)
 
-           !!!! TRANSECT CALCULATION
-           sumTransport = 0.0_RKIND
-           mocStreamValLatAndDepthLocal = 0.0_RKIND
-           mocStreamValLatAndDepthTotal = 0.0_RKIND
-           sumVertBinVelocity = 0.0_RKIND
-           mocStreamValLatAndDepthRegionLocal = 0.0_RKIND
-           mocStreamValLatAndDepthRegionTotal = 0.0_RKIND
-           sumVertBinVelocityRegion = 0.0_RKIND
+     !      !!!! TRANSECT CALCULATION
+     !      sumTransport = 0.0_RKIND
+     !      mocStreamValLatAndDepthLocal = 0.0_RKIND
+     !      mocStreamValLatAndDepthTotal = 0.0_RKIND
+     !      sumVertBinVelocity = 0.0_RKIND
+     !      mocStreamValLatAndDepthRegionLocal = 0.0_RKIND
+     !      mocStreamValLatAndDepthRegionTotal = 0.0_RKIND
+     !      sumVertBinVelocityRegion = 0.0_RKIND
 
-           do iTransect = 1,transectsInAddGroup
-              currentTransect = transectsInGroup(iTransect, transectGroupNumber)
-              do iEdge = 1,nEdgesOwned
-                 c1 = cellsOnEdge(1,iEdge)
-                 c2 = cellsOnEdge(2,iEdge)
-                 do k = 1, maxLevelEdgeTop(iEdge)
-                    sumTransport(k,iTransect) = sumTransport(k,iTransect) + &
-                       transectEdgeMaskSigns(currentTransect,iEdge) &
-                       * transectEdgeMasks(currentTransect, iEdge) &
-                       * normalVelocity(k,iEdge)*dvEdge(iEdge) &
-                       * 0.5_RKIND*(layerThickness(k,c1) + layerThickness(k,c2))
-                 end do
-              end do
-              do k = 2, nVertLevels
-                 mocStreamValLatAndDepthRegionLocal(1, k, iTransect) = &
-                    mocStreamValLatAndDepthRegionLocal(1, k - 1, iTransect) &
-                    + sumTransport(k - 1, iTransect)
-              end do
-           end do
+     !      do iTransect = 1,transectsInAddGroup
+     !         currentTransect = transectsInGroup(iTransect, transectGroupNumber)
+     !         do iEdge = 1,nEdgesOwned
+     !            c1 = cellsOnEdge(1,iEdge)
+     !            c2 = cellsOnEdge(2,iEdge)
+     !            do k = 1, maxLevelEdgeTop(iEdge)
+     !               sumTransport(k,iTransect) = sumTransport(k,iTransect) + &
+     !                  transectEdgeMaskSigns(currentTransect,iEdge) &
+     !                  * transectEdgeMasks(currentTransect, iEdge) &
+     !                  * normalTransportVelocity(k,iEdge)*dvEdge(iEdge) &
+     !                  * 0.5_RKIND*(layerThickness(k,c1) + layerThickness(k,c2))
+     !            end do
+     !         end do
+     !         do k = 2, nVertLevels
+     !            mocStreamValLatAndDepthRegionLocal(1, k, iTransect) = &
+     !               mocStreamValLatAndDepthRegionLocal(1, k - 1, iTransect) &
+     !               + sumTransport(k - 1, iTransect)
+     !         end do
+     !      end do
 
-           !!!! END TRANSECT CALCULATION
+     !      !!!! END TRANSECT CALCULATION
 
-           do iCell = 1,nCellsOwned
-              iBin = max(int((latCell(iCell) - binBoundaryMocStreamfunction(1)) / binWidth), 2)
-              do k = 1,maxLevelCell(iCell)
-                 do i = 1, regionsInAddGroup
-                    currentRegion = regionsInGroup(i, regionGroupNumber)
-                    sumVertBinVelocityRegion(iBin, k, i) = sumVertBinVelocityRegion(iBin, k, i) + (vertGMBolusVelocityTop(k, iCell) * &
-                          areaCell(iCell) * regionCellMasks(currentRegion, iCell))
-                 end do
-                 sumVertBinVelocity(iBin, k) = sumVertBinVelocity(iBin, k) + (vertGMBolusVelocityTop(k, iCell) * areaCell(iCell))
-              end do
-           end do
+     !      do iCell = 1,nCellsOwned
+     !         iBin = max(int((latCell(iCell) - binBoundaryMocStreamfunction(1)) / binWidth), 2)
+     !         do k = 1,maxLevelCell(iCell)
+     !            do i = 1, regionsInAddGroup
+     !               currentRegion = regionsInGroup(i, regionGroupNumber)
+     !               sumVertBinVelocityRegion(iBin, k, i) = sumVertBinVelocityRegion(iBin, k, i) + (vertGMBolusVelocityTop(k, iCell) * &
+     !                     areaCell(iCell) * regionCellMasks(currentRegion, iCell))
+     !            end do
+     !            sumVertBinVelocity(iBin, k) = sumVertBinVelocity(iBin, k) + (vertGMBolusVelocityTop(k, iCell) * areaCell(iCell))
+     !         end do
+     !      end do
 
-           do i = 1, regionsInAddGroup
-              do k = 1,nVertLevels
-                 do iBin = 2, nMocStreamfunctionBinsUsed + 1
-                    mocStreamValLatAndDepthLocal(iBin, k) = mocStreamValLatAndDepthLocal(iBin-1, k) &
-                       + sumVertBinVelocity(iBin, k)
-                    mocStreamValLatAndDepthRegionLocal(iBin, k, i) = mocStreamValLatAndDepthRegionLocal(iBin-1, k, i) &
-                       + sumVertBinVelocityRegion(iBin, k, i)
-                 end do
-              end do
-           end do
+     !      do i = 1, regionsInAddGroup
+     !         do k = 1,nVertLevels
+     !            do iBin = 2, nMocStreamfunctionBinsUsed + 1
+     !               mocStreamValLatAndDepthLocal(iBin, k) = mocStreamValLatAndDepthLocal(iBin-1, k) &
+     !                  + sumVertBinVelocity(iBin, k)
+     !               mocStreamValLatAndDepthRegionLocal(iBin, k, i) = mocStreamValLatAndDepthRegionLocal(iBin-1, k, i) &
+     !                  + sumVertBinVelocityRegion(iBin, k, i)
+     !            end do
+     !         end do
+     !      end do
 
-           block => block % next
-       end do
+     !      block => block % next
+     !  end do
 
-       call mpas_dmpar_sum_real_array(dminfo, nVertLevels * (nMocStreamfunctionBinsUsed + 1), mocStreamValLatAndDepthLocal, &
-           mocStreamvalLatAndDepthTotal)
+     !  call mpas_dmpar_sum_real_array(dminfo, nVertLevels * (nMocStreamfunctionBinsUsed + 1), mocStreamValLatAndDepthLocal, &
+     !      mocStreamvalLatAndDepthTotal)
 
-       call mpas_dmpar_sum_real_array(dminfo, nVertLevels * (nMocStreamfunctionBinsUsed + 1) * maxRegionsInGroup, &
-           mocStreamValLatAndDepthRegionLocal, mocStreamvalLatAndDepthRegionTotal)
+     !  call mpas_dmpar_sum_real_array(dminfo, nVertLevels * (nMocStreamfunctionBinsUsed + 1) * maxRegionsInGroup, &
+     !      mocStreamValLatAndDepthRegionLocal, mocStreamvalLatAndDepthRegionTotal)
 
-       call mpas_pool_get_subpool(domain % blocklist % structs, 'mocStreamfunctionAM', mocStreamfunctionAMPool)
-       call mpas_pool_get_array(mocStreamfunctionAMPool, 'mocStreamvalLatAndDepthGM', mocStreamvalLatAndDepthGM)
-       mocStreamvalLatAndDepthGM = mocStreamvalLatAndDepthTotal * m3ps_to_Sv
+     !  call mpas_pool_get_subpool(domain % blocklist % structs, 'mocStreamfunctionAM', mocStreamfunctionAMPool)
+     !  call mpas_pool_get_array(mocStreamfunctionAMPool, 'mocStreamvalLatAndDepthGM', mocStreamvalLatAndDepthGM)
+     !  mocStreamvalLatAndDepthGM = mocStreamvalLatAndDepthTotal * m3ps_to_Sv
 
-       call mpas_pool_get_array(mocStreamfunctionAMPool, 'mocStreamvalLatAndDepthRegionGM', mocStreamvalLatAndDepthRegionGM)
-       mocStreamvalLatAndDepthRegionGM = mocStreamvalLatAndDepthRegionTotal * m3ps_to_Sv
+     !  call mpas_pool_get_array(mocStreamfunctionAMPool, 'mocStreamvalLatAndDepthRegionGM', mocStreamvalLatAndDepthRegionGM)
+     !  mocStreamvalLatAndDepthRegionGM = mocStreamvalLatAndDepthRegionTotal * m3ps_to_Sv
 
-       !Add GM bolus contribution to resolved streamfunction to create total streamfunction
-       mocStreamvalLatAndDepthRegion = mocStreamvalLatAndDepthRegion + mocStreamvalLatAndDepthRegionGM
-       mocStreamvalLatAndDepth = mocStreamvalLatAndDepth + mocStreamvalLatAndDepthGM
+     !  !Add GM bolus contribution to resolved streamfunction to create total streamfunction
+     !  mocStreamvalLatAndDepthRegion = mocStreamvalLatAndDepthRegion + mocStreamvalLatAndDepthRegionGM
+     !  mocStreamvalLatAndDepth = mocStreamvalLatAndDepth + mocStreamvalLatAndDepthGM
 
-     endif !config_use_GM
+     !endif !config_use_GM
 
      deallocate(mocStreamvalLatAndDepthTotal)
      deallocate(mocStreamvalLatAndDepthLocal)
@@ -879,10 +878,10 @@ contains
      deallocate(sumVertBinVelocityRegion)
      deallocate(zMidEdge, refZMid, transportZL, layerThicknessEdge)
      deallocate(refZTop, vertVelocityTopZL)
-     deallocate(normalVelocityHZLAll)
+     deallocate(trVelHZALL)
      deallocate(div_hu,div_huTransport,div_huGMBolus)
 
-     !!!! TRANSECT CELANUP
+     !!!! TRANSECT CLEANUP
      deallocate(sumTransport)
      deallocate(totalSumTransport)
 
