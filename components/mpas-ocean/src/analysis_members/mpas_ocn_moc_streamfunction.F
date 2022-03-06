@@ -376,7 +376,10 @@ contains
       real (kind=RKIND) :: bottomDepthEdge, dzUpper, dzLower
       real (kind=RKIND), dimension(:), allocatable :: zMidEdge, zTopEdge, refZMid, transportZL, layerThicknessEdge
       real (kind=RKIND), dimension(:), allocatable :: refZTop, vertVelocityTopZL, xIn, xOut, yIn
+      real (kind=RKIND), dimension(:,:), allocatable :: normalVelocityHZLAll
       integer :: nIn, nOut
+      real(kind=RKIND) :: invAreaCell1, edgeNorm
+      real (kind=RKIND), dimension(:), allocatable:: div_hu,div_huTransport,div_huGMBolus
 
       !!!! REGION INITIALIZATION
       !! region dimensions
@@ -412,8 +415,10 @@ contains
       allocate(sumVertBinVelocityRegion(nMocStreamfunctionBinsUsed + 1, nVertLevels, maxRegionsInGroup))
       allocate(mocStreamValLatAndDepthRegionTotal(nMocStreamfunctionBinsUsed + 1, nVertLevels, maxRegionsInGroup))
       allocate(zMidEdge(nVertLevels), zTopEdge(nVertLevelsP1), refZMid(nVertLevels), transportZL(nVertLevels), layerThicknessEdge(nVertLevels))
+      allocate(normalVelocityHZLAll(nVertLevels, nEdgesAll))
       allocate(refZTop(nVertLevelsP1), vertVelocityTopZL(nVertLevelsP1))
       allocate(xIn(nVertLevels+2), xOut(nVertLevelsP1), yIn(nVertLevels+2))
+      allocate(div_hu(nVertLevels),div_huTransport(nVertLevels),div_huGMBolus(nVertLevels))
 
       ! compute refZTop. This could be moved to the mesh later.
       refZTop(1) = 0.0_RKIND
@@ -551,6 +556,46 @@ contains
 !            !$omp end parallel
 !         end if
 
+
+            !  Compute normalVelocityHZLAll for all edges
+            if (config_AM_mocStreamfunction_vert_interp) then
+               ! vertical interpolation, for general vertical coordinates
+               do iEdge = 1,nEdgesAll
+                  normalVelocityHZLAll(:,iEdge) = 0.0_RKIND
+                  if (maxLevelEdgeTop(iEdge).le.1) cycle
+                  c1 = cellsOnEdge(1,iEdge)
+                  c2 = cellsOnEdge(2,iEdge)
+                  bottomDepthEdge = 0.5_RKIND*(bottomDepth(c1) + bottomDepth(c2))
+                  do k = 1, maxLevelEdgeTop(iEdge)
+                      layerThicknessEdge(k) = 0.5_RKIND*(layerThickness(k,c1) + layerThickness(k,c2))
+                  end do
+                  zTopEdge(1) = 0.0_RKIND
+                  zMidEdge(1) = -0.5_RKIND*layerThicknessEdge(1)
+                  do k = 2, maxLevelEdgeTop(iEdge)
+                     zTopEdge(k) = zTopEdge(k-1) - layerThicknessEdge(k-1)
+                     zMidEdge(k) = zMidEdge(k-1) - 0.5_RKIND*(layerThicknessEdge(k-1) + layerThicknessEdge(k))
+                  end do
+                  k = maxLevelEdgeTop(iEdge) + 1
+                  zTopEdge(k) = zTopEdge(k-1) - layerThicknessEdge(k-1)
+                  ! Integrate normalVelocity:
+                  ! (zTopEdge, normalVelocity) -> (refZTop, normalVelocityHZLAll)
+                  kZL = 1
+                  ! loop through general coordinate levels
+                  do kGC = 1,maxLevelEdgeTop(iEdge)
+                     if (zTopEdge(kGC+1) > refZTop(kZL+1) - 1.0e-8) then
+                        ! if GC layer is full within z-level, give the whole thing
+                        normalVelocityHZLAll(kZL,iEdge) = normalVelocityHZLAll(kZL,iEdge) + normalVelocity(kGC,iEdge) * layerThicknessEdge(kGC)
+                     else
+                        ! if GC layer is partially within z-level, give just part.
+                        normalVelocityHZLAll(kZL,iEdge) = normalVelocityHZLAll(kZL,iEdge) + normalVelocity(kGC,iEdge) * (zTopEdge(kGC) - refZTop(kZL+1))
+                        ! and give the rest to the next level
+                        kZL = min(nVertLevels, kZL + 1)
+                        normalVelocityHZLAll(kZL,iEdge) = normalVelocityHZLAll(kZL,iEdge) + normalVelocity(kGC,iEdge) * (refZTop(kZL) - zTopEdge(kGC+1))
+                     endif
+                  end do
+               end do
+            endif
+
          !!!! TRANSECT CALCULATION
          sumTransport = 0.0_RKIND
          mocStreamValLatAndDepthLocal = 0.0_RKIND
@@ -632,23 +677,24 @@ contains
             do iCell = 1,nCellsOwned
                iBin = max(int((latCell(iCell) - binBoundaryMocStreamfunction(1)) / binWidth), 2)
 
-               ! Interpolate vertVelocityTop:
-               ! (zTop(:,iCell), vertVelocityTop(:,iCell)) -> (refZTop(:), vertVelocityTopZL(:))
-               !  xIn            yIn size: nIn=maxLevelCell+2  xOut        yOut  nVertLevels
-
-               nIn = maxLevelCell(iCell) + 2
-               xIn(1:nIn-2) = -zTop(1:nIn-2,iCell)
-               yIn(1:nIn-2) = vertVelocityTop(1:nIn-2,iCell)
-               ! Add two extra points so all velocities are zero below bottom
-               xIn(nIn-1) = bottomDepth(iCell)
-               yIn(nIn-1) = 0.0_RKIND
-               xIn(nIn) = 6000 ! deepest ocean cell in m
-               yIn(nIn) = 0.0_RKIND
-               ! xOut = -refZTop (set above)
-               ! nOut = nVertLevels + 1 (set above)
-               xIn(1) = 0.0_RKIND ! set SSH to match xOut
-               call mpas_interpolate_linear(xIn,yIn,nIn, &
-                  xOut,vertVelocityTopZL,nOut)
+!!!!!!!! This is linear interpolation of vertVelocityTop
+!               ! Interpolate vertVelocityTop:
+!               ! (zTop(:,iCell), vertVelocityTop(:,iCell)) -> (refZTop(:), vertVelocityTopZL(:))
+!               !  xIn            yIn size: nIn=maxLevelCell+2  xOut        yOut  nVertLevels
+!
+!               nIn = maxLevelCell(iCell) + 2
+!               xIn(1:nIn-2) = -zTop(1:nIn-2,iCell)
+!               yIn(1:nIn-2) = vertVelocityTop(1:nIn-2,iCell)
+!               ! Add two extra points so all velocities are zero below bottom
+!               xIn(nIn-1) = bottomDepth(iCell)
+!               yIn(nIn-1) = 0.0_RKIND
+!               xIn(nIn) = 6000 ! deepest ocean cell in m
+!               yIn(nIn) = 0.0_RKIND
+!               ! xOut = -refZTop (set above)
+!               ! nOut = nVertLevels + 1 (set above)
+!               xIn(1) = 0.0_RKIND ! set SSH to match xOut
+!               call mpas_interpolate_linear(xIn,yIn,nIn, &
+!                  xOut,vertVelocityTopZL,nOut)
                !if (iCell < 10000) then
                !    print *, 'iCell, nIn, nOut',iCell, nIn, nOut
                !print *, 'xIn',xIn
@@ -656,7 +702,29 @@ contains
                !print *, 'xOut',xOut
                !print *, 'yOut',vertVelocityTopZL
                !endif
+!!!!!!!! End linear interpolation of vertVelocityTop
 
+               div_hu(:) = 0.0_RKIND
+               !div_huTransport(:) = 0.0_RKIND
+               !div_huGMBolus(:) = 0.0_RKIND
+               invAreaCell1 = invAreaCell(iCell)
+               do i = 1, nEdgesOnCell(iCell)
+                  iEdge = edgesOnCell(i, iCell)
+                  edgeNorm = dvEdge(iEdge) * invAreaCell1 * edgeSignOnCell(i, iCell)
+                  do k = 1,nVertLevels
+                     div_hu(k) = div_hu(k) - normalVelocityHZLAll(k, iEdge) * edgeNorm
+                     !div_huTransport(k) = div_huTransport(k) - normalTransportVelocity(k, iEdge) * edgeNorm * refLayerThickness(k)
+                     !div_huGMBolus(k) = div_huGMBolus(k) - normalGMBolusVelocity(k, iEdge) * edgeNorm * refLayerThickness(k)
+                  end do
+               end do
+               ! Vertical velocity at bottom (maxLevelCell(iCell)+1) is zero, initialized above.
+               vertVelocityTopZL(1) = 0.0_RKIND
+               vertVelocityTopZL(nVertLevels+1) = 0.0_RKIND
+               do k = nVertLevels, 2, -1
+                  vertVelocityTopZL(k) = vertVelocityTopZL(k+1) - div_hu(k)
+                  !vertTransportVelocityTopZL(k) = vertTransportVelocityTopZL(k+1) - div_huTransport(k)
+                  !vertGMBolusVelocityTopZL(k) = vertGMBolusVelocityTopZL(k+1) - div_huGMBolus(k)
+               end do
                do k = 1,nVertLevels
                   do i = 1, regionsInAddGroup
                      currentRegion = regionsInGroup(i, regionGroupNumber)
@@ -811,6 +879,8 @@ contains
      deallocate(sumVertBinVelocityRegion)
      deallocate(zMidEdge, refZMid, transportZL, layerThicknessEdge)
      deallocate(refZTop, vertVelocityTopZL)
+     deallocate(normalVelocityHZLAll)
+     deallocate(div_hu,div_huTransport,div_huGMBolus)
 
      !!!! TRANSECT CELANUP
      deallocate(sumTransport)
