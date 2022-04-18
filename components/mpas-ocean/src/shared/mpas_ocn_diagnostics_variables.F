@@ -191,6 +191,8 @@ module ocn_diagnostics_variables
    real (kind=RKIND), dimension(:), pointer :: betaEdge
    real (kind=RKIND), dimension(:), pointer :: RediHorizontalTaper, gmHorizontalTaper, RossbyRadius
 
+   real (kind=RKIND), dimension(:), pointer :: BtrAvgOfBaroclinicVelocity, BtrAvgOfGMBolusVelocity, normalVelocityCorrection
+
    ! Semi-implicit Array Pointers
    real (kind=RKIND), dimension(:), pointer :: SIvec_r0,SIvec_r00,SIvec_r1 ,SIvec_rh0,SIvec_rh1,SIvec_ph0,SIvec_ph1
    real (kind=RKIND), dimension(:), pointer :: SIvec_v0,SIvec_s0 ,SIvec_s1 ,SIvec_sh0,SIvec_sh1
@@ -611,6 +613,13 @@ contains
       call mpas_pool_get_array(diagnosticsPool, 'surfacePressure', &
                 surfacePressure)
 
+      if (trim(config_time_integrator) == 'split_explicit' .or. &
+          trim(config_time_integrator) == 'split_implicit') then
+         call mpas_pool_get_array(diagnosticsPool, 'BtrAvgOfBaroclinicVelocity', BtrAvgOfBaroclinicVelocity)
+         call mpas_pool_get_array(diagnosticsPool, 'BtrAvgOfGMBolusVelocity', BtrAvgOfGMBolusVelocity)
+      end if
+         call mpas_pool_get_array(diagnosticsPool, 'normalVelocityCorrection', normalVelocityCorrection)
+
       ! Semi-implicit Array Pointer retrievals
       if (trim(config_time_integrator) == 'split_implicit') then
          call mpas_pool_get_array(diagnosticsPool, 'SIvec_r0', SIvec_r0)
@@ -799,6 +808,14 @@ contains
       if ( config_use_activeTracers_surface_restoring ) then
          !$acc enter data create(                                  &
          !$acc                   salinitySurfaceRestoringTendency  &
+         !$acc                   )
+      end if
+      if (trim(config_time_integrator) == 'split_explicit' .or. &
+          trim(config_time_integrator) == 'split_implicit') then
+         !$acc enter data create(                       &
+         !$acc                   BtrAvgOfBaroclinicVelocity,              &
+         !$acc                   normalVelocityCorrection,              &
+         !$acc                   BtrAvgOfGMBolusVelocity              &
          !$acc                   )
       end if
       if ( trim(config_time_integrator) == 'split_implicit' ) then
@@ -1049,6 +1066,14 @@ contains
          !$acc                   salinitySurfaceRestoringTendency  &
          !$acc                   )
       end if
+      if (trim(config_time_integrator) == 'split_explicit' .or. &
+          trim(config_time_integrator) == 'split_implicit') then
+         !$acc exit data delete(                        &
+         !$acc                   BtrAvgOfBaroclinicVelocity,              &
+         !$acc                   normalVelocityCorrection,              &
+         !$acc                   BtrAvgOfGMBolusVelocity              &
+         !$acc                   )
+      end if
       if ( trim(config_time_integrator) == 'split_implicit' ) then
          !$acc exit data delete(                        &
          !$acc                   SIvec_r0,              &
@@ -1248,6 +1273,12 @@ contains
       end if
       if ( config_use_self_attraction_loading ) then
          nullify(ssh_sal)
+      end if
+      if (trim(config_time_integrator) == 'split_explicit' .or. &
+          trim(config_time_integrator) == 'split_implicit') then
+         nullify(BtrAvgOfBaroclinicVelocity,              &
+                 normalVelocityCorrection,              &
+                 BtrAvgOfGMBolusVelocity)
       end if
       if ( trim(config_time_integrator) == 'split_implicit' ) then
          nullify(SIvec_r0,              &

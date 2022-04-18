@@ -179,7 +179,6 @@ module ocn_time_integration_split
          flux,             &! temp for computing flux for barotropic
          sshEdge,          &! sea surface height at edge
          CoriolisTerm,     &! temp for computing coriolis term (fuperp)
-         normalVelocityCorrection, &! velocity correction
          temp,             &! temp for holding vars at new time
          temp_h,           &! temporary for phi
          temp_mask,        &! temporary mask (edgeMask)
@@ -407,6 +406,7 @@ module ocn_time_integration_split
       ! Initialize * variables that are used to compute baroclinic
       ! tendencies below.
 
+if (.not.config_btr_new1_resplit) then
       ! The baroclinic velocity needs be recomputed at the beginning
       ! of a timestep because the implicit vertical mixing is
       ! conducted on the total u.  We keep normalBarotropicVelocity
@@ -445,11 +445,40 @@ module ocn_time_integration_split
       end do
 #ifndef MPAS_OPENACC
       !$omp end do
+      !$omp end parallel
 #endif
+
+else ! config_btr_resplit
+
+      !$omp parallel
+      !$omp do schedule(runtime) private(k, thicknessSum)
+      do iEdge = 1,nEdgesAll
+
+         ! Compute barotropic component ubar at the beginning of every time step
+         thicknessSum  = layerThickEdgeMean(1,iEdge)
+         normalBarotropicVelocityCur(iEdge) = normalVelocityCur(1,iEdge) * layerThickEdgeMean(1,iEdge)
+         do k = 2, maxLevelEdgeTop(iEdge)
+            thicknessSum  =  thicknessSum + layerThickEdgeMean(k,iEdge)
+            normalBarotropicVelocityCur(iEdge) = normalBarotropicVelocityCur(iEdge) + normalVelocityCur(k,iEdge) * layerThickEdgeMean(k,iEdge)
+         enddo
+         normalBarotropicVelocityCur(iEdge) = normalBarotropicVelocityCur(iEdge) / thicknessSum
+
+         ! Compute baroclinic component u' = u - ubar at the beginning of every time step
+         do k = 1, nVertLevels !mrp, could tighten these bounds later: maxLevelEdgeTop % array(iEdge)
+            normalBaroclinicVelocityCur(k,iEdge) = normalVelocityCur(k,iEdge) - normalBarotropicVelocityCur(iEdge)
+            normalVelocityNew(k,iEdge) = normalVelocityCur(k,iEdge)
+            normalBaroclinicVelocityNew(k,iEdge) = normalBaroclinicVelocityCur(k,iEdge)
+         end do
+      end do
+      !$omp end do
+      !$omp end parallel
+
+end if ! config_btr_resplit
 
 #ifdef MPAS_OPENACC
       !$acc loop gang
 #else
+      !$omp parallel
       !$omp do schedule(runtime) private(k)
 #endif
       do iCell = 1, nCellsAll
@@ -1556,7 +1585,7 @@ module ocn_time_integration_split
             ! efficiency: This next block of code is really a check for
             ! debugging, and can be removed later.
             call mpas_timer_start('btr se ssh verif')
-
+if (.not.config_btr_new4_VelCor) then
             ! Correction velocity
             !   normalVelocityCorrection = (Flux - Sum(h u*))/H
             ! or, for the full latex version:
@@ -1624,7 +1653,7 @@ module ocn_time_integration_split
                                  layerThickEdgeFlux(k,iEdge)
                enddo
 
-               normalVelocityCorrection = useVelocityCorrection* &
+               normalVelocityCorrection(iEdge) = useVelocityCorrection* &
                              ((barotropicThicknessFlux(iEdge) - &
                                normalThicknessFluxSum)/thicknessSum)
 
@@ -1639,15 +1668,81 @@ module ocn_time_integration_split
                   ! and tracers in tendency calls in stage 3.
                   normalTransportVelocity(k,iEdge) = edgeMask(k,iEdge)*( &
                              normalTransportVelocity(k,iEdge) + &
-                             normalVelocityCorrection)
+                             normalVelocityCorrection(iEdge))
                enddo
+
+               k = minLevelEdgeBot(iEdge)
+               thicknessSum = 1.0e-15_RKIND
+               BtrAvgOfBaroclinicVelocity(iEdge) = 0.0_RKIND
+               BtrAvgOfGMBolusVelocity(iEdge) = 0.0_RKIND
+               ! note, BtrAvgOfGMBolusVelocity could be changed from an array
+               ! to a scalar if it is not needed to save for later inspection
+               do k = minLevelEdgeBot(iEdge), maxLevelEdgeTop(iEdge)
+                  thicknessSum  =  thicknessSum + layerThickEdgeFlux(k,iEdge)
+                  BtrAvgOfBaroclinicVelocity(iEdge) = BtrAvgOfBaroclinicVelocity(iEdge) + normalBaroclinicVelocityNew(k,iEdge) * layerThickEdgeFlux(k,iEdge)
+                  BtrAvgOfGMBolusVelocity(iEdge) = BtrAvgOfGMBolusVelocity(iEdge) + normalGMBolusVelocity(k,iEdge) * layerThickEdgeFlux(k,iEdge)
+               enddo
+               BtrAvgOfBaroclinicVelocity(iEdge) = BtrAvgOfBaroclinicVelocity(iEdge) / thicknessSum
+               BtrAvgOfGMBolusVelocity(iEdge) = BtrAvgOfGMBolusVelocity(iEdge) / thicknessSum
+  if (config_btr_new2_ubtr_foH) then
+               normalBarotropicVelocityNew(iEdge) = barotropicThicknessFlux(iEdge) / thicknessSum
+  end if
 
             end do ! iEdge
             !$omp end do
             !$omp end parallel
 
             deallocate(uTemp)
+else ! if (config_btr_new4_VelCor) then
+            nEdges = nEdgesHalo(config_num_halos+1 ) !mrp check min w nEdgesPtr in PR
 
+            !$omp parallel
+            !$omp do schedule(runtime) private(k, thicknessSum)
+            do iEdge = 1, nEdges
+
+               ! thicknessSum is initialized outside the loop because on land boundaries
+               ! maxLevelEdgeTop=0, but I want to initialize thicknessSum with a
+               ! nonzero value to avoid a NaN.
+               k = minLevelEdgeBot(iEdge)
+               thicknessSum = 1.0e-15_RKIND
+               BtrAvgOfBaroclinicVelocity(iEdge) = 0.0_RKIND
+               BtrAvgOfGMBolusVelocity(iEdge) = 0.0_RKIND
+               ! note, BtrAvgOfGMBolusVelocity could be changed from an array
+               ! to a scalar if it is not needed to save for later inspection
+               do k = minLevelEdgeBot(iEdge), maxLevelEdgeTop(iEdge)
+                  thicknessSum  =  thicknessSum + layerThickEdgeFlux(k,iEdge)
+                  BtrAvgOfBaroclinicVelocity(iEdge) = BtrAvgOfBaroclinicVelocity(iEdge) + normalBaroclinicVelocityNew(k,iEdge) * layerThickEdgeFlux(k,iEdge)
+                  BtrAvgOfGMBolusVelocity(iEdge) = BtrAvgOfGMBolusVelocity(iEdge) + normalGMBolusVelocity(k,iEdge) * layerThickEdgeFlux(k,iEdge)
+               enddo
+               BtrAvgOfBaroclinicVelocity(iEdge) = BtrAvgOfBaroclinicVelocity(iEdge) / thicknessSum
+               BtrAvgOfGMBolusVelocity(iEdge) = BtrAvgOfGMBolusVelocity(iEdge) / thicknessSum
+
+               ! Compute barotropic velocity from thickness flux.
+               ! mrp changed back. With this commented out, barotropic velocity
+               ! is computed from average of subcycles above.
+               ! Before, we had
+               ! Set momentum velocity (normalVelocity) to:
+               ! u = F/H + u' - btrAvg( u' )
+               ! with this commented out, we have
+               ! u = subcycleAvg(ubar) + u' - btrAvg( u' )
+  if (config_btr_new2_ubtr_foH) then
+               normalBarotropicVelocityNew(iEdge) = barotropicThicknessFlux(iEdge) / thicknessSum
+  end if
+
+               do k = 1, nVertLevels
+
+                  ! Compute transport velocity, used to transport thickness and tracers.
+                  ! uTr = F/H + u' - btrAvg( u' ) + uBolus - btrAvg( uBolus )
+                  normalTransportVelocity(k,iEdge) = edgeMask(k,iEdge) &
+                       *(  barotropicThicknessFlux(iEdge) / thicknessSum &
+                         + normalBaroclinicVelocityNew(k,iEdge) - BtrAvgOfBaroclinicVelocity(iEdge) &
+                         + normalGMBolusVelocity(k,iEdge) - BtrAvgOfGMBolusVelocity(iEdge) )
+               enddo
+
+            end do ! iEdge
+            !$omp end do
+            !$omp end parallel
+end if 
             call mpas_timer_stop('btr se ssh verif')
 
          endif ! split_explicit
@@ -1909,9 +2004,17 @@ module ocn_time_integration_split
                ! u = normalBarotropicVelocity + normalBaroclinicVelocity
                ! here normalBaroclinicVelocity is at time n+1/2
                ! This is u used in next iteration or step
+if (.not.config_btr_new3_sub_btrAvgbclV) then
                normalVelocityNew(k,iEdge) = edgeMask(k,iEdge)* &
                          ( normalBarotropicVelocityNew(iEdge) + &
                            normalBaroclinicVelocityNew(k,iEdge) )
+else !if (.not.config_btr_new3_sub_btrAvgbclV) then
+               
+               normalVelocityNew(k,iEdge) = edgeMask(k,iEdge)* &
+                         ( normalBarotropicVelocityNew(iEdge) + &
+                           normalBaroclinicVelocityNew(k,iEdge) - &
+                           BtrAvgOfBaroclinicVelocity(iEdge) )
+end if
 
             enddo
             end do ! iEdge
@@ -2794,12 +2897,7 @@ module ocn_time_integration_split
          nBtrSubcycles = nBtrSubcycles + 1
       end if
 
-      !*** Set mask for using velocity correction
-      if (config_vel_correction) then
-         useVelocityCorrection = 1.0_RKIND
-      else
-         useVelocityCorrection = 0.0_RKIND
-      endif
+         useVelocityCorrection = 1.0_RKIND ! mrp 
 
       !*** Compute some halo needs to reduce the number
       !*** of halo updates during subcycling
