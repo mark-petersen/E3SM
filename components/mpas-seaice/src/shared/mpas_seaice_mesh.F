@@ -25,6 +25,8 @@ module seaice_mesh
   public :: &
        seaice_init_mesh, &
        seaice_cell_vertices_at_vertex, &
+       seaice_cell_edges_at_edge, &
+       seaice_triangle_edges_at_edge, &
        seaice_normal_vectors, &
        seaice_normal_vectors_polygon, &
        seaice_dot_product_3space, &
@@ -34,7 +36,11 @@ module seaice_mesh
        seaice_latlon_from_xyz, &
        seaice_interpolate_cell_to_vertex, &
        seaice_interpolate_vertex_to_cell, &
-       seaice_project_3D_vector_onto_local_2D
+       seaice_project_3D_vector_onto_local_2D, &
+       spherical_triangle_area, &
+       sphere_distance, &
+       planar_triangle_area, &
+       planar_distance
 
 contains
 
@@ -683,6 +689,114 @@ contains
     enddo ! iVertex
 
   end subroutine seaice_cell_vertices_at_vertex!}}}
+
+!-----------------------------------------------------------------------
+
+  subroutine seaice_cell_edges_at_edge(&
+       cellEdgesAtEdge, &
+       nEdges, &
+       nEdgesOnCell, &
+       edgesOnCell, &
+       cellsOnEdge)!{{{
+
+    integer, dimension(:,:), intent(out) :: &
+         cellEdgesAtEdge !< Output:
+
+    integer, intent(in) :: &
+         nEdges !< Input:
+
+    integer, dimension(:), intent(in) :: &
+         nEdgesOnCell !< Input:
+
+    integer, dimension(:,:), intent(in) :: &
+         cellsOnEdge, & !< Input:
+         edgesOnCell   !< Input:
+
+    integer :: &
+         iEdge, &
+         iCellsOnEdge, &
+         iCell, &
+         iEdgesOnCell, &
+         jEdge
+
+    do iEdge = 1, nEdges
+
+       do iCellsOnEdge = 1, 2
+
+          cellEdgesAtEdge(iCellsOnEdge,iEdge) = 0
+
+          iCell = cellsOnEdge(iCellsOnEdge, iEdge)
+
+          do iEdgesOnCell = 1, nEdgesOnCell(iCell)
+
+             jEdge = edgesOnCell(iEdgesOnCell,iCell)
+
+             if (iEdge == jEdge) then
+
+                cellEdgesAtEdge(iCellsOnEdge,iEdge) = iEdgesOnCell
+
+             endif
+
+          enddo ! iEdgesOnCell
+
+       enddo ! iCellsOnEdge
+
+    enddo ! iEdge
+
+  end subroutine seaice_cell_edges_at_edge!}}}
+
+!-----------------------------------------------------------------------
+
+  subroutine seaice_triangle_edges_at_edge(&
+       triangleEdgesAtEdge, &
+       nEdges, &
+       vertexDegree, &
+       edgesOnVertex, &
+       verticesOnEdge)!{{{
+
+    integer, dimension(:,:), intent(out) :: &
+         triangleEdgesAtEdge !< Output:
+
+    integer, intent(in) :: &
+         nEdges, & !< Input:
+         vertexDegree !<Input:
+
+    integer, dimension(:,:), intent(in) :: &
+         verticesOnEdge, & !< Input:
+         edgesOnVertex   !< Input:
+
+    integer :: &
+         iEdge, &
+         iTrianglesOnEdge, &
+         iTriangle, &
+         iTriangleVertex, &
+         jEdge
+
+    do iEdge = 1, nEdges
+
+       do iTrianglesOnEdge = 1, 2
+
+          triangleEdgesAtEdge(iTrianglesOnEdge,iEdge) = 0
+
+          iTriangle = verticesOnEdge(iTrianglesOnEdge, iEdge)
+
+          do iTriangleVertex = 1, vertexDegree
+
+             jEdge = edgesOnVertex(iTriangleVertex,iTriangle)
+
+             if (iEdge == jEdge) then
+
+                triangleEdgesAtEdge(iTrianglesOnEdge,iEdge) = iTriangleVertex
+
+             endif
+
+          enddo ! iTriangleVertex
+
+       enddo ! iTrianglesOnEdge
+
+    enddo ! iEdge
+
+  end subroutine seaice_triangle_edges_at_edge!}}}
 
 !-----------------------------------------------------------------------
 ! normal vectors
@@ -3802,5 +3916,91 @@ contains
   end subroutine seaice_test_mesh_conversions
 
 !-----------------------------------------------------------------------
+
+   real function spherical_triangle_area(laPointOne, loPointOne, laPointTwo, loPointTwo, laPointThree, loPointThree, radius)
+
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   ! sphericalTriangleArea uses the spherical analog of Heron's formula to
+   ! compute the area of a triangle on the surface of a sphere
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      real (kind=RKIND), intent(in) :: laPointOne, loPointOne, laPointTwo, loPointTwo, laPointThree, loPointThree, radius
+      real (kind=RKIND) :: tanqe, s, a, b, c
+
+      a = sphere_distance(laPointThree, loPointThree, laPointTwo, loPointTwo, radius)
+      b = sphere_distance(laPointThree, loPointThree, laPointOne, loPointOne, radius)
+      c = sphere_distance(laPointOne, loPointOne, laPointTwo, loPointTwo, radius)
+      s = 0.5_RKIND*(a+b+c)
+
+      tanqe = sqrt(tan(0.5_RKIND*s)*tan(0.5_RKIND*(s-a))*tan(0.5_RKIND*(s-b))*tan(0.5_RKIND*(s-c)))
+      spherical_triangle_area = 4.0_RKIND * atan(tanqe)*radius*radius
+
+   end function spherical_triangle_area
+
+!-----------------------------------------------------------------------
+
+   real function planar_triangle_area(x1, y1, z1, x2, y2, z2, x3, y3, z3)
+
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   ! planarTriangleArea uses Heron's formula to compute the area
+   ! of a triangle in a plane
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+     implicit none
+
+     real (kind=RKIND), intent(in) :: x1, y1, z1, x2, y2, z2, x3, y3, z3
+     real (kind=RKIND) :: s, a, b, c, underSqrt
+
+     !get side lengths
+     a = planar_distance(x1, y1, z1, x2, y2, z2)
+     b = planar_distance(x2, y2, z2, x3, y3, z3)
+     c = planar_distance(x1, y1, z1, x3, y3, z3)
+
+     !semi-perimeter of TRI(ABC)
+     s = (a + b + c) * 0.5_RKIND
+
+     underSqrt = s * (s - a) * (s - b) * (s - c)     
+     if (abs(underSqrt) < 1.e-11) then
+        underSqrt = abs(underSqrt) !to handle numerical zeros
+     end if
+     planar_triangle_area = sqrt(underSqrt)
+
+   end function planar_triangle_area
+
+!-----------------------------------------------------------------------
+
+   real function planar_distance(x1, y1, z1, x2, y2, z2)
+
+     implicit none
+
+     real (kind=RKIND), intent(in) :: x1, y1, z1, x2, y2, z2
+     real (kind=RKIND) :: a, b, c
+
+     a = x1 - x2
+     b = y1 - y2
+     c = z1 - z2
+     planar_distance = sqrt(a**2+b**2+c**2)
+
+   end function planar_distance
+
+!-----------------------------------------------------------------------
+
+   real function sphere_distance(lat1, lon1, lat2, lon2, radius)
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   ! Compute the great-circle distance between (lat1, lon1) and (lat2, lon2) 
+   ! on a sphere with given radius.
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      implicit none
+
+      real (kind=RKIND), intent(in) :: lat1, lon1, lat2, lon2, radius
+
+      real (kind=RKIND) :: arg1
+
+      arg1 = sqrt( sin(0.5_RKIND*(lat2-lat1))**2 +  &
+                   cos(lat1)*cos(lat2)*sin(0.5_RKIND*(lon2-lon1))**2 )
+      sphere_distance = 2.0_RKIND*radius*asin(arg1)
+
+   end function sphere_distance
 
 end module seaice_mesh
