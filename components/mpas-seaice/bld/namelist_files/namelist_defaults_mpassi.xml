@@ -149,6 +149,8 @@
 <config_ocean_stress_type>'quadratic'</config_ocean_stress_type>
 <config_use_special_boundaries_velocity>false</config_use_special_boundaries_velocity>
 <config_use_special_boundaries_velocity_masks>false</config_use_special_boundaries_velocity_masks>
+<config_use_c_grid>false</config_use_c_grid>
+<config_use_projected_b_grid>false</config_use_projected_b_grid>
 
 <!-- advection -->
 <config_advection_type>'incremental_remap'</config_advection_type>

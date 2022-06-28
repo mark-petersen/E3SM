@@ -703,6 +703,22 @@ Valid values: true or false
 Default: Defined in namelist_defaults.xml
 </entry>
 
+<entry id="config_use_c_grid" type="logical"
+	category="velocity_solver" group="velocity_solver">
+Use the special boundaries velocity mask option.
+
+Valid values: true or false
+Default: Use the C-grid formulation for the variational approach.
+</entry>
+
+<entry id="config_use_projected_b_grid" type="logical"
+	category="velocity_solver" group="velocity_solver">
+Use the special boundaries velocity mask option.
+
+Valid values: true or false
+Default: To project the contributions for the stress on a common tg plane for the B-grid
+</entry>
+
 
 <!-- advection -->
 

@@ -143,6 +143,8 @@ add_default($nl, 'config_geostrophic_surface_tilt');
 add_default($nl, 'config_ocean_stress_type');
 add_default($nl, 'config_use_special_boundaries_velocity');
 add_default($nl, 'config_use_special_boundaries_velocity_masks');
+add_default($nl, 'config_use_c_grid');
+add_default($nl, 'config_use_projected_b_grid');
 
 #############################
 # Namelist group: advection #
