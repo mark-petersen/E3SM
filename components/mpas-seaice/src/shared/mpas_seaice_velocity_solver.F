@@ -1937,6 +1937,17 @@ contains
 
   subroutine constant_air_stress(domain)
 
+    use seaice_constants, only: &
+         seaiceDaysPerSecond
+
+    use seaice_diagnostics, only: &
+         seaice_set_time_diagnostics
+    
+    use seaice_testing, only: &
+         time_wind_velocity
+
+    use seaice_constants, only: pii
+
     type(domain_type), intent(inout) :: &
          domain
 
@@ -1946,7 +1957,9 @@ contains
     type(MPAS_pool_type), pointer :: &
          velocitySolverPool, &
          atmosCouplingPool, &
-         tracersAggregatePool
+         tracersAggregatePool, &
+         mesh, &
+         diagnosticsPool
 
     real(kind=RKIND), dimension(:), pointer :: &
          airStressCellU, &
@@ -1956,8 +1969,31 @@ contains
          airDensity, &
          iceAreaCell
 
+    real(kind=RKIND), dimension(:), pointer :: &
+         xVertex, &
+         yVertex, &
+         zVertex, &
+         xCell, &
+         yCell
+
     real(kind=RKIND) :: &
          windSpeed
+    
+    real(kind=RKIND), pointer :: &
+        daysSinceStartOfSim
+
+    real(kind=RKIND) :: &
+         mx, &
+         my, &
+         r, &
+         alpha,&
+         x, &
+         y, &
+         svmax, &
+         xmin, &
+         ymin, &
+         time, &
+         xmax, ymax
 
     integer, pointer :: &
          nCellsSolve
@@ -1976,6 +2012,8 @@ contains
        call MPAS_pool_get_subpool(block % structs, "velocity_solver", velocitySolverPool)
        call MPAS_pool_get_subpool(block % structs, "atmos_coupling", atmosCouplingPool)
        call MPAS_pool_get_subpool(block % structs, "tracers_aggregate", tracersAggregatePool)
+       call MPAS_pool_get_subpool(block % structs, "mesh", mesh)
+       call MPAS_pool_get_subpool(block % structs, "diagnostics",diagnosticsPool)
 
        call MPAS_pool_get_array(velocitySolverPool, "airStressCellU", airStressCellU)
        call MPAS_pool_get_array(velocitySolverPool, "airStressCellV", airStressCellV)
@@ -1985,8 +2023,44 @@ contains
        call MPAS_pool_get_array(atmosCouplingPool, "airDensity", airDensity)
 
        call MPAS_pool_get_array(tracersAggregatePool, "iceAreaCell", iceAreaCell)
+       
+       call MPAS_pool_get_array(mesh, "xCell", xCell)
+       call MPAS_pool_get_array(mesh, "yCell", yCell)
+       call MPAS_pool_get_array(mesh, "xVertex", xVertex)
+       call MPAS_pool_get_array(mesh, "yVertex", yVertex)
+       !call MPAS_pool_get_array(mesh, "zVertex", zVertex)
+       
+       call mpas_pool_get_array(diagnosticsPool, 'daysSinceStartOfSim',daysSinceStartOfSim)
+       
+       time = daysSinceStartOfSim!*86400.0 
+
+       mx = 1000.0*(256.0 + 51.2*time) 
+       my = 1000.0*(256.0 + 51.2*time) 
+       alpha = 72.0*pii/180.0
+       
+       xmin = minval(xVertex)
+       ymin = minval(yVertex)
+       xmax = maxval(xVertex)
+       ymax = maxval(yVertex)
 
        do iCell = 1, nCellsSolve
+          
+          x = xCell(iCell) - xmin
+          y = yCell(iCell) - ymin
+          r = sqrt((mx-x)**2 + (my-y)**2)  
+          svmax = 3.0e-4*exp(-1e-5*r)
+          
+          uAirVelocity(iCell) = -svmax*(cos(alpha)*(x-mx) + sin(alpha)*(y-my)) !/ 512000.0
+          vAirVelocity(iCell) = -svmax*(-sin(alpha)*(x-mx) + cos(alpha)*(y-my))! / 512000.0
+          
+          !call time_wind_velocity(&
+          !    uAirVelocity(iCell), &
+          !    vAirVelocity(iCell), &
+          !    xCell(iCell), &
+          !    yCell(iCell), &
+          !    xmin, &
+          !    ymin,&
+          !    time)
 
           windSpeed = sqrt(uAirVelocity(iCell)**2 + vAirVelocity(iCell)**2)
 
@@ -1999,6 +2073,61 @@ contains
     end do
 
   end subroutine constant_air_stress
+
+  subroutine time_wind_velocity1(&
+       uAirVelocity, &
+       vAirVelocity, &
+       xin, &
+       yin, &
+       xmin, &
+       ymin, &
+       time)
+
+    real(kind=RKIND), intent(out) :: &
+         uAirVelocity, &
+         vAirVelocity
+
+    real(kind=RKIND), intent(in) :: &
+         xin, &
+         yin, &
+         xmin, &
+         ymin
+
+    real(kind=RKIND), intent(in) :: &
+         time
+
+
+    real(kind=RKIND) :: &
+         x, &
+         y
+
+    integer :: iPoint, nPoints
+    real(kind=RKIND) :: &
+        mx, my, &
+        alpha, r, svmax
+
+    !nPoints = size(uAirVelocity,1)
+    
+    mx = 256000.0 + 51200.0*time 
+    my = 256000.0 + 51200.0*time
+    alpha = 72.0
+
+    !do iPoint = 1, nPoints
+
+       x = xin - xmin 
+       y = yin - ymin
+
+       ! velocities
+       r = sqrt((mx-x)**2 + (my-y)**2)
+       svmax = 0.3*exp(-1e-5*r)
+
+       uAirVelocity = -svmax*(cos(alpha)*(x-mx) + sin(alpha)*(y-my))
+       vAirVelocity = -svmax*(-sin(alpha)*(x-mx) + cos(alpha)*(y-my))
+
+
+    !enddo ! iPoint
+
+  end subroutine time_wind_velocity1
 
 !|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 !

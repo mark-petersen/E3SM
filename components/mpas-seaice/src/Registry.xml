@@ -3728,6 +3728,9 @@
 		<var name="stressDivergenceVAnalytical"		type="real"	dimensions="nVertices Time"		name_in_code="stressDivergenceVAnalytical"/>
 		<var name="stressDivergenceUAnalyticalCGrid"	type="real"	dimensions="nEdges Time"		name_in_code="stressDivergenceUAnalyticalCGrid"/>
 		<var name="stressDivergenceVAnalyticalCGrid"	type="real"	dimensions="nEdges Time"		name_in_code="stressDivergenceVAnalyticalCGrid"/>
+		<var name="strain11VertexAnalytical"		type="real"	dimensions="nVertices Time"		name_in_code="strain11VertexAnalytical"/>
+		<var name="strain22VertexAnalytical"		type="real"	dimensions="nVertices Time"		name_in_code="strain22VertexAnalytical"/>
+		<var name="strain12VertexAnalytical"	type="real"	dimensions="nVertices Time"		name_in_code="strain12VertexAnalytical"/>
 		<var name="stressDivergenceUCGrid"		type="real"	dimensions="nEdges Time"		name_in_code="stressDivergenceUCGrid"/>
 		<var name="stressDivergenceVCGrid"		type="real"	dimensions="nEdges Time"		name_in_code="stressDivergenceVCGrid"/>
 		<var name="stressDivergenceUCGridNoMetric"		type="real"	dimensions="nEdges Time"		name_in_code="stressDivergenceUCGridNoMetric"/>

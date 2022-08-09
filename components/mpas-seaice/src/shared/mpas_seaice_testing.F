@@ -28,7 +28,8 @@ module seaice_testing
        seaice_divergence_stress_test_stress_set_weak, &
        seaice_init_square_test_case_hex, &
        seaice_init_square_point_test_case_hex, &
-       seaice_init_spherical_test_case
+       seaice_init_spherical_test_case, &
+       time_wind_velocity
 
 contains
 
@@ -390,6 +391,9 @@ contains
          xmin, xmax, ymin, ymax
 
     integer :: iPoint, nPoints
+    real(kind=RKIND) :: &
+        mx, my, &
+        alpha, r, svmax
 
     xmin = minval(xin)
     xmax = maxval(xin)
@@ -397,17 +401,27 @@ contains
     ymax = maxval(yin)
 
     nPoints = size(uAirVelocity,1)
+    
+    mx = 1000.0*256.0 
+    my = 1000.0*256.0 
+    alpha = 72.0*pii/180.0
 
     do iPoint = 1, nPoints
 
-       x = xin(iPoint)
-       y = yin(iPoint)
+       x = xin(iPoint) - xmin 
+       y = yin(iPoint) - ymin
 
        ! velocities
-       uAirVelocity(iPoint) = &!a * (y / Ly)
-            a + (sin((2.0_RKIND * pii * time) / theta) - b) * sin(2.0_RKIND * pii * (x / Lx)) * sin(pii * (y / Ly))
-       vAirVelocity(iPoint) = &!0.0_RKIND!&
-            a + (sin((2.0_RKIND * pii * time) / theta) - b) * sin(2.0_RKIND * pii * (y / Ly)) * sin(pii * (x / Lx))
+       r = sqrt((mx-x)**2 + (my-y)**2)
+       svmax = 3.0e-4*exp(-1.0e-5*r)
+
+       uAirVelocity(iPoint) = -svmax*(cos(alpha)*(x-mx) + sin(alpha)*(y-my)) !/ 512000.0
+       vAirVelocity(iPoint) = -svmax*(-sin(alpha)*(x-mx) + cos(alpha)*(y-my))! / 512000.0
+
+       !uAirVelocity(iPoint) = &!a * (y / Ly)
+       !     a + (sin((2.0_RKIND * pii * time) / theta) - b) * sin(2.0_RKIND * pii * (x / Lx)) * sin(pii * (y / Ly))
+       !vAirVelocity(iPoint) = &!0.0_RKIND!&
+       !     a + (sin((2.0_RKIND * pii * time) / theta) - b) * sin(2.0_RKIND * pii * (y / Ly)) * sin(pii * (x / Lx))
 
        !uAirVelocity(iPoint) = a
        !vAirVelocity(iPoint) = a
@@ -420,6 +434,63 @@ contains
     enddo ! iPoint
 
   end subroutine init_square_test_case_atmos
+
+  subroutine time_wind_velocity(&
+       uAirVelocity, &
+       vAirVelocity, &
+       xin, &
+       yin, &
+       xmin, &
+       ymin, &
+       time)
+    
+    use seaice_constants, only: pii
+
+    real(kind=RKIND), intent(out) :: &
+         uAirVelocity, &
+         vAirVelocity
+
+    real(kind=RKIND), intent(in) :: &
+         xin, &
+         yin, &
+         xmin, &
+         ymin
+
+    real(kind=RKIND), intent(in) :: &
+         time
+
+
+    real(kind=RKIND) :: &
+         x, &
+         y
+
+    integer :: iPoint, nPoints
+    real(kind=RKIND) :: &
+        mx, my, &
+        alpha, r, svmax
+
+    !nPoints = size(uAirVelocity,1)
+    
+    mx = 1000.0*(256.0 + 51.2*time) 
+    my = 1000.0*(256.0 + 51.2*time)
+    alpha = 72.0*pii/180.0
+
+    !do iPoint = 1, nPoints
+
+       x = xin - xmin 
+       y = yin - ymin
+
+       ! velocities
+       r = sqrt((mx-x)**2 + (my-y)**2)
+       svmax = 3.0e-4*exp(-1.0e-5*r)
+
+       uAirVelocity = -svmax*(cos(alpha)*(x-mx) + sin(alpha)*(y-my))!/512000.0
+       vAirVelocity = -svmax*(-sin(alpha)*(x-mx) + cos(alpha)*(y-my))!/512000.0
+
+
+    !enddo ! iPoint
+
+  end subroutine time_wind_velocity
 
 !|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 !
@@ -453,7 +524,7 @@ contains
          iceThickness
 
     real(kind=RKIND) :: &
-         x
+         x, y
 
     real(kind=RKIND), parameter :: &
          Lx = 1.28e6_RKIND
@@ -471,6 +542,7 @@ contains
 
     real(kind=RKIND), dimension(:), pointer :: &
          xCell, &
+         yCell, &
          uVelocity, &
          vVelocity, &
          uOceanVelocity, &
@@ -488,6 +560,7 @@ contains
     call MPAS_pool_get_dimension(mesh, "nVertices", nVertices)
 
     call MPAS_pool_get_array(mesh, "xCell", xCell)
+    call MPAS_pool_get_array(mesh, "yCell", yCell)
 
     call MPAS_pool_get_array(tracers, "iceAreaCategory", iceAreaCategory, 1)
     call MPAS_pool_get_array(tracers, "iceVolumeCategory", iceVolumeCategory, 1)
@@ -506,14 +579,18 @@ contains
 
     ! thickness and area
 
-    iceThickness = 2.0_RKIND
+    !iceThickness = 2.0_RKIND
 
     do iCell = 1, nCells
 
        x = xCell(iCell)
+       y = yCell(iCell)
 
-       iceAreaCategory(1,:,iCell) = &!0.95_RKIND!&
-            max(min(x / Lx, 1.0_RKIND), 0.0_RKIND)
+       iceThickness = 0.3 + 0.005*(sin((60.0/1.0e6)*x) + sin((30.0/1.0e6)*y))
+
+       !iceAreaCategory(1,:,iCell) = &!0.95_RKIND!&
+       !     max(min(x / Lx, 1.0_RKIND), 0.0_RKIND)
+       iceAreaCategory(1,:,iCell) = 1.0 
 
        iceVolumeCategory(1,:,iCell) = &
             iceThickness * iceAreaCategory(1,:,iCell)
