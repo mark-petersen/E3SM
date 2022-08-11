@@ -652,6 +652,10 @@
 			description="To project the contributions for the stress on a common tg plane for the B-grid"
 			possible_values="true or false"
 		/>
+		<nml_option name="config_use_inline_air_velocity" type="logical" default_value="false" units="unitless"
+			description="Use for the time dependent atmospheric forcing"
+			possible_values="true or false"
+		/>
 		
 	</nml_record>
 

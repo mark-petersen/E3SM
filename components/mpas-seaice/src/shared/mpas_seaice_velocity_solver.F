@@ -1937,17 +1937,9 @@ contains
 
   subroutine constant_air_stress(domain)
 
-    use seaice_constants, only: &
-         seaiceDaysPerSecond
-
     use seaice_diagnostics, only: &
          seaice_set_time_diagnostics
     
-    use seaice_testing, only: &
-         time_wind_velocity
-
-    use seaice_constants, only: pii
-
     type(domain_type), intent(inout) :: &
          domain
 
@@ -2004,6 +1996,10 @@ contains
     real(kind=RKIND), parameter :: &
          airStressCoeff = 0.0012_RKIND
 
+    logical, pointer :: &
+         config_use_inline_air_velocity
+    
+         
     block => domain % blocklist
     do while (associated(block))
 
@@ -2031,103 +2027,56 @@ contains
        !call MPAS_pool_get_array(mesh, "zVertex", zVertex)
        
        call mpas_pool_get_array(diagnosticsPool, 'daysSinceStartOfSim',daysSinceStartOfSim)
+       call MPAS_pool_get_config(block % configs, "config_use_inline_air_velocity", config_use_inline_air_velocity)
        
-       time = daysSinceStartOfSim!*86400.0 
+       if(config_use_inline_air_velocity) then        
+            
+            time = daysSinceStartOfSim 
 
-       mx = 1000.0*(256.0 + 51.2*time) 
-       my = 1000.0*(256.0 + 51.2*time) 
-       alpha = 72.0*pii/180.0
+            mx = 1000.0*(256.0 + 51.2*time) 
+            my = 1000.0*(256.0 + 51.2*time) 
+            alpha = 72.0
        
-       xmin = minval(xVertex)
-       ymin = minval(yVertex)
-       xmax = maxval(xVertex)
-       ymax = maxval(yVertex)
+            xmin = minval(xVertex)
+            ymin = minval(yVertex)
+            xmax = maxval(xVertex)
+            ymax = maxval(yVertex)
 
-       do iCell = 1, nCellsSolve
+            do iCell = 1, nCellsSolve
           
-          x = xCell(iCell) - xmin
-          y = yCell(iCell) - ymin
-          r = sqrt((mx-x)**2 + (my-y)**2)  
-          svmax = 3.0e-4*exp(-1e-5*r)
+                x = xCell(iCell) - xmin
+                y = yCell(iCell) - ymin
+                r = sqrt((mx-x)**2 + (my-y)**2)  
+                svmax = 3.0e-4*exp(-1e-5*r)
           
-          uAirVelocity(iCell) = -svmax*(cos(alpha)*(x-mx) + sin(alpha)*(y-my)) !/ 512000.0
-          vAirVelocity(iCell) = -svmax*(-sin(alpha)*(x-mx) + cos(alpha)*(y-my))! / 512000.0
+                uAirVelocity(iCell) = -svmax*(cos(alpha)*(x-mx) + sin(alpha)*(y-my))
+                vAirVelocity(iCell) = -svmax*(-sin(alpha)*(x-mx) + cos(alpha)*(y-my))
           
-          !call time_wind_velocity(&
-          !    uAirVelocity(iCell), &
-          !    vAirVelocity(iCell), &
-          !    xCell(iCell), &
-          !    yCell(iCell), &
-          !    xmin, &
-          !    ymin,&
-          !    time)
 
-          windSpeed = sqrt(uAirVelocity(iCell)**2 + vAirVelocity(iCell)**2)
+                windSpeed = sqrt(uAirVelocity(iCell)**2 + vAirVelocity(iCell)**2)
 
-          airStressCellU(iCell) = airDensity(iCell) * windSpeed * airStressCoeff * uAirVelocity(iCell) * iceAreaCell(iCell)
-          airStressCellV(iCell) = airDensity(iCell) * windSpeed * airStressCoeff * vAirVelocity(iCell) * iceAreaCell(iCell)
+                airStressCellU(iCell) = airDensity(iCell) * windSpeed * airStressCoeff * uAirVelocity(iCell) * iceAreaCell(iCell)
+                airStressCellV(iCell) = airDensity(iCell) * windSpeed * airStressCoeff * vAirVelocity(iCell) * iceAreaCell(iCell)
 
-       enddo ! iCell
+            enddo ! iCell
+       
+       else
+            do iCell = 1, nCellsSolve
+          
+                windSpeed = sqrt(uAirVelocity(iCell)**2 + vAirVelocity(iCell)**2)
+
+                airStressCellU(iCell) = airDensity(iCell) * windSpeed * airStressCoeff * uAirVelocity(iCell) * iceAreaCell(iCell)
+                airStressCellV(iCell) = airDensity(iCell) * windSpeed * airStressCoeff * vAirVelocity(iCell) * iceAreaCell(iCell)
+
+            enddo ! iCell
+       
+       endif
 
        block => block % next
     end do
 
   end subroutine constant_air_stress
 
-  subroutine time_wind_velocity1(&
-       uAirVelocity, &
-       vAirVelocity, &
-       xin, &
-       yin, &
-       xmin, &
-       ymin, &
-       time)
-
-    real(kind=RKIND), intent(out) :: &
-         uAirVelocity, &
-         vAirVelocity
-
-    real(kind=RKIND), intent(in) :: &
-         xin, &
-         yin, &
-         xmin, &
-         ymin
-
-    real(kind=RKIND), intent(in) :: &
-         time
-
-
-    real(kind=RKIND) :: &
-         x, &
-         y
-
-    integer :: iPoint, nPoints
-    real(kind=RKIND) :: &
-        mx, my, &
-        alpha, r, svmax
-
-    !nPoints = size(uAirVelocity,1)
-    
-    mx = 256000.0 + 51200.0*time 
-    my = 256000.0 + 51200.0*time
-    alpha = 72.0
-
-    !do iPoint = 1, nPoints
-
-       x = xin - xmin 
-       y = yin - ymin
-
-       ! velocities
-       r = sqrt((mx-x)**2 + (my-y)**2)
-       svmax = 0.3*exp(-1e-5*r)
-
-       uAirVelocity = -svmax*(cos(alpha)*(x-mx) + sin(alpha)*(y-my))
-       vAirVelocity = -svmax*(-sin(alpha)*(x-mx) + cos(alpha)*(y-my))
-
-
-    !enddo ! iPoint
-
-  end subroutine time_wind_velocity1
 
 !|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 !

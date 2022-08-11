@@ -607,16 +607,12 @@ contains
     use seaice_mesh, only: &
          seaice_latlon_vector_rotation_forward
     
-    use seaice_testing, only: &
-         time_wind_velocity
-
     type (block_type), pointer :: block
 
     type (mpas_pool_type), pointer :: &
          mesh, &
          atmosCoupling, &
-         atmosForcing, &
-         diagnosticsPool
+         atmosForcing
 
     real(kind=RKIND), dimension(:), pointer :: &
          shortwaveVisibleDirectDown, &
@@ -631,18 +627,10 @@ contains
          lonCell, &
          xCell, &
          yCell, &
-         zCell, &
-         xVertex, &
-         yVertex
-
-    real(kind=RKIND) :: &
-        time, &
-        xmin, &
-        ymin
+         zCell
 
     real(kind=RKIND), pointer :: &
-         sphere_radius, &
-         daysSinceStartOfSim
+         sphere_radius
 
     logical, pointer :: &
          config_rotate_cartesian_grid
@@ -656,7 +644,6 @@ contains
     call MPAS_pool_get_subpool(block % structs, "mesh", mesh)
     call MPAS_pool_get_subpool(block % structs, "atmos_coupling", atmosCoupling)
     call MPAS_pool_get_subpool(block % structs, "atmos_forcing", atmosForcing)
-    call MPAS_pool_get_subpool(block % structs, "diagnostics", diagnosticsPool)
 
     call MPAS_pool_get_config(block % configs, "config_rotate_cartesian_grid", config_rotate_cartesian_grid)
 
@@ -668,8 +655,6 @@ contains
     call MPAS_pool_get_array(mesh, "xCell", xCell)
     call MPAS_pool_get_array(mesh, "yCell", yCell)
     call MPAS_pool_get_array(mesh, "zCell", zCell)
-    call MPAS_pool_get_array(mesh, "xVertex", xVertex)
-    call MPAS_pool_get_array(mesh, "yVertex", yVertex)
 
     call MPAS_pool_get_array(atmosCoupling, "shortwaveVisibleDirectDown", shortwaveVisibleDirectDown)
     call MPAS_pool_get_array(atmosCoupling, "shortwaveVisibleDiffuseDown", shortwaveVisibleDiffuseDown)
@@ -681,24 +666,9 @@ contains
     call MPAS_pool_get_array(atmosForcing, "windSpeed", windSpeed)
     call MPAS_pool_get_array(atmosForcing, "shortwaveDown", shortwaveDown)
     
-    call mpas_pool_get_array(diagnosticsPool,'daysSinceStartOfSim',daysSinceStartOfSim)
-
-    time = daysSinceStartOfSim
-
-    xmin = minval(xVertex)
-    ymin = minval(yVertex)
 
     do iCell = 1, nCellsSolve
        
-       call time_wind_velocity(&
-                 uAirVelocity(iCell), &
-                 vAirVelocity(iCell), &
-                 xCell(iCell), &
-                 yCell(iCell), &
-                 xmin, &
-                 ymin,&
-                 time)
-
        ! wind speed
        windSpeed(iCell) = sqrt(uAirVelocity(iCell)**2 + vAirVelocity(iCell)**2)
 
@@ -745,16 +715,12 @@ contains
          seaiceAirSpecificHeat, &
          seaiceLatentHeatSublimation
 
-    use seaice_testing, only: &
-         time_wind_velocity
-    
     type (block_type), pointer :: block
 
     type (mpas_pool_type), pointer :: &
          mesh, &
          atmosCoupling, &
-         atmosForcing, &
-         diagnosticsPool
+         atmosForcing
 
     real(kind=RKIND), dimension(:), pointer :: &
          airDensity, &
@@ -767,9 +733,7 @@ contains
          vAirStress, &
          xCell, &
          yCell, &
-         zCell, &
-         xVertex, &
-         yVertex
+         zCell
 
     real(kind=RKIND) :: &
          airStressCoefficient
@@ -780,18 +744,9 @@ contains
     integer :: &
          iCell
     
-    real(kind=RKIND) :: &
-        time, &
-        xmin, &
-        ymin
-    
-    real(kind=RKIND), pointer :: &
-         daysSinceStartOfSim
-
     call MPAS_pool_get_subpool(block % structs, "mesh", mesh)
     call MPAS_pool_get_subpool(block % structs, "atmos_coupling", atmosCoupling)
     call MPAS_pool_get_subpool(block % structs, "atmos_forcing", atmosForcing)
-    call MPAS_pool_get_subpool(block % structs, "diagnostics", diagnosticsPool)
 
     call MPAS_pool_get_dimension(mesh, "nCellsSolve", nCellsSolve)
 
@@ -805,34 +760,12 @@ contains
     call MPAS_pool_get_array(atmosForcing, "uAirStress", uAirStress)
     call MPAS_pool_get_array(atmosForcing, "vAirStress", vAirStress)
 
-    call MPAS_pool_get_array(mesh, "xCell", xCell)
-    call MPAS_pool_get_array(mesh, "yCell", yCell)
-    call MPAS_pool_get_array(mesh, "zCell", zCell)
-    call MPAS_pool_get_array(mesh, "xVertex", xVertex)
-    call MPAS_pool_get_array(mesh, "yVertex", yVertex)
-    
-    call mpas_pool_get_array(diagnosticsPool,'daysSinceStartOfSim',daysSinceStartOfSim)
-
-    time = daysSinceStartOfSim
-
-    xmin = minval(xVertex)
-    ymin = minval(yVertex)
-    
     do iCell = 1, nCellsSolve
 
        ! transfer coefficients
        sensibleTransferCoefficient(iCell) = 1.20e-3_RKIND * seaiceAirSpecificHeat       * airDensity(iCell) * windSpeed(iCell)
        latentTransferCoefficient(iCell)   = 1.50e-3_RKIND * seaiceLatentHeatSublimation * airDensity(iCell) * windSpeed(iCell)
 
-       call time_wind_velocity(&
-                 uAirVelocity(iCell), &
-                 vAirVelocity(iCell), &
-                 xCell(iCell), &
-                 yCell(iCell), &
-                 xmin, &
-                 ymin,&
-                 time)
-    
        ! air stresses
        airStressCoefficient = 0.0012_RKIND * airDensity(iCell) * windSpeed(iCell)
 
