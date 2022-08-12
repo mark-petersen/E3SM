@@ -1,0 +1,82 @@
+import os
+try:
+    import f90nml
+except ImportError:
+    print("Module f90nml needed and not available")
+    raise
+
+#-------------------------------------------------------------------------------
+
+def run_model():
+
+    MPAS_SEAICE_TESTCASES_RUN_COMMAND = os.environ.get('MPAS_SEAICE_TESTCASES_RUN_COMMAND')
+    mpas_tools_dir = os.environ['MPAS_TOOLS_DIR']
+    if (MPAS_SEAICE_TESTCASES_RUN_COMMAND is None):
+        MPAS_SEAICE_TESTCASES_RUN_COMMAND = ""
+
+    gridSizes = [2562, 10242, 40962, 163842]
+    #gridSizes = [2562, 10242]
+    #gridSizes = [2562]
+
+    operatorMethods = ["wachspress", "pwl"]
+    #operatorMethods = ["pwl"]
+
+    for operatorMethod in operatorMethods:
+
+        print("Operator Method: ", operatorMethod)
+
+        for gridSize in gridSizes:
+
+            print("  Gridsize: ", gridSize)
+
+            os.system("rm grid.nc ic.nc")
+            #os.system("ln -s x1.%i.grid.nc grid.nc" %(gridSize))
+            #os.system("ln -s grid.%i.nc grid.nc" %(gridSize))
+            os.system("ln -s jumbledMeshes/%i/grid.%i.nc grid.nc" %(gridSize,gridSize))
+            os.system("ln -s ic_%i.nc ic.nc" %(gridSize))
+
+            if (operatorMethod == "wachspress"):
+                nmlPatch = {"velocity_solver": {"config_strain_scheme":"variational",
+                                                "config_stress_divergence_scheme":"variational",
+                                                "config_variational_basis":"wachspress"}}
+                                                #"config_variational_denominator_type":"original"}}
+            elif (operatorMethod == "pwl"):
+                nmlPatch = {"velocity_solver": {"config_strain_scheme":"variational",
+                                                "config_stress_divergence_scheme":"variational",
+                                                "config_variational_basis":"pwl"}}
+                                                #"config_variational_denominator_type":"original"}}
+            elif (operatorMethod == "weak"):
+                nmlPatch = {"velocity_solver": {"config_strain_scheme":"weak",
+                                                "config_stress_divergence_scheme":"weak"}}
+            elif (operatorMethod == "wachspress_alt"):
+                nmlPatch = {"velocity_solver": {"config_strain_scheme":"variational",
+                                                "config_stress_divergence_scheme":"variational",
+                                                "config_variational_basis":"wachspress",
+                                                "config_variational_denominator_type":"alternate"}}
+            elif (operatorMethod == "pwl_alt"):
+                nmlPatch = {"velocity_solver": {"config_strain_scheme":"variational",
+                                                "config_stress_divergence_scheme":"variational",
+                                                "config_variational_basis":"pwl",
+                                                "config_variational_denominator_type":"alternate"}}
+            
+
+            f90nml.patch("namelist.seaice.stress_divergence", nmlPatch, "namelist.seaice.%s.%i" %(operatorMethod, gridSize))
+
+            os.system("rm -rf namelist.seaice streams.seaice output_%s_%i" %(operatorMethod, gridSize))
+            os.system("ln -s namelist.seaice.%s.%i namelist.seaice" %(operatorMethod, gridSize))
+            os.system("ln -s streams.seaice.stress_divergence streams.seaice")
+
+            #os.system("%s/mesh_tools/mesh_conversion_tools/MpasMeshConverter.x grid.%s.nc" %(mpas_tools_dir, gridSize))
+            os.system("%s/mesh_tools/mesh_conversion_tools/MpasMeshConverter.x jumbledMeshes/%s/grid.%s.nc" %(mpas_tools_dir, gridSize,gridSize))
+
+            os.system("gpmetis graph.info 12")
+
+            os.system("%s seaice_model" %(MPAS_SEAICE_TESTCASES_RUN_COMMAND))
+
+            os.system("mv output output_%s_%i" %(operatorMethod, gridSize))
+
+#-------------------------------------------------------------------------------
+
+if __name__ == "__main__":
+
+    run_model()
