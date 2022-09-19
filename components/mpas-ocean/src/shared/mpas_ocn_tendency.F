@@ -207,8 +207,15 @@ contains
                                layerThickEdgeFlux, tendThick, err)
 
       ! Compute vertical advection term -d/dz(hw)
+if (config_btr_new5_NoALE) then
+      ! force z-level with Eulerian transport at top
+      call ocn_thick_vadv_tend(vertTransportVelocityTop, &
+                               tendThick, err)
+else
+      ! original
       call ocn_thick_vadv_tend(vertAleTransportTop, &
                                tendThick, err)
+endif
 
       ! Compute surface flux tendency
       call ocn_thick_surface_flux_tend(fractionAbsorbed, &
@@ -411,8 +418,15 @@ contains
                                       kineticEnergyCell, tendVel, err)
 
       ! Add vertical advection term -w du/dz
+if (config_btr_new5_NoALE) then
+      ! force z-level with Eulerian transport at top
+      call ocn_vel_vadv_tend(normalVelocity, layerThickEdgeFlux, &
+                             vertVelocityTop, tendVel, err)
+else
+      ! original
       call ocn_vel_vadv_tend(normalVelocity, layerThickEdgeFlux, &
                              vertAleTransportTop, tendVel, err)
+endif
 
       ! Add pressure gradient
       call ocn_vel_pressure_grad_tend(ssh, pressure, surfacePressure, &
@@ -1095,10 +1109,20 @@ contains
          !     -div( layerThickness \phi u)
          ! Tracer budget is computed and stored within the tracer adv
          ! routine
+if (config_btr_new5_NoALE) then
+      ! force z-level with Eulerian transport at top
+      ! I think this is just for diagnostics, but being safe here.
+         call ocn_tracer_advection_tend(tracerGroup, &
+                            normalThicknessFlux, vertTransportVelocityTop, &
+                            layerThickness, dt, tracerGroupTend, &
+                            computeBudgets)
+else
+      ! original
          call ocn_tracer_advection_tend(tracerGroup, &
                             normalThicknessFlux, vertAleTransportTop, &
                             layerThickness, dt, tracerGroupTend, &
                             computeBudgets)
+endif
 
          !$acc update host (activeTracerHorizontalAdvectionEdgeFlux, &
          !$acc              activeTracerHorizontalAdvectionTendency, &
