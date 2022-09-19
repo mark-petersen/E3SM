@@ -356,6 +356,8 @@ module ocn_core_interface
       if (config_use_GM.or.config_use_Redi) then
          gmActive = .true.
       end if
+         ! mrp TEMPORARY, always turn on gm package
+         gmActive = .true.
 
       !
       ! test for use of gm
