@@ -1143,8 +1143,11 @@ else
                      ! neighboring cells.
                      k = maxLevelEdgeTop(iEdge)
                      thicknessSum = sshEdge + 0.5* &
-                        (  min(bottomDepth(cell1), refBottomDepth(k)) &
-                         + min(bottomDepth(cell2), refBottomDepth(k)) )
+                        (  min(bottomDepth(cell1), -zTop(k+1,cell1)) &
+                         + min(bottomDepth(cell2), -zTop(k+1,cell2)) )
+                        ! first attempt, for z-level only:
+                        !(  min(bottomDepth(cell1), refBottomDepth(k)) &
+                        ! + min(bottomDepth(cell2), refBottomDepth(k)) )
 endif
 
                      flux = ((1.0-config_btr_gam1_velWt1)* &
@@ -1202,8 +1205,11 @@ else
                      ! neighboring cells.
                      k = maxLevelEdgeTop(iEdge)
                      thicknessSum = sshEdge + 0.5* &
-                        (  min(bottomDepth(cell1), refBottomDepth(k)) &
-                         + min(bottomDepth(cell2), refBottomDepth(k)) )
+                        (  min(bottomDepth(cell1), -zTop(k+1,cell1)) &
+                         + min(bottomDepth(cell2), -zTop(k+1,cell2)) )
+                        ! first attempt, for z-level only:
+                        !(  min(bottomDepth(cell1), refBottomDepth(k)) &
+                        ! + min(bottomDepth(cell2), refBottomDepth(k)) )
 endif
 
                      flux = ((1.0-config_btr_gam1_velWt1)* &
@@ -1450,8 +1456,11 @@ else
                         !    neighboring cells
                      k = maxLevelEdgeTop(iEdge)
                      thicknessSum = sshEdge + 0.5* &
-                        (  min(bottomDepth(cell1), refBottomDepth(k)) &
-                         + min(bottomDepth(cell2), refBottomDepth(k)) )
+                        (  min(bottomDepth(cell1), -zTop(k+1,cell1)) &
+                         + min(bottomDepth(cell2), -zTop(k+1,cell2)) )
+                        ! first attempt, for z-level only:
+                        !(  min(bottomDepth(cell1), refBottomDepth(k)) &
+                        ! + min(bottomDepth(cell2), refBottomDepth(k)) )
 endif
 
                         flux = ((1.0-config_btr_gam3_velWt2)* &
@@ -1506,8 +1515,11 @@ else
                      ! neighboring cells.
                      k = maxLevelEdgeTop(iEdge)
                      thicknessSum = sshEdge + 0.5* &
-                        (  min(bottomDepth(cell1), refBottomDepth(k)) &
-                         + min(bottomDepth(cell2), refBottomDepth(k)) )
+                        (  min(bottomDepth(cell1), -zTop(k+1,cell1)) &
+                         + min(bottomDepth(cell2), -zTop(k+1,cell2)) )
+                        ! first attempt, for z-level only:
+                        !(  min(bottomDepth(cell1), refBottomDepth(k)) &
+                        ! + min(bottomDepth(cell2), refBottomDepth(k)) )
 endif
 
                      flux = ((1.0-config_btr_gam3_velWt2) * &
