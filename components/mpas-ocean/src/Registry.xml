@@ -1283,6 +1283,10 @@
 					description="experimental flag"
 					possible_values=".true. or .false."
 		/>
+		<nml_option name="config_btr_new6_EdgeThickness" type="logical" default_value=".false."
+					description="experimental flag"
+					possible_values=".true. or .false."
+		/>
 		<nml_option name="config_vel_correction" type="logical" default_value=".true."
 					description="If true, the velocity correction term is included in the horizontal advection of thickness and tracers"
 					possible_values=".true. or .false."

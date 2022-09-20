@@ -1112,12 +1112,13 @@ end if ! config_btr_resplit
 
                !$omp parallel
                !$omp do schedule(runtime) &
-               !$omp private(i, iEdge, cell1, cell2, sshEdge, &
+               !$omp private(i, k, iEdge, cell1, cell2, sshEdge, &
                !$omp         thicknessSum, flux)
                do iCell = 1, nCells
                   sshTend(iCell) = 0.0_RKIND
                   do i = 1, nEdgesOnCell(iCell)
                      iEdge = edgesOnCell(i, iCell)
+                     if (maxLevelEdgeTop(iEdge).eq.0) cycle
 
                      cell1 = cellsOnEdge(1, iEdge)
                      cell2 = cellsOnEdge(2, iEdge)
@@ -1129,16 +1130,22 @@ end if ! config_btr_resplit
                      !thicknessSum = sshEdge + &
                      ! refBottomDepthTopOfCell(maxLevelEdgeTop(iEdge)+1)
 
+if (.not.config_btr_new6_EdgeThickness) then
                      ! method 1, matches method 0 without pbcs, works with pbcs.
                      thicknessSum = sshEdge + min(bottomDepth(cell1), &
                                                   bottomDepth(cell2))
-
+else
+! mrp note, this works for z-level right now.
+! for z-star, could use -zTop(k+1) for refBottomDepth(k)
+! but that would not work for general coordinate
                      ! method 2: may be better than method 1.
                      ! Take average  of full thickness at two
                      ! neighboring cells.
-                     !thicknessSum = sshEdge + 0.5* &
-                     !      (bottomDepth(cell1) + bottomDepth(cell2))
-
+                     k = maxLevelEdgeTop(iEdge)
+                     thicknessSum = sshEdge + 0.5* &
+                        (  min(bottomDepth(cell1), refBottomDepth(k)) &
+                         + min(bottomDepth(cell2), refBottomDepth(k)) )
+endif
 
                      flux = ((1.0-config_btr_gam1_velWt1)* &
                             normalBarotropicVelocitySubcycleCur(iEdge) &
@@ -1178,16 +1185,26 @@ end if ! config_btr_resplit
                   !$omp do schedule(runtime) &
                   !$omp private(cell1, cell2, sshEdge,thicknessSum,flux)
                   do iEdge = 1, nEdges
+                     if (maxLevelEdgeTop(iEdge).eq.0) cycle
                      cell1 = cellsOnEdge(1,iEdge)
                      cell2 = cellsOnEdge(2,iEdge)
 
                      sshEdge = 0.5_RKIND*(sshSubcycleCur(cell1) + &
                                           sshSubcycleCur(cell2))
 
-                     ! method 1, matches method 0 without pbcs,
-                     !    works with pbcs.
+if (.not.config_btr_new6_EdgeThickness) then
+                     ! method 1, matches method 0 without pbcs, works with pbcs.
                      thicknessSum = sshEdge + min(bottomDepth(cell1), &
                                                   bottomDepth(cell2))
+else
+                     ! method 2: may be better than method 1.
+                     ! Take average  of full thickness at two
+                     ! neighboring cells.
+                     k = maxLevelEdgeTop(iEdge)
+                     thicknessSum = sshEdge + 0.5* &
+                        (  min(bottomDepth(cell1), refBottomDepth(k)) &
+                         + min(bottomDepth(cell2), refBottomDepth(k)) )
+endif
 
                      flux = ((1.0-config_btr_gam1_velWt1)* &
                             normalBarotropicVelocitySubcycleCur(iEdge) &
@@ -1399,6 +1416,7 @@ end if ! config_btr_resplit
                      sshTend(iCell) = 0.0_RKIND
                      do i = 1, nEdgesOnCell(iCell)
                         iEdge = edgesOnCell(i, iCell)
+                        if (maxLevelEdgeTop(iEdge).eq.0) cycle
 
                         cell1 = cellsOnEdge(1,iEdge)
                         cell2 = cellsOnEdge(2,iEdge)
@@ -1420,17 +1438,21 @@ end if ! config_btr_resplit
                         !thicknessSum = sshEdge + &
                         !refBottomDepthTopOfCell(maxLevelEdgeTop(iEdge)+1)
 
+if (.not.config_btr_new6_EdgeThickness) then
                         ! method 1, matches method 0 without pbcs,
                         !    but works with pbcs.
                         thicknessSum = sshEdge + &
                                        min(bottomDepth(cell1), &
                                            bottomDepth(cell2))
-
+else
                         ! method 2: may be better than method 1.
                         ! take average of full thickness at two
                         !    neighboring cells
-                        !thicknessSum = sshEdge + 0.5* &
-                        !   (bottomDepth(cell1) + bottomDepth (cell2))
+                     k = maxLevelEdgeTop(iEdge)
+                     thicknessSum = sshEdge + 0.5* &
+                        (  min(bottomDepth(cell1), refBottomDepth(k)) &
+                         + min(bottomDepth(cell2), refBottomDepth(k)) )
+endif
 
                         flux = ((1.0-config_btr_gam3_velWt2)* &
                            normalBarotropicVelocitySubcycleCur(iEdge) &
@@ -1474,17 +1496,19 @@ end if ! config_btr_resplit
                      !thicknessSum = sshEdge + &
                      !refBottomDepthTopOfCell(maxLevelEdgeTop(iEdge)+1)
 
-                     ! method 1, matches method 0 without pbcs,
-                     !           but works with pbcs.
-                     thicknessSum = sshEdge + min(bottomDepth(cell1),&
+if (.not.config_btr_new6_EdgeThickness) then
+                     ! method 1, matches method 0 without pbcs, works with pbcs.
+                     thicknessSum = sshEdge + min(bottomDepth(cell1), &
                                                   bottomDepth(cell2))
-
-                     ! method 2, better, I think.
-                     !           take average of full thickness at two
-                     !           neighboring cells
-                     !thicknessSum = sshEdge + 0.5* &
-                     !               (bottomDepth(cell1) + &
-                     !                bottomDepth(cell2) )
+else
+                     ! method 2: may be better than method 1.
+                     ! Take average  of full thickness at two
+                     ! neighboring cells.
+                     k = maxLevelEdgeTop(iEdge)
+                     thicknessSum = sshEdge + 0.5* &
+                        (  min(bottomDepth(cell1), refBottomDepth(k)) &
+                         + min(bottomDepth(cell2), refBottomDepth(k)) )
+endif
 
                      flux = ((1.0-config_btr_gam3_velWt2) * &
                          normalBarotropicVelocitySubcycleCur(iEdge) &
