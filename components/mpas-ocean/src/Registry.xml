@@ -3308,7 +3308,7 @@
 		<var name="vertAdvVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
 		<var name="totalVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
 		<var name="vmixVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
-		<var name="botDragVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
+		<var name="surfStressVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
 		<var name="del2GradDivVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
 		<var name="del2GradVortVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
 		<var name="del4Term1VelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>

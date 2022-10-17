@@ -155,7 +155,7 @@ module ocn_diagnostics_variables
    real (kind=RKIND), dimension(:,:), pointer :: vertAdvVelocityTendency
    real (kind=RKIND), dimension(:,:), pointer :: totalVelocityTendency
    real (kind=RKIND), dimension(:,:), pointer :: vmixVelocityTendency
-   real (kind=RKIND), dimension(:,:), pointer :: botDragVelocityTendency
+   real (kind=RKIND), dimension(:,:), pointer :: surfStressVelocityTendency
    real (kind=RKIND), dimension(:,:), pointer :: del4Term1VelocityTendency
    real (kind=RKIND), dimension(:,:), pointer :: del4Term2VelocityTendency
    real (kind=RKIND), dimension(:,:), pointer :: del4Term3VelocityTendency
@@ -330,7 +330,7 @@ horAdvVelocityTendency
 vertAdvVelocityTendency
 totalVelocityTendency
 vmixVelocityTendency
-botDragVelocityTendency
+surfStressVelocityTendency
 del4Term1VelocityTendency
 del4Term2VelocityTendency
 del4Term3VelocityTendency
@@ -345,7 +345,7 @@ del2GradVortVelocityTendency
                   call mpas_pool_get_array(diagnosticsPool,'vertAdvVelocityTendency', vertAdvVelocityTendency     )
                   call mpas_pool_get_array(diagnosticsPool,'totalVelocityTendency', totalVelocityTendency       )
                   call mpas_pool_get_array(diagnosticsPool,'vmixVelocityTendency', vmixVelocityTendency        )
-                  call mpas_pool_get_array(diagnosticsPool,'botDragVelocityTendency', botDragVelocityTendency     )
+                  call mpas_pool_get_array(diagnosticsPool,'surfStressVelocityTendency', surfStressVelocityTendency     )
                   call mpas_pool_get_array(diagnosticsPool,'del4Term1VelocityTendency', del4Term1VelocityTendency   )
                   call mpas_pool_get_array(diagnosticsPool,'del4Term2VelocityTendency', del4Term2VelocityTendency   )
                   call mpas_pool_get_array(diagnosticsPool,'del4Term3VelocityTendency', del4Term3VelocityTendency   )
@@ -1307,7 +1307,7 @@ del2GradVortVelocityTendency
                  vertAdvVelocityTendency, &
                  totalVelocityTendency, &
                  vmixVelocityTendency, &
-                 botDragVelocityTendency, &
+                 surfStressVelocityTendency, &
                  del4Term1VelocityTendency, &
                  del4Term2VelocityTendency, &
                  del4Term3VelocityTendency, &
