@@ -1406,6 +1406,10 @@
 					description="Enables the computation of tracer budget terms"
 					possible_values=".true. or .false."
 		/>
+		<nml_option name="config_compute_velocity_budget" type="logical" default_value=".true."
+					description="Enables the computation of velocity budget terms"
+					possible_values=".true. or .false."
+		/>
 		<nml_option name="config_disable_thick_all_tend" type="logical" default_value=".false."
 					description="Disables all tendencies on the thickness field."
 					possible_values=".true. or .false."

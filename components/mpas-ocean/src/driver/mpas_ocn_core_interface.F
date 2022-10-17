@@ -118,6 +118,7 @@ module ocn_core_interface
       logical, pointer :: windStressBulkPKGActive
       logical, pointer :: variableBottomDragPKGActive
       logical, pointer :: tracerBudgetActive
+      logical, pointer :: velocityBudgetActive
       logical, pointer :: landIcePressurePKGActive
       logical, pointer :: landIceFluxesPKGActive
       logical, pointer :: landIceCouplingPKGActive
@@ -270,6 +271,15 @@ module ocn_core_interface
       call mpas_pool_get_config(configPool, 'config_compute_active_tracer_budgets', config_compute_active_tracer_budgets)
       if ( config_compute_active_tracer_budgets ) then
          tracerBudgetActive = .true.
+      end if
+
+      !
+      ! test for velocity budget
+      !
+      call mpas_pool_get_package(packagePool, 'velocityBudgetActive', velocityBudgetActive)
+      call mpas_pool_get_config(configPool, 'config_compute_velocity_budget', config_compute_velocity_budget)
+      if ( config_compute_velocity_budget) then
+         velocityBudgetActive = .true.
       end if
 
       !
