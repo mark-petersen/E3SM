@@ -147,6 +147,21 @@ module ocn_diagnostics_variables
    real (kind=RKIND), dimension(:,:,:), pointer :: activeTracerHorMixTendency
    real (kind=RKIND), dimension(:,:), pointer :: temperatureShortWaveTendency
    real (kind=RKIND), dimension(:), pointer :: RediKappa
+   real (kind=RKIND), dimension(:,:), pointer :: pressureVelocityTendency
+   real (kind=RKIND), dimension(:,:), pointer :: coriolisVelocityTendency
+   real (kind=RKIND), dimension(:,:), pointer :: del2VelocityTendency
+   real (kind=RKIND), dimension(:,:), pointer :: del4VelocityTendency
+   real (kind=RKIND), dimension(:,:), pointer :: horAdvVelocityTendency
+   real (kind=RKIND), dimension(:,:), pointer :: vertAdvVelocityTendency
+   real (kind=RKIND), dimension(:,:), pointer :: totalVelocityTendency
+   real (kind=RKIND), dimension(:,:), pointer :: vmixVelocityTendency
+   real (kind=RKIND), dimension(:,:), pointer :: botDragVelocityTendency
+   real (kind=RKIND), dimension(:,:), pointer :: del4Term1VelocityTendency
+   real (kind=RKIND), dimension(:,:), pointer :: del4Term2VelocityTendency
+   real (kind=RKIND), dimension(:,:), pointer :: del4Term3VelocityTendency
+   real (kind=RKIND), dimension(:,:), pointer :: del4Term4VelocityTendency
+   real (kind=RKIND), dimension(:,:), pointer :: del2GradDivVelocityTendency
+   real (kind=RKIND), dimension(:,:), pointer :: del2GradVortVelocityTendency
 
    ! pointers for tendencies used in diagnostic budget computation
    real (kind=RKIND), dimension(:,:,:), pointer, contiguous :: &
@@ -305,6 +320,38 @@ contains
          call mpas_pool_get_array(diagnosticsPool, &
                   'activeTracerVertMixTendency', &
                    activeTracerVertMixTendency)
+      end if
+      if ( config_compute_velocity_budgets ) then
+pressureVelocityTendency
+coriolisVelocityTendency
+del2VelocityTendency
+del4VelocityTendency
+horAdvVelocityTendency
+vertAdvVelocityTendency
+totalVelocityTendency
+vmixVelocityTendency
+botDragVelocityTendency
+del4Term1VelocityTendency
+del4Term2VelocityTendency
+del4Term3VelocityTendency
+del4Term4VelocityTendency
+del2GradDivVelocityTendency
+del2GradVortVelocityTendency
+                  call mpas_pool_get_array(diagnosticsPool,'pressureVelocityTendency', pressureVelocityTendency    )
+                  call mpas_pool_get_array(diagnosticsPool,'coriolisVelocityTendency', coriolisVelocityTendency    )
+                  call mpas_pool_get_array(diagnosticsPool,'del2VelocityTendency', del2VelocityTendency        )
+                  call mpas_pool_get_array(diagnosticsPool,'del4VelocityTendency', del4VelocityTendency        )
+                  call mpas_pool_get_array(diagnosticsPool,'horAdvVelocityTendency', horAdvVelocityTendency      )
+                  call mpas_pool_get_array(diagnosticsPool,'vertAdvVelocityTendency', vertAdvVelocityTendency     )
+                  call mpas_pool_get_array(diagnosticsPool,'totalVelocityTendency', totalVelocityTendency       )
+                  call mpas_pool_get_array(diagnosticsPool,'vmixVelocityTendency', vmixVelocityTendency        )
+                  call mpas_pool_get_array(diagnosticsPool,'botDragVelocityTendency', botDragVelocityTendency     )
+                  call mpas_pool_get_array(diagnosticsPool,'del4Term1VelocityTendency', del4Term1VelocityTendency   )
+                  call mpas_pool_get_array(diagnosticsPool,'del4Term2VelocityTendency', del4Term2VelocityTendency   )
+                  call mpas_pool_get_array(diagnosticsPool,'del4Term3VelocityTendency', del4Term3VelocityTendency   )
+                  call mpas_pool_get_array(diagnosticsPool,'del4Term4VelocityTendency', del4Term4VelocityTendency   )
+                  call mpas_pool_get_array(diagnosticsPool,'del2GradDivVelocityTendency', del2GradDivVelocityTendency )
+                  call mpas_pool_get_array(diagnosticsPool,'del2GradVortVelocityTendency', del2GradVortVelocityTendency)
       end if
 
       if ( config_use_activeTracers_surface_restoring ) then
@@ -1250,6 +1297,23 @@ contains
                  activeTracerVerticalAdvectionTendency,   &
                  activeTracerHorizontalAdvectionTendency, &
                  activeTracerHorizontalAdvectionEdgeFlux)
+      end if
+      if ( config_compute_velocity_budgets ) then
+         nullify(pressureVelocityTendency, &
+                 coriolisVelocityTendency, &
+                 del2VelocityTendency, &
+                 del4VelocityTendency, &
+                 horAdvVelocityTendency, &
+                 vertAdvVelocityTendency, &
+                 totalVelocityTendency, &
+                 vmixVelocityTendency, &
+                 botDragVelocityTendency, &
+                 del4Term1VelocityTendency, &
+                 del4Term2VelocityTendency, &
+                 del4Term3VelocityTendency, &
+                 del4Term4VelocityTendency, &
+                 del2GradDivVelocityTendency, &
+                 del2GradVortVelocityTendency)
       end if
       if ( config_use_activeTracers_surface_restoring ) then
          nullify(salinitySurfaceRestoringTendency)

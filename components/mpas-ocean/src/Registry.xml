@@ -3300,6 +3300,21 @@
 			description="the fractional cloudiness (between 0 and 1)"
 			packages="variableShortwave"
 		/>
+		<var name="pressureVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
+		<var name="coriolisVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
+		<var name="del2VelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
+		<var name="del4VelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
+		<var name="horAdvVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
+		<var name="vertAdvVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
+		<var name="totalVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
+		<var name="vmixVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
+		<var name="botDragVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
+		<var name="del2GradDivVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
+		<var name="del2GradVortVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
+		<var name="del4Term1VelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
+		<var name="del4Term2VelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
+		<var name="del4Term3VelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
+		<var name="del4Term4VelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
 	</var_struct>
 	<var_struct name="forcing" time_levs="1">
 		<!-- *********************************************************************
