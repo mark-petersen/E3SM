@@ -405,22 +405,28 @@ contains
 
       ! Add nonlinear Coriolis term and horizontal advection of
       ! momentum, formulated as grad of kinetic energy
+      totalVelocityTendency = tendVel
       call ocn_vel_hadv_coriolis_tend(normRelVortEdge, &
                                       normPlanetVortEdge, &
                                       layerThickEdgeFlux, normalVelocity, &
                                       kineticEnergyCell, tendVel, err)
+      hadvCorVelocityTendency = tendVel - totalVelocityTendency  
 
       ! Add vertical advection term -w du/dz
+      totalVelocityTendency = tendVel
       call ocn_vel_vadv_tend(normalVelocity, layerThickEdgeFlux, &
                              vertAleTransportTop, tendVel, err)
+      vadvVelocityTendency = tendVel - totalVelocityTendency  
 
       ! Add pressure gradient
+      totalVelocityTendency = tendVel
       call ocn_vel_pressure_grad_tend(ssh, pressure, surfacePressure, &
                                montgomeryPotential, zMid, &
                                density, potentialDensity, &
                                indxTemp, indxSalt, activeTracers, &
                                thermExpCoeff, salineContractCoeff, &
                                tendVel, err)
+      pressureGradVelocityTendency = tendVel - totalVelocityTendency  
 
       ! Compute ssh additions due to self-attraction and loading
       if(mpas_is_alarm_ringing(domain % clock, 'salComputeAlarm', ierr=err)) then 
@@ -440,12 +446,16 @@ contains
       endif
 
       ! Add horizontal mixing
+      totalVelocityTendency = tendVel
       call ocn_vel_hmix_tend(divergence, relativeVorticity, tendVel,err)
+      hmixVelocityTendency = tendVel - totalVelocityTendency  
 
       ! Add forcing and bottom drag
+      totalVelocityTendency = tendVel
       call ocn_vel_forcing_tend(normalVelocity, sfcFlxAttCoeff, &
                                 sfcStress, kineticEnergyCell, &
                                 layerThickEdgeMean, tendVel, err)
+      forcingVelocityTendency = tendVel - totalVelocityTendency  
 
       ! vertical mixing treated implicitly in a later routine
       ! adjust total velocity tendency based on wetting/drying
@@ -461,6 +471,7 @@ contains
       do k=1,nVertLevels
          tendVel(k,iEdge) = tendVel(k,iEdge)* &
                             (1.0_RKIND - wettingVelocity(k,iEdge))
+         totalVelocityTendency(k,iEdge) = tendVel(k,iEdge)
       end do
       end do
 #ifndef MPAS_OPENACC

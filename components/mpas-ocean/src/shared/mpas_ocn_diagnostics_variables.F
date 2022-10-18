@@ -147,21 +147,23 @@ module ocn_diagnostics_variables
    real (kind=RKIND), dimension(:,:,:), pointer :: activeTracerHorMixTendency
    real (kind=RKIND), dimension(:,:), pointer :: temperatureShortWaveTendency
    real (kind=RKIND), dimension(:), pointer :: RediKappa
-   real (kind=RKIND), dimension(:,:), pointer :: pressureVelocityTendency
-   real (kind=RKIND), dimension(:,:), pointer :: coriolisVelocityTendency
-   real (kind=RKIND), dimension(:,:), pointer :: del2VelocityTendency
-   real (kind=RKIND), dimension(:,:), pointer :: del4VelocityTendency
-   real (kind=RKIND), dimension(:,:), pointer :: horAdvVelocityTendency
-   real (kind=RKIND), dimension(:,:), pointer :: vertAdvVelocityTendency
    real (kind=RKIND), dimension(:,:), pointer :: totalVelocityTendency
-   real (kind=RKIND), dimension(:,:), pointer :: vmixVelocityTendency
-   real (kind=RKIND), dimension(:,:), pointer :: surfStressVelocityTendency
-   real (kind=RKIND), dimension(:,:), pointer :: del4Term1VelocityTendency
-   real (kind=RKIND), dimension(:,:), pointer :: del4Term2VelocityTendency
-   real (kind=RKIND), dimension(:,:), pointer :: del4Term3VelocityTendency
-   real (kind=RKIND), dimension(:,:), pointer :: del4Term4VelocityTendency
+   real (kind=RKIND), dimension(:,:), pointer :: hadvCorVelocityTendency
+   real (kind=RKIND), dimension(:,:), pointer :: vadvVelocityTendency
+   real (kind=RKIND), dimension(:,:), pointer :: hmixVelocityTendency
+   real (kind=RKIND), dimension(:,:), pointer :: forcingVelocityTendency
+   real (kind=RKIND), dimension(:,:), pointer :: pressureGradVelocityTendency
    real (kind=RKIND), dimension(:,:), pointer :: del2GradDivVelocityTendency
    real (kind=RKIND), dimension(:,:), pointer :: del2GradVortVelocityTendency
+   real (kind=RKIND), dimension(:,:), pointer :: del4del2relVortVelocityTendency
+   real (kind=RKIND), dimension(:,:), pointer :: del4del2divVelocityTendency
+   real (kind=RKIND), dimension(:,:), pointer :: del4GradDivVelocityTendency
+   real (kind=RKIND), dimension(:,:), pointer :: del4GradVortVelocityTendency
+   real (kind=RKIND), dimension(:,:), pointer :: relVortAdvVelocityTendency
+   real (kind=RKIND), dimension(:,:), pointer :: planetVortAdvVelocityTendency
+   real (kind=RKIND), dimension(:,:), pointer :: extra1VelocityTendency
+   real (kind=RKIND), dimension(:,:), pointer :: extra2VelocityTendency
+   real (kind=RKIND), dimension(:,:), pointer :: extra3VelocityTendency
 
    ! pointers for tendencies used in diagnostic budget computation
    real (kind=RKIND), dimension(:,:,:), pointer, contiguous :: &
@@ -322,36 +324,23 @@ contains
                    activeTracerVertMixTendency)
       end if
       if ( config_compute_velocity_budgets ) then
-pressureVelocityTendency
-coriolisVelocityTendency
-del2VelocityTendency
-del4VelocityTendency
-horAdvVelocityTendency
-vertAdvVelocityTendency
-totalVelocityTendency
-vmixVelocityTendency
-surfStressVelocityTendency
-del4Term1VelocityTendency
-del4Term2VelocityTendency
-del4Term3VelocityTendency
-del4Term4VelocityTendency
-del2GradDivVelocityTendency
-del2GradVortVelocityTendency
-                  call mpas_pool_get_array(diagnosticsPool,'pressureVelocityTendency', pressureVelocityTendency    )
-                  call mpas_pool_get_array(diagnosticsPool,'coriolisVelocityTendency', coriolisVelocityTendency    )
-                  call mpas_pool_get_array(diagnosticsPool,'del2VelocityTendency', del2VelocityTendency        )
-                  call mpas_pool_get_array(diagnosticsPool,'del4VelocityTendency', del4VelocityTendency        )
-                  call mpas_pool_get_array(diagnosticsPool,'horAdvVelocityTendency', horAdvVelocityTendency      )
-                  call mpas_pool_get_array(diagnosticsPool,'vertAdvVelocityTendency', vertAdvVelocityTendency     )
-                  call mpas_pool_get_array(diagnosticsPool,'totalVelocityTendency', totalVelocityTendency       )
-                  call mpas_pool_get_array(diagnosticsPool,'vmixVelocityTendency', vmixVelocityTendency        )
-                  call mpas_pool_get_array(diagnosticsPool,'surfStressVelocityTendency', surfStressVelocityTendency     )
-                  call mpas_pool_get_array(diagnosticsPool,'del4Term1VelocityTendency', del4Term1VelocityTendency   )
-                  call mpas_pool_get_array(diagnosticsPool,'del4Term2VelocityTendency', del4Term2VelocityTendency   )
-                  call mpas_pool_get_array(diagnosticsPool,'del4Term3VelocityTendency', del4Term3VelocityTendency   )
-                  call mpas_pool_get_array(diagnosticsPool,'del4Term4VelocityTendency', del4Term4VelocityTendency   )
-                  call mpas_pool_get_array(diagnosticsPool,'del2GradDivVelocityTendency', del2GradDivVelocityTendency )
-                  call mpas_pool_get_array(diagnosticsPool,'del2GradVortVelocityTendency', del2GradVortVelocityTendency)
+         call mpas_pool_get_array(diagnosticsPool,'totalVelocityTendency', totalVelocityTendency          )
+         call mpas_pool_get_array(diagnosticsPool,'hadvCorVelocityTendency', hadvCorVelocityTendency        )
+         call mpas_pool_get_array(diagnosticsPool,'vadvVelocityTendency', vadvVelocityTendency           )
+         call mpas_pool_get_array(diagnosticsPool,'hmixVelocityTendency', hmixVelocityTendency           )
+         call mpas_pool_get_array(diagnosticsPool,'forcingVelocityTendency', forcingVelocityTendency        )
+         call mpas_pool_get_array(diagnosticsPool,'pressureGradVelocityTendency', pressureGradVelocityTendency   )
+         call mpas_pool_get_array(diagnosticsPool,'del2GradDivVelocityTendency', del2GradDivVelocityTendency    )
+         call mpas_pool_get_array(diagnosticsPool,'del2GradVortVelocityTendency', del2GradVortVelocityTendency   )
+         call mpas_pool_get_array(diagnosticsPool,'del4del2relVortVelocityTendency', del4del2relVortVelocityTendency)
+         call mpas_pool_get_array(diagnosticsPool,'del4del2divVelocityTendency', del4del2divVelocityTendency    )
+         call mpas_pool_get_array(diagnosticsPool,'del4GradDivVelocityTendency', del4GradDivVelocityTendency    )
+         call mpas_pool_get_array(diagnosticsPool,'del4GradVortVelocityTendency', del4GradVortVelocityTendency   )
+         call mpas_pool_get_array(diagnosticsPool,'relVortAdvVelocityTendency', relVortAdvVelocityTendency     )
+         call mpas_pool_get_array(diagnosticsPool,'planetVortAdvVelocityTendency', planetVortAdvVelocityTendency  )
+         call mpas_pool_get_array(diagnosticsPool,'extra1VelocityTendency', extra1VelocityTendency         )
+         call mpas_pool_get_array(diagnosticsPool,'extra2VelocityTendency', extra2VelocityTendency         )
+         call mpas_pool_get_array(diagnosticsPool,'extra3VelocityTendency', extra3VelocityTendency)
       end if
 
       if ( config_use_activeTracers_surface_restoring ) then
@@ -1299,21 +1288,7 @@ del2GradVortVelocityTendency
                  activeTracerHorizontalAdvectionEdgeFlux)
       end if
       if ( config_compute_velocity_budgets ) then
-         nullify(pressureVelocityTendency, &
-                 coriolisVelocityTendency, &
-                 del2VelocityTendency, &
-                 del4VelocityTendency, &
-                 horAdvVelocityTendency, &
-                 vertAdvVelocityTendency, &
-                 totalVelocityTendency, &
-                 vmixVelocityTendency, &
-                 surfStressVelocityTendency, &
-                 del4Term1VelocityTendency, &
-                 del4Term2VelocityTendency, &
-                 del4Term3VelocityTendency, &
-                 del4Term4VelocityTendency, &
-                 del2GradDivVelocityTendency, &
-                 del2GradVortVelocityTendency)
+         !nullify(pressureVelocityTendency, & etc
       end if
       if ( config_use_activeTracers_surface_restoring ) then
          nullify(salinitySurfaceRestoringTendency)

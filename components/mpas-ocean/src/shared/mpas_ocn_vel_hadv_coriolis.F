@@ -202,6 +202,8 @@ contains
 
          do k = 1, nVertLevels
             qArr(k,iEdge) = 0.0_RKIND
+      relVortAdvVelocityTendency(k,iEdge) = 0.0_RKIND
+      planetaryVortAdvVelocityTendency(k,iEdge) = 0.0_RKIND
          end do
 
          do j = 1, nEdgesOnEdge(iEdge)
@@ -213,6 +215,18 @@ contains
                               (tmpVorticity(k,iEdge) + &
                                tmpVorticity(k,eoe))
                qArr(k,iEdge) = qArr(k,iEdge) + &
+                               edgeWeight*normalVelocity(k,eoe)* &
+                               avgVorticity*layerThickEdgeFlux(k,eoe)
+               avgVorticity = 0.5_RKIND* &
+                              (normRelVortEdge(k,iEdge) + &
+                               normRelVortEdge(k,eoe))
+      relVortAdvVelocityTendency(k,iEdge) = relVortAdvVelocityTendency(k,iEdge) + &
+                               edgeWeight*normalVelocity(k,eoe)* &
+                               avgVorticity*layerThickEdgeFlux(k,eoe)
+               avgVorticity = 0.5_RKIND* &
+                              (normPlanetVortEdge(k,iEdge) + &
+                               normPlanetVortEdge(k,eoe))
+      planetVortAdvVelocityTendency(k,iEdge) = planetaryVortAdvVelocityTendency(k,iEdge) + &
                                edgeWeight*normalVelocity(k,eoe)* &
                                avgVorticity*layerThickEdgeFlux(k,eoe)
             end do
@@ -243,6 +257,12 @@ contains
          do k = kmin, kmax
             tend(k,iEdge) = tend(k,iEdge) + &
                         edgeMask(k,iEdge)* (qArr(k,iEdge) - &
+                           (kineticEnergyCell(k,cell2) &
+                          - kineticEnergyCell(k,cell1))*invLength)
+      qArrVelocityTendency(k,iEdge) = &
+                        edgeMask(k,iEdge)* qArr(k,iEdge) 
+      gradKVelocityTendency(k,iEdge) = &
+                        edgeMask(k,iEdge)* (- &
                            (kineticEnergyCell(k,cell2) &
                           - kineticEnergyCell(k,cell1))*invLength)
          end do

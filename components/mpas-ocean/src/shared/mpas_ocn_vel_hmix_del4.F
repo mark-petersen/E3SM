@@ -25,6 +25,7 @@ module ocn_vel_hmix_del4
    use ocn_constants
    use ocn_config
    use ocn_mesh
+   use ocn_diagnostics_variables
 
    implicit none
    private
@@ -212,6 +213,7 @@ contains
                del2relVort(k,iVertex) = del2relVort(k,iVertex) &
                                       + edgeSignOnVertex(i,iVertex) &
                                        *dcEdge(iEdge)*del2u(k,iEdge)*areaTriInv
+      del4del2relVortVelocityTendency(k,iVertex) = del2relVort(k,iVertex) 
             end do
          end do
       end do
@@ -243,6 +245,7 @@ contains
                del2div(k,iCell) = del2div(k,iCell) - &
                                   edgeSignOnCell(i,iCell)*dvEdge(iEdge) &
                                  *del2u(k,iEdge)*areaCellInv
+      del4del2divVelocityTendency(k,iCell) = del2div(k,iCell)
             end do
          end do
       end do
@@ -289,6 +292,11 @@ contains
 
             tend(k,iEdge) = tend(k,iEdge) - &
                             edgeMask(k,iEdge)*uDiff*visc4
+
+      del4GradDivVelocityTendency(k,iEdge) = edgeMask(k,iEdge)*visc4 *&
+                     divFactor*(del2div(k,cell2) - del2div(k,cell1))*dcEdgeInv
+      del4GradVortVelocityTendency(k,iEdge) = - edgeMask(k,iEdge)*visc4 *&
+                   (del2relVort(k,vertex2) - del2relVort(k,vertex1))* dvEdgeInv
          end do
       end do
 #ifndef MPAS_OPENACC

@@ -24,6 +24,7 @@ module ocn_vel_hmix_del2
    use ocn_constants
    use ocn_config
    use ocn_mesh
+   use ocn_diagnostics_variables
 
    implicit none
    private
@@ -165,6 +166,11 @@ contains
 
             tend(k,iEdge) = tend(k,iEdge) + &
                             edgeMask(k,iEdge)*visc2*uDiff
+
+      del2GradDivVelocityTendency(k,iEdge) = edgeMask(k,iEdge)*visc2 *&
+                     (div(k,cell2) - div(k,cell1))*dcEdgeInv
+      del2GradVortVelocityTendency(k,iEdge) = - edgeMask(k,iEdge)*visc2 *&
+                   (relVort(k,vertex2)-relVort(k,vertex1))*dvEdgeInv
 
          end do
       end do

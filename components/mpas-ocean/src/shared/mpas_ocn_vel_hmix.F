@@ -125,13 +125,17 @@ contains
       ! note that the user can choose multiple options and the
       !   tendencies will be added together
 
+      totalVelocityTendency = tend
       call ocn_vel_hmix_del2_tend(div, relVort, tend, err1)
+      hmixDel2VelocityTendency = tend - totalVelocityTendency  
       err = ior(err1, err)
 
       call ocn_vel_hmix_leith_tend(div, relVort, tend, err1)
       err = ior(err1, err)
 
+      totalVelocityTendency = tend
       call ocn_vel_hmix_del4_tend(div, relVort, tend, err1)
+      hmixDel4VelocityTendency = tend - totalVelocityTendency  
       err = ior(err1, err)
 
       call mpas_timer_stop("vel hmix")
