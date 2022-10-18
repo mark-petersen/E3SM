@@ -151,6 +151,8 @@ module ocn_diagnostics_variables
    real (kind=RKIND), dimension(:,:), pointer :: hadvCorVelocityTendency
    real (kind=RKIND), dimension(:,:), pointer :: vadvVelocityTendency
    real (kind=RKIND), dimension(:,:), pointer :: hmixVelocityTendency
+   real (kind=RKIND), dimension(:,:), pointer :: hmixDel2VelocityTendency
+   real (kind=RKIND), dimension(:,:), pointer :: hmixDel4VelocityTendency
    real (kind=RKIND), dimension(:,:), pointer :: forcingVelocityTendency
    real (kind=RKIND), dimension(:,:), pointer :: pressureGradVelocityTendency
    real (kind=RKIND), dimension(:,:), pointer :: del2GradDivVelocityTendency
@@ -161,6 +163,8 @@ module ocn_diagnostics_variables
    real (kind=RKIND), dimension(:,:), pointer :: del4GradVortVelocityTendency
    real (kind=RKIND), dimension(:,:), pointer :: relVortAdvVelocityTendency
    real (kind=RKIND), dimension(:,:), pointer :: planetVortAdvVelocityTendency
+   real (kind=RKIND), dimension(:,:), pointer :: qArrVelocityTendency
+   real (kind=RKIND), dimension(:,:), pointer :: gradKVelocityTendency
    real (kind=RKIND), dimension(:,:), pointer :: extra1VelocityTendency
    real (kind=RKIND), dimension(:,:), pointer :: extra2VelocityTendency
    real (kind=RKIND), dimension(:,:), pointer :: extra3VelocityTendency
@@ -323,11 +327,13 @@ contains
                   'activeTracerVertMixTendency', &
                    activeTracerVertMixTendency)
       end if
-      if ( config_compute_velocity_budgets ) then
+      if ( config_compute_velocity_budget ) then
          call mpas_pool_get_array(diagnosticsPool,'totalVelocityTendency', totalVelocityTendency          )
          call mpas_pool_get_array(diagnosticsPool,'hadvCorVelocityTendency', hadvCorVelocityTendency        )
          call mpas_pool_get_array(diagnosticsPool,'vadvVelocityTendency', vadvVelocityTendency           )
          call mpas_pool_get_array(diagnosticsPool,'hmixVelocityTendency', hmixVelocityTendency           )
+         call mpas_pool_get_array(diagnosticsPool,'hmixDel2VelocityTendency', hmixDel2VelocityTendency           )
+         call mpas_pool_get_array(diagnosticsPool,'hmixDel4VelocityTendency', hmixDel4VelocityTendency           )
          call mpas_pool_get_array(diagnosticsPool,'forcingVelocityTendency', forcingVelocityTendency        )
          call mpas_pool_get_array(diagnosticsPool,'pressureGradVelocityTendency', pressureGradVelocityTendency   )
          call mpas_pool_get_array(diagnosticsPool,'del2GradDivVelocityTendency', del2GradDivVelocityTendency    )
@@ -338,6 +344,8 @@ contains
          call mpas_pool_get_array(diagnosticsPool,'del4GradVortVelocityTendency', del4GradVortVelocityTendency   )
          call mpas_pool_get_array(diagnosticsPool,'relVortAdvVelocityTendency', relVortAdvVelocityTendency     )
          call mpas_pool_get_array(diagnosticsPool,'planetVortAdvVelocityTendency', planetVortAdvVelocityTendency  )
+         call mpas_pool_get_array(diagnosticsPool,'qArrVelocityTendency', qArrVelocityTendency         )
+         call mpas_pool_get_array(diagnosticsPool,'gradKVelocityTendency', gradKVelocityTendency        )
          call mpas_pool_get_array(diagnosticsPool,'extra1VelocityTendency', extra1VelocityTendency         )
          call mpas_pool_get_array(diagnosticsPool,'extra2VelocityTendency', extra2VelocityTendency         )
          call mpas_pool_get_array(diagnosticsPool,'extra3VelocityTendency', extra3VelocityTendency)
@@ -1287,9 +1295,9 @@ contains
                  activeTracerHorizontalAdvectionTendency, &
                  activeTracerHorizontalAdvectionEdgeFlux)
       end if
-      if ( config_compute_velocity_budgets ) then
-         !nullify(pressureVelocityTendency, & etc
-      end if
+      !if ( config_compute_velocity_budget ) then
+      !   !nullify(pressureVelocityTendency, & etc
+      !end if
       if ( config_use_activeTracers_surface_restoring ) then
          nullify(salinitySurfaceRestoringTendency)
       end if

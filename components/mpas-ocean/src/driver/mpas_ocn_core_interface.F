@@ -182,6 +182,7 @@ module ocn_core_interface
       logical, pointer :: config_use_bulk_wind_stress
       logical, pointer :: config_use_bulk_thickness_flux
       logical, pointer :: config_compute_active_tracer_budgets
+      logical, pointer :: config_compute_velocity_budget
       character (len=StrKIND), pointer :: config_land_ice_flux_mode
 
        type (mpas_pool_iterator_type) :: groupItr

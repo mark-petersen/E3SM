@@ -30,6 +30,7 @@ module ocn_vel_hmix
    use ocn_vel_hmix_del4
    use ocn_constants
    use ocn_config
+   use ocn_diagnostics_variables
 
    implicit none
    private

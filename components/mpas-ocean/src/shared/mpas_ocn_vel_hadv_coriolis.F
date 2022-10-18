@@ -25,6 +25,7 @@ module ocn_vel_hadv_coriolis
    use ocn_constants
    use ocn_mesh
    use ocn_config
+   use ocn_diagnostics_variables
 
    implicit none
    private
@@ -203,7 +204,7 @@ contains
          do k = 1, nVertLevels
             qArr(k,iEdge) = 0.0_RKIND
       relVortAdvVelocityTendency(k,iEdge) = 0.0_RKIND
-      planetaryVortAdvVelocityTendency(k,iEdge) = 0.0_RKIND
+      planetVortAdvVelocityTendency(k,iEdge) = 0.0_RKIND
          end do
 
          do j = 1, nEdgesOnEdge(iEdge)
@@ -226,7 +227,7 @@ contains
                avgVorticity = 0.5_RKIND* &
                               (normPlanetVortEdge(k,iEdge) + &
                                normPlanetVortEdge(k,eoe))
-      planetVortAdvVelocityTendency(k,iEdge) = planetaryVortAdvVelocityTendency(k,iEdge) + &
+      planetVortAdvVelocityTendency(k,iEdge) = planetVortAdvVelocityTendency(k,iEdge) + &
                                edgeWeight*normalVelocity(k,eoe)* &
                                avgVorticity*layerThickEdgeFlux(k,eoe)
             end do
