@@ -465,10 +465,12 @@ module ocn_tracer_advection_mono
 
               scaleFactor = (tracerMax(k,iCell) - tracerUpwindNew)/ &
                             (tracerMaxNew - tracerUpwindNew + eps)
+scaleFactorMaxHor(k,iCell) = scaleFactor
               flxIn (k,iCell) = min(1.0_RKIND, &
                                 max(0.0_RKIND, scaleFactor))
               scaleFactor = (tracerUpwindNew - tracerMin(k,iCell))/ &
                             (tracerUpwindNew - tracerMinNew + eps)
+scaleFactorMinHor(k,iCell) = scaleFactor
               flxOut(k,iCell) = min(1.0_RKIND, &
                                 max(0.0_RKIND, scaleFactor))
            end do ! k loop
@@ -821,6 +823,7 @@ module ocn_tracer_advection_mono
 
               scaleFactor = (tracerMax(k,iCell)-tracerUpwindNew)/ &
                             (tracerMaxNew-tracerUpwindNew+eps)
+scaleFactorMaxVert(k,iCell) = scaleFactor
               flxIn (k,iCell) = min(1.0_RKIND, &
                                 max(0.0_RKIND, scaleFactor))
 
@@ -828,6 +831,7 @@ module ocn_tracer_advection_mono
                             (tracerUpwindNew-tracerMinNew+eps)
               flxOut(k,iCell) = min(1.0_RKIND, &
                                 max(0.0_RKIND, scaleFactor))
+scaleFactorMinVert(k,iCell) = scaleFactor
            end do ! k loop
         end do ! iCell loop
 #ifndef MPAS_OPENACC

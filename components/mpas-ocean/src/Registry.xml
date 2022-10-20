@@ -3322,6 +3322,10 @@
 		<var name="extra1VelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
 		<var name="extra2VelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
 		<var name="extra3VelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
+		<var name="scaleFactorMinHor" dimensions="nVertLevels nCells Time" units="" packages="velocityBudget" type="real" description="velocity tendency"/>
+		<var name="scaleFactorMaxHor" dimensions="nVertLevels nCells Time" units="" packages="velocityBudget" type="real" description="velocity tendency"/>
+		<var name="scaleFactorMinVert" dimensions="nVertLevels nCells Time" units="" packages="velocityBudget" type="real" description="velocity tendency"/>
+		<var name="scaleFactorMaxVert" dimensions="nVertLevels nCells Time" units="" packages="velocityBudget" type="real" description="velocity tendency"/>
 	</var_struct>
 	<var_struct name="forcing" time_levs="1">
 		<!-- *********************************************************************

@@ -168,6 +168,10 @@ module ocn_diagnostics_variables
    real (kind=RKIND), dimension(:,:), pointer :: extra1VelocityTendency
    real (kind=RKIND), dimension(:,:), pointer :: extra2VelocityTendency
    real (kind=RKIND), dimension(:,:), pointer :: extra3VelocityTendency
+   real (kind=RKIND), dimension(:,:), pointer :: scaleFactorMinHor
+   real (kind=RKIND), dimension(:,:), pointer :: scaleFactorMaxHor
+   real (kind=RKIND), dimension(:,:), pointer :: scaleFactorMinVert
+   real (kind=RKIND), dimension(:,:), pointer :: scaleFactorMaxVert
 
    ! pointers for tendencies used in diagnostic budget computation
    real (kind=RKIND), dimension(:,:,:), pointer, contiguous :: &
@@ -349,6 +353,10 @@ contains
          call mpas_pool_get_array(diagnosticsPool,'extra1VelocityTendency', extra1VelocityTendency         )
          call mpas_pool_get_array(diagnosticsPool,'extra2VelocityTendency', extra2VelocityTendency         )
          call mpas_pool_get_array(diagnosticsPool,'extra3VelocityTendency', extra3VelocityTendency)
+         call mpas_pool_get_array(diagnosticsPool,'scaleFactorMinHor', scaleFactorMinHor )
+         call mpas_pool_get_array(diagnosticsPool,'scaleFactorMaxHor', scaleFactorMaxHor )
+         call mpas_pool_get_array(diagnosticsPool,'scaleFactorMinVert', scaleFactorMinVert)
+         call mpas_pool_get_array(diagnosticsPool,'scaleFactorMaxVert', scaleFactorMaxVert)
       end if
 
       if ( config_use_activeTracers_surface_restoring ) then
