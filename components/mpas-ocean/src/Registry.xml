@@ -2674,6 +2674,31 @@
 				 description="Meridional surface velocity reconstructed at cell centers"
 			/>
 		</var_array>
+		<var name="totalVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" type="real" description="velocity tendency" packages="velocityBudget"/>
+		<var name="hadvCorVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" type="real" description="velocity tendency" packages="velocityBudget"/>
+		<var name="vadvVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" type="real" description="velocity tendency" packages="velocityBudget"/>
+		<var name="hmixVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" type="real" description="velocity tendency" packages="velocityBudget"/>
+		<var name="hmixDel2VelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" type="real" description="velocity tendency" packages="velocityBudget"/>
+		<var name="hmixDel4VelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" type="real" description="velocity tendency" packages="velocityBudget"/>
+		<var name="forcingVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" type="real" description="velocity tendency" packages="velocityBudget"/>
+		<var name="pressureGradVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" type="real" description="velocity tendency" packages="velocityBudget"/>
+		<var name="del2GradDivVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" type="real" description="velocity tendency" packages="velocityBudget"/>
+		<var name="del2GradVortVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" type="real" description="velocity tendency" packages="velocityBudget"/>
+		<var name="del4del2relVortVelocityTendency" dimensions="nVertLevels nVertices Time" units="m s^-2" type="real" description="velocity tendency" packages="velocityBudget"/>
+		<var name="del4del2divVelocityTendency" dimensions="nVertLevels nCells Time" units="m s^-2" type="real" description="velocity tendency" packages="velocityBudget"/>
+		<var name="del4GradDivVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" type="real" description="velocity tendency" packages="velocityBudget"/>
+		<var name="del4GradVortVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" type="real" description="velocity tendency" packages="velocityBudget"/>
+		<var name="relVortAdvVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" type="real" description="velocity tendency" packages="velocityBudget"/>
+		<var name="planetVortAdvVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" type="real" description="velocity tendency" packages="velocityBudget"/>
+		<var name="qArrVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" type="real" description="velocity tendency" packages="velocityBudget"/>
+		<var name="gradKVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" type="real" description="velocity tendency" packages="velocityBudget"/>
+		<var name="extra1VelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" type="real" description="velocity tendency" packages="velocityBudget"/>
+		<var name="extra2VelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" type="real" description="velocity tendency" packages="velocityBudget"/>
+		<var name="extra3VelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" type="real" description="velocity tendency" packages="velocityBudget"/>
+		<var name="scaleFactorMinHor" dimensions="nVertLevels nCells Time" units="" type="real" description="velocity tendency" packages="velocityBudget"/>
+		<var name="scaleFactorMaxHor" dimensions="nVertLevels nCells Time" units="" type="real" description="velocity tendency" packages="velocityBudget"/>
+		<var name="scaleFactorMinVert" dimensions="nVertLevels nCells Time" units="" type="real" description="velocity tendency" packages="velocityBudget"/>
+		<var name="scaleFactorMaxVert" dimensions="nVertLevels nCells Time" units="" type="real" description="velocity tendency" packages="velocityBudget"/>
 		<var name="surfacePressure" type="real" dimensions="nCells Time" units="Pa"
 			description="Pressure at the sea surface due to atmosphere, sea ice, frazil and land ice"
 		/>
@@ -3301,31 +3326,6 @@
 			description="the fractional cloudiness (between 0 and 1)"
 			packages="variableShortwave"
 		/>
-		<var name="totalVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
-		<var name="hadvCorVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
-		<var name="vadvVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
-		<var name="hmixVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
-		<var name="hmixDel2VelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
-		<var name="hmixDel4VelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
-		<var name="forcingVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
-		<var name="pressureGradVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
-		<var name="del2GradDivVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
-		<var name="del2GradVortVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
-		<var name="del4del2relVortVelocityTendency" dimensions="nVertLevels nVertices Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
-		<var name="del4del2divVelocityTendency" dimensions="nVertLevels nCells Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
-		<var name="del4GradDivVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
-		<var name="del4GradVortVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
-		<var name="relVortAdvVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
-		<var name="planetVortAdvVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
-		<var name="qArrVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
-		<var name="gradKVelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
-		<var name="extra1VelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
-		<var name="extra2VelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
-		<var name="extra3VelocityTendency" dimensions="nVertLevels nEdges Time" units="m s^-2" packages="velocityBudget" type="real" description="velocity tendency"/>
-		<var name="scaleFactorMinHor" dimensions="nVertLevels nCells Time" units="" packages="velocityBudget" type="real" description="velocity tendency"/>
-		<var name="scaleFactorMaxHor" dimensions="nVertLevels nCells Time" units="" packages="velocityBudget" type="real" description="velocity tendency"/>
-		<var name="scaleFactorMinVert" dimensions="nVertLevels nCells Time" units="" packages="velocityBudget" type="real" description="velocity tendency"/>
-		<var name="scaleFactorMaxVert" dimensions="nVertLevels nCells Time" units="" packages="velocityBudget" type="real" description="velocity tendency"/>
 	</var_struct>
 	<var_struct name="forcing" time_levs="1">
 		<!-- *********************************************************************

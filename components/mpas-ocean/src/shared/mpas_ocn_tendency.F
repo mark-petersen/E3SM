@@ -405,7 +405,11 @@ contains
 
       ! Add nonlinear Coriolis term and horizontal advection of
       ! momentum, formulated as grad of kinetic energy
-      totalVelocityTendency = tendVel
+      do iEdge = 1, nEdgesAll
+         do k=1,nVertLevels
+            totalVelocityTendency(k,iEdge) = tendVel(k,iEdge)
+         end do
+      end do
       call ocn_vel_hadv_coriolis_tend(normRelVortEdge, &
                                       normPlanetVortEdge, &
                                       layerThickEdgeFlux, normalVelocity, &
