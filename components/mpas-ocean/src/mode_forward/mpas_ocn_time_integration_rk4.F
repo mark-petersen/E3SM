@@ -387,7 +387,7 @@ module ocn_time_integration_rk4
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       ! BEGIN RK loop
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      do rk_step = 1, 4
+      do rk_step = 1, 1 !4 Change to only one loop
 
         if (config_disable_thick_all_tend .and. config_disable_vel_all_tend .and. config_disable_tr_all_tend) then
           exit ! don't compute in loop meant to update velocity, thickness, and tracers
@@ -503,6 +503,7 @@ module ocn_time_integration_rk4
 
         block => domain % blocklist
         do while (associated(block))
+           print('ocn_time_integrator_rk4_compute_vel_tends rk_step=',rk_step)
            call ocn_time_integrator_rk4_compute_vel_tends(domain, block, dt, rk_substep_weights(rk_step), domain % dminfo, err )
 
            call ocn_time_integrator_rk4_compute_thick_tends( block, dt, rk_substep_weights(rk_step), err )
