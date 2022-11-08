@@ -204,12 +204,6 @@
 					description="Time integration method."
 					possible_values="'split_explicit', 'RK4', 'unsplit_explicit', 'split_implicit', 'LTS'"
 		/>
-                <nml_option name="config_init_LTS"                 type="logical"       default_value="false"
-                                        description="If true, the LTS objects (LTSRegions, lists etc.) are initialized"
-                />
-                <nml_option name="config_dt_scaling_LTS"                          type="integer"       default_value="4"
-                                        description="This is the positive integer M that defines dtFine for LTS, dtFine = dt / M"
-                />
 	</nml_record>
 	<nml_record name="hmix" mode="forward">
 		<nml_option name="config_hmix_scaleWithMesh" type="logical" default_value=".false."
@@ -1152,6 +1146,22 @@
 					possible_values="any positive real, but typically 1000-1035"
 		/>
 	</nml_record>
+        <nml_record name="lts" mode="forward">
+                <nml_option name="config_init_LTS"                 type="logical"       default_value="false"
+                                        description="If true, the LTS arrays are initialized"
+                />
+                <nml_option name="config_dt_scaling_LTS"                          type="integer"       default_value="1"
+                                        description="This is the positive integer M that defines dtFine for LTS, dtFine = dt / M"
+                />
+                <nml_option name="config_split_ssh_terms" type="logical" default_value="true" units="unitless"
+                                        description="This isolates the ssh term in the ssh_gradient pressure gradient formulation and in the tidal potential."
+                                        possible_values="'true', 'false'"
+                />
+                <nml_option name="config_split_non_ssh_terms" type="logical" default_value="true" units="unitless"
+                                        description="This isolates the non ssh temrs in the ssh_gradient pressure gradient formulation and in the tidal potential."
+                                        possible_values="'true', 'false'"
+                />
+        </nml_record>
 	<nml_record name="pressure_gradient" mode="forward">
 		<nml_option name="config_pressure_gradient_type" type="character" default_value="pressure_and_zmid"
 					description="Form of pressure gradient terms in momentum equation. For most applications, the gradient of pressure and layer mid-depth are appropriate.  For isopycnal coordinates, one may use the gradient of the Montgomery potential.  The sea surface height gradient (ssh_gradient) option is for barotropic, depth-averaged pressure."

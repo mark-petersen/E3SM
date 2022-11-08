@@ -208,22 +208,35 @@ Valid values: 'split_explicit', 'RK4', 'unsplit_explicit', 'split_implicit', 'LT
 Default: Defined in namelist_defaults.xml
 </entry>
 
+<!-- lts -->
+
 <entry id="config_init_LTS" type="logical"
-        category="time_integration" group="time_integration">
-Setup the LTS regions and arrays.
+        category="lts" group="lts">
+Setup the LTS arrays.
 
 Valid values: .true. or .false.
 Default: Defined in namelist_defaults.xml
 </entry>
 
 <entry id="config_dt_scaling_LTS" type="integer"
-        category="time_integration" group="time_integration">
+        category="lts" group="lts">
 Defines the fine time-step for LTS. dtFine = dt / config_dt_scaling_LTS.
 
 Valid values: Any positive integer.
 Default: Defined in namelist_defaults.xml
 </entry>
 
+<entry id="config_split_ssh_terms" type="logical"
+       category="lts" group="lts">
+This flag isolates the ssh terms in the ssh gradient formulation of the pressure gradient and in the tidal potential
+Default: Defined in namelist_defaults.xml
+</entry>
+
+<entry id="config_split_non_ssh_terms" type="logical"
+       category="lts" group="lts">
+This flag isolates the non ssh terms in the ssh gradient formulation of the pressure gradient and in the tidal potential
+Default: Defined in namelist_defaults.xml
+</entry>
 
 <!-- hmix -->
 
