@@ -40,6 +40,7 @@ my @groups = qw(run_modes
                 testing
                 transport_tests
                 init_mode_vert_levels
+                init_mode_time_levels
                 tracer_forcing_activetracers
                 tracer_forcing_debugtracers
                 tracer_forcing_ecosystracers

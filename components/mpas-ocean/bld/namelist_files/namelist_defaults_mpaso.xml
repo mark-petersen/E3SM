@@ -537,6 +537,9 @@
 <!-- init_mode_vert_levels -->
 <config_vert_levels>-1</config_vert_levels>
 
+<!-- init_mode_time_levels -->
+<config_time_levels>2</config_time_levels>
+
 <!-- tracer_forcing_activeTracers -->
 <config_use_activeTracers>.true.</config_use_activeTracers>
 <config_use_activeTracers_surface_bulk_forcing>.true.</config_use_activeTracers_surface_bulk_forcing>
