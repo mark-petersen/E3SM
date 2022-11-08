@@ -46,6 +46,8 @@ add_default($nl, 'config_proc_decomp_file_prefix');
 
 add_default($nl, 'config_dt');
 add_default($nl, 'config_time_integrator');
+add_default($nl, 'config_init_LTS');
+add_default($nl, 'config_dt_scaling_LTS');
 
 ########################
 # Namelist group: hmix #
