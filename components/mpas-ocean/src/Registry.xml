@@ -38,6 +38,9 @@
 		<dim name="FOUR" definition="4"
 			 description="The number four as a dimension."
 		/>
+		<dim name="FIVE" definition="5"
+			 description="The number five as a dimension."
+		/>
 		<dim name="SIX" definition="6"
 			 description="The number six as a dimension."
 		/>
@@ -2200,7 +2203,7 @@
 
 	</streams>
 
-	<var_struct name="state" time_levs="nTimeLevels">
+	<var_struct name="state" time_levs="4">
 		<var name="normalVelocity" type="real" dimensions="nVertLevels nEdges Time" units="m s^-1"
 			 description="horizontal velocity, normal component to an edge"
 			 missing_value="FILLVAL" missing_value_mask="edgeMask"
