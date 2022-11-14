@@ -599,7 +599,13 @@ contains
 
       real (kind=RKIND) :: invAreaTri1, r_tmp
 
-      err = 0
+      real (kind=RKIND), dimension(:,:), allocatable :: &
+         relativeVorticityCell
+      real (kind=RKIND), dimension(:), allocatable :: &
+         areaSum
+
+      allocate(relativeVorticityCell(nVertLevels, nCellsAll))
+      allocate(areaSum(nVertLevels))
 
 #ifdef MPAS_OPENACC
       !$acc parallel loop collapse(2) present(circulation, relativeVorticity)
@@ -642,6 +648,55 @@ contains
       !$omp end parallel
 #endif
 
+      do iCell = 1, nCellsOwned
+         relativeVorticityCell(:,iCell) = 0.0_RKIND
+         invAreaCell1 = invAreaCell(iCell)
+         kmin = minLevelCell(iCell)
+         kmax = maxLevelCell(iCell)
+
+         do i = 1, nEdgesOnCell(iCell)
+            j = kiteIndexOnCell(i, iCell)
+            iVertex = verticesOnCell(i, iCell)
+            do k = kmin,kmax
+               relativeVorticityCell(k,iCell) = &
+               relativeVorticityCell(k,iCell) + &
+                        kiteAreasOnVertex(j,iVertex)* &
+                        relativeVorticity(k,iVertex)*invAreaCell1
+            end do
+         end do
+      end do
+
+#ifdef MPAS_OPENACC
+      !$acc parallel loop &
+      !$acc          present(circulation, relativeVorticity, areaTriangle, edgesOnVertex, &
+      !$acc                  maxLevelVertexBot, dcEdge, normalVelocity, edgeSignOnVertex, &
+      !$acc                  minLevelVertexTop) &
+      !$acc          private(invAreaTri1, iVertex, iEdge, k, r_tmp)
+#else
+      !$omp do schedule(runtime) private(invAreaTri1, i, iEdge, k, r_tmp)
+#endif
+      do iVertex = 1, nVerticesAll
+         do k = 1, nVertLevels
+            relativeVorticity(k, iVertex) = 0.0_RKIND
+            areaSum(k) = 0.0_RKIND
+         enddo
+         invAreaTri1 = 1.0_RKIND / areaTriangle(iVertex)
+         do i = 1, vertexDegree
+            iCell = cellssOnVertex(i, iVertex)
+            do k = minLevelCell(iCell), maxLevelCell(iCell)
+              areaSum(k) = areaSum(k) + kiteAreasOnVertex(i,iVertex)
+              relativeVorticity(k, iVertex) = relativeVorticity(k, iVertex) + &
+                  kiteAreasOnVertex(i,iVertex)*relativeVorticityCell(k,iCell) 
+            end do
+         end do
+         do k = minLevelVertexTop(iVertex), maxLevelVertexBot(iVertex)
+            relativeVorticity(k, iVertex) = relativeVorticity(k,iVertex)/areaSum(k)
+         end do
+      end do
+#ifndef MPAS_OPENACC
+      !$omp end do
+      !$omp end parallel
+#endif
    !--------------------------------------------------------------------
 
    end subroutine ocn_relativeVorticity_circulation!}}}
