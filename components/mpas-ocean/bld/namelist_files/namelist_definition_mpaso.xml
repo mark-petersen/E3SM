@@ -210,14 +210,6 @@ Default: Defined in namelist_defaults.xml
 
 <!-- lts -->
 
-<entry id="config_init_LTS" type="logical"
-        category="lts" group="lts">
-Setup the LTS arrays.
-
-Valid values: .true. or .false.
-Default: Defined in namelist_defaults.xml
-</entry>
-
 <entry id="config_dt_scaling_LTS" type="integer"
         category="lts" group="lts">
 Defines the fine time-step for LTS. dtFine = dt / config_dt_scaling_LTS.

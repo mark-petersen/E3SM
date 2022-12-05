@@ -1150,9 +1150,6 @@
 		/>
 	</nml_record>
         <nml_record name="lts" mode="forward">
-                <nml_option name="config_init_LTS"                 type="logical"       default_value="false"
-                                        description="If true, the LTS arrays are initialized"
-                />
                 <nml_option name="config_dt_scaling_LTS"                          type="integer"       default_value="1"
                                         description="This is the positive integer M that defines dtFine for LTS, dtFine = dt / M"
                 />

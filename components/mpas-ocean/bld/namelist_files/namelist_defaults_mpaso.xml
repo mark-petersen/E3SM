@@ -51,7 +51,6 @@
 <config_time_integrator>'split_explicit'</config_time_integrator>
 
 <!-- lts -->
-<config_init_LTS>.false.</config_init_LTS>
 <config_dt_scaling_LTS>1</config_dt_scaling_LTS>
 <config_split_ssh_terms>.true.</config_split_ssh_terms>
 <config_split_non_ssh_terms>.true.</config_split_non_ssh_terms>
