@@ -38,6 +38,9 @@
 		<dim name="FOUR" definition="4"
 			 description="The number four as a dimension."
 		/>
+		<dim name="FIVE" definition="5"
+			 description="The number five as a dimension."
+		/>
 		<dim name="SIX" definition="6"
 			 description="The number six as a dimension."
 		/>
@@ -55,6 +58,9 @@
 		/>
 		<dim name="nVertLevelsP1" definition="nVertLevels+1"
 			 description="The number of interfaces in the vertical direction."
+		/>
+		<dim name="nTimeLevels" definition="namelist:config_time_levels"
+			 description="The number of time levels of the state variables"
 		/>
 		<dim name="nPoints" definition="1"
 			 description="The number of points for AM_pointwiseStats"
@@ -200,6 +206,10 @@
 		<nml_option name="config_time_integrator" type="character" default_value="split_explicit"
 					description="Time integration method."
 					possible_values="'split_explicit', 'RK4', 'unsplit_explicit', 'split_implicit'"
+		/>
+		<nml_option name="config_time_levels" type="integer" default_value="2"
+					description="Number of time levels for the state variables."
+					possible_values="Any positive integer larger than two, which is the minimum to consider old and new solutions."
 		/>
 	</nml_record>
 	<nml_record name="hmix" mode="forward">
@@ -2176,7 +2186,7 @@
 
 	</streams>
 
-	<var_struct name="state" time_levs="2">
+	<var_struct name="state" time_levs="nTimeLevels">
 		<var name="normalVelocity" type="real" dimensions="nVertLevels nEdges Time" units="m s^-1"
 			 description="horizontal velocity, normal component to an edge"
 			 missing_value="FILLVAL" missing_value_mask="edgeMask"
