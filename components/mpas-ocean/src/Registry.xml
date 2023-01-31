@@ -59,9 +59,6 @@
 		<dim name="nVertLevelsP1" definition="nVertLevels+1"
 			 description="The number of interfaces in the vertical direction."
 		/>
-		<dim name="nTimeLevels" definition="namelist:config_time_levels"
-			 description="The number of time levels of the state variables"
-		/>
 		<dim name="nPoints" definition="1"
 			 description="The number of points for AM_pointwiseStats"
 		/>
