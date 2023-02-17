@@ -1533,12 +1533,6 @@
 					possible_values="Any positive non-zero integer. A value of -1 causes this to be overwritten with the configurations vertical level definition."
 		/>
 	</nml_record>
-        <nml_record name="init_mode_time_levels">
-                <nml_option name="config_time_levels" type="integer" default_value="2"
-                                        description="Number of time levels for the state variables."
-                                        possible_values="Any positive integer larger than two, which is the minimum to consider old and new solutions."
-                />
-        </nml_record>
 	<packages>
 		<package name="timeVaryingAtmosphericForcingPKG" description="This package includes variables required for time varying atmospheric forcing"/>
 		<package name="timeVaryingLandIceForcingPKG" description="This package includes variavles required for time varying land-ice forcing"/>
@@ -2197,7 +2191,11 @@
 
 	</streams>
 
+#ifdef USE_LTS
 	<var_struct name="state" time_levs="4">
+#else    
+	<var_struct name="state" time_levs="2">
+#endif
 		<var name="normalVelocity" type="real" dimensions="nVertLevels nEdges Time" units="m s^-1"
 			 description="horizontal velocity, normal component to an edge"
 			 missing_value="FILLVAL" missing_value_mask="edgeMask"
