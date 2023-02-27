@@ -2193,7 +2193,7 @@
 
 #ifdef USE_LTS
 	<var_struct name="state" time_levs="4">
-#else    
+#else
 	<var_struct name="state" time_levs="2">
 #endif
 		<var name="normalVelocity" type="real" dimensions="nVertLevels nEdges Time" units="m s^-1"
@@ -4050,13 +4050,13 @@
 			description="The name for each transect group."
 			/>
 	</var_struct>
-        <var_struct name="LTS" time_levs="1">
-                <var name="LTSRegion"                         type="integer"  dimensions="nCells"/>
-                <var name="cellsInLTSRegion"                    type="integer"  dimensions="TWO FIVE nCells"/>
-                <var name="nCellsInLTSRegion"                   type="integer"  dimensions="TWO FIVE"/>
-                <var name="edgesInLTSRegion"                    type="integer"  dimensions="TWO FIVE nEdges"/>
-                <var name="nEdgesInLTSRegion"                   type="integer"  dimensions="TWO FIVE"/>
-        </var_struct>
+	<var_struct name="LTS" time_levs="1">
+		<var name="LTSRegion"					type="integer"	dimensions="nCells"/>
+		<var name="cellsInLTSRegion"			type="integer"	dimensions="TWO FIVE nCells"/>
+		<var name="nCellsInLTSRegion"			type="integer"	dimensions="TWO FIVE"/>
+		<var name="edgesInLTSRegion"			type="integer"	dimensions="TWO FIVE nEdges"/>
+		<var name="nEdgesInLTSRegion"			type="integer"	dimensions="TWO FIVE"/>
+	</var_struct>
 
 <!-- Include registry files from subdirectories -->
 #include "tracer_groups/Registry_tracers.xml"
