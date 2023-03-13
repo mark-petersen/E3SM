@@ -1150,14 +1150,6 @@
                 <nml_option name="config_dt_scaling_LTS"                          type="integer"       default_value="1"
                                         description="This is the positive integer M that defines dtFine for LTS, dtFine = dt / M"
                 />
-                <nml_option name="config_split_ssh_terms" type="logical" default_value="true" units="unitless"
-                                        description="This isolates the ssh term in the ssh_gradient pressure gradient formulation and in the tidal potential."
-                                        possible_values="'true', 'false'"
-                />
-                <nml_option name="config_split_non_ssh_terms" type="logical" default_value="true" units="unitless"
-                                        description="This isolates the non ssh temrs in the ssh_gradient pressure gradient formulation and in the tidal potential."
-                                        possible_values="'true', 'false'"
-                />
         </nml_record>
 	<nml_record name="pressure_gradient" mode="forward">
 		<nml_option name="config_pressure_gradient_type" type="character" default_value="pressure_and_zmid"
