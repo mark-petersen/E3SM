@@ -52,8 +52,6 @@ add_default($nl, 'config_time_integrator');
 ##########################
 
 add_default($nl, 'config_dt_scaling_LTS');
-add_default($nl, 'config_split_ssh_terms');
-add_default($nl, 'config_split_non_ssh_terms');
 
 ########################
 # Namelist group: hmix #

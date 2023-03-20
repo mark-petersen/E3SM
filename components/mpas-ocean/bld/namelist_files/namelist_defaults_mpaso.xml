@@ -52,8 +52,6 @@
 
 <!-- lts -->
 <config_dt_scaling_LTS>1</config_dt_scaling_LTS>
-<config_split_ssh_terms>.true.</config_split_ssh_terms>
-<config_split_non_ssh_terms>.true.</config_split_non_ssh_terms>
 
 <!-- hmix -->
 <config_hmix_scaleWithMesh ocn_grid="oQU480">.false.</config_hmix_scaleWithMesh>
