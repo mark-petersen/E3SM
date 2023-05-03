@@ -1149,6 +1149,7 @@
         <nml_record name="lts" mode="forward">
                 <nml_option name="config_dt_scaling_LTS"                          type="integer"       default_value="1"
                                         description="This is the positive integer M that defines dtFine for LTS, dtFine = dt / M"
+					possible_values="Any positive integer"
                 />
         </nml_record>
 	<nml_record name="pressure_gradient" mode="forward">

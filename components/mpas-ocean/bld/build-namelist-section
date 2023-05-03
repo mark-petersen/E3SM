@@ -48,12 +48,6 @@ add_default($nl, 'config_dt');
 add_default($nl, 'config_time_integrator');
 
 ########################
-### Namelist group: lts #
-##########################
-
-add_default($nl, 'config_dt_scaling_LTS');
-
-########################
 # Namelist group: hmix #
 ########################
 
@@ -359,6 +353,12 @@ add_default($nl, 'config_vegetation_drag_coefficient');
 ###################################
 
 add_default($nl, 'config_density0');
+
+#######################
+# Namelist group: lts #
+#######################
+
+add_default($nl, 'config_dt_scaling_LTS');
 
 #####################################
 # Namelist group: pressure_gradient #

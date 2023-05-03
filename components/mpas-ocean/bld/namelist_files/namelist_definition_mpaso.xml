@@ -17,7 +17,7 @@
           An abbreviation of the fortran declaration for the variable.
       Valid declarations are:
 
-          char*n  
+          char*n
           integer
           logical
           real
@@ -31,7 +31,7 @@
      input_pathname
           Only include this attribute to indicate that the variable
           contains the pathname of an input dataset that resides in the
-          CESM inputdata directory tree.  
+          CESM inputdata directory tree.
 
       The recognized values are "abs" to indicate that an absolute
           pathname is required, or "rel:var_name" to indicate that the
@@ -208,15 +208,6 @@ Valid values: 'split_explicit', 'RK4', 'unsplit_explicit', 'split_implicit', 'LT
 Default: Defined in namelist_defaults.xml
 </entry>
 
-<!-- lts -->
-
-<entry id="config_dt_scaling_LTS" type="integer"
-        category="lts" group="lts">
-Defines the fine time-step for LTS. dtFine = dt / config_dt_scaling_LTS.
-
-Valid values: Any positive integer.
-Default: Defined in namelist_defaults.xml
-</entry>
 
 <!-- hmix -->
 
@@ -1823,6 +1814,17 @@ Default: Defined in namelist_defaults.xml
 </entry>
 
 
+<!-- lts -->
+
+<entry id="config_dt_scaling_LTS" type="integer"
+	category="lts" group="lts">
+This is the positive integer M that defines dtFine for LTS, dtFine = dt / M
+
+Valid values: Any positive integer
+Default: Defined in namelist_defaults.xml
+</entry>
+
+
 <!-- pressure_gradient -->
 
 <entry id="config_pressure_gradient_type" type="char*1024"
@@ -2556,6 +2558,7 @@ Number of vertical levels to create within the configuration.
 Valid values: Any positive non-zero integer. A value of -1 causes this to be overwritten with the configurations vertical level definition.
 Default: Defined in namelist_defaults.xml
 </entry>
+
 
 <!-- tracer_forcing_activeTracers -->
 
