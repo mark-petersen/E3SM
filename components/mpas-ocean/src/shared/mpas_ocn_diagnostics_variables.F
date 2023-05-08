@@ -115,6 +115,9 @@ module ocn_diagnostics_variables
    integer, dimension(:), pointer :: smoothingMask
    real (kind=RKIND), dimension(:,:), pointer :: verticalStretch
 
+   integer, dimension(:,:,:), pointer :: edgesOppositeEdge
+   real (kind=RKIND), dimension(:,:,:), pointer :: weightsOnOppositeEdge
+
    integer, dimension(:), pointer :: modifyLandIcePressureMask
 
    real (kind=RKIND), dimension(:,:), pointer :: velocityMeridional
@@ -578,6 +581,10 @@ contains
          index_vertNonLocalFluxTemp = index_vertNonLocalFluxTempPtr
          indexSSHGradientMeridional = indexSSHGradientMeridionalPtr
          indexSSHGradientZonal = indexSSHGradientZonalPtr
+         call mpas_pool_get_array(diagnosticsPool, 'edgesOppositeEdge', &
+                   edgesOppositeEdge)
+         call mpas_pool_get_array(diagnosticsPool, 'weightsOnOppositeEdge', &
+                   weightsOnOppositeEdge)
       end if
 
       call mpas_pool_get_array(diagnosticsPool, &
@@ -776,6 +783,8 @@ contains
          !$acc                   GMBolusVelocityMeridional,       &
          !$acc                   mleVelocityMeridional,           &
          !$acc                   bulkRichardsonNumberShear,       &
+         !$acc                   edgesOppositeEdge,               &
+         !$acc                   weightsOnOppositeEdge,           &
          !$acc                   normalVelocitySurfaceLayer,      &
          !$acc                   transportVelocityMeridional,     &
          !$acc                   penetrativeTemperatureFluxOBL,   &
@@ -1018,6 +1027,8 @@ contains
          !$acc                   mleVelocityMeridional,           &
          !$acc                   GMBolusVelocityMeridional,       &
          !$acc                   bulkRichardsonNumberShear,       &
+         !$acc                   edgesOppositeEdge,               &
+         !$acc                   weightsOnOppositeEdge,           &
          !$acc                   normalVelocitySurfaceLayer,      &
          !$acc                   transportVelocityMeridional,     &
          !$acc                   penetrativeTemperatureFluxOBL,   &
@@ -1218,6 +1229,8 @@ contains
                  mleVelocityMeridional,           &
                  GMBolusVelocityMeridional,       &
                  bulkRichardsonNumberShear,       &
+                 edgesOppositeEdge,               &
+                 weightsOnOppositeEdge,           &
                  normalVelocitySurfaceLayer,      &
                  transportVelocityMeridional,     &
                  penetrativeTemperatureFluxOBL,   &
