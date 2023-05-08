@@ -451,7 +451,7 @@ contains
 
       ! Add horizontal mixing
       totalVelocityTendency = tendVel
-      call ocn_vel_hmix_tend(divergence, relativeVorticity, tendVel,err)
+      call ocn_vel_hmix_tend(divergence, relativeVorticity, normalVelocity, tendVel,err)
       hmixVelocityTendency = tendVel - totalVelocityTendency  
 
       ! Add forcing and bottom drag

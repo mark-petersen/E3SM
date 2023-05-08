@@ -158,6 +158,10 @@ module ocn_mesh
    real(kind=RKIND), public, dimension(:, :), allocatable :: &
       edgeAreaFractionOfCell
 
+   integer, public, dimension(:,:,:), pointer :: edgesOppositeEdge
+   real (kind=RKIND), public, dimension(:,:,:), pointer :: weightsOnOppositeEdge
+   real (kind=RKIND), public, dimension(:,:), pointer :: distToOppositeEdge
+
    !}}}
 
    !----------------------------------------------------------------------------
@@ -470,6 +474,12 @@ contains
                                cellTangentPlane)
       call mpas_pool_get_array(meshPool, 'coeffs_reconstruct', &
                                coeffs_reconstruct)
+      call mpas_pool_get_array(meshPool, 'edgesOppositeEdge', &
+                   edgesOppositeEdge)
+      call mpas_pool_get_array(meshPool, 'weightsOnOppositeEdge', &
+                   weightsOnOppositeEdge)
+      call mpas_pool_get_array(meshPool, 'distToOppositeEdge', &
+                   distToOppositeEdge)
 
       ! For masks, we wish to convert to real multiplicative masks
       ! so retrieve integer version pointers and allocate real masks
@@ -658,6 +668,9 @@ contains
          !$acc                   edgeNormalVectors,        &
          !$acc                   localVerticalUnitVectors, &
          !$acc                   cellTangentPlane,         &
+         !$acc                   edgesOppositeEdge,        &
+         !$acc                   weightsOnOppositeEdge,    &
+         !$acc                   distToOppositeEdge,       &
          !$acc                   coeffs_reconstruct)
 
 !-------------------------------------------------------------------------------
@@ -788,6 +801,9 @@ contains
       !$acc                  edgeNormalVectors, &
       !$acc                  localVerticalUnitVectors, &
       !$acc                  cellTangentPlane,  &
+      !$acc                  edgesOppositeEdge,        &
+      !$acc                  weightsOnOppositeEdge,    &
+      !$acc                  distToOppositeEdge,    &
       !$acc                  coeffs_reconstruct)
 
       ! Reset all scalars to zero
@@ -870,6 +886,9 @@ contains
                edgeNormalVectors, &
                localVerticalUnitVectors, &
                cellTangentPlane, &
+               edgesOppositeEdge, &
+               weightsOnOppositeEdge, &
+               distToOppositeEdge, &
                coeffs_reconstruct)
 
 #ifdef MPAS_OPENACC
@@ -1833,6 +1852,139 @@ contains
 
 !***********************************************************************
 
+!***********************************************************************
+!
+!  routine ocn_meshOppositeEdges
+!
+!> \brief  Computes edgesOppositeEdge and weightsOnOppositeEdge
+!> \author Mark Petersen
+!> \date   May 2023
+!> \details
+!>  This routine computes edgesOppositeEdge and weightsOnOppositeEdge
+!
+!-----------------------------------------------------------------------
+
+   subroutine ocn_meshOppositeEdges() !{{{
+
+      !-----------------------------------------------------------------
+      ! local variables
+      !-----------------------------------------------------------------
+
+      integer :: &
+         iEdge,       &! loop index/address for edges
+         jEdge, iCell, &
+         localEdge, localCell, &
+         localEdge1, localEdge2, &
+         edge1, edge2
+
+      real (kind=RKIND) :: &
+         relAngle1, relAngle2
+
+      real (kind=RKIND), dimension(maxEdges) :: &
+         dist
+
+      ! End preamble
+      !-------------
+      ! Begin code
+
+      ! to do:
+      ! Add these variables to a package, control package with flags.
+
+      if (config_use_mom_del2_small_stencil_reg) then
+
+         ! edgesOppositeEdge: Given an edge, specify the edges furthest from
+         ! that edge in each of the neighboring cells. The first index
+         ! corresponds to the same cell as cellsOnEdge. The second index is 1 for
+         ! furthest, and 2 for second furthest.
+
+         ! weightsOnOppositeEdge" type="real" dimensions="TWO TWO nEdges" units="1"
+
+         do iEdge = 1, nEdgesOwned
+            do localCell = 1,2
+               iCell = cellsOnEdge(localCell,iEdge)
+               do localEdge = 1,nEdgesOnCell(iCell)
+                   jEdge = edgesOnCell(localEdge,iCell)
+                   dist(localEdge) = &
+                          (xEdge(iEdge) - xEdge(jEdge))**2 &
+                        + (yEdge(iEdge) - yEdge(jEdge))**2
+               end do
+               ! find furthest edge
+               localEdge1 = maxloc(dist,1)
+               edgesOppositeEdge(localCell,1,iEdge) = edgesOnCell(localEdge1,iCell)
+               ! note I could have used this for the local edge number relative to the cell:
+               ! edgesOppositeEdge(localCell,1,iEdge) = localEdge1
+               edge1 = edgesOppositeEdge(localCell,1,iEdge)
+               relAngle1 = abs(mod(angleEdge(edge1) - angleEdge(iEdge),2.0_RKIND*pii)) !think about sign and mod
+               if (relAngle1.lt.1e-12) then
+                  weightsOnOppositeEdge(localCell,1,iEdge) = 1.0_RKIND
+               elseif (abs(relAngle1-pii).lt.1e-12) then
+                  weightsOnOppositeEdge(localCell,1,iEdge) = -1.0_RKIND
+               else 
+                  call mpas_log_write( &
+                    ' fatal error: edgesOppositeEdge angle on regular mesh is not 0 or pi', &
+                    MPAS_LOG_ERR)
+               endif
+
+            end do
+
+         end do
+
+      end if
+
+      if (config_use_mom_del2_small_stencil) then
+
+         ! edgesOppositeEdge: Given an edge, specify the edges furthest from
+         ! that edge in each of the neighboring cells. The first index
+         ! corresponds to the same cell as cellsOnEdge. The second index is 1 for
+         ! furthest, and 2 for second furthest.
+
+         ! weightsOnOppositeEdge" type="real" dimensions="TWO TWO nEdges" units="1"
+
+         do iEdge = 1, nEdgesOwned
+            do localCell = 1,2
+               iCell = cellsOnEdge(localCell,iEdge)
+               do localEdge = 1,nEdgesOnCell(iCell)
+                   jEdge = edgesOnCell(localEdge,iCell)
+                   dist(localEdge) = &
+                          (xEdge(iEdge) - xEdge(jEdge))**2 &
+                        + (yEdge(iEdge) - yEdge(jEdge))**2 &
+                        + (zEdge(iEdge) - zEdge(jEdge))**2
+               end do
+               ! find furthest edge
+               localEdge1 = maxloc(dist,1)
+               edgesOppositeEdge(localCell,1,iEdge) = edgesOnCell(localEdge1,iCell)
+               ! note I could have used this for the local edge number relative to the cell:
+               ! edgesOppositeEdge(localCell,1,iEdge) = localEdge1
+               edge1 = edgesOppositeEdge(localCell,1,iEdge)
+               relAngle1 = abs(mod(angleEdge(edge1) - angleEdge(iEdge),2.0_RKIND*pii)) !think about sign and mod
+               ! Weights are angle of the other one. As relative angle approaches zero, that edge
+               ! gets the full weight.
+               weightsOnOppositeEdge(localCell,1,iEdge) = relAngle2 / (relAngle1 + relAngle2)
+               distToOppositeEdge(localCell,iEdge) = weightsOnOppositeEdge(localCell,1,iEdge)*dist(localEdge1)*cos(relAngle1)
+
+               ! find second furthest edge
+               ! zero out furthest edge:
+               dist(localEdge2) = 0.0_RKIND
+               localEdge2 = maxloc(dist,1)
+               edgesOppositeEdge(localCell,2,iEdge) = edgesOnCell(localEdge2,iCell)
+               edge2 = edgesOppositeEdge(localCell,2,iEdge)
+               relAngle2 = abs(mod(angleEdge(edge2) - angleEdge(iEdge),2.0_RKIND*pii)) !think about sign and mod
+               weightsOnOppositeEdge(localCell,2,iEdge) = relAngle1 / (relAngle1 + relAngle2)
+
+               distToOppositeEdge(localCell,iEdge) = distToOppositeEdge(localCell,iEdge) &
+                  + weightsOnOppositeEdge(localCell,2,iEdge)*dist(localEdge2)*cos(relAngle2)
+
+            end do
+
+         end do
+
+      end if
+
+   !--------------------------------------------------------------------
+
+   end subroutine ocn_meshOppositeEdges !}}}
+
+!***********************************************************************
 end module ocn_mesh
 
 !|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||

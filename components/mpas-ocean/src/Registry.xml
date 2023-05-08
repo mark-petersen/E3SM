@@ -233,6 +233,18 @@
 					description="Horizontal viscosity, $\nu_{2h}$. If config_hmix_use_ref_cell_width = .true. then $\nu_h$ = config_mom_del2*(cellWidth / config_hmix_use_ref_cell_width). If config_hmix_use_ref_cell_width = .false. then it is referenced to the smallest cell."
 					possible_values="any positive real"
 		/>
+		<nml_option name="config_use_mom_del2_small_stencil_reg" type="logical" default_value=".false."
+					description="If true, include the small stencil finite difference approximation for the Laplacian horizontal mixing is used on the momentum equation. This is the version for a regular hex mesh, where only a single opposite edge on each side is considered."
+					possible_values=".true. or .false."
+		/>
+		<nml_option name="config_use_mom_del2_small_stencil" type="logical" default_value=".false."
+					description="If true, include the small stencil finite difference approximation for the Laplacian horizontal mixing is used on the momentum equation.  This is the version for a general mesh (irregular), where two opposite edges on each side are considered."
+					possible_values=".true. or .false."
+		/>
+		<nml_option name="config_mom_del2_small_stencil_factor" type="real" default_value="0.5" units="non-dimensional"
+					description="If config_use_mom_del2_small_stencil=.true., then use this weight for the small stencil del2, which removes gridscale noise and (1-wt) for a coefficient for the standard del2 operator."
+					possible_values="any positive real"
+		/>
 		<nml_option name="config_use_tracer_del2" type="logical" default_value=".false."
 					description="If true, Laplacian horizontal mixing is used on the tracer equation."
 					possible_values=".true. or .false."
@@ -2442,6 +2454,15 @@
 		/>
 		<var name="coeffs_reconstruct" type="real" dimensions="R3 maxEdges nCells" units="1"
 			 description="Coefficients to reconstruct velocity vectors at cells centers."
+		/>
+		<var name="edgesOppositeEdge" type="integer" dimensions="TWO TWO nEdges"
+			 description="Given an edge, specify the edges furthest from that edge in each of the neighboring cells. The first index corresponds to the same cell as cellsOnEdge. The second index is 1 for furthest, and 2 for second furthest."
+		/>
+		<var name="weightsOnOppositeEdge" type="real" dimensions="TWO TWO nEdges" units="1"
+			 description="These are the weights when adding the edges specified by edgesOppositeEdge to reconstruct the velocity on the opposite side of the cell."
+		/>
+		<var name="distToOppositeEdge" type="real" dimensions="TWO nEdges" units="1"
+			 description="Distance to the opposite side of cell if projecting the cell normal directly out from the edge. The first index corresponds to the same cell as cellsOnEdge."
 		/>
 		<var name="minLevelCell" type="integer" dimensions="nCells" default_value="1"
 			 description="Index to the first active ocean cell in each column."
