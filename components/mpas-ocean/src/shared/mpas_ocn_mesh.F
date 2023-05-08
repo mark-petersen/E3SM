@@ -158,6 +158,9 @@ module ocn_mesh
    real(kind=RKIND), public, dimension(:, :), allocatable :: &
       edgeAreaFractionOfCell
 
+   integer, public, dimension(:,:,:), pointer :: edgesOppositeEdge
+   real (kind=RKIND), public, dimension(:,:,:), pointer :: weightsOnOppositeEdge
+
    !}}}
 
    !----------------------------------------------------------------------------
@@ -470,6 +473,10 @@ contains
                                cellTangentPlane)
       call mpas_pool_get_array(meshPool, 'coeffs_reconstruct', &
                                coeffs_reconstruct)
+      call mpas_pool_get_array(meshPool, 'edgesOppositeEdge', &
+                   edgesOppositeEdge)
+      call mpas_pool_get_array(meshPool, 'weightsOnOppositeEdge', &
+                   weightsOnOppositeEdge)
 
       ! For masks, we wish to convert to real multiplicative masks
       ! so retrieve integer version pointers and allocate real masks
@@ -658,6 +665,8 @@ contains
          !$acc                   edgeNormalVectors,        &
          !$acc                   localVerticalUnitVectors, &
          !$acc                   cellTangentPlane,         &
+         !$acc                   edgesOppositeEdge,        &
+         !$acc                   weightsOnOppositeEdge,    &
          !$acc                   coeffs_reconstruct)
 
 !-------------------------------------------------------------------------------
@@ -788,6 +797,8 @@ contains
       !$acc                  edgeNormalVectors, &
       !$acc                  localVerticalUnitVectors, &
       !$acc                  cellTangentPlane,  &
+      !$acc                  edgesOppositeEdge,        &
+      !$acc                  weightsOnOppositeEdge,    &
       !$acc                  coeffs_reconstruct)
 
       ! Reset all scalars to zero
@@ -870,6 +881,8 @@ contains
                edgeNormalVectors, &
                localVerticalUnitVectors, &
                cellTangentPlane, &
+               edgesOppositeEdge, &
+               weightsOnOppositeEdge, &
                coeffs_reconstruct)
 
 #ifdef MPAS_OPENACC
