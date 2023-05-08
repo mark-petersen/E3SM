@@ -233,6 +233,14 @@
 					description="Horizontal viscosity, $\nu_{2h}$. If config_hmix_use_ref_cell_width = .true. then $\nu_h$ = config_mom_del2*(cellWidth / config_hmix_use_ref_cell_width). If config_hmix_use_ref_cell_width = .false. then it is referenced to the smallest cell."
 					possible_values="any positive real"
 		/>
+		<nml_option name="config_use_mom_del2_small_stencil" type="logical" default_value=".false."
+					description="If true, include the small stencil finite difference approximation for the Laplacian horizontal mixing is used on the momentum equation."
+					possible_values=".true. or .false."
+		/>
+		<nml_option name="config_mom_del2_small_stencil_factor" type="real" default_value="0.5" units="non-dimensional"
+					description="If config_use_mom_del2_small_stencil=.true., then use this weight for the small stencil del2, which removes gridscale noise and (1-wt) for a coefficient for the standard del2 operator."
+					possible_values="any positive real"
+		/>
 		<nml_option name="config_use_tracer_del2" type="logical" default_value=".false."
 					description="If true, Laplacian horizontal mixing is used on the tracer equation."
 					possible_values=".true. or .false."
