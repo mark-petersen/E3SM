@@ -1846,6 +1846,84 @@ contains
 
 !***********************************************************************
 
+!***********************************************************************
+!
+!  routine ocn_meshOppositeEdges
+!
+!> \brief  Computes edgesOppositeEdge and weightsOnOppositeEdge
+!> \author Mark Petersen
+!> \date   May 2023
+!> \details
+!>  This routine computes edgesOppositeEdge and weightsOnOppositeEdge
+!
+!-----------------------------------------------------------------------
+
+		<var name="edgesOppositeEdge" type="integer" dimensions="TWO TWO nEdges"
+			 description="Given an edge, specify the edges furthest from that edge in each of the neighboring cells. The first index corresponds to the same cell as cellsOnEdge. The second index is 1 for furthest, and 2 for second furthest."
+		/>
+		<var name="weightsOnOppositeEdge" type="real" dimensions="TWO TWO nEdges" units="1"
+   subroutine ocn_meshOppositeEdges() !{{{
+
+      !-----------------------------------------------------------------
+      ! local variables
+      !-----------------------------------------------------------------
+
+      integer :: &
+         iEdge,       &! loop index/address for edges
+         cell1, cell2  ! cell addresses for neighbors across edge
+
+      real (kind=RKIND) :: &
+         cellWidth,   &! reference cell width for scaling
+         avgDensity    ! avg mesh density across edge
+
+      ! End preamble
+      !-------------
+      ! Begin code
+
+      if (config_use_mom_del2_small_stencil) then
+            ! Mesh scaling is set by areaCell and and an input
+            ! reference widht config_hmix_ref_cell_width
+            ! See description of config_hmix_ref_cell_width in
+            ! Registry.xml for more detail.
+            do iEdge = 1, nEdgesAll
+               cell1 = cellsOnEdge(1,iEdge)
+               cell2 = cellsOnEdge(2,iEdge)
+               ! Effective cell width at edge iEdge, assuming
+               ! neighboring cells are circles for this calculation.
+               cellWidth = 2.0_RKIND* &
+                           sqrt((areaCell(cell1) + areaCell(cell2))/ &
+                                2.0_RKIND/pii)
+               meshScalingDel2(iEdge) =  cellWidth/ &
+                                         config_hmix_ref_cell_width
+               meshScalingDel4(iEdge) = (cellWidth/ &
+                                         config_hmix_ref_cell_width)**3
+            end do
+
+         else ! not using ref cell width
+            ! Mesh scaling is set by meshDensity. This is both confusing
+            ! and inconvenient, as the flags like config_mom_del2 need
+            ! to be reset for every resolution. It is kept for backwards
+            ! compatibility, but should become defunct.
+            ! del2 scales as dc**1, del4 scales as dc**3
+            do iEdge = 1, nEdgesAll
+               cell1 = cellsOnEdge(1,iEdge)
+               cell2 = cellsOnEdge(2,iEdge)
+               avgDensity = (meshDensity(cell1) + meshDensity(cell2))/ &
+                            2.0_RKIND
+               meshScalingDel2(iEdge) = 1.0_RKIND/ &
+                  (avgDensity/config_maxMeshDensity)**(1.0_RKIND/4.0_RKIND)
+               meshScalingDel4(iEdge) = 1.0_RKIND/ &
+                  (avgDensity/config_maxMeshDensity)**(3.0_RKIND/4.0_RKIND)
+            end do
+         end if
+
+      end if
+
+   !--------------------------------------------------------------------
+
+   end subroutine ocn_meshOppositeEdges !}}}
+
+!***********************************************************************
 end module ocn_mesh
 
 !|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
