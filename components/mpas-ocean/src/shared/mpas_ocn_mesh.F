@@ -160,6 +160,7 @@ module ocn_mesh
 
    integer, public, dimension(:,:,:), pointer :: edgesOppositeEdge
    real (kind=RKIND), public, dimension(:,:,:), pointer :: weightsOnOppositeEdge
+   real (kind=RKIND), public, dimension(:,:), pointer :: distToOppositeEdge
 
    !}}}
 
@@ -477,6 +478,8 @@ contains
                    edgesOppositeEdge)
       call mpas_pool_get_array(meshPool, 'weightsOnOppositeEdge', &
                    weightsOnOppositeEdge)
+      call mpas_pool_get_array(meshPool, 'distToOppositeEdge', &
+                   distToOppositeEdge)
 
       ! For masks, we wish to convert to real multiplicative masks
       ! so retrieve integer version pointers and allocate real masks
@@ -667,6 +670,7 @@ contains
          !$acc                   cellTangentPlane,         &
          !$acc                   edgesOppositeEdge,        &
          !$acc                   weightsOnOppositeEdge,    &
+         !$acc                   distToOppositeEdge,       &
          !$acc                   coeffs_reconstruct)
 
 !-------------------------------------------------------------------------------
@@ -799,6 +803,7 @@ contains
       !$acc                  cellTangentPlane,  &
       !$acc                  edgesOppositeEdge,        &
       !$acc                  weightsOnOppositeEdge,    &
+      !$acc                  distToOppositeEdge,    &
       !$acc                  coeffs_reconstruct)
 
       ! Reset all scalars to zero
@@ -883,6 +888,7 @@ contains
                cellTangentPlane, &
                edgesOppositeEdge, &
                weightsOnOppositeEdge, &
+               distToOppositeEdge, &
                coeffs_reconstruct)
 
 #ifdef MPAS_OPENACC
@@ -1858,10 +1864,6 @@ contains
 !
 !-----------------------------------------------------------------------
 
-		<var name="edgesOppositeEdge" type="integer" dimensions="TWO TWO nEdges"
-			 description="Given an edge, specify the edges furthest from that edge in each of the neighboring cells. The first index corresponds to the same cell as cellsOnEdge. The second index is 1 for furthest, and 2 for second furthest."
-		/>
-		<var name="weightsOnOppositeEdge" type="real" dimensions="TWO TWO nEdges" units="1"
    subroutine ocn_meshOppositeEdges() !{{{
 
       !-----------------------------------------------------------------
@@ -1870,52 +1872,67 @@ contains
 
       integer :: &
          iEdge,       &! loop index/address for edges
-         cell1, cell2  ! cell addresses for neighbors across edge
+         jEdge, iCell, &
+         localEdge, localCell, &
+         localEdge1, localEdge2, &
+         edge1, edge2
 
       real (kind=RKIND) :: &
-         cellWidth,   &! reference cell width for scaling
-         avgDensity    ! avg mesh density across edge
+         relAngle1, relAngle2
+
+      real (kind=RKIND), dimension(maxEdges) :: &
+         dist
 
       ! End preamble
       !-------------
       ! Begin code
 
       if (config_use_mom_del2_small_stencil) then
-            ! Mesh scaling is set by areaCell and and an input
-            ! reference widht config_hmix_ref_cell_width
-            ! See description of config_hmix_ref_cell_width in
-            ! Registry.xml for more detail.
-            do iEdge = 1, nEdgesAll
-               cell1 = cellsOnEdge(1,iEdge)
-               cell2 = cellsOnEdge(2,iEdge)
-               ! Effective cell width at edge iEdge, assuming
-               ! neighboring cells are circles for this calculation.
-               cellWidth = 2.0_RKIND* &
-                           sqrt((areaCell(cell1) + areaCell(cell2))/ &
-                                2.0_RKIND/pii)
-               meshScalingDel2(iEdge) =  cellWidth/ &
-                                         config_hmix_ref_cell_width
-               meshScalingDel4(iEdge) = (cellWidth/ &
-                                         config_hmix_ref_cell_width)**3
+
+         ! edgesOppositeEdge: Given an edge, specify the edges furthest from
+         ! that edge in each of the neighboring cells. The first index
+         ! corresponds to the same cell as cellsOnEdge. The second index is 1 for
+         ! furthest, and 2 for second furthest.
+
+         ! weightsOnOppositeEdge" type="real" dimensions="TWO TWO nEdges" units="1"
+
+         do iEdge = 1, nEdgesOwned
+            do localCell = 1,2
+               iCell = cellsOnEdge(localCell,iEdge)
+               do localEdge = 1,nEdgesOnCell(iCell)
+                   jEdge = edgesOnCell(localEdge,iCell)
+                   dist(localEdge) = &
+                          (xEdge(iEdge) - xEdge(jEdge))**2 &
+                        + (yEdge(iEdge) - yEdge(jEdge))**2 &
+                        + (zEdge(iEdge) - zEdge(jEdge))**2
+               end do
+               ! find furthest edge
+               localEdge1 = maxloc(dist,1)
+               edgesOppositeEdge(localCell,1,iEdge) = edgesOnCell(localEdge1,iCell)
+               ! note I could have used this for the local edge number relative to the cell:
+               ! edgesOppositeEdge(localCell,1,iEdge) = localEdge1
+               edge1 = edgesOppositeEdge(localCell,1,iEdge)
+               relAngle1 = abs(mod(angleEdge(edge1) - angleEdge(iEdge),2.0_RKIND*pii)) !think about sign and mod
+               ! Weights are angle of the other one. As relative angle approaches zero, that edge
+               ! gets the full weight.
+               weightsOnOppositeEdge(localCell,1,iEdge) = relAngle2 / (relAngle1 + relAngle2)
+               distToOppositeEdge(localCell,iEdge) = weightsOnOppositeEdge(localCell,1,iEdge)*dist(localEdge1)*cos(relAngle1)
+
+               ! find second furthest edge
+               ! zero out furthest edge:
+               dist(localEdge2) = 0.0_RKIND
+               localEdge2 = maxloc(dist,1)
+               edgesOppositeEdge(localCell,2,iEdge) = edgesOnCell(localEdge2,iCell)
+               edge2 = edgesOppositeEdge(localCell,2,iEdge)
+               relAngle2 = abs(mod(angleEdge(edge2) - angleEdge(iEdge),2.0_RKIND*pii)) !think about sign and mod
+               weightsOnOppositeEdge(localCell,2,iEdge) = relAngle1 / (relAngle1 + relAngle2)
+
+               distToOppositeEdge(localCell,iEdge) = distToOppositeEdge(localCell,iEdge) &
+                  + weightsOnOppositeEdge(localCell,2,iEdge)*dist(localEdge2)*cos(relAngle2)
+
             end do
 
-         else ! not using ref cell width
-            ! Mesh scaling is set by meshDensity. This is both confusing
-            ! and inconvenient, as the flags like config_mom_del2 need
-            ! to be reset for every resolution. It is kept for backwards
-            ! compatibility, but should become defunct.
-            ! del2 scales as dc**1, del4 scales as dc**3
-            do iEdge = 1, nEdgesAll
-               cell1 = cellsOnEdge(1,iEdge)
-               cell2 = cellsOnEdge(2,iEdge)
-               avgDensity = (meshDensity(cell1) + meshDensity(cell2))/ &
-                            2.0_RKIND
-               meshScalingDel2(iEdge) = 1.0_RKIND/ &
-                  (avgDensity/config_maxMeshDensity)**(1.0_RKIND/4.0_RKIND)
-               meshScalingDel4(iEdge) = 1.0_RKIND/ &
-                  (avgDensity/config_maxMeshDensity)**(3.0_RKIND/4.0_RKIND)
-            end do
-         end if
+         end do
 
       end if
 
