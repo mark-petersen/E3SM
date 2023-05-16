@@ -1887,6 +1887,9 @@ contains
       !-------------
       ! Begin code
 
+      ! to do:
+      ! Add these variables to a package, control package with flags.
+
       if (config_use_mom_del2_small_stencil) then
 
          ! edgesOppositeEdge: Given an edge, specify the edges furthest from
