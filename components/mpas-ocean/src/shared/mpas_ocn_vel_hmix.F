@@ -80,7 +80,7 @@ contains
 !
 !-----------------------------------------------------------------------
 
-   subroutine ocn_vel_hmix_tend(div, relVort, tend, err)!{{{
+   subroutine ocn_vel_hmix_tend(div, relVort, normalVelocity, tend, err)!{{{
 
       !-----------------------------------------------------------------
       ! input variables
@@ -88,7 +88,8 @@ contains
 
       real (kind=RKIND), dimension(:,:), intent(in) :: &
          div,           &!< [in] velocity divergence
-         relVort         !< [in] relative vorticity
+         relVort,       &!< [in] relative vorticity
+         normalVelocity  !< [in] Horizontal velocity
 
       !-----------------------------------------------------------------
       ! input/output variables
@@ -125,7 +126,7 @@ contains
       ! note that the user can choose multiple options and the
       !   tendencies will be added together
 
-      call ocn_vel_hmix_del2_tend(div, relVort, tend, err1)
+      call ocn_vel_hmix_del2_tend(div, relVort, normalVelocity, tend, err1)
       err = ior(err1, err)
 
       call ocn_vel_hmix_leith_tend(div, relVort, tend, err1)

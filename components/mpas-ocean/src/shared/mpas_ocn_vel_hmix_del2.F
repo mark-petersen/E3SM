@@ -78,7 +78,7 @@ contains
 !
 !-----------------------------------------------------------------------
 
-   subroutine ocn_vel_hmix_del2_tend(div, relVort, tend, err)!{{{
+   subroutine ocn_vel_hmix_del2_tend(div, relVort, normalVelocity, tend, err)!{{{
 
       !-----------------------------------------------------------------
       ! input variables
@@ -86,7 +86,8 @@ contains
 
       real (kind=RKIND), dimension(:,:), intent(in) :: &
          div,           &!< [in] velocity divergence
-         relVort         !< [in] relative vorticity
+         relVort,       &!< [in] relative vorticity
+         normalVelocity  !< [in] Horizontal velocity
 
       !-----------------------------------------------------------------
       ! input /output variables
@@ -108,11 +109,13 @@ contains
       integer ::           &
          iEdge, k,         &! loop indices for edge, vertical loops
          cell1, cell2,     &! neighbor cell addresses across edge
+         edge1, edge2,     &! neighbor cell addresses across edge
          vertex1, vertex2   ! neighbor vertex addresses along edge
 
       real (kind=RKIND) :: &
          uDiff,            &! velocity diffusion
          dcEdgeInv,        &! 1/dcEdge
+         dcEdgeInv2,        &! 1/dcEdge^2
          dvEdgeInv,        &! 1/dvEdge
          visc2              ! scaled viscosity coefficient
 
@@ -129,37 +132,34 @@ contains
       call mpas_timer_start("vel del2")
 
       if (config_use_mom_del2_small_stencil) then
-#ifdef MPAS_OPENACC
-      !$acc parallel loop &
-      !$acc    present(cellsOnEdge, maxLevelEdgeTop, minLevelEdgeBot, &
-      !$acc            verticesOnEdge, edgeMask, dcEdge, dvEdge, &
-      !$acc            meshScalingDel2, div, relVort, tend) &
-      !$acc    private(k, cell1, cell2, uDiff, vertex1, vertex2, &
-      !$acc            dcEdgeInv, dvEdgeInv, visc2)
-#else
-      !$omp parallel
-      !$omp do schedule(runtime) &
-      !$omp    private(k, cell1, cell2, uDiff, vertex1, vertex2, &
-      !$omp            dcEdgeInv, dvEdgeInv, visc2)
-#endif
-!<nml_option name="config_use_mom_del2_small_stencil" type="logical" default_value=".false."
-!description="If true, include the small stencil finite difference approximation for the Laplacian horizontal mixing is used on the momentum equation."
-!<nml_option name="config_mom_del2_small_stencil_factor" type="real" default_value="0.5" units="non-dimensional"
-!description="If config_use_mom_del2_small_stencil=.true., then use this weight for the small stencil del2, which removes gridscale noise and (1-wt) for a coefficient for the standard del2 operator."
+!  #ifdef MPAS_OPENACC
+!        !$acc parallel loop &
+!        !$acc    present(cellsOnEdge, maxLevelEdgeTop, minLevelEdgeBot, &
+!        !$acc            verticesOnEdge, edgeMask, dcEdge, dvEdge, &
+!        !$acc            meshScalingDel2, div, relVort, tend) &
+!        !$acc    private(k, cell1, cell2, uDiff, vertex1, vertex2, &
+!        !$acc            dcEdgeInv, dvEdgeInv, visc2)
+!  #else
+!        !$omp parallel
+!        !$omp do schedule(runtime) &
+!        !$omp    private(k, cell1, cell2, uDiff, vertex1, vertex2, &
+!        !$omp            dcEdgeInv, dvEdgeInv, visc2)
+!  #endif
       do iEdge = 1, nEdgesOwned
          cell1 = cellsOnEdge(1,iEdge)
          cell2 = cellsOnEdge(2,iEdge)
          vertex1 = verticesOnEdge(1,iEdge)
          vertex2 = verticesOnEdge(2,iEdge)
+         edge1 = edgesOppositeEdge(1,1,iEdge)
+         edge2 = edgesOppositeEdge(2,1,iEdge)
 
          dcEdgeInv = 1.0_RKIND / dcEdge(iEdge)
+         dcEdgeInv2 = 1.0_RKIND / (dcEdge(iEdge)*dcEdge(iEdge))
          dvEdgeInv = 1.0_RKIND / dvEdge(iEdge)
 
          visc2 =  viscDel2*meshScalingDel2(iEdge)
 
          do k = minLevelEdgeBot(iEdge), maxLevelEdgeTop(iEdge)
-             uRt = w1 * ( u1 * cos( angleEdge1) + v1*cos(angleEdge2)) &
-                 + w1 * ( u1 * cos( angleEdge1) + v1*cos(angleEdge2)) &
 
             ! Here -( relativeVorticity(k,vertex2) - 
             !         relativeVorticity(k,vertex1) ) / dvEdge(iEdge)
@@ -172,18 +172,59 @@ contains
                      * ( (div(k,cell2) - div(k,cell1))*dcEdgeInv &
                      -(relVort(k,vertex2)-relVort(k,vertex1))*dvEdgeInv ) & 
                    + del2_small_stencil_factor & ! this is new version !!!!! 
-                     * ( (div(k,cell2) - div(k,cell1))*dcEdgeInv &
-                     -(relVort(k,vertex2)-relVort(k,vertex1))*dvEdgeInv ) 
+                     * ( -2.0_RKIND*normalVelocity(k,iEdge) &
+                         + weightsOnOppositeEdge(1,1,iEdge) * normalVelocity(k,edge1) &
+                         + weightsOnOppositeEdge(2,1,iEdge) * normalVelocity(k,edge2) ) &
+                     * dcEdgeInv2
 
             tend(k,iEdge) = tend(k,iEdge) + &
                             edgeMask(k,iEdge)*visc2*uDiff
 
          end do
       end do
-#ifndef MPAS_OPENACC
-      !$omp end do
-      !$omp end parallel
-#endif
+      end if
+
+      !if (config_use_mom_del2_small_stencil) then
+      !do iEdge = 1, nEdgesOwned
+      !   cell1 = cellsOnEdge(1,iEdge)
+      !   cell2 = cellsOnEdge(2,iEdge)
+      !   vertex1 = verticesOnEdge(1,iEdge)
+      !   vertex2 = verticesOnEdge(2,iEdge)
+
+      !   dcEdgeInv = 1.0_RKIND / dcEdge(iEdge)
+      !   dvEdgeInv = 1.0_RKIND / dvEdge(iEdge)
+
+      !   visc2 =  viscDel2*meshScalingDel2(iEdge)
+
+      !   do k = minLevelEdgeBot(iEdge), maxLevelEdgeTop(iEdge)
+      !       uRt = w1 * ( u1 * cos( angleEdge1) + v1*cos(angleEdge2)) &
+      !           + w1 * ( u1 * cos( angleEdge1) + v1*cos(angleEdge2)) &
+
+      !      ! Here -( relativeVorticity(k,vertex2) - 
+      !      !         relativeVorticity(k,vertex1) ) / dvEdge(iEdge)
+      !      ! is - \nabla relativeVorticity pointing from vertex 2 
+      !      ! to vertex 1, or equivalently
+      !      ! + k \times \nabla relativeVorticity pointing from cell1 
+      !      ! to cell2.
+! to d!o: check omp acc etc.
+      !      uDiff = (1.0_RKIND - del2_small_stencil_factor)  &! This is standard version
+      !               * ( (div(k,cell2) - div(k,cell1))*dcEdgeInv &
+      !               -(relVort(k,vertex2)-relVort(k,vertex1))*dvEdgeInv ) & 
+      !             + del2_small_stencil_factor & ! this is new version !!!!! 
+      !               * ( (div(k,cell2) - div(k,cell1))*dcEdgeInv &
+      !               -(relVort(k,vertex2)-relVort(k,vertex1))*dvEdgeInv ) 
+
+      !      tend(k,iEdge) = tend(k,iEdge) + &
+      !                      edgeMask(k,iEdge)*visc2*uDiff
+
+      !   end do
+      !end do
+      !end if
+
+!  #ifndef MPAS_OPENACC
+!        !$omp end do
+!        !$omp end parallel
+!  #endif
       else ! config_use_mom_del2_small_stencil is off (original)
 #ifdef MPAS_OPENACC
       !$acc parallel loop &

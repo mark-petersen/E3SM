@@ -440,7 +440,7 @@ contains
       endif
 
       ! Add horizontal mixing
-      call ocn_vel_hmix_tend(divergence, relativeVorticity, tendVel,err)
+      call ocn_vel_hmix_tend(divergence, relativeVorticity, normalVelocity, tendVel,err)
 
       ! Add forcing and bottom drag
       call ocn_vel_forcing_tend(normalVelocity, sfcFlxAttCoeff, &
