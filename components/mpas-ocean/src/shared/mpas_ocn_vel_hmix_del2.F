@@ -110,7 +110,6 @@ contains
       integer ::           &
          iEdge, k,         &! loop indices for edge, vertical loops
          cell1, cell2,     &! neighbor cell addresses across edge
-         edge1, edge2,     &! neighbor cell addresses across edge
          vertex1, vertex2   ! neighbor vertex addresses along edge
 
       real (kind=RKIND) :: &
@@ -118,6 +117,7 @@ contains
          dcEdgeInv,        &! 1/dcEdge
          dcEdgeInv2,        &! 1/dcEdge^2
          dvEdgeInv,        &! 1/dvEdge
+         dvEdgeInv2,        &! 1/(dvEdge*3/2)^2
          visc2              ! scaled viscosity coefficient
 
       !-----------------------------------------------------------------
@@ -151,13 +151,14 @@ contains
          cell2 = cellsOnEdge(2,iEdge)
          vertex1 = verticesOnEdge(1,iEdge)
          vertex2 = verticesOnEdge(2,iEdge)
-         edge1 = edgesOppositeEdge(1,1,iEdge)
-         edge2 = edgesOppositeEdge(2,1,iEdge)
 
 !print *, 'iEdge, edgesOppositeEdge(1,1,iEdge),edgesOppositeEdge(2,1,iEdge)',iEdge, edgesOppositeEdge(1,1,iEdge),edgesOppositeEdge(2,1,iEdge)
          dcEdgeInv = 1.0_RKIND / dcEdge(iEdge)
          dcEdgeInv2 = 1.0_RKIND / (dcEdge(iEdge)*dcEdge(iEdge))
          dvEdgeInv = 1.0_RKIND / dvEdge(iEdge)
+         ! 9/4 is from 1/d^2 where d is distance from edge center to side cell center, which is 
+         ! dcEdge*sqrt(3)/2 = dvEdge*3/2
+         dvEdgeInv2 = 4.0_RKIND / (dvEdge(iEdge)*dvEdge(iEdge)*9.0_RKIND)
 
          visc2 =  viscDel2*meshScalingDel2(iEdge)
 
@@ -173,11 +174,17 @@ contains
             uDiff = (1.0_RKIND - del2_small_stencil_factor)  &! This is standard version
                      * ( (div(k,cell2) - div(k,cell1))*dcEdgeInv &
                      -(relVort(k,vertex2)-relVort(k,vertex1))*dvEdgeInv ) & 
-                   + del2_small_stencil_factor & ! this is new version !!!!! 
-                     * ( -2.0_RKIND*normalVelocity(k,iEdge) &
-                         + weightsOnOppositeEdge(1,1,iEdge) * normalVelocity(k,edge1) &
-                         + weightsOnOppositeEdge(2,1,iEdge) * normalVelocity(k,edge2) ) &
-                     * dcEdgeInv2
+                   + del2_small_stencil_factor * (& ! this is new version !!!!! 
+                      ( -2.0_RKIND*normalVelocity(k,iEdge) &
+                         + weightsOnOppositeEdge(1,1,iEdge) * normalVelocity(k,edgesOppositeEdge(1,1,iEdge)) &
+                         + weightsOnOppositeEdge(2,1,iEdge) * normalVelocity(k,edgesOppositeEdge(2,1,iEdge)) ) &
+                     * dcEdgeInv2 &
+                     +( -2.0_RKIND*normalVelocity(k,iEdge) + 0.5_RKIND &
+                       *(  weightsOnSideEdge(1,1,iEdge) * normalVelocity(k,edgesSideEdge(1,1,iEdge)) &
+                         + weightsOnSideEdge(1,2,iEdge) * normalVelocity(k,edgesSideEdge(1,2,iEdge)) &
+                         + weightsOnSideEdge(2,1,iEdge) * normalVelocity(k,edgesSideEdge(2,1,iEdge)) &
+                         + weightsOnSideEdge(2,2,iEdge) * normalVelocity(k,edgesSideEdge(2,2,iEdge)) ) ) &
+                     * dvEdgeInv2 )
 
             tend(k,iEdge) = tend(k,iEdge) + &
                             edgeMask(k,iEdge)*visc2*uDiff

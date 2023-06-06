@@ -2461,6 +2461,12 @@
 		<var name="weightsOnOppositeEdge" type="real" dimensions="TWO TWO nEdges" units="1"
 			 description="These are the weights when adding the edges specified by edgesOppositeEdge to reconstruct the velocity on the opposite side of the cell."
 		/>
+		<var name="edgesSideEdge" type="integer" dimensions="TWO TWO nEdges"
+			 description="Given an edge, specify the edges parallel to that edge on the left and right side The first index corresponds to the same cell connected to each vertex. The second index for each of the two parallel edges on that neighboring cell."
+		/>
+		<var name="weightsOnSideEdge" type="real" dimensions="TWO TWO nEdges" units="1"
+			 description="These are the weights when adding the edges specified by edgesSideEdge"
+		/>
 		<var name="distToOppositeEdge" type="real" dimensions="TWO nEdges" units="1"
 			 description="Distance to the opposite side of cell if projecting the cell normal directly out from the edge. The first index corresponds to the same cell as cellsOnEdge."
 		/>

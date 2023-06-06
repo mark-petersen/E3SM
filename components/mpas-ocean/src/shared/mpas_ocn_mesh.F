@@ -160,6 +160,8 @@ module ocn_mesh
 
    integer, public, dimension(:,:,:), pointer :: edgesOppositeEdge
    real (kind=RKIND), public, dimension(:,:,:), pointer :: weightsOnOppositeEdge
+   integer, public, dimension(:,:,:), pointer :: edgesSideEdge
+   real (kind=RKIND), public, dimension(:,:,:), pointer :: weightsOnSideEdge
    real (kind=RKIND), public, dimension(:,:), pointer :: distToOppositeEdge
 
    !}}}
@@ -478,6 +480,10 @@ contains
                    edgesOppositeEdge)
       call mpas_pool_get_array(meshPool, 'weightsOnOppositeEdge', &
                    weightsOnOppositeEdge)
+      call mpas_pool_get_array(meshPool, 'edgesSideEdge', &
+                   edgesSideEdge)
+      call mpas_pool_get_array(meshPool, 'weightsOnSideEdge', &
+                   weightsOnSideEdge)
       call mpas_pool_get_array(meshPool, 'distToOppositeEdge', &
                    distToOppositeEdge)
 
@@ -672,6 +678,8 @@ contains
          !$acc                   cellTangentPlane,         &
          !$acc                   edgesOppositeEdge,        &
          !$acc                   weightsOnOppositeEdge,    &
+         !$acc                   edgesSideEdge,        &
+         !$acc                   weightsOnSideEdge,    &
          !$acc                   distToOppositeEdge,       &
          !$acc                   coeffs_reconstruct)
 
@@ -805,6 +813,8 @@ contains
       !$acc                  cellTangentPlane,  &
       !$acc                  edgesOppositeEdge,        &
       !$acc                  weightsOnOppositeEdge,    &
+      !$acc                  edgesSideEdge,        &
+      !$acc                  weightsOnSideEdge,    &
       !$acc                  distToOppositeEdge,    &
       !$acc                  coeffs_reconstruct)
 
@@ -890,6 +900,8 @@ contains
                cellTangentPlane, &
                edgesOppositeEdge, &
                weightsOnOppositeEdge, &
+               edgesSideEdge, &
+               weightsOnSideEdge, &
                distToOppositeEdge, &
                coeffs_reconstruct)
 
@@ -1874,10 +1886,10 @@ contains
 
       integer :: &
          iEdge,       &! loop index/address for edges
-         jEdge, iCell, &
-         localEdge, localCell, &
+         jEdge, iCell, iVertex, &
+         localEdge, localCell, localVertex, &
          localEdge1, localEdge2, &
-         edge1, edge2
+         edge1, edge2,i,j
 
       real (kind=RKIND) :: &
          relAngle1, relAngle2
@@ -1903,6 +1915,7 @@ contains
 
          !print *, 'angleEdge(edge1), angleEdge(iEdge), relAngle1, weightsOnOppositeEdge(localCell,1,iEdge)'
          do iEdge = 1, nEdgesOwned
+            ! compute edgesOppositeEdge
             do localCell = 1,2
                iCell = cellsOnEdge(localCell,iEdge)
                ! compare angles
@@ -1927,6 +1940,40 @@ contains
                endif
                !print *, iEdge,jEdge,angleEdge(iEdge), angleEdge(jEdge), relAngle1,weightsOnOppositeEdge(localCell,1,iEdge)
 
+            end do
+
+            ! compute edgesSideEdge
+            do localVertex = 1,2
+               ! Find cell at end of vertex
+               iVertex = verticesOnEdge(localVertex,iEdge)
+               do i = 1,3
+                  iCell = cellsOnVertex(i,iVertex)
+                  if ((iCell.ne.cellsOnEdge(1,iEdge)).and. &
+                      (iCell.ne.cellsOnEdge(2,iEdge)) ) then
+                     ! iCell is to the side of iEdge
+                     j = 1
+                     do localEdge = 1,nEdgesOnCell(iCell)
+                         jEdge = edgesOnCell(localEdge,iCell)
+                         relAngle1 = mod(abs(angleEdge(jEdge) - angleEdge(iEdge)),pii)
+                         if (relAngle1<1e-12_RKIND) then
+               !print *, iEdge,localVertex,i,localEdge,jEdge,j,angleEdge(iEdge), angleEdge(jEdge), relAngle1
+                            edgesSideEdge(localVertex,j,iEdge) = jEdge
+
+                            relAngle1 = mod(abs(angleEdge(jEdge) - angleEdge(iEdge)),2.0_RKIND*pii)
+                            if (relAngle1.lt.1e-12) then
+                               weightsOnSideEdge(localVertex,j,iEdge) = 1.0_RKIND
+                            elseif (abs(relAngle1-pii).lt.1e-12) then
+                               weightsOnSideEdge(localVertex,j,iEdge) = -1.0_RKIND
+                            else 
+                               call mpas_log_write( &
+                                 ' fatal error: edgesOppositeEdge angle on regular mesh is not 0 or pi', &
+                                 MPAS_LOG_ERR)
+                            endif
+                            j = j + 1
+                         end if 
+                     end do
+                  end if
+               end do
             end do
 
          end do
