@@ -154,6 +154,7 @@ contains
          edge1 = edgesOppositeEdge(1,1,iEdge)
          edge2 = edgesOppositeEdge(2,1,iEdge)
 
+!print *, 'iEdge, edgesOppositeEdge(1,1,iEdge),edgesOppositeEdge(2,1,iEdge)',iEdge, edgesOppositeEdge(1,1,iEdge),edgesOppositeEdge(2,1,iEdge)
          dcEdgeInv = 1.0_RKIND / dcEdge(iEdge)
          dcEdgeInv2 = 1.0_RKIND / (dcEdge(iEdge)*dcEdge(iEdge))
          dvEdgeInv = 1.0_RKIND / dvEdge(iEdge)

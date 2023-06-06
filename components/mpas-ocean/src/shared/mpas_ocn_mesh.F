@@ -532,6 +532,8 @@ contains
       endif
       call ocn_meshScaling()
    
+      call ocn_meshOppositeEdges()
+
       ! Routine calls above initialized the real mask arrays
       ! so convert the meshPool integer pointers here
       do n = 1, nCellsAll+1
@@ -1899,22 +1901,21 @@ contains
 
          ! weightsOnOppositeEdge" type="real" dimensions="TWO TWO nEdges" units="1"
 
+         !print *, 'angleEdge(edge1), angleEdge(iEdge), relAngle1, weightsOnOppositeEdge(localCell,1,iEdge)'
          do iEdge = 1, nEdgesOwned
             do localCell = 1,2
                iCell = cellsOnEdge(localCell,iEdge)
+               ! compare angles
                do localEdge = 1,nEdgesOnCell(iCell)
                    jEdge = edgesOnCell(localEdge,iCell)
-                   dist(localEdge) = &
-                          (xEdge(iEdge) - xEdge(jEdge))**2 &
-                        + (yEdge(iEdge) - yEdge(jEdge))**2
+                   if (iEdge==jEdge) cycle
+                   relAngle1 = mod(abs(angleEdge(jEdge) - angleEdge(iEdge)),pii)
+                   if (relAngle1<1e-12_RKIND) exit
                end do
-               ! find furthest edge
-               localEdge1 = maxloc(dist,1)
-               edgesOppositeEdge(localCell,1,iEdge) = edgesOnCell(localEdge1,iCell)
+               edgesOppositeEdge(localCell,1,iEdge) = jEdge
                ! note I could have used this for the local edge number relative to the cell:
                ! edgesOppositeEdge(localCell,1,iEdge) = localEdge1
-               edge1 = edgesOppositeEdge(localCell,1,iEdge)
-               relAngle1 = abs(mod(angleEdge(edge1) - angleEdge(iEdge),2.0_RKIND*pii)) !think about sign and mod
+               relAngle1 = mod(abs(angleEdge(jEdge) - angleEdge(iEdge)),2.0_RKIND*pii)
                if (relAngle1.lt.1e-12) then
                   weightsOnOppositeEdge(localCell,1,iEdge) = 1.0_RKIND
                elseif (abs(relAngle1-pii).lt.1e-12) then
@@ -1924,6 +1925,7 @@ contains
                     ' fatal error: edgesOppositeEdge angle on regular mesh is not 0 or pi', &
                     MPAS_LOG_ERR)
                endif
+               !print *, iEdge,jEdge,angleEdge(iEdge), angleEdge(jEdge), relAngle1,weightsOnOppositeEdge(localCell,1,iEdge)
 
             end do
 
@@ -1931,54 +1933,57 @@ contains
 
       end if
 
-      if (config_use_mom_del2_small_stencil) then
+      !if (config_use_mom_del2_small_stencil) then
 
-         ! edgesOppositeEdge: Given an edge, specify the edges furthest from
-         ! that edge in each of the neighboring cells. The first index
-         ! corresponds to the same cell as cellsOnEdge. The second index is 1 for
-         ! furthest, and 2 for second furthest.
+      !   ! edgesOppositeEdge: Given an edge, specify the edges furthest from
+      !   ! that edge in each of the neighboring cells. The first index
+      !   ! corresponds to the same cell as cellsOnEdge. The second index is 1 for
+      !   ! furthest, and 2 for second furthest.
 
-         ! weightsOnOppositeEdge" type="real" dimensions="TWO TWO nEdges" units="1"
+      !   ! weightsOnOppositeEdge" type="real" dimensions="TWO TWO nEdges" units="1"
 
-         do iEdge = 1, nEdgesOwned
-            do localCell = 1,2
-               iCell = cellsOnEdge(localCell,iEdge)
-               do localEdge = 1,nEdgesOnCell(iCell)
-                   jEdge = edgesOnCell(localEdge,iCell)
-                   dist(localEdge) = &
-                          (xEdge(iEdge) - xEdge(jEdge))**2 &
-                        + (yEdge(iEdge) - yEdge(jEdge))**2 &
-                        + (zEdge(iEdge) - zEdge(jEdge))**2
-               end do
-               ! find furthest edge
-               localEdge1 = maxloc(dist,1)
-               edgesOppositeEdge(localCell,1,iEdge) = edgesOnCell(localEdge1,iCell)
-               ! note I could have used this for the local edge number relative to the cell:
-               ! edgesOppositeEdge(localCell,1,iEdge) = localEdge1
-               edge1 = edgesOppositeEdge(localCell,1,iEdge)
-               relAngle1 = abs(mod(angleEdge(edge1) - angleEdge(iEdge),2.0_RKIND*pii)) !think about sign and mod
-               ! Weights are angle of the other one. As relative angle approaches zero, that edge
-               ! gets the full weight.
-               weightsOnOppositeEdge(localCell,1,iEdge) = relAngle2 / (relAngle1 + relAngle2)
-               distToOppositeEdge(localCell,iEdge) = weightsOnOppositeEdge(localCell,1,iEdge)*dist(localEdge1)*cos(relAngle1)
+      !   do iEdge = 1, nEdgesOwned
+      !      do localCell = 1,2
+      !         iCell = cellsOnEdge(localCell,iEdge)
+                ! be careful about comparing distances on cartesian meshes
+      !         do localEdge = 1,nEdgesOnCell(iCell)
+      !             jEdge = edgesOnCell(localEdge,iCell)
+      !             dist(localEdge) = &
+      !                    (xEdge(iEdge) - xEdge(jEdge))**2 &
+      !                  + (yEdge(iEdge) - yEdge(jEdge))**2 &
+      !                  + (zEdge(iEdge) - zEdge(jEdge))**2
+      !         end do
+      !         ! find furthest edge
+      !         localEdge1 = maxloc(dist,1)
+      !         edgesOppositeEdge(localCell,1,iEdge) = edgesOnCell(localEdge1,iCell)
+      !         ! note I could have used this for the local edge number relative to the cell:
+      !         ! edgesOppositeEdge(localCell,1,iEdge) = localEdge1
+      !         edge1 = edgesOppositeEdge(localCell,1,iEdge)
+      !         relAngle1 = abs(mod(angleEdge(edge1) - angleEdge(iEdge),2.0_RKIND*pii)) !think about sign and mod
+      !         ! Weights are angle of the other one. As relative angle approaches zero, that edge
+      !         ! gets the full weight.
 
-               ! find second furthest edge
-               ! zero out furthest edge:
-               dist(localEdge2) = 0.0_RKIND
-               localEdge2 = maxloc(dist,1)
-               edgesOppositeEdge(localCell,2,iEdge) = edgesOnCell(localEdge2,iCell)
-               edge2 = edgesOppositeEdge(localCell,2,iEdge)
-               relAngle2 = abs(mod(angleEdge(edge2) - angleEdge(iEdge),2.0_RKIND*pii)) !think about sign and mod
-               weightsOnOppositeEdge(localCell,2,iEdge) = relAngle1 / (relAngle1 + relAngle2)
+      !         ! this is not used yet:
+      !         !weightsOnOppositeEdge(localCell,1,iEdge) = relAngle2 / (relAngle1 + relAngle2)
+      !         !distToOppositeEdge(localCell,iEdge) = weightsOnOppositeEdge(localCell,1,iEdge)*dist(localEdge1)*cos(relAngle1)
 
-               distToOppositeEdge(localCell,iEdge) = distToOppositeEdge(localCell,iEdge) &
-                  + weightsOnOppositeEdge(localCell,2,iEdge)*dist(localEdge2)*cos(relAngle2)
+      !         ! find second furthest edge
+      !         ! zero out furthest edge:
+      !         !dist(localEdge2) = 0.0_RKIND
+      !         !localEdge2 = maxloc(dist,1)
+      !         !edgesOppositeEdge(localCell,2,iEdge) = edgesOnCell(localEdge2,iCell)
+      !         !edge2 = edgesOppositeEdge(localCell,2,iEdge)
+      !         !relAngle2 = abs(mod(angleEdge(edge2) - angleEdge(iEdge),2.0_RKIND*pii)) !think about sign and mod
+      !         !weightsOnOppositeEdge(localCell,2,iEdge) = relAngle1 / (relAngle1 + relAngle2)
 
-            end do
+      !         !distToOppositeEdge(localCell,iEdge) = distToOppositeEdge(localCell,iEdge) &
+      !         !   + weightsOnOppositeEdge(localCell,2,iEdge)*dist(localEdge2)*cos(relAngle2)
 
-         end do
+      !      end do
 
-      end if
+      !   end do
+
+      !end if
 
    !--------------------------------------------------------------------
 
