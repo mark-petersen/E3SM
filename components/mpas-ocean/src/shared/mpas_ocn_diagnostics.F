@@ -79,6 +79,7 @@ module ocn_diagnostics
 
    ! Methods for computing thickness at edges for flux calculations
    integer :: thickEdgeFluxChoice  ! choice of thickness flux type
+   integer :: relative_vorticity_averaging ! choice of vorticity averaging
    integer, parameter :: &
       thickEdgeFluxUnknown = 0, &! type unknown or unset
       thickEdgeFluxCenter  = 1, &! use mean thickness of cell neighbors
@@ -227,7 +228,7 @@ contains
 
       ! inputs: normalVelocity
       ! outputs: relativeVorticity, circulation
-      call ocn_relativeVorticity_circulation(relativeVorticity, circulation, normalVelocity, err)
+      call ocn_relativeVorticity_circulation(relativeVorticity, relativeVorticityCell, relativeVorticityEdge, circulation, normalVelocity, err)
 
       ! inputs: relativeVorticity, layerThickEdgeFlux, normalVelocity, normalTransportVelocity, 
       !         normalGMBolusVelocity
@@ -236,7 +237,7 @@ contains
       ! in and out: vertVelocityTop
       call ocn_diagnostic_solve_vortVel(relativeVorticity, &
              layerThickEdgeFlux, normalVelocity, normalTransportVelocity, &
-             vertVelocityTop, vertTransportVelocityTop, relativeVorticityCell, &
+             vertVelocityTop, vertTransportVelocityTop, &
              divergence, kineticEnergyCell, tangentialVelocity)
 
       !compute vertical velocity due to gm bolus velocity if requested
@@ -455,7 +456,7 @@ contains
          if (landIcePressureOn) then
             call ocn_diagnostic_solve_ssh(forcingPool, ssh, seaIcePressure, &
                    pressureAdjustedSSH, gradSSH, landIceDraft=landIceDraft )
-        else 
+        else
             call ocn_diagnostic_solve_ssh(forcingPool, ssh, seaIcePressure, &
                    pressureAdjustedSSH, gradSSH)
          end if
@@ -471,6 +472,7 @@ contains
       !! ocn_diagnostic_solve_vortVel            :: vertTransportVelocityTop, (diagnostics array)
       !!                                            vertGMBolusVelocityTop, (diagnostics array)
       !!                                            relativeVorticityCell, (diagnostics array)
+      !!                                            relativeVorticityEdge, (diagnostics array)
       !!                                            divergence, (diagnostics array)
       !!                                            kineticEnergyCell, (diagnostics array)
       !!                                            tangentialVelocity (diagnostics array)
@@ -507,6 +509,7 @@ contains
 !     !$acc update host(vertTransportVelocityTop, &
 !     !$acc             vertGMBolusVelocityTop, &
 !     !$acc             relativeVorticityCell, &
+!     !$acc             relativeVorticityEdge, &
 !     !$acc             divergence, &
 !     !$acc             kineticEnergyCell, &
 !     !$acc             tangentialVelocity, &
@@ -564,7 +567,7 @@ contains
 !
 !-----------------------------------------------------------------------
 
-   subroutine ocn_relativeVorticity_circulation(relativeVorticity, circulation, normalVelocity, err)!{{{
+   subroutine ocn_relativeVorticity_circulation(relativeVorticity, relativeVorticityCell, relativeVorticityEdge, circulation, normalVelocity, err)!{{{
 
       !-----------------------------------------------------------------
       !
@@ -582,7 +585,9 @@ contains
       !-----------------------------------------------------------------
 
       real (kind=RKIND), dimension(:,:), intent(out) :: &
-         relativeVorticity
+         relativeVorticity, &
+         relativeVorticityCell, &!< [out] relative vorticity in cell
+         relativeVorticityEdge   !< [out] relative vorticity in edge
 
       real (kind=RKIND), dimension(:,:), intent(out) :: &
          circulation
@@ -596,15 +601,13 @@ contains
       !-----------------------------------------------------------------
 
       integer :: iVertex, iEdge, i, k
+      integer :: iCell, j, nCells, nEdges, vertex1, vertex2
 
-      real (kind=RKIND) :: invAreaTri1, r_tmp
+      real (kind=RKIND) :: invAreaTri1, r_tmp, invAreaCell1, areaEdge
 
-      real (kind=RKIND), dimension(:,:), allocatable :: &
-         relativeVorticityCell
       real (kind=RKIND), dimension(:), allocatable :: &
          areaSum
 
-      allocate(relativeVorticityCell(nVertLevels, nCellsAll))
       allocate(areaSum(nVertLevels))
 
 #ifdef MPAS_OPENACC
@@ -648,55 +651,142 @@ contains
       !$omp end parallel
 #endif
 
-!      do iCell = 1, nCellsOwned
-!         relativeVorticityCell(:,iCell) = 0.0_RKIND
-!         invAreaCell1 = invAreaCell(iCell)
-!         kmin = minLevelCell(iCell)
-!         kmax = maxLevelCell(iCell)
-!
-!         do i = 1, nEdgesOnCell(iCell)
-!            j = kiteIndexOnCell(i, iCell)
-!            iVertex = verticesOnCell(i, iCell)
-!            do k = kmin,kmax
-!               relativeVorticityCell(k,iCell) = &
-!               relativeVorticityCell(k,iCell) + &
-!                        kiteAreasOnVertex(j,iVertex)* &
-!                        relativeVorticity(k,iVertex)*invAreaCell1
-!            end do
-!         end do
-!      end do
-!
-!#ifdef MPAS_OPENACC
-!      !$acc parallel loop &
-!      !$acc          present(circulation, relativeVorticity, areaTriangle, edgesOnVertex, &
-!      !$acc                  maxLevelVertexBot, dcEdge, normalVelocity, edgeSignOnVertex, &
-!      !$acc                  minLevelVertexTop) &
-!      !$acc          private(invAreaTri1, iVertex, iEdge, k, r_tmp)
-!#else
-!      !$omp do schedule(runtime) private(invAreaTri1, i, iEdge, k, r_tmp)
-!#endif
-!      do iVertex = 1, nVerticesAll
-!         do k = 1, nVertLevels
-!            relativeVorticity(k, iVertex) = 0.0_RKIND
-!            areaSum(k) = 0.0_RKIND
-!         enddo
-!         invAreaTri1 = 1.0_RKIND / areaTriangle(iVertex)
-!         do i = 1, vertexDegree
-!            iCell = cellssOnVertex(i, iVertex)
-!            do k = minLevelCell(iCell), maxLevelCell(iCell)
-!              areaSum(k) = areaSum(k) + kiteAreasOnVertex(i,iVertex)
-!              relativeVorticity(k, iVertex) = relativeVorticity(k, iVertex) + &
-!                  kiteAreasOnVertex(i,iVertex)*relativeVorticityCell(k,iCell) 
-!            end do
-!         end do
-!         do k = minLevelVertexTop(iVertex), maxLevelVertexBot(iVertex)
-!            relativeVorticity(k, iVertex) = relativeVorticity(k,iVertex)/areaSum(k)
-!         end do
-!      end do
-!#ifndef MPAS_OPENACC
-!      !$omp end do
-!      !$omp end parallel
-!#endif
+      nEdges = nEdgesHalo(2)
+
+#ifdef MPAS_OPENACC
+      !$acc parallel loop gang vector &
+      !$acc    present(relativeVorticityEdge, &
+      !$acc            relativeVorticity, &
+      !&acc            minLevelEdgeTop, maxLevelEdgeBot, &
+      !$acc            verticesOnEdge) &
+      !$acc    private(k, vertex1, vertex2)
+#else
+      !$omp parallel
+      !$omp do schedule(runtime) private(k, vertex1, vertex2)
+#endif
+      do iEdge = 1, nEdges
+         relativeVorticityEdge (:,iEdge) = 0.0_RKIND
+         vertex1 = verticesOnEdge(1, iEdge)
+         vertex2 = verticesOnEdge(2, iEdge)
+         !$acc loop seq
+         do k = minLevelEdgeTop(iEdge), maxLevelEdgeBot(iEdge)
+            relativeVorticityEdge(k,iEdge) = 0.5_RKIND* &
+                   (relativeVorticity(k,vertex1) &
+                  + relativeVorticity(k,vertex2))
+        end do
+      end do
+#ifndef MPAS_OPENACC
+      !$omp end do
+      !$omp end parallel
+#endif
+
+      nCells = nCellsHalo(1)
+
+#ifdef MPAS_OPENACC
+      !$acc parallel loop gang vector &
+      !$acc    present(relativeVorticityCell, &
+      !$acc            relativeVorticity, &
+      !$acc            invAreaCell, kiteAreasOnVertex, &
+      !$acc            nEdgesOnCell, kiteIndexOnCell, &
+      !$acc            minLevelCell, maxLevelCell, verticesOnCell) &
+      !$acc    private(i, j, k, iVertex, invAreaCell1)
+#else
+      !$omp parallel
+      !$omp do schedule(runtime) &
+      !$omp    private(i, j, k, iVertex, invAreaCell1)
+#endif
+      do iCell = 1, nCells
+         relativeVorticityCell(:,iCell) = 0.0_RKIND
+         invAreaCell1 = invAreaCell(iCell)
+
+         do i = 1, nEdgesOnCell(iCell)
+            j = kiteIndexOnCell(i, iCell)
+            iVertex = verticesOnCell(i, iCell)
+            !$acc loop seq
+            do k = minLevelCell(iCell), maxLevelCell(iCell)
+               relativeVorticityCell(k,iCell) = &
+               relativeVorticityCell(k,iCell) + &
+                                  kiteAreasOnVertex(j,iVertex)* &
+                  relativeVorticity(k,iVertex)* &
+                  invAreaCell1
+            end do
+         end do
+      end do
+#ifndef MPAS_OPENACC
+      !$omp end do
+      !$omp end parallel
+#endif
+
+      ! average relative vorticity from cells back to vertices
+      if (relative_vorticity_averaging==1) then ! mrp indent later
+#ifdef MPAS_OPENACC
+      !$acc parallel loop &
+      !$acc          present(circulation, relativeVorticity, areaTriangle, edgesOnVertex, &
+      !$acc                  maxLevelVertexBot, dcEdge, normalVelocity, edgeSignOnVertex, &
+      !$acc                  minLevelVertexTop) &
+      !$acc          private(invAreaTri1, iVertex, iEdge, k, r_tmp)
+#else
+      !$omp do schedule(runtime) private(invAreaTri1, i, iEdge, k, r_tmp)
+#endif
+      do iVertex = 1, nVerticesAll
+         do k = 1, nVertLevels
+            relativeVorticity(k, iVertex) = 0.0_RKIND
+            areaSum(k) = 0.0_RKIND
+         enddo
+         invAreaTri1 = 1.0_RKIND / areaTriangle(iVertex)
+         do i = 1, vertexDegree
+            iCell = cellsOnVertex(i, iVertex)
+            do k = minLevelCell(iCell), maxLevelCell(iCell)
+              areaSum(k) = areaSum(k) + kiteAreasOnVertex(i,iVertex)
+              relativeVorticity(k, iVertex) = relativeVorticity(k, iVertex) + &
+                  kiteAreasOnVertex(i,iVertex)*relativeVorticityCell(k,iCell) 
+            end do
+         end do
+         do k = minLevelVertexTop(iVertex), maxLevelVertexBot(iVertex)
+            relativeVorticity(k, iVertex) = relativeVorticity(k,iVertex)/areaSum(k)
+         end do
+      end do
+#ifndef MPAS_OPENACC
+      !$omp end do
+      !$omp end parallel
+#endif
+
+      ! averge relative vorticity from edges back to vertices
+      elseif (relative_vorticity_averaging==2) then ! mrp indent later
+#ifdef MPAS_OPENACC
+      !$acc parallel loop &
+      !$acc          present(circulation, relativeVorticity, areaTriangle, edgesOnVertex, &
+      !$acc                  maxLevelVertexBot, dcEdge, normalVelocity, edgeSignOnVertex, &
+      !$acc                  minLevelVertexTop) &
+      !$acc          private(invAreaTri1, iVertex, iEdge, k, r_tmp)
+#else
+      !$omp do schedule(runtime) private(invAreaTri1, i, iEdge, k, r_tmp)
+#endif
+      do iVertex = 1, nVerticesAll
+         do k = 1, nVertLevels
+            relativeVorticity(k, iVertex) = 0.0_RKIND
+            areaSum(k) = 0.0_RKIND
+         enddo
+         invAreaTri1 = 1.0_RKIND / areaTriangle(iVertex)
+         do i = 1, vertexDegree
+            iEdge = edgesOnVertex(i, iVertex)
+            areaEdge = dcEdge(iEdge)*dvEdge(iEdge)
+            do k = minLevelEdgeTop(iEdge), maxLevelEdgeTop(iEdge)
+              areaSum(k) = areaSum(k) + areaEdge
+              relativeVorticity(k, iVertex) = relativeVorticity(k, iVertex) + &
+                  areaEdge*relativeVorticityEdge(k,iEdge) 
+            end do
+         end do
+         do k = minLevelVertexTop(iVertex), maxLevelVertexBot(iVertex)
+            relativeVorticity(k, iVertex) = relativeVorticity(k,iVertex)/areaSum(k)
+         end do
+      end do
+#ifndef MPAS_OPENACC
+      !$omp end do
+      !$omp end parallel
+#endif
+   endif
+
    !--------------------------------------------------------------------
 
    end subroutine ocn_relativeVorticity_circulation!}}}
@@ -1904,7 +1994,7 @@ contains
                            relativeVorticity, layerThicknessEdgeFlux, &
                            normalVelocity, normalTransportVelocity, &
                            vertVelocityTop, vertTransportVelocityTop, &
-                           relativeVorticityCell, divergence, &
+                           divergence, &
                            kineticEnergyCell, tangentialVelocity)!{{{
 
       !-----------------------------------------------------------------
@@ -1924,7 +2014,7 @@ contains
       real (kind=RKIND), dimension(:,:), intent(inout) :: &
          vertVelocityTop,       &!< [out] vertical velocity top of cell
          vertTransportVelocityTop, &!< [out] vert transport vel at top
-         relativeVorticityCell, &!< [out] relative vorticity in cell
+         !relativeVorticityCell, &!< [out] relative vorticity in cell
          divergence,            &!< [out] divergence
          kineticEnergyCell,     &!< [out] kinetic energy in cell
          tangentialVelocity      !< [out] tangential velocity at edge
@@ -1957,40 +2047,6 @@ contains
       ! Begin code
 
       ! Compute relative vorticity in cells
-
-#ifdef MPAS_OPENACC
-      !$acc parallel loop gang vector &
-      !$acc    present(relativeVorticityCell, relativeVorticity, &
-      !$acc            invAreaCell, kiteAreasOnVertex, &
-      !$acc            nEdgesOnCell, kiteIndexOnCell, verticesOnCell, &
-      !$acc            minLevelCell, maxLevelCell) &
-      !$acc    private(i, iVertex, j, k, kmin, kmax, invAreaCell1) 
-#else
-      !$omp parallel
-      !$omp do schedule(runtime) &
-      !$omp    private(i, iVertex, j, k, kmin, kmax, invAreaCell1) 
-#endif
-      do iCell = 1, nCellsOwned
-         relativeVorticityCell(:,iCell) = 0.0_RKIND
-         invAreaCell1 = invAreaCell(iCell)
-         kmin = minLevelCell(iCell)
-         kmax = maxLevelCell(iCell)
-
-         do i = 1, nEdgesOnCell(iCell)
-            j = kiteIndexOnCell(i, iCell)
-            iVertex = verticesOnCell(i, iCell)
-            do k = kmin,kmax
-               relativeVorticityCell(k,iCell) = &
-               relativeVorticityCell(k,iCell) + &
-                        kiteAreasOnVertex(j,iVertex)* &
-                        relativeVorticity(k,iVertex)*invAreaCell1
-            end do
-         end do
-      end do
-#ifndef MPAS_OPENACC
-      !$omp end do
-      !$omp end parallel
-#endif
 
       ! Need 0,1,2 halo cells
       nCells = nCellsHalo(2)
@@ -4282,6 +4338,16 @@ contains
                  & trim(config_thickness_flux_type) // &
                  & 'is not known', MPAS_LOG_CRIT)
          end if
+      end if
+
+      if (trim(config_relative_vorticity_averaging) == 'cells') then
+         ! average to cells and back to vertices
+         relative_vorticity_averaging = 1
+      elseif (trim(config_relative_vorticity_averaging) == 'edges') then
+         ! average to cells and back to vertices
+         relative_vorticity_averaging = 2
+      else 
+         relative_vorticity_averaging = 0
       end if
 
       call ocn_diagnostics_variables_init(domain, jenkinsOn, &

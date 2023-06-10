@@ -44,6 +44,7 @@ module ocn_diagnostics_variables
    real (kind=RKIND), dimension(:,:), pointer :: circulation
    real (kind=RKIND), dimension(:,:), pointer :: relativeVorticity
    real (kind=RKIND), dimension(:,:), pointer :: relativeVorticityCell
+   real (kind=RKIND), dimension(:,:), pointer :: relativeVorticityEdge
    real (kind=RKIND), dimension(:,:), pointer :: normPlanetVortEdge
    real (kind=RKIND), dimension(:,:), pointer :: normRelVortEdge
    real (kind=RKIND), dimension(:,:), pointer :: normalizedRelativeVorticityCell
@@ -509,6 +510,8 @@ contains
                    relativeVorticity)
          call mpas_pool_get_array(diagnosticsPool, 'relativeVorticityCell', &
                    relativeVorticityCell)
+         call mpas_pool_get_array(diagnosticsPool, 'relativeVorticityEdge', &
+                   relativeVorticityEdge)
 
          call mpas_pool_get_array(diagnosticsPool, 'surfaceVelocity', &
                    surfaceVelocity)
@@ -790,6 +793,7 @@ contains
          !$acc                   gmStreamFuncTopOfEdge,           &
          !$acc                   indexSSHGradientZonal,           &
          !$acc                   relativeVorticityCell,           &
+         !$acc                   relativeVorticityEdge,           &
          !$acc                   normalGMBolusVelocity,           &
          !$acc                   normalMLEvelocity,               &
          !$acc                   vertGMBolusVelocityTop,          &
@@ -1040,6 +1044,7 @@ contains
          !$acc                   gmStreamFuncTopOfEdge,           &
          !$acc                   indexSSHGradientZonal,           &
          !$acc                   relativeVorticityCell,           &
+         !$acc                   relativeVorticityEdge,           &
          !$acc                   normalGMBolusVelocity,           &
          !$acc                   normalMLEvelocity,               &
          !$acc                   vertGMBolusVelocityTop,          &
@@ -1248,6 +1253,7 @@ contains
                  gmStreamFuncTopOfEdge,           &
                  indexSSHGradientZonal,           &
                  relativeVorticityCell,           &
+                 relativeVorticityEdge,           &
                  normalGMBolusVelocity,           &
                  normalMLEvelocity,               &
                  vertGMBolusVelocityTop,          &

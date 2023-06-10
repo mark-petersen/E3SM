@@ -223,6 +223,10 @@
 					description="Anticipated potential vorticity (APV) method scale factor, $c_{apv}$. When zero, APV is off."
 					possible_values="Any non-negative number, typically between zero and one."
 		/>
+		<nml_option name="config_relative_vorticity_averaging" type="character" default_value="none"
+					description="Average relative vorticity from original at verticies to cells or edges and back to vertices."
+					possible_values="'none', 'cells', 'edges'"
+		/>
 	</nml_record>
 	<nml_record name="hmix_del2" mode="forward">
 		<nml_option name="config_use_mom_del2" type="logical" default_value=".false."
@@ -2847,6 +2851,10 @@
 		/>
 		<var name="relativeVorticityCell" type="real" dimensions="nVertLevels nCells Time" units="s^-1"
 			 description="curl of horizontal velocity, averaged from vertices to cell centers"
+			 packages="forwardMode;analysisMode"
+		/>
+		<var name="relativeVorticityEdge" type="real" dimensions="nVertLevels nEdges Time" units="s^-1"
+			 description="curl of horizontal velocity, averaged from vertices to edges"
 			 packages="forwardMode;analysisMode"
 		/>
 		<var name="normalizedRelativeVorticityEdge" type="real" dimensions="nVertLevels nEdges Time" units="s^-1"
