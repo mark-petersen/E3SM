@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <stdbool.h>
 #include "ezxml.h"
 #include "registry_types.h"
 #include "gen_inc.h"
@@ -1685,6 +1686,8 @@ int parse_var(FILE *fd, ezxml_t registry, ezxml_t superStruct, ezxml_t currentVa
 	char package_spacing[1024];
 	char default_value[1024];
 	char missing_value[1024];
+	char config_name[1024];
+	bool time_levs_from_config;
 
 	var_xml = currentVar;
 
@@ -1723,10 +1726,21 @@ int parse_var(FILE *fd, ezxml_t registry, ezxml_t superStruct, ezxml_t currentVa
 		vartimelevs = ezxml_attr(superStruct, "time_levs");
 	}
 
+	time_levs_from_config = false;
 	if(vartimelevs){
-		time_levs = atoi(vartimelevs);
-		if(time_levs < 1){
-			time_levs = 1;
+		if(strncmp(vartimelevs, "namelist:", 9) == 0){
+			time_levs_from_config = true;
+            // set time_levs to 2 to trigger array declarations below
+            time_levs = 2;
+			snprintf(config_name, 1024, "%s", (vartimelevs)+9);
+			// obtain number of time steps from namelist
+			fortprintf(fd, "      call mpas_pool_get_config(block %% configs, '%s', config_flag_time_levs)\n", config_name);
+			fortprintf(fd, "\n");
+		} else {
+			time_levs = atoi(vartimelevs);
+			if(time_levs < 1){
+				time_levs = 1;
+			}
 		}
 	} else {
 		time_levs = 1;
@@ -1750,20 +1764,21 @@ int parse_var(FILE *fd, ezxml_t registry, ezxml_t superStruct, ezxml_t currentVa
 
 	// Determine name of pointer for this field.
 	set_pointer_name(type, ndims, pointer_name, time_levs);
-	if (time_levs > 1) {
-		fortprintf(fd, "      allocate(%s(%d))\n", pointer_name, time_levs);
-	} else {
-		fortprintf(fd, "      allocate(%s)\n", pointer_name);
-	}
 
-	for(time_lev = 1; time_lev <= time_levs; time_lev++){
-		if (time_levs > 1) {
-			snprintf(pointer_name_arr, 1024, "%s(%d)", pointer_name, time_lev);
+	if (time_levs > 1 || time_levs_from_config) {
+		if (time_levs_from_config) {
+			fortprintf(fd, "      allocate(%s(config_flag_time_levs))\n", pointer_name);
+			fortprintf(fd, "      do iTime = 1,config_flag_time_levs\n");
+		} else {
+			fortprintf(fd, "      allocate(%s(%d))\n", pointer_name, time_levs);
+			fortprintf(fd, "      do iTime = 1,%d\n",time_levs);
+		}
+		snprintf(pointer_name_arr, 1024, "%s(iTime)", pointer_name);
 		} else {
 			snprintf(pointer_name_arr, 1024, "%s", pointer_name);
+			fortprintf(fd, "      allocate(%s)\n", pointer_name);
 		}
-		fortprintf(fd, "\n");
-		fortprintf(fd, "! Setting up time level %d\n", time_lev);
+		fortprintf(fd, "! Setting up metadata\n");
 		fortprintf(fd, "      %s %% fieldName = '%s'\n", pointer_name_arr, varname);
 		fortprintf(fd, "      %s %% outputFieldName = '%s'\n", pointer_name_arr, varname_in_output);
 		fortprintf(fd, "      %s %% isVarArray = .false.\n", pointer_name_arr);
@@ -1952,7 +1967,9 @@ int parse_var(FILE *fd, ezxml_t registry, ezxml_t superStruct, ezxml_t currentVa
 
 		fortprintf(fd, "      %s %% block => block\n", pointer_name_arr);
 
-	}
+	if (time_levs > 1) {
+		fortprintf(fd, "      enddo\n");
+		}
 
 	// Parse packages if they are defined
 	fortprintf(fd, "\n");
@@ -1972,13 +1989,19 @@ int parse_var(FILE *fd, ezxml_t registry, ezxml_t superStruct, ezxml_t currentVa
 		fortprintf(fd, ") then\n");
 	}
 
-	for(time_lev = 1; time_lev <= time_levs; time_lev++){
-		if (time_levs > 1) {
-			snprintf(pointer_name_arr, 1024, "%s(%d)", pointer_name, time_lev);
-		} else {
-			snprintf(pointer_name_arr, 1024, "%s", pointer_name);
-		}
-		fortprintf(fd, "      %s%s %% isActive = .true.\n", package_spacing, pointer_name_arr);
+	if (time_levs > 1 || time_levs_from_config) {
+        if (time_levs_from_config) {
+	        fortprintf(fd, "      do iTime = 1,config_flag_time_levs\n");
+    	} else {
+	        fortprintf(fd, "      do iTime = 1,%d\n",time_levs);
+        }
+		snprintf(pointer_name_arr, 1024, "%s(iTime)", pointer_name);
+	} else {
+		snprintf(pointer_name_arr, 1024, "%s", pointer_name);
+	}
+		fortprintf(fd, "         %s%s %% isActive = .true.\n", package_spacing, pointer_name_arr);
+	if (time_levs > 1) {
+		fortprintf(fd, "      enddo\n");
 	}
 
 	if(varpackages != NULL){
@@ -2053,6 +2076,8 @@ int parse_struct(FILE *fd, ezxml_t registry, ezxml_t superStruct, int subpool, c
 	fortprintf(fd, "      logical :: group_started\n");
 	fortprintf(fd, "      integer :: group_start\n");
 	fortprintf(fd, "      integer :: index_counter\n");
+	fortprintf(fd, "      integer :: iTime\n");
+	fortprintf(fd, "      integer, pointer :: config_flag_time_levs\n");
 	fortprintf(fd, "      integer, pointer :: const_index\n");
 	fortprintf(fd, "\n");
 
