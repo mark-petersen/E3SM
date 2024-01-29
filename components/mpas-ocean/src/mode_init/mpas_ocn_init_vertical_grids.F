@@ -883,7 +883,7 @@ contains
 
      if (config_init_vertical_grid_type /= 'z-level' .and. &
          config_init_vertical_grid_type /= 'z-star' .and. &
-         config_init_vertical_grid_type /= 'sigma-z-proporational' .and. &
+         config_init_vertical_grid_type /= 'sigma-z-proportional' .and. &
          config_init_vertical_grid_type /= 'sigma-z-min-bottom' .and. &
          config_init_vertical_grid_type /= 'haney-number') then
 
