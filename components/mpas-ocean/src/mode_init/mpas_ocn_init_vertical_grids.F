@@ -1092,7 +1092,7 @@ contains
 
          ! create sigma-z weight function
          do k = 1, nVertLevels
-           x1= config_global_ocean_sigmaz_wt_depth1; y1=1.0_RKIND
+           x1= config_global_ocean_sigmaz_wt_depth1; y1=config_global_ocean_sigmaz_weight1
            x2= config_global_ocean_sigmaz_wt_depth2; y2=config_global_ocean_sigmaz_weight2
            x3= config_global_ocean_sigmaz_wt_depth3; y3=config_global_ocean_sigmaz_weight3
            x4= config_global_ocean_sigmaz_wt_depth4; y4=config_global_ocean_sigmaz_weight4

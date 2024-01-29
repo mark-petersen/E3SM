@@ -351,6 +351,10 @@
 			description="Depth of first point for the sigma-z weight function definition"
 			possible_values="Any positive real value greater than 0."
 		/>
+		<nml_option name="config_global_ocean_sigmaz_weight1" type="real" default_value="1.0" units="dimensionless"
+			description="Weight of point for the sigma-z weight function definition"
+			possible_values="value between 1.0 (fully z-level) and 0.0 (fully sigma), but typically between 0.5 and 1.0."
+		/>
 		<nml_option name="config_global_ocean_sigmaz_wt_depth2" type="real" default_value="200.0" units="m"
 			description="Depth of point for the sigma-z weight function definition"
 			possible_values="Any positive real value greater than 0."
