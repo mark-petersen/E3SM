@@ -247,14 +247,14 @@ def buildnml(case, caseroot, compname):
             ic_prefix = 'mpaso.WC14to60E2r3.rstFromG-anvil'
 
     elif ocn_grid == 'GoM14r1':
-        decomp_date = '240118'
+        decomp_date = '20240108'
         decomp_prefix = 'partitions/mpas-o.graph.info.'
-        restoring_file = 'sss.PHC2_monthlyClimatology.GoM14r1.240118.nc'
-        analysis_mask_file = 'GoM14r1_mocBasinsAndTransects240118.nc'
-        ic_date = '240118'
+        restoring_file = 'sss.PHC2_monthlyClimatology.GoM14r1.20240108.nc'
+        analysis_mask_file = 'GoM14r1_mocBasinsAndTransects20240108.nc'
+        ic_date = '20240108'
         ic_prefix = 'ocean.GoM14r1'
         if ocn_ic_mode == 'spunup':
-            ic_date = '240118'
+            ic_date = '20240108'
             ic_prefix = 'mpaso.GoM14r1.rstFromG-anvil'
 
     elif ocn_grid == 'WCAtl12to45E2r4':
