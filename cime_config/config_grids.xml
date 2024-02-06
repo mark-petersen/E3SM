@@ -2775,7 +2775,7 @@
     </domain>
 
     <domain name="GoM14r2">
-      <nx>267521</nx>
+      <nx>138782</nx>
       <ny>1</ny>
       <file grid="ice|ocn">$DIN_LOC_ROOT/share/domains/domain.ocn.GoM14r2.240131.nc</file>
       <desc>GoM14r2 is a MPAS ice/ocean grid with enhanced resolution of 14km in the Gulf of Mexico</desc>
