@@ -232,9 +232,18 @@ def buildnml(case, caseroot, compname):
         if ice_ic_mode == 'spunup':
             grid_date = '20240108'
             grid_prefix = 'mpassi.GoM14r1.rstFromG-anvil'
+    
+    elif ice_grid == 'GoM14r2':
+        decomp_date = '20240108'
+        decomp_prefix = 'partitions/mpas-seaice.graph.info.'
+        grid_date = '20240108'
+        grid_prefix = 'seaice.GoM14r2'
+        if ice_ic_mode == 'spunup':
+            grid_date = '20240108'
+            grid_prefix = 'mpassi.GoM14r2.rstFromG-anvil'
 
     elif ice_grid == 'WCAtl12to45E2r4':
-        decomp_date = '210318'
+        decomp_date = '210312'
         decomp_prefix = 'mpas-seaice.graph.info.'
         grid_date = '210318'
         grid_prefix = 'seaice.WCAtl12to45E2r4'
