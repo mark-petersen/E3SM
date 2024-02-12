@@ -373,6 +373,7 @@
       <value compset="_DATM.*_SLND.*MPAS" grid="oi%WC14to60E2r3">48</value>
       <value compset="_DATM.*_SLND.*MPAS" grid="oi%GoM14r1">48</value>
       <value compset="_DATM.*_SLND.*MPAS" grid="oi%GoM14r2">48</value>
+      <value compset="_DATM.*_SLND.*MPAS" grid="oi%GoM3r1">48</value>
       <value compset="_DATM.*_SLND.*MPAS" grid="oi%oRRS30to10v3">96</value>
       <value compset="_DATM.*_SLND.*MPAS" grid="oi%oRRS18to6v3">96</value>
       <value compset="_DATM.*_SLND.*MPAS" grid="oi%oRRS15to5">96</value>
@@ -491,6 +492,7 @@
       <value compset="_MPASO" grid="oi%GoM14r1">48</value>
       <value compset="_MPASO" grid="oi%oRRS30to10v3">48</value>
       <value compset="_MPASO" grid="oi%GoM14r2">48</value>
+      <value compset="_MPASO" grid="oi%GoM3r1">48</value>
       <value compset="_MPASO" grid="oi%oRRS18to6v3">48</value>
       <value compset="_MPASO" grid="oi%oRRS15to5">96</value>
       <value compset="_MPASO" grid="oi%oARRM60to10">48</value>

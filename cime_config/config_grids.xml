@@ -509,6 +509,16 @@
       <mask>GoM14r2</mask>
     </model_grid>
     
+    <model_grid alias="TL319_GoM3r1" compset="(DATM|XATM|SATM)">
+      <grid name="atm">TL319</grid>
+      <grid name="lnd">TL319</grid>
+      <grid name="ocnice">GoM3r1</grid>
+      <grid name="rof">JRA025</grid>
+      <grid name="glc">null</grid>
+      <grid name="wav">null</grid>
+      <mask>GoM14r1</mask>
+    </model_grid>
+    
     <model_grid alias="TL319_WCAtl12to45E2r4" compset="(DATM|XATM|SATM)">
       <grid name="atm">TL319</grid>
       <grid name="lnd">TL319</grid>
@@ -2404,6 +2414,8 @@
       <file grid="ice|ocn" mask="GoM14r1">$DIN_LOC_ROOT/share/domains/domain.ocn.TL319_GoM14r1.240131.nc</file>
       <file grid="atm|lnd" mask="GoM14r2">$DIN_LOC_ROOT/share/domains/domain.lnd.TL319_GoM14r2.240131.nc</file>
       <file grid="ice|ocn" mask="GoM14r2">$DIN_LOC_ROOT/share/domains/domain.ocn.TL319_GoM14r2.240131.nc</file>
+      <file grid="atm|lnd" mask="GoM3r1">$DIN_LOC_ROOT/share/domains/domain.lnd.TL319_GoM3r1.240131.nc</file>
+      <file grid="ice|ocn" mask="GoM3r1">$DIN_LOC_ROOT/share/domains/domain.ocn.TL319_GoM3r1.240131.nc</file>
       <file grid="atm|lnd" mask="WCAtl12to45E2r4">$DIN_LOC_ROOT/share/domains/domain.lnd.TL319_WCAtl12to45E2r4.210318.nc</file>
       <file grid="ice|ocn" mask="WCAtl12to45E2r4">$DIN_LOC_ROOT/share/domains/domain.ocn.TL319_WCAtl12to45E2r4.210318.nc</file>
       <file grid="atm|lnd" mask="SOwISC12to60E2r4">$DIN_LOC_ROOT/share/domains/domain.lnd.TL319_SOwISC12to60E2r4.210119.nc</file>
@@ -2779,7 +2791,15 @@
       <ny>1</ny>
       <file grid="ice|ocn">$DIN_LOC_ROOT/share/domains/domain.ocn.GoM14r2.240131.nc</file>
       <desc>GoM14r2 is a MPAS ice/ocean grid with enhanced resolution of 14km in the Gulf of Mexico</desc>
-    </domain>
+    </domain>>
+    
+    <domain name="GoM3r1">
+      <nx>344508</nx>
+      <ny>1</ny>
+      <file grid="ice|ocn">$DIN_LOC_ROOT/share/domains/domain.ocn.GoM3r1.240131.nc</file>
+      <desc>GoM3r12 is a MPAS ice/ocean grid with enhanced resolution of 3km in the Gulf of Mexico</desc>
+    </domain>>
+
     <domain name="WCAtl12to45E2r4">
       <nx>851664</nx>
       <ny>1</ny>
@@ -4100,6 +4120,14 @@
       <map name="OCN2ATM_FMAPNAME">cpl/gridmaps/GoM14r2/map_GoM14r2_to_TL319_traave.20240130.nc</map>
       <map name="OCN2ATM_SMAPNAME">cpl/gridmaps/GoM14r2/map_GoM14r2_to_TL319_traave.20240130.nc</map>
     </gridmap>
+    
+    <gridmap atm_grid="TL319" ocn_grid="GoM3r1">
+      <map name="ATM2OCN_FMAPNAME">cpl/gridmaps/TL319/map_TL319_to_GoM3r1_traave.20240130.nc</map>
+      <map name="ATM2OCN_SMAPNAME">cpl/gridmaps/TL319/map_TL319_to_GoM3r1_trbilin.20240130.nc</map>
+      <map name="ATM2OCN_VMAPNAME">cpl/gridmaps/TL319/map_TL319_to_GoM3r1_esmfpatch.20240130.nc</map>
+      <map name="OCN2ATM_FMAPNAME">cpl/gridmaps/GoM3r1/map_GoM3r1_to_TL319_traave.20240130.nc</map>
+      <map name="OCN2ATM_SMAPNAME">cpl/gridmaps/GoM14r3/map_GoM3r1_to_TL319_traave.20240130.nc</map>
+    </gridmap>
 
     <gridmap atm_grid="TL319" ocn_grid="WCAtl12to45E2r4">
       <map name="ATM2OCN_FMAPNAME">cpl/gridmaps/TL319/map_TL319_to_WCAtl12to45E2r4_aave.210318.nc</map>
@@ -4641,6 +4669,11 @@
     <gridmap ocn_grid="GoM14r2" rof_grid="JRA025">
       <map name="ROF2OCN_ICE_RMAPNAME">cpl/cpl6/map_JRA025_to_GoM14r2_cstmnn.r150e300.20240130.nc</map>
       <map name="ROF2OCN_LIQ_RMAPNAME">cpl/cpl6/map_JRA025_to_GoM14r2_cstmnn.r150e300.20240130.nc</map>
+    </gridmap>
+    
+    <gridmap ocn_grid="GoM3r1" rof_grid="JRA025">
+      <map name="ROF2OCN_ICE_RMAPNAME">cpl/cpl6/map_JRA025_to_GoM3r1.1_cstmnn.r150e300.20240130.nc</map>
+      <map name="ROF2OCN_LIQ_RMAPNAME">cpl/cpl6/map_JRA025_to_GoM3r1.1_cstmnn.r150e300.20240130.nc</map>
     </gridmap>
     
     <gridmap ocn_grid="WCAtl12to45E2r4" rof_grid="JRA025">
