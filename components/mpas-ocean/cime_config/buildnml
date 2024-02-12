@@ -267,6 +267,17 @@ def buildnml(case, caseroot, compname):
         if ocn_ic_mode == 'spunup':
             ic_date = '20240108'
             ic_prefix = 'mpaso.GoM14r2.rstFromG-anvil'
+    
+    elif ocn_grid == 'GoM3r1':
+        decomp_date = '20240212'
+        decomp_prefix = 'partitions/mpas-o.graph.info.'
+        restoring_file = 'sss.PHC2_monthlyClimatology.GoM3r1.20240212.nc'
+        analysis_mask_file = 'GoM3r1_mocBasinsAndTransects20240212.nc'
+        ic_date = '20240212'
+        ic_prefix = 'ocean.GoM3r1'
+        if ocn_ic_mode == 'spunup':
+            ic_date = '20240212'
+            ic_prefix = 'mpaso.GoM3r1.rstFromG-anvil'
 
     elif ocn_grid == 'WCAtl12to45E2r2':
         decomp_date = '210318'
