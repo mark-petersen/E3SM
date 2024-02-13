@@ -80,7 +80,7 @@
 <config_hmix_scaleWithMesh ocn_grid="ECwISC30to60E2r1">.true.</config_hmix_scaleWithMesh>
 <config_hmix_scaleWithMesh ocn_grid="IcoswISC30E3r5">.true.</config_hmix_scaleWithMesh>
 <config_maxMeshDensity>-1.0</config_maxMeshDensity>
-<config_hmix_use_ref_cell_width>.false.</config_hmix_use_ref_cell_width>
+<config_hmix_use_ref_cell_width>.true.</config_hmix_use_ref_cell_width>
 <config_hmix_ref_cell_width>30.0e3</config_hmix_ref_cell_width>
 <config_apvm_scale_factor>0.0</config_apvm_scale_factor>
 
@@ -157,12 +157,14 @@
 <config_use_Redi ocn_grid="oRRS15to5">.false.</config_use_Redi>
 <config_Redi_closure>'constant'</config_Redi_closure>
 <config_Redi_constant_kappa>400.0</config_Redi_constant_kappa>
+<config_Redi_constant_kappa ocn_grid="GoM3r1" >300.0</config_Redi_constant_kappa>
 <config_Redi_constant_kappa ocn_forcing="datm_forced_restoring">400.0</config_Redi_constant_kappa>
 <config_Redi_maximum_slope>0.01</config_Redi_maximum_slope>
 <config_Redi_use_slope_taper>.true.</config_Redi_use_slope_taper>
 <config_Redi_use_surface_taper>.true.</config_Redi_use_surface_taper>
 <config_Redi_use_quasi_monotone_limiter>.true.</config_Redi_use_quasi_monotone_limiter>
 <config_Redi_quasi_monotone_safety_factor>0.9</config_Redi_quasi_monotone_safety_factor>
+<config_Redi_quasi_monotone_safety_factor ocn_grid="GoM3r1">0.8</config_Redi_quasi_monotone_safety_factor>
 <config_Redi_limit_term1>.true.</config_Redi_limit_term1>
 <config_Redi_min_layers_diag_terms>0</config_Redi_min_layers_diag_terms>
 <config_Redi_min_layers_diag_terms ocn_grid="ARRM10to60E2r1">15</config_Redi_min_layers_diag_terms>
@@ -172,6 +174,7 @@
 <!-- To do: ramp for WC but RossbyRadius for Cryo -->
 <config_Redi_horizontal_taper ocn_grid="IcoswISC30E3r5">'ramp'</config_Redi_horizontal_taper>
 <config_Redi_horizontal_ramp_min>20e3</config_Redi_horizontal_ramp_min>
+<config_Redi_horizontal_ramp_min ocn_grid="GoM3r1">3e3</config_Redi_horizontal_ramp_min>
 <config_Redi_horizontal_ramp_min ocn_grid="WCAtl12to45E2r4">30e3</config_Redi_horizontal_ramp_min>
 <config_Redi_horizontal_ramp_max>30e3</config_Redi_horizontal_ramp_max>
 <config_Redi_horizontal_ramp_max ocn_grid="WCAtl12to45E2r4">40e3</config_Redi_horizontal_ramp_max>
@@ -179,7 +182,8 @@
 <!-- submesoscale_eddy_parameterization -->
 <config_submesoscale_enable>.true.</config_submesoscale_enable>
 <config_submesoscale_tau>172800</config_submesoscale_tau>
-<config_submesoscale_Ce>0.08</config_submesoscale_Ce>
+<config_submesoscale_ce>0.08</config_submesoscale_ce>
+<config_submesoscale_ce ocn_grid="GoM3r1">0.06</config_submesoscale_ce>
 <config_submesoscale_Lfmin>1000.0</config_submesoscale_Lfmin>
 <config_submesoscale_ds_max>100000.0</config_submesoscale_ds_max>
 
@@ -201,6 +205,7 @@
 <!-- To do: constant for WC but N2_dependent for Cryo -->
 <config_GM_closure ocn_grid="IcoswISC30E3r5">'constant'</config_GM_closure>
 <config_GM_constant_kappa>900.0</config_GM_constant_kappa>
+<config_GM_constant_kappa ocn_grid="GoM3r1">300.0</config_GM_constant_kappa>
 <config_GM_constant_kappa ocn_forcing="datm_forced_restoring" ocn_grid="oEC60to30v3wLI">600.0</config_GM_constant_kappa>
 <config_GM_constant_kappa ocn_forcing="datm_forced_restoring" ocn_grid="ECwISC30to60E1r2">600.0</config_GM_constant_kappa>
 <config_GM_constant_kappa ocn_forcing="datm_forced_restoring" ocn_grid="EC30to60E2r2">600.0</config_GM_constant_kappa>
@@ -219,9 +224,11 @@
 <config_GM_spatially_variable_baroclinic_mode>3.0</config_GM_spatially_variable_baroclinic_mode>
 <config_GM_spatially_variable_baroclinic_mode ocn_grid="SOwISC12to60E2r4">1.0</config_GM_spatially_variable_baroclinic_mode>
 <config_GM_spatially_variable_baroclinic_mode ocn_grid="ECwISC30to60E2r1">1.0</config_GM_spatially_variable_baroclinic_mode>
+<config_GM_spatially_variable_baroclinic_mode ocn_grid="GoM3r1">1.0</config_GM_spatially_variable_baroclinic_mode>
 <!-- To do: 3.0 for WC but 1.0 for Cryo? -->
 <config_GM_spatially_variable_baroclinic_mode ocn_grid="IcoswISC30E3r5">3.0</config_GM_spatially_variable_baroclinic_mode>
 <config_GM_Visbeck_alpha>0.13</config_GM_Visbeck_alpha>
+<config_GM_Visbeck_alpha ocn_grid="GoM3r1">0.005</config_GM_Visbeck_alpha>
 <config_GM_Visbeck_max_depth>1000.0</config_GM_Visbeck_max_depth>
 <config_GM_EG_riMin>200.0</config_GM_EG_riMin>
 <config_GM_EG_kappa_factor>3.0</config_GM_EG_kappa_factor>
@@ -236,6 +243,7 @@
 <config_GM_horizontal_ramp_min ocn_grid="WCAtl12to45E2r4">30e3</config_GM_horizontal_ramp_min>
 <config_GM_horizontal_ramp_max>30e3</config_GM_horizontal_ramp_max>
 <config_GM_horizontal_ramp_max ocn_grid="WCAtl12to45E2r4">40e3</config_GM_horizontal_ramp_max>
+<config_GM_horizontal_ramp_max ocn_grid="GoM3r1">20e3</config_GM_horizontal_ramp_max>
 <config_GMRedi_Rossby_ramp_min>0.5</config_GMRedi_Rossby_ramp_min>
 <config_GMRedi_Rossby_ramp_max>3.0</config_GMRedi_Rossby_ramp_max>
 
@@ -403,6 +411,7 @@
 <config_vert_tracer_adv_flux_order>3</config_vert_tracer_adv_flux_order>
 <config_horiz_tracer_adv_order>3</config_horiz_tracer_adv_order>
 <config_coef_3rd_order>0.25</config_coef_3rd_order>
+<config_coef_3rd_order ocn_grid="GoM3r1">0.33</config_coef_3rd_order>
 <config_flux_limiter>'monotonic'</config_flux_limiter>
 <config_remap_limiter>'monotonic'</config_remap_limiter>
 <config_thickness_flux_type>'centered'</config_thickness_flux_type>
@@ -443,6 +452,7 @@
 <!-- pressure_gradient -->
 <config_pressure_gradient_type>'Jacobian_from_TS'</config_pressure_gradient_type>
 <config_common_level_weight>0.5</config_common_level_weight>
+<config_pressure_gradient_type ocn_grid="GoM3r1">'pressure_and_zmid'</config_pressure_gradient_type>
 <config_zonal_ssh_grad>0.0</config_zonal_ssh_grad>
 <config_meridional_ssh_grad>0.0</config_meridional_ssh_grad>
 
@@ -494,7 +504,7 @@
 <config_btr_dt ocn_grid="WC14to60E2r3">'0000_00:00:15'</config_btr_dt>
 <config_btr_dt ocn_grid="GoM14r1">'0000_00:00:15'</config_btr_dt>
 <config_btr_dt ocn_grid="GoM14r2">'0000_00:00:15'</config_btr_dt>
-<config_btr_dt ocn_grid="GoM3r1">'0000_00:00:07.5'</config_btr_dt>
+<config_btr_dt ocn_grid="GoM3r1">'0000_00:00:09'</config_btr_dt>
 <config_btr_dt ocn_grid="WCAtl12to45E2r4">'0000_00:00:15'</config_btr_dt>
 <config_btr_dt ocn_grid="SOwISC12to60E2r4">'0000_00:00:15'</config_btr_dt>
 <config_btr_dt ocn_grid="ECwISC30to60E2r1">'0000_00:01:15'</config_btr_dt>
