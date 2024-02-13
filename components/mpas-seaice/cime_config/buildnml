@@ -246,7 +246,7 @@ def buildnml(case, caseroot, compname):
         decomp_date = '20240212'
         decomp_prefix = 'partitions/mpas-seaice.graph.info.'
         grid_date = '20240212'
-        grid_prefix = 'seaice.GoM312'
+        grid_prefix = 'seaice.GoM3r1'
         if ice_ic_mode == 'spunup':
             grid_date = '20240212'
             grid_prefix = 'mpassi.GoM3r1.rstFromG-anvil'

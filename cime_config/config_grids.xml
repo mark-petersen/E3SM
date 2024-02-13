@@ -516,7 +516,7 @@
       <grid name="rof">JRA025</grid>
       <grid name="glc">null</grid>
       <grid name="wav">null</grid>
-      <mask>GoM14r1</mask>
+      <mask>GoM3r1</mask>
     </model_grid>
     
     <model_grid alias="TL319_WCAtl12to45E2r4" compset="(DATM|XATM|SATM)">
@@ -2797,7 +2797,7 @@
       <nx>344508</nx>
       <ny>1</ny>
       <file grid="ice|ocn">$DIN_LOC_ROOT/share/domains/domain.ocn.GoM3r1.240131.nc</file>
-      <desc>GoM3r12 is a MPAS ice/ocean grid with enhanced resolution of 3km in the Gulf of Mexico</desc>
+      <desc>GoM3r1 is a MPAS ice/ocean grid with enhanced resolution of 3km in the Gulf of Mexico</desc>
     </domain>>
 
     <domain name="WCAtl12to45E2r4">
@@ -4126,7 +4126,7 @@
       <map name="ATM2OCN_SMAPNAME">cpl/gridmaps/TL319/map_TL319_to_GoM3r1_trbilin.20240130.nc</map>
       <map name="ATM2OCN_VMAPNAME">cpl/gridmaps/TL319/map_TL319_to_GoM3r1_esmfpatch.20240130.nc</map>
       <map name="OCN2ATM_FMAPNAME">cpl/gridmaps/GoM3r1/map_GoM3r1_to_TL319_traave.20240130.nc</map>
-      <map name="OCN2ATM_SMAPNAME">cpl/gridmaps/GoM14r3/map_GoM3r1_to_TL319_traave.20240130.nc</map>
+      <map name="OCN2ATM_SMAPNAME">cpl/gridmaps/GoM3r1/map_GoM3r1_to_TL319_traave.20240130.nc</map>
     </gridmap>
 
     <gridmap atm_grid="TL319" ocn_grid="WCAtl12to45E2r4">
