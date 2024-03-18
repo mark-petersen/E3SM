@@ -503,7 +503,7 @@ contains
 
    subroutine ocn_tend_tracer(tendPool, statePool, forcingPool, &
                               meshPool, swForcingPool, &
-                              dt, activeTracersOnlyIn, timeLevelIn )!{{{
+                              dt, currTime, activeTracersOnlyIn, timeLevelIn)!{{{
 
       !-----------------------------------------------------------------
       ! input variables
@@ -521,6 +521,8 @@ contains
 
       integer, intent(in), optional :: &
          timeLevelIn          !< [in] time index to use for state vars
+
+      type (MPAS_Time_Type), intent(in) :: currTime
 
       ! these variables input from shared diagnostics module:
       !    normalTransportVelocity - transport velocity across edge
@@ -827,7 +829,7 @@ contains
                                   tracerGroupSurfaceFlux, &
                                   tracerGroupSurfaceFluxRunoff, &
                                   tracerGroupSurfaceFluxRemoved, &
-                                  dt, layerThickness, err)
+                                  dt, layerThickness, currTime, err)
 
          end if ! sfc bulk forcing
 

@@ -92,7 +92,7 @@ module ocn_time_integration
 !
 !-----------------------------------------------------------------------
 
-   subroutine ocn_timestep(domain, dt, timeStamp)!{{{
+   subroutine ocn_timestep(domain, dt, timeStamp, currTime)!{{{
 
       !-----------------------------------------------------------------
       ! Input variables
@@ -103,6 +103,8 @@ module ocn_time_integration
 
       character(len=*), intent(in) :: &
          timeStamp       !< [in] current time step in simulation
+
+      type (MPAS_Time_Type), intent(in) :: currTime
 
       !-----------------------------------------------------------------
       ! Input/Output variables
@@ -127,17 +129,17 @@ module ocn_time_integration
       ! Advance the model base on choice of time integration scheme
       select case (timeIntegratorChoice)
       case (timeIntSplitExplicit)
-         call ocn_time_integrator_split(domain, dt)
+         call ocn_time_integrator_split(domain, dt, currTime)
       case (timeIntUnsplitExplicit)
-         call ocn_time_integrator_split(domain, dt)
+         call ocn_time_integrator_split(domain, dt, currTime)
       case (timeIntSemiImplicit)
-         call ocn_time_integrator_si(domain, dt)
+         call ocn_time_integrator_si(domain, dt, currTime)
       case (timeIntRK4)
-         call ocn_time_integrator_rk4(domain, dt)
+         call ocn_time_integrator_rk4(domain, dt, currTime)
       case (timeIntLTS)
-         call ocn_time_integrator_lts(domain, dt)
+         call ocn_time_integrator_lts(domain, dt, currTime)
       case (timeIntSplitExplicitAB2)
-         call ocn_time_integrator_split_ab2(domain, dt)
+         call ocn_time_integrator_split_ab2(domain, dt, currTime)
       end select
 
       ! compute time since start of simulation, in days

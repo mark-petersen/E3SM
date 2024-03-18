@@ -25,6 +25,7 @@ module ocn_surface_bulk_forcing
    use mpas_derived_types
    use mpas_pool_routines
    use mpas_timekeeping
+   use mpas_constants
    use ocn_constants
    use ocn_config
    use ocn_mesh
@@ -78,7 +79,7 @@ contains
 !-----------------------------------------------------------------------
 
    subroutine ocn_surface_bulk_forcing_tracers(meshPool, groupName, forcingPool, tracerGroup,   &
-      tracersSurfaceFlux, tracersSurfaceFluxRunoff, tracersSurfaceFluxRemoved, dt, layerThickness, err)!{{{
+      tracersSurfaceFlux, tracersSurfaceFluxRunoff, tracersSurfaceFluxRemoved, dt, layerThickness, currTime, err)!{{{
 
       !-----------------------------------------------------------------
       !
@@ -87,6 +88,7 @@ contains
       !-----------------------------------------------------------------
       type (mpas_pool_type), intent(in) :: meshPool !< Input: mesh information
       character (len=*) :: groupName !< Input: Name of tracer group
+      type (MPAS_Time_Type), intent(in) :: currTime
 
       !-----------------------------------------------------------------
       !
@@ -122,7 +124,7 @@ contains
       call mpas_timer_start("bulk_" // trim(groupName))
       if ( trim(groupName) == 'activeTracers' ) then
          call ocn_surface_bulk_forcing_active_tracers(meshPool, forcingPool, tracerGroup,  &
-            tracersSurfaceFlux, tracersSurfaceFluxRunoff, tracersSurfaceFluxRemoved, layerThickness, dt, err)
+            tracersSurfaceFlux, tracersSurfaceFluxRunoff, tracersSurfaceFluxRemoved, layerThickness, dt, currTime, err)
       end if
       call mpas_timer_stop("bulk_" // trim(groupName))
 
@@ -419,7 +421,8 @@ contains
 !-----------------------------------------------------------------------
 
    subroutine ocn_surface_bulk_forcing_active_tracers(meshPool, forcingPool, tracerGroup,  &
-      tracersSurfaceFlux, tracersSurfaceFluxRunoff, tracersSurfaceFluxRemoved, layerThickness, dt, err)!{{{
+      tracersSurfaceFlux, tracersSurfaceFluxRunoff, tracersSurfaceFluxRemoved, layerThickness, dt, &
+      currTime, err)!{{{
 
       !-----------------------------------------------------------------
       !
@@ -427,6 +430,7 @@ contains
       !
       !-----------------------------------------------------------------
       type (mpas_pool_type), intent(in) :: meshPool !< Input: mesh information
+      type (MPAS_Time_Type), intent(in) :: currTime
 
       !-----------------------------------------------------------------
       !
@@ -471,6 +475,17 @@ contains
                                                   seaIceTemperatureFlux, icebergTemperatureFlux, &
                                                   totalFreshWaterTemperatureFlux
       real (kind=RKIND) :: requiredSalt, allowedSalt, surfaceTemperatureFluxWithoutRunoff
+
+      integer :: iday, err_tmp
+
+      ! Declare variables to fit the sine wave
+      ! If this is added permanently, put these into namelist flags.
+      real (kind=RKIND) :: GoM_runoff_temperature ! computed temperature for GoM runoff
+      real (kind=RKIND) :: A ! amplitude
+      real (kind=RKIND) :: w ! period modification
+      real (kind=RKIND) :: p ! phase shift modification
+      real (kind=RKIND) :: c ! Vertical shift
+      real (kind=RKIND) :: minLat, minLon, maxLat, maxLon ! Gulf of Mexico box
 
       err = 0
 
@@ -552,6 +567,22 @@ contains
       ! Only include this heat forcing when bulk thickness is turned on
       ! indices on tracerGroup are (iTracer, iLevel, iCell)
       if (.not. bulkThicknessFluxOff) then
+         !River temperature fitting code implemented by Dylan Schlichting
+         call mpas_get_time(curr_time=currTime, DoY=iday, ierr=err_tmp)
+
+         A = -11.597_RKIND
+         w = 0.0172_RKIND
+         p = 1.030_RKIND
+         c = 18.782_RKIND
+         GoM_runoff_temperature = max(A*sin(w*iday/365.0_RKIND+p)+c, 0.0_RKIND)
+         ! temporary, use for testing:
+         print *, 'iday, GoM_runoff_temperature', iday, GoM_runoff_temperature
+
+         minLon = (-100.0_RKIND + 360) * pii/180.0_RKIND
+         maxLon = ( -60.0_RKIND + 360) * pii/180.0_RKIND
+         minLat =    5.0_RKIND * pii/180.0_RKIND
+         maxLat =   35.0_RKIND * pii/180.0_RKIND
+
          !$omp parallel
          !$omp do schedule(runtime) private(surfaceTemperatureFluxWithoutRunoff)
          do iCell = 1, nCells
@@ -561,8 +592,18 @@ contains
            evapTemperatureFlux(iCell) = evaporationFlux(iCell) * tracerGroup(index_temperature_flux,minLevelCell(iCell),iCell) / rho_sw
 
            ! Runoff can only have a minimum temperature of 0.0C, since it is fresh water.
-           tracersSurfaceFluxRunoff(index_temperature_flux,iCell) = riverRunoffFlux(iCell) &
-                      * min(10.0,max(tracerGroup(index_temperature_flux,minLevelCell(iCell),iCell), 0.0_RKIND)) / rho_sw
+           if (latCell(iCell)>minLat .and. latCell(iCell)<maxLat .and. &
+               lonCell(iCell)>minLon .and. lonCell(iCell)<maxLon) then
+             tracersSurfaceFluxRunoff(index_temperature_flux,iCell) = riverRunoffFlux(iCell) & 
+                         * GoM_runoff_temperature / rho_sw
+           else
+             tracersSurfaceFluxRunoff(index_temperature_flux,iCell) = riverRunoffFlux(iCell) &
+                         * max(tracerGroup(index_temperature_flux,minLevelCell(iCell),iCell), 0.0_RKIND) / rho_sw
+           endif
+
+           ! temporary, set to 10C. Remove later:
+           !tracersSurfaceFluxRunoff(index_temperature_flux,iCell) = riverRunoffFlux(iCell) &
+           !           * min(10.0,max(tracerGroup(index_temperature_flux,minLevelCell(iCell),iCell), 0.0_RKIND)) / rho_sw
 
            ! Accumulate fluxes that use the freezing point
 ! mrp performance note: should call ocn_freezing_temperature just once here 

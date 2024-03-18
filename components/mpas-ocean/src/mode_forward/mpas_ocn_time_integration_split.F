@@ -121,7 +121,7 @@ module ocn_time_integration_split
 !
 !-----------------------------------------------------------------------
 
-   subroutine ocn_time_integrator_split(domain, dt)!{{{
+   subroutine ocn_time_integrator_split(domain, dt, currTime)!{{{
 
       !-----------------------------------------------------------------
       ! Input variables
@@ -129,6 +129,7 @@ module ocn_time_integration_split
 
       real (kind=RKIND), intent(in) :: &
          dt              !< [in] time step (sec) to move forward
+      type (MPAS_Time_Type), intent(in) :: currTime
 
       !-----------------------------------------------------------------
       ! Input/output variables
@@ -1796,7 +1797,7 @@ module ocn_time_integration_split
          call mpas_timer_start('se tracer tend', .false.)
          call ocn_tend_tracer(tendPool, statePool, forcingPool, &
                               meshPool, swForcingPool, &
-                              dt, activeTracersOnly, 2)
+                              dt, currTime, activeTracersOnly, 2)
 
          call mpas_pool_get_array(tracersPool, 'activeTracers', &
                                                 tracersGroupCur, 1)

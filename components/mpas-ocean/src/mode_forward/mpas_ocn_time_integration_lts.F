@@ -75,7 +75,7 @@ module ocn_time_integration_lts
 !
 !-----------------------------------------------------------------------
 
-    subroutine ocn_time_integrator_lts(domain,dt)!{{{
+    subroutine ocn_time_integrator_lts(domain,dt,currTime)!{{{
     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     ! Advance model state forward in time by the specified time step using
     ! a local time stepping scheme with spltting of the fast and slow tendencies
@@ -90,6 +90,8 @@ module ocn_time_integration_lts
 
     real (kind=RKIND), intent(in) :: &
        dt      !< [in] time step (sec) to move forward
+
+      type (MPAS_Time_Type), intent(in) :: currTime
 
     !-----------------------------------------------------------------
     ! Input/output variables
