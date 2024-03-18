@@ -562,7 +562,7 @@ contains
 
            ! Runoff can only have a minimum temperature of 0.0C, since it is fresh water.
            tracersSurfaceFluxRunoff(index_temperature_flux,iCell) = riverRunoffFlux(iCell) &
-                      * max(tracerGroup(index_temperature_flux,minLevelCell(iCell),iCell), 0.0_RKIND) / rho_sw
+                      * min(10.0,max(tracerGroup(index_temperature_flux,minLevelCell(iCell),iCell), 0.0_RKIND)) / rho_sw
 
            ! Accumulate fluxes that use the freezing point
 ! mrp performance note: should call ocn_freezing_temperature just once here 
