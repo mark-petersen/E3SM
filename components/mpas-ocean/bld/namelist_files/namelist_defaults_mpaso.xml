@@ -43,6 +43,8 @@
 <config_dt ocn_grid="oARRM60to10">'00:10:00'</config_dt>
 <config_dt ocn_grid="oARRM60to6">'00:05:00'</config_dt>
 <config_dt ocn_grid="ARRM10to60E2r1">'00:10:00'</config_dt>
+<config_dt ocn_grid="ARRMwISC3to18E3r1">'00:00:10'</config_dt>
+<config_dt ocn_grid="ARRMwISC2p4to18E3r1">'00:00:10'</config_dt>
 <config_dt ocn_grid="EC30to60E2r2">'00:30:00'</config_dt>
 <config_dt ocn_grid="WC14to60E2r3">'00:10:00'</config_dt>
 <config_dt ocn_grid="WCAtl12to45E2r4">'00:10:00'</config_dt>
@@ -85,6 +87,8 @@
 <config_hmix_scaleWithMesh ocn_grid="FRISwISC02to60E3r1">.true.</config_hmix_scaleWithMesh>
 <config_hmix_scaleWithMesh ocn_grid="FRISwISC01to60E3r1">.true.</config_hmix_scaleWithMesh>
 <config_hmix_scaleWithMesh ocn_grid="RRSwISC6to18E3r5">.true.</config_hmix_scaleWithMesh>
+<config_hmix_scaleWithMesh ocn_grid="ARRMwISC3to18E3r1">.true.</config_hmix_scaleWithMesh>
+<config_hmix_scaleWithMesh ocn_grid="ARRMwISC2p4to18E3r1">.true.</config_hmix_scaleWithMesh>
 <config_maxMeshDensity>-1.0</config_maxMeshDensity>
 <config_hmix_use_ref_cell_width>.false.</config_hmix_use_ref_cell_width>
 <config_hmix_ref_cell_width>30.0e3</config_hmix_ref_cell_width>
@@ -107,6 +111,8 @@
 <config_use_mom_del2 ocn_grid="FRISwISC02to60E3r1">.true.</config_use_mom_del2>
 <config_use_mom_del2 ocn_grid="FRISwISC01to60E3r1">.true.</config_use_mom_del2>
 <config_use_mom_del2 ocn_grid="RRSwISC6to18E3r5">.true.</config_use_mom_del2>
+<config_use_mom_del2 ocn_grid="ARRMwISC3to18E3r1">.true.</config_use_mom_del2>
+<config_use_mom_del2 ocn_grid="ARRMwISC2p4to18E3r1">.true.</config_use_mom_del2>
 <config_mom_del2>10.0</config_mom_del2>
 <config_mom_del2 ocn_grid="oEC60to30v3">1000.0</config_mom_del2>
 <config_mom_del2 ocn_grid="oEC60to30v3wLI">1000.0</config_mom_del2>
@@ -123,6 +129,8 @@
 <config_mom_del2 ocn_grid="FRISwISC02to60E3r1">77.0</config_mom_del2>
 <config_mom_del2 ocn_grid="FRISwISC01to60E3r1">38.5</config_mom_del2>
 <config_mom_del2 ocn_grid="RRSwISC6to18E3r5">100.0</config_mom_del2>
+<config_mom_del2 ocn_grid="ARRMwISC3to18E3r1">50</config_mom_del2>
+<config_mom_del2 ocn_grid="ARRMwISC2p4to18E3r1">40</config_mom_del2>
 <config_use_tracer_del2>.false.</config_use_tracer_del2>
 <config_tracer_del2>10.0</config_tracer_del2>
 
@@ -154,6 +162,8 @@
 <config_mom_del4 ocn_grid="FRISwISC02to60E3r1">5.46e07</config_mom_del4>
 <config_mom_del4 ocn_grid="FRISwISC01to60E3r1">6.83e06</config_mom_del4>
 <config_mom_del4 ocn_grid="RRSwISC6to18E3r5">3.2e09</config_mom_del4>
+<config_mom_del4 ocn_grid="ARRMwISC3to18E3r1">1.6e09</config_mom_del4>
+<config_mom_del4 ocn_grid="ARRMwISC2p4to18E3r1">1.3e09</config_mom_del4>
 <config_mom_del4_div_factor>1.0</config_mom_del4_div_factor>
 <config_use_tracer_del4>.false.</config_use_tracer_del4>
 <config_tracer_del4>0.0</config_tracer_del4>
@@ -171,6 +181,8 @@
 <config_use_Redi ocn_grid="oRRS18to6v3">.false.</config_use_Redi>
 <config_use_Redi ocn_grid="oRRS15to5">.false.</config_use_Redi>
 <config_use_Redi ocn_grid="RRSwISC6to18E3r5">.false.</config_use_Redi>
+<config_use_Redi ocn_grid="ARRMwISC3to18E3r1">.false.</config_use_Redi>
+<config_use_Redi ocn_grid="ARRMwISC2p4to18E3r1">.false.</config_use_Redi>
 <config_Redi_closure>'constant'</config_Redi_closure>
 <config_Redi_constant_kappa>400.0</config_Redi_constant_kappa>
 <config_Redi_constant_kappa ocn_forcing="datm_forced_restoring">400.0</config_Redi_constant_kappa>
@@ -210,6 +222,8 @@
 <config_use_GM ocn_grid="oRRS18to6v3">.false.</config_use_GM>
 <config_use_GM ocn_grid="oRRS15to5">.false.</config_use_GM>
 <config_use_GM ocn_grid="RRSwISC6to18E3r5">.false.</config_use_GM>
+<config_use_GM ocn_grid="ARRMwISC3to18E3r1">.false.</config_use_GM>
+<config_use_GM ocn_grid="ARRMwISC2p4to18E3r1">.false.</config_use_GM>
 <config_GM_closure>'EdenGreatbatch'</config_GM_closure>
 <config_GM_closure ocn_grid="EC30to60E2r2">'constant'</config_GM_closure>
 <config_GM_closure ocn_grid="WC14to60E2r3">'constant'</config_GM_closure>
@@ -559,6 +573,8 @@
 <config_btr_dt ocn_grid="oARRM60to10">'0000_00:00:24'</config_btr_dt>
 <config_btr_dt ocn_grid="oARRM60to6">'0000_00:00:10'</config_btr_dt>
 <config_btr_dt ocn_grid="ARRM10to60E2r1">'0000_00:00:24'</config_btr_dt>
+<config_btr_dt ocn_grid="ARRMwISC3to18E3r1">'0000_00:00:01'</config_btr_dt>
+<config_btr_dt ocn_grid="ARRMwISC2p4to18E3r1">'0000_00:00:01'</config_btr_dt>
 <config_btr_dt ocn_grid="EC30to60E2r2">'0000_00:01:15'</config_btr_dt>
 <config_btr_dt ocn_grid="WC14to60E2r3">'0000_00:00:15'</config_btr_dt>
 <config_btr_dt ocn_grid="WCAtl12to45E2r4">'0000_00:00:15'</config_btr_dt>
@@ -618,6 +634,8 @@
 <config_check_ssh_consistency ocn_grid="FRISwISC02to60E3r1">.false.</config_check_ssh_consistency>
 <config_check_ssh_consistency ocn_grid="FRISwISC01to60E3r1">.false.</config_check_ssh_consistency>
 <config_check_ssh_consistency ocn_grid="RRSwISC6to18E3r5">.false.</config_check_ssh_consistency>
+<config_check_ssh_consistency ocn_grid="ARRMwISC3to18E3r1">.false.</config_check_ssh_consistency>
+<config_check_ssh_consistency ocn_grid="ARRMwISC2p4to18E3r1">.false.</config_check_ssh_consistency>
 <config_filter_btr_mode>.false.</config_filter_btr_mode>
 <config_prescribe_velocity>.false.</config_prescribe_velocity>
 <config_prescribe_thickness>.false.</config_prescribe_thickness>
@@ -1132,6 +1150,8 @@
 <config_AM_mocStreamfunction_enable ocn_grid="oARRM60to10">.false.</config_AM_mocStreamfunction_enable>
 <config_AM_mocStreamfunction_enable ocn_grid="oARRM60to6">.false.</config_AM_mocStreamfunction_enable>
 <config_AM_mocStreamfunction_enable ocn_grid="ARRM10to60E2r1">.true.</config_AM_mocStreamfunction_enable>
+<config_AM_mocStreamfunction_enable ocn_grid="ARRMwISC3to18E3r1">.true.</config_AM_mocStreamfunction_enable>
+<config_AM_mocStreamfunction_enable ocn_grid="ARRMwISC2p4to18E3r1">.true.</config_AM_mocStreamfunction_enable>
 <config_AM_mocStreamfunction_enable ocn_grid="EC30to60E2r2">.true.</config_AM_mocStreamfunction_enable>
 <config_AM_mocStreamfunction_enable ocn_grid="WC14to60E2r3">.true.</config_AM_mocStreamfunction_enable>
 <config_AM_mocStreamfunction_enable ocn_grid="WCAtl12to45E2r4">.true.</config_AM_mocStreamfunction_enable>
