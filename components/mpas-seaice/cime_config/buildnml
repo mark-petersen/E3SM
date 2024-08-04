@@ -208,6 +208,24 @@ def buildnml(case, caseroot, compname):
             grid_date = '220802'
             grid_prefix = 'mpassi.ARRM10to60E2r1.rstFrom1monthG-chrys'
 
+    elif ice_grid == 'ARRMwISC3to18E3r1':
+        decomp_date = '20240619'
+        decomp_prefix = 'partitions/mpas-seaice.graph.info.'
+        grid_date = '20240823'
+        grid_prefix = 'mpassi.ARRMwISC3to18E3r1'
+        if ice_ic_mode == 'spunup':
+            grid_date = '240701'
+            grid_prefix = 'mpassi.ARRMwISC3to18E3r1.rstFrom1monthG-chrys'
+
+    elif ice_grid == 'ARRMwISC2p4to18E3r1':
+        decomp_date = '20240808'
+        decomp_prefix = 'partitions/mpas-seaice.graph.info.'
+        grid_date = '20240823'
+        grid_prefix = 'mpassi.ARRMwISC2p4to18E3r1'
+        if ice_ic_mode == 'spunup':
+            grid_date = '240701'
+            grid_prefix = 'mpassi.ARRMwISC2p4to18E3r1.rstFrom1monthG-chrys'
+
     elif ice_grid == 'EC30to60E2r2':
         decomp_date = '230313'
         decomp_prefix = 'partitions/mpas-seaice.graph.info.'
@@ -678,13 +696,14 @@ def buildnml(case, caseroot, compname):
             lines.append('        filename_template="{}.mpassi{}.hist.am.highFrequencyOutput.$Y-$M-$D.nc"'.format(casename, inst_string))
             lines.append('        filename_interval="00-01-00_00:00:00"')
             lines.append('        reference_time="01-01-01_00:00:00"')
-            lines.append('        output_interval="none"')
+            lines.append('        output_interval="00-00-01_00:00:00"')
             lines.append('        clobber_mode="truncate"')
             lines.append('        packages="highFrequencyOutputAMPKG">')
             lines.append('')
             lines.append('    <var name="xtime"/>')
-            lines.append('    <stream name="mesh"/>')
-            lines.append('    <var name="iceAreaCellCategory1"/>')
+            lines.append('    <var name="daysSinceStartOfSim"/>')
+            lines.append('    <var name="iceAreaCell"/>')
+            lines.append('    <var name="iceVolumeCell"/>')
             lines.append('</stream>')
             lines.append('')
             lines.append('<stream name="regionalStatisticsOutput"')
