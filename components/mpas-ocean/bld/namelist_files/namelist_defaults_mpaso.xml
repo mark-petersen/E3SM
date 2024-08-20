@@ -43,8 +43,6 @@
 <config_dt ocn_grid="oARRM60to10">'00:10:00'</config_dt>
 <config_dt ocn_grid="oARRM60to6">'00:05:00'</config_dt>
 <config_dt ocn_grid="ARRM10to60E2r1">'00:10:00'</config_dt>
-<config_dt ocn_grid="ARRMwISC3to18E3r1">'00:00:10'</config_dt>
-<config_dt ocn_grid="ARRMwISC2p4to18E3r1">'00:00:10'</config_dt>
 <config_dt ocn_grid="EC30to60E2r2">'00:30:00'</config_dt>
 <config_dt ocn_grid="WC14to60E2r3">'00:10:00'</config_dt>
 <config_dt ocn_grid="WCAtl12to45E2r4">'00:10:00'</config_dt>
@@ -57,6 +55,8 @@
 <config_dt ocn_grid="FRISwISC02to60E3r1">'00:02:00'</config_dt>
 <config_dt ocn_grid="FRISwISC01to60E3r1">'00:01:00'</config_dt>
 <config_dt ocn_grid="RRSwISC6to18E3r5">'00:05:00'</config_dt>
+<config_dt ocn_grid="ARRMwISC3to18E3r1">'00:02:30'</config_dt>
+<config_dt ocn_grid="ARRMwISC2p4to18E3r1">'00:02:00'</config_dt>
 <config_time_integrator>'split_explicit_ab2'</config_time_integrator>
 <config_number_of_time_levels>2</config_number_of_time_levels>
 
@@ -583,8 +583,6 @@
 <config_btr_dt ocn_grid="oARRM60to10">'0000_00:00:24'</config_btr_dt>
 <config_btr_dt ocn_grid="oARRM60to6">'0000_00:00:10'</config_btr_dt>
 <config_btr_dt ocn_grid="ARRM10to60E2r1">'0000_00:00:24'</config_btr_dt>
-<config_btr_dt ocn_grid="ARRMwISC3to18E3r1">'0000_00:00:01'</config_btr_dt>
-<config_btr_dt ocn_grid="ARRMwISC2p4to18E3r1">'0000_00:00:01'</config_btr_dt>
 <config_btr_dt ocn_grid="EC30to60E2r2">'0000_00:01:15'</config_btr_dt>
 <config_btr_dt ocn_grid="WC14to60E2r3">'0000_00:00:15'</config_btr_dt>
 <config_btr_dt ocn_grid="WCAtl12to45E2r4">'0000_00:00:15'</config_btr_dt>
@@ -597,6 +595,8 @@
 <config_btr_dt ocn_grid="FRISwISC02to60E3r1">'0000_00:00:02.5'</config_btr_dt>
 <config_btr_dt ocn_grid="FRISwISC01to60E3r1">'0000_00:00:01.25'</config_btr_dt>
 <config_btr_dt ocn_grid="RRSwISC6to18E3r5">'0000_00:00:05'</config_btr_dt>
+<config_btr_dt ocn_grid="ARRMwISC3to18E3r1">'0000_00:00:08'</config_btr_dt>
+<config_btr_dt ocn_grid="ARRMwISC2p4to18E3r1">'0000_00:00:06'</config_btr_dt>
 <config_n_btr_cor_iter>2</config_n_btr_cor_iter>
 <config_vel_correction>.true.</config_vel_correction>
 <config_btr_subcycle_loop_factor>2</config_btr_subcycle_loop_factor>
