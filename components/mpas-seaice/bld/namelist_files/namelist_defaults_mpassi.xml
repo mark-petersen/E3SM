@@ -482,7 +482,7 @@
 <config_prescribed_ice_stream_fill>false</config_prescribed_ice_stream_fill>
 
 <!-- AM_highFrequencyOutput -->
-<config_AM_highFrequencyOutput_enable>false</config_AM_highFrequencyOutput_enable>
+<config_AM_highFrequencyOutput_enable>true</config_AM_highFrequencyOutput_enable>
 <config_AM_highFrequencyOutput_compute_interval>'output_interval'</config_AM_highFrequencyOutput_compute_interval>
 <config_AM_highFrequencyOutput_output_stream>'highFrequencyOutput'</config_AM_highFrequencyOutput_output_stream>
 <config_AM_highFrequencyOutput_compute_on_startup>true</config_AM_highFrequencyOutput_compute_on_startup>
