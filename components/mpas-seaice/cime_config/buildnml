@@ -494,7 +494,7 @@ def buildnml(case, caseroot, compname):
             lines.append('<immutable_stream name="mesh"')
             lines.append('                  type="none"')
             if ice_grid.startswith("oRRS1") or ice_grid.startswith("FRIS") \
-                    or ice_grid.startswith("RRSwISC6"):
+                    or ice_grid.startswith("RRSwISC6") or ice_grid.startswith("ARRMwISC"):
                 lines.append('                  io_type="pnetcdf,cdf5"')
             else:
                 lines.append('                  io_type="{}"'.format(ice_pio_typename))
@@ -504,7 +504,7 @@ def buildnml(case, caseroot, compname):
             lines.append('<immutable_stream name="input"')
             lines.append('                  type="input"')
             if ice_grid.startswith("oRRS1") or ice_grid.startswith("FRIS") \
-                    or ice_grid.startswith("RRSwISC6"):
+                    or ice_grid.startswith("RRSwISC6") or ice_grid.startswith("ARRMwISC"):
                 lines.append('                  io_type="pnetcdf,cdf5"')
             else:
                 lines.append('                  io_type="{}"'.format(ice_pio_typename))
@@ -527,7 +527,7 @@ def buildnml(case, caseroot, compname):
             lines.append('<immutable_stream name="restart"')
             lines.append('                  type="input;output"')
             if ice_grid.startswith("oRRS1") or ice_grid.startswith("FRIS") \
-                    or ice_grid.startswith("RRSwISC6"):
+                    or ice_grid.startswith("RRSwISC6") or ice_grid.startswith("ARRMwISC"):
                 lines.append('                  io_type="pnetcdf,cdf5"')
             else:
                 lines.append('                  io_type="{}"'.format(ice_pio_typename))
@@ -544,7 +544,7 @@ def buildnml(case, caseroot, compname):
                 lines.append('<immutable_stream name="restart_ic"')
                 lines.append('                  type="input"')
                 if ice_grid.startswith("oRRS1") or ice_grid.startswith("FRIS") \
-                        or ice_grid.startswith("RRSwISC6"):
+                        or ice_grid.startswith("RRSwISC6") or ice_grid.startswith("ARRMwISC"):
                         lines.append('                  io_type="pnetcdf,cdf5"')
                 else:
                     lines.append('                  io_type="{}"'.format(ice_pio_typename))

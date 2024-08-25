@@ -577,7 +577,7 @@ def buildnml(case, caseroot, compname):
             lines.append('<immutable_stream name="mesh"')
             lines.append('                  type="none"')
             if ocn_grid.startswith("oRRS1") or ocn_grid.startswith("FRIS") \
-                    or ocn_grid.startswith("RRSwISC6"):
+                    or ocn_grid.startswith("RRSwISC6") or ocn_grid.startswith("ARRMwISC"):
                 lines.append('                  io_type="pnetcdf,cdf5"')
             else:
                 lines.append('                  io_type="{}"'.format(ocn_pio_typename))
@@ -587,7 +587,7 @@ def buildnml(case, caseroot, compname):
             lines.append('<immutable_stream name="input"')
             lines.append('                  type="input"')
             if ocn_grid.startswith("oRRS1") or ocn_grid.startswith("FRIS") \
-                    or ocn_grid.startswith("RRSwISC6"):
+                    or ocn_grid.startswith("RRSwISC6") or ocn_grid.startswith("ARRMwISC"):
                 lines.append('                  io_type="pnetcdf,cdf5"')
             else:
                 lines.append('                  io_type="{}"'.format(ocn_pio_typename))
@@ -609,7 +609,7 @@ def buildnml(case, caseroot, compname):
             lines.append('<immutable_stream name="restart"')
             lines.append('                  type="input;output"')
             if ocn_grid.startswith("oRRS1") or ocn_grid.startswith("FRIS") \
-                    or ocn_grid.startswith("RRSwISC6"):
+                    or ocn_grid.startswith("RRSwISC6") or ocn_grid.startswith("ARRMwISC"):
                 lines.append('                  io_type="pnetcdf,cdf5"')
             else:
                 lines.append('                  io_type="{}"'.format(ocn_pio_typename))
@@ -629,7 +629,7 @@ def buildnml(case, caseroot, compname):
             lines.append('<stream name="output"')
             lines.append('        type="output"')
             if ocn_grid.startswith("oRRS1") or ocn_grid.startswith("FRIS") \
-                    or ocn_grid.startswith("RRSwISC6"):
+                    or ocn_grid.startswith("RRSwISC6") or ocn_grid.startswith("ARRMwISC"):
                 lines.append('        io_type="pnetcdf,cdf5"')
             else:
                 lines.append('        io_type="{}"'.format(ocn_pio_typename))
@@ -821,7 +821,7 @@ def buildnml(case, caseroot, compname):
             lines.append('        filename_template="{}.mpaso{}.hist.am.globalStats.$Y-$M-$D.nc"'.format(casename, inst_string))
             lines.append('        filename_interval="00-01-00_00:00:00"')
             lines.append('        reference_time="01-01-01_00:00:00"')
-            lines.append('        output_interval="00-00-01_00:00:00"')
+            lines.append('        output_interval="00-00-00_01:00:00"')
             lines.append('        clobber_mode="truncate"')
             lines.append('        packages="globalStatsAMPKG">')
             lines.append('')
@@ -941,7 +941,7 @@ def buildnml(case, caseroot, compname):
             lines.append('        type="output"')
             lines.append('        precision="single"')
             if ocn_grid.startswith("oRRS1") or ocn_grid.startswith("FRIS") \
-                    or ocn_grid.startswith("RRSwISC6"):
+                    or ocn_grid.startswith("RRSwISC6") or ocn_grid.startswith("ARRMwISC"):
                 lines.append('        io_type="pnetcdf,cdf5"')
             else:
                 lines.append('        io_type="{}"'.format(ocn_pio_typename))
@@ -1326,7 +1326,7 @@ def buildnml(case, caseroot, compname):
             lines.append('        type="output"')
             lines.append('        precision="single"')
             if ocn_grid.startswith("oRRS1") or ocn_grid.startswith("FRIS") \
-                    or ocn_grid.startswith("RRSwISC6"):
+                    or ocn_grid.startswith("RRSwISC6") or ocn_grid.startswith("ARRMwISC"):
                 lines.append('        io_type="pnetcdf,cdf5"')
             else:
                 lines.append('        io_type="{}"'.format(ocn_pio_typename))
@@ -1372,7 +1372,8 @@ def buildnml(case, caseroot, compname):
             lines.append('    <var name="atmosphericPressure"/>')
             lines.append('    <var name="normalMLEvelocity"/>')
             lines.append('    <var name="vertMLEBolusVelocityTop"/>')
-            if not (ocn_grid.startswith("oRRS1") or ocn_grid.startswith("RRSwISC6")):
+            if not (ocn_grid.startswith("oRRS1") or ocn_grid.startswith("RRSwISC6") \
+                    or ocn_grid.startswith("ARRMwISC")):
                 lines.append('    <var name="normalGMBolusVelocity"/>')
                 lines.append('    <var name="vertGMBolusVelocityTop"/>')
                 lines.append('    <var name="cGMphaseSpeed"/>')
@@ -1562,7 +1563,7 @@ def buildnml(case, caseroot, compname):
             lines.append('        type="output"')
             lines.append('        precision="single"')
             if ocn_grid.startswith("oRRS1") or ocn_grid.startswith("FRIS") \
-                    or ocn_grid.startswith("RRSwISC6"):
+                    or ocn_grid.startswith("RRSwISC6") or ocn_grid.startswith("ARRMwISC"):
                 lines.append('        io_type="pnetcdf,cdf5"')
             else:
                 lines.append('        io_type="{}"'.format(ocn_pio_typename))
@@ -1628,7 +1629,7 @@ def buildnml(case, caseroot, compname):
             lines.append('        type="output"')
             lines.append('        precision="single"')
             if ocn_grid.startswith("oRRS1") or ocn_grid.startswith("FRIS") \
-                    or ocn_grid.startswith("RRSwISC6"):
+                    or ocn_grid.startswith("RRSwISC6") or ocn_grid.startswith("ARRMwISC"):
                 lines.append('        io_type="pnetcdf,cdf5"')
             else:
                 lines.append('        io_type="{}"'.format(ocn_pio_typename))
@@ -1735,7 +1736,7 @@ def buildnml(case, caseroot, compname):
             lines.append('<stream name="timeSeriesStatsMonthlyRestart"')
             lines.append('        type="input;output"')
             if ocn_grid.startswith("oRRS1") or ocn_grid.startswith("FRIS") \
-                    or ocn_grid.startswith("RRSwISC6"):
+                    or ocn_grid.startswith("RRSwISC6") or ocn_grid.startswith("ARRMwISC"):
                 lines.append('        io_type="pnetcdf,cdf5"')
             else:
                 lines.append('        io_type="{}"'.format(ocn_pio_typename))
@@ -1752,7 +1753,7 @@ def buildnml(case, caseroot, compname):
             lines.append('<stream name="timeSeriesStatsMonthlyMaxRestart"')
             lines.append('        type="input;output"')
             if ocn_grid.startswith("oRRS1") or ocn_grid.startswith("FRIS") \
-                    or ocn_grid.startswith("RRSwISC6"):
+                    or ocn_grid.startswith("RRSwISC6") or ocn_grid.startswith("ARRMwISC"):
                 lines.append('        io_type="pnetcdf,cdf5"')
             else:
                 lines.append('        io_type="{}"'.format(ocn_pio_typename))
@@ -1769,7 +1770,7 @@ def buildnml(case, caseroot, compname):
             lines.append('<stream name="timeSeriesStatsMonthlyMinRestart"')
             lines.append('        type="input;output"')
             if ocn_grid.startswith("oRRS1") or ocn_grid.startswith("FRIS") \
-                    or ocn_grid.startswith("RRSwISC6"):
+                    or ocn_grid.startswith("RRSwISC6") or ocn_grid.startswith("ARRMwISC"):
                 lines.append('        io_type="pnetcdf,cdf5"')
             else:
                 lines.append('        io_type="{}"'.format(ocn_pio_typename))
