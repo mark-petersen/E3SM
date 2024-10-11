@@ -31,8 +31,8 @@
 <config_dt ice_grid="FRISwISC02to60E3r1">120.0</config_dt>
 <config_dt ice_grid="FRISwISC01to60E3r1">60.0</config_dt>
 <config_dt ice_grid="RRSwISC6to18E3r5">900.0</config_dt>
-<config_dt ice_grid="ARRMwISC3to18E3r1">30.0</config_dt>
-<config_dt ice_grid="ARRMwISC2p4to18E3r1">10.0</config_dt>
+<config_dt ice_grid="ARRMwISC3to18E3r1">150.0</config_dt>
+<config_dt ice_grid="ARRMwISC2p4to18E3r1">120.0</config_dt>
 <config_calendar_type>'noleap'</config_calendar_type>
 <config_start_time>'2000-01-01_00:00:00'</config_start_time>
 <config_stop_time>'none'</config_stop_time>
