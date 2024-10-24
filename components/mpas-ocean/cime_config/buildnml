@@ -419,6 +419,18 @@ def buildnml(case, caseroot, compname):
         if ocn_ismf == 'data':
             data_ismf_file = 'prescribed_ismf_paolo2023.SOwISC12to30E3r3.20241017.nc'
 
+    elif ocn_grid == 'GoM1pt5':
+        decomp_date = '20241018'
+        decomp_prefix = 'partitions/mpas-o.graph.info.'
+        restoring_file = 'sss.PHC2_monthlyClimatology.GoM1pt5.20241018.nc'
+        analysis_mask_file = 'GoM1pt5_mocBasinsAndTransects20241018.nc'
+        ic_date = '20241018'
+        ic_prefix = 'mpaso.GoM1pt5'
+        if ocn_ic_mode == 'spunup':
+            ic_date = '20241018'
+            ic_prefix = 'mpaso.GoM1pt5.rstFromG-chrysalis'
+        if ocn_ismf == 'data':
+            data_ismf_file = 'prescribed_ismf_paolo2023.SOwISC12to30E3r3.20240829.nc'
 
     #--------------------------------------------------------------------
     # Set OCN_FORCING = datm_forced_restoring if restoring file is available
