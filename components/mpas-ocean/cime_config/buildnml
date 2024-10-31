@@ -234,8 +234,8 @@ def buildnml(case, caseroot, compname):
         decomp_prefix = 'partitions/mpas-o.graph.info.'
         restoring_file = 'sss.PHC3.0_monthlyClimatology.ARRMwISC3to18E3r1.240710.nc'
         analysis_mask_file = 'ARRMwISC3to18E3r1_mocBasinsAndTransects240710.nc'
-        ic_date = '20240805'
-        ic_prefix = 'mpaso.ARRMwISC3to18E3r1'
+        ic_date = '241022'
+        ic_prefix = 'mpaso.ARRMwISC3to18E3r1.rstFromG-pm'
         if ocn_ic_mode == 'spunup':
             ic_date = '20240710'
             ic_prefix = 'mpaso.ARRMwISC3to18E3r1.rstFrom1monthG-pm'
