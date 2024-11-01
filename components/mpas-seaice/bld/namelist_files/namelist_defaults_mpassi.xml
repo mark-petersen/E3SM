@@ -75,7 +75,8 @@
 
 <!-- initialize -->
 <config_earth_radius>6371229.0</config_earth_radius>
-<config_initial_condition_type>'cice_default'</config_initial_condition_type>
+<!-- mrp changed from cice_default for spun up G case -->
+<config_initial_condition_type>'restart'</config_initial_condition_type>
 <config_initial_ice_area>1.0</config_initial_ice_area>
 <config_initial_ice_volume>1.0</config_initial_ice_volume>
 <config_initial_snow_volume>0.0</config_initial_snow_volume>
