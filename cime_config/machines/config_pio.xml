@@ -279,8 +279,11 @@
   <entry id="CPL_PIO_TYPENAME">
     <values>
       <value mach="onyx">netcdf</value>
+      <value mach="carpenter">netcdf</value>
       <value mach="narwhal">netcdf</value>
       <value mach="warhawk">netcdf</value>
+      <value mach="warhawkm">netcdf</value>
+      <value mach="warhawku">netcdf</value>
     </values>
   </entry>
 
