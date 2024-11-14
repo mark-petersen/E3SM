@@ -2166,7 +2166,8 @@ contains
            seaIceSalinityFlux(i) = x2o_o % rAttr(index_x2o_Fioi_salt, n)
         end if
         if ( riverRunoffFluxField % isActive ) then
-           riverRunoffFlux(i) = x2o_o % rAttr(index_x2o_Foxx_rofl, n)
+           !riverRunoffFlux(i) = x2o_o % rAttr(index_x2o_Foxx_rofl, n)
+           riverRunoffFlux(i) = 0.0_RKIND
            if (config_remove_ais_river_runoff) then
               if (latCell(i) < -1.04719666667_RKIND) then ! 60S in radians
                  removedRiverRunoffFlux(i) = riverRunoffFlux(i)

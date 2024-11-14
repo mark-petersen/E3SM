@@ -439,7 +439,6 @@
 <config_land_ice_flux_mode ocn_grid="FRISwISC01to60E3r1">'pressure_only'</config_land_ice_flux_mode>
 <config_land_ice_flux_mode ocn_grid="RRSwISC6to18E3r5">'pressure_only'</config_land_ice_flux_mode>
 <config_land_ice_flux_mode ocn_grid="SOwISC12to30E3r3">'pressure_only'</config_land_ice_flux_mode>
-<config_land_ice_flux_mode ocn_grid="GoM1pt5">'pressure_only'</config_land_ice_flux_mode>
 <config_land_ice_flux_formulation>'Jenkins'</config_land_ice_flux_formulation>
 <config_land_ice_flux_useHollandJenkinsAdvDiff>.false.</config_land_ice_flux_useHollandJenkinsAdvDiff>
 <config_land_ice_flux_attenuation_coefficient>10.0</config_land_ice_flux_attenuation_coefficient>
@@ -460,7 +459,6 @@
 <config_land_ice_flux_explicit_topDragCoeff ocn_grid="FRISwISC01to60E3r1">4.48e-3</config_land_ice_flux_explicit_topDragCoeff>
 <config_land_ice_flux_explicit_topDragCoeff ocn_grid="RRSwISC6to18E3r5">4.48e-3</config_land_ice_flux_explicit_topDragCoeff>
 <config_land_ice_flux_explicit_topDragCoeff ocn_grid="SOwISC12to30E3r3">4.48e-3</config_land_ice_flux_explicit_topDragCoeff>
-<config_land_ice_flux_explicit_topDragCoeff ocn_grid="GoM1pt5">4.48e-3</config_land_ice_flux_explicit_topDragCoeff>
 <config_land_ice_flux_ISOMIP_gammaT>1e-4</config_land_ice_flux_ISOMIP_gammaT>
 <config_land_ice_flux_jenkins_heat_transfer_coefficient>0.011</config_land_ice_flux_jenkins_heat_transfer_coefficient>
 <config_land_ice_flux_jenkins_heat_transfer_coefficient ocn_grid="oEC60to30v3wLI">0.00295</config_land_ice_flux_jenkins_heat_transfer_coefficient>
@@ -475,7 +473,6 @@
 <config_land_ice_flux_jenkins_heat_transfer_coefficient ocn_grid="FRISwISC01to60E3r1">0.00295</config_land_ice_flux_jenkins_heat_transfer_coefficient>
 <config_land_ice_flux_jenkins_heat_transfer_coefficient ocn_grid="RRSwISC6to18E3r5">0.00295</config_land_ice_flux_jenkins_heat_transfer_coefficient>
 <config_land_ice_flux_jenkins_heat_transfer_coefficient ocn_grid="SOwISC12to30E3r3">0.00295</config_land_ice_flux_jenkins_heat_transfer_coefficient>
-<config_land_ice_flux_jenkins_heat_transfer_coefficient ocn_grid="GoM1pt5">0.00295</config_land_ice_flux_jenkins_heat_transfer_coefficient>
 <config_land_ice_flux_jenkins_salt_transfer_coefficient>3.1e-4</config_land_ice_flux_jenkins_salt_transfer_coefficient>
 <config_land_ice_flux_jenkins_salt_transfer_coefficient ocn_grid="oEC60to30v3wLI">8.42e-5</config_land_ice_flux_jenkins_salt_transfer_coefficient>
 <config_land_ice_flux_jenkins_salt_transfer_coefficient ocn_grid="ECwISC30to60E1r2">8.42e-5</config_land_ice_flux_jenkins_salt_transfer_coefficient>
@@ -489,7 +486,6 @@
 <config_land_ice_flux_jenkins_salt_transfer_coefficient ocn_grid="FRISwISC01to60E3r1">8.42e-5</config_land_ice_flux_jenkins_salt_transfer_coefficient>
 <config_land_ice_flux_jenkins_salt_transfer_coefficient ocn_grid="RRSwISC6to18E3r5">8.42e-5</config_land_ice_flux_jenkins_salt_transfer_coefficient>
 <config_land_ice_flux_jenkins_salt_transfer_coefficient ocn_grid="SOwISC12to30E3r3">8.42e-5</config_land_ice_flux_jenkins_salt_transfer_coefficient>
-<config_land_ice_flux_jenkins_salt_transfer_coefficient ocn_grid="GoM1pt5">8.42e-5</config_land_ice_flux_jenkins_salt_transfer_coefficient>
 <config_land_ice_flux_tidal_Jourdain_alpha>1.0</config_land_ice_flux_tidal_Jourdain_alpha>
 <config_land_ice_flux_tidal_Jourdain_A0>0.0</config_land_ice_flux_tidal_Jourdain_A0>
 <config_land_ice_flux_tidal_Jourdain_U0>5e-2</config_land_ice_flux_tidal_Jourdain_U0>
@@ -523,7 +519,6 @@
 <config_implicit_top_drag_coeff ocn_grid="FRISwISC01to60E3r1">4.48e-3</config_implicit_top_drag_coeff>
 <config_implicit_top_drag_coeff ocn_grid="RRSwISC6to18E3r5">4.48e-3</config_implicit_top_drag_coeff>
 <config_implicit_top_drag_coeff ocn_grid="SOwISC12to30E3r3">4.48e-3</config_implicit_top_drag_coeff>
-<config_implicit_top_drag_coeff ocn_grid="GoM1pt5">4.48e-3</config_implicit_top_drag_coeff>
 <config_loglaw_bottom_roughness>1.0e-3</config_loglaw_bottom_roughness>
 <config_loglaw_layer_depth_max>10.0</config_loglaw_layer_depth_max>
 <config_loglaw_bottom_drag_min>2.5e-3</config_loglaw_bottom_drag_min>
