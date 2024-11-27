@@ -882,6 +882,29 @@
     </queues>
   </batch_system>
 
+ <batch_system MACH="carpenter" type="pbs" >
+    <directives queue="debug">
+      <directive>-A {{ PROJECT }}</directive>
+      <directive>-l application=Regional-Arctic-System-Model</directive>
+      <directive>-l select={{ num_nodes }}:ncpus={{ MAX_MPITASKS_PER_NODE }}:mpiprocs={{ tasks_per_node }}</directive>
+    </directives>
+    <directives queue="standard">
+      <directive>-A {{ PROJECT }}</directive>
+      <directive>-l application=Regional-Arctic-System-Model</directive>
+      <directive>-l select={{ num_nodes }}:ncpus={{ MAX_MPITASKS_PER_NODE }}:mpiprocs={{ tasks_per_node }}</directive>
+    </directives>
+    <directives queue="transfer">
+      <directive>-A {{ PROJECT }}</directive>
+      <directive>-l application=Regional-Arctic-System-Model</directive>
+      <directive>-l select=1:ncpus=1</directive>
+    </directives>
+    <queues>
+      <queue walltimemax="00:59:00" nodemax="72" strict="true">debug</queue>
+      <queue walltimemax="04:00:00" default="true">standard</queue>
+      <queue default="true" walltimemax="12:00:00" jobmin="1" jobmax="1">transfer</queue>
+    </queues>
+  </batch_system>
+
   <batch_system MACH="narwhal" type="pbs" >
     <directives queue="debug">
       <directive>-A {{ PROJECT }}</directive>
@@ -906,6 +929,52 @@
   </batch_system>
 
   <batch_system MACH="warhawk" type="pbs" >
+    <directives queue="debug">
+      <directive>-A {{ PROJECT }}</directive>
+      <directive>-l application=Regional-Arctic-System-Model</directive>
+      <directive>-l select={{ num_nodes }}:ncpus={{ MAX_MPITASKS_PER_NODE }}:mpiprocs={{ tasks_per_node }}</directive>
+    </directives>
+    <directives queue="standard">
+      <directive>-A {{ PROJECT }}</directive>
+      <directive>-l application=Regional-Arctic-System-Model</directive>
+      <directive>-l select={{ num_nodes }}:ncpus={{ MAX_MPITASKS_PER_NODE }}:mpiprocs={{ tasks_per_node }}</directive>
+    </directives>
+    <directives queue="transfer">
+      <directive>-A {{ PROJECT }}</directive>
+      <directive>-l application=Regional-Arctic-System-Model</directive>
+      <directive>-l select=1:ncpus=1</directive>
+    </directives>
+    <queues>
+      <queue walltimemax="00:59:00" nodemax="22" strict="true">debug</queue>
+      <queue walltimemax="04:00:00" default="true">standard</queue>
+      <queue default="true" walltimemax="12:00:00" jobmin="1" jobmax="1">transfer</queue>
+    </queues>
+  </batch_system>
+
+  <batch_system MACH="warhawkm" type="pbs" >
+    <directives queue="debug">
+      <directive>-A {{ PROJECT }}</directive>
+      <directive>-l application=Regional-Arctic-System-Model</directive>
+      <directive>-l select={{ num_nodes }}:ncpus={{ MAX_MPITASKS_PER_NODE }}:mpiprocs={{ tasks_per_node }}</directive>
+    </directives>
+    <directives queue="standard">
+      <directive>-A {{ PROJECT }}</directive>
+      <directive>-l application=Regional-Arctic-System-Model</directive>
+      <directive>-l select={{ num_nodes }}:ncpus={{ MAX_MPITASKS_PER_NODE }}:mpiprocs={{ tasks_per_node }}</directive>
+    </directives>
+    <directives queue="transfer">
+      <directive>-A {{ PROJECT }}</directive>
+      <directive>-l application=Regional-Arctic-System-Model</directive>
+      <directive>-l select=1:ncpus=1</directive>
+    </directives>
+    <queues>
+      <queue walltimemax="00:59:00" nodemax="22" strict="true">debug</queue>
+      <queue walltimemax="04:00:00" default="true">standard</queue>
+      <queue default="true" walltimemax="12:00:00" jobmin="1" jobmax="1">transfer</queue>
+    </queues>
+  </batch_system>
+
+  <batch_system MACH="warhawku" type="pbs" >
     <directives queue="debug">
       <directive>-A {{ PROJECT }}</directive>
       <directive>-l application=Regional-Arctic-System-Model</directive>
