@@ -63,10 +63,11 @@ module ocn_tracer_advection_mono
 !
 !-----------------------------------------------------------------------
 
+!maltrud advection hack
    subroutine ocn_tracer_advection_mono_tend( &
                                         tend, tracers, layerThickness, &
                                         normalThicknessFlux, w, dt,    &
-                                        computeBudgets, skipTracer)!{{{
+                                        computeBudgets, skipTracer, advectionOrderHack)!{{{
 
       !-----------------------------------------------------------------
       ! Input/Output parameters
@@ -95,6 +96,8 @@ module ocn_tracer_advection_mono
 
       logical, dimension(:), intent(in) :: &
          skipTracer            !< [in] Flag to skip tracer in tracers
+!maltrud advection hack
+      integer, intent(in) :: advectionOrderHack
 
       !-----------------------------------------------------------------
       ! Local variables
@@ -332,6 +335,10 @@ module ocn_tracer_advection_mono
               iCell = advCellsForEdge(i,iEdge)
               coef1 = advCoefs       (i,iEdge)
               coef3 = advCoefs3rd    (i,iEdge)*coef3rdOrder
+
+!maltrud advection hack
+              if (advectionOrderHack == 2) coef3 = 0.0_RKIND
+
               do k = minLevelCell(iCell), maxLevelCell(iCell)
                  highOrderFlx(k,iEdge) = highOrderFlx(k,iEdge) &
                            + tracerCur(k,iCell)* &
@@ -719,8 +726,10 @@ module ocn_tracer_advection_mono
 
         ! Compute the high order vertical fluxes based on order selected.
 
+!maltrud advection hack
         call ocn_tracer_advection_vert_flx(tracerCur, w, hProv, &
-                                           highOrderFlx)
+                                           highOrderFlx, advectionOrderHack)
+!                                          highOrderFlx)
 
 #ifdef _ADV_TIMERS
         call mpas_timer_stop('vertical flux high')
