@@ -356,23 +356,24 @@ contains
       ! Only need densities on 0, 1, and 2 halo cells
       nCells = nCellsAll
 
+! mrp omega timing comparison. Turn off EOS
       ! inputs: activeTracers, tracersSurfaceValue,maxLevelCell,refBottomDepth
       ! outputs: density, potentialDensity, displacedDensity, thermalExpansionCoeff, salineContractionCoeff
       ! compute in-place density
-      call ocn_equation_of_state_density(statePool, meshPool, activeTracers, tracersSurfaceValue, &
-                                         nCells, 0, 'relative', density, err, &
-                                         thermExpCoeff, salineContractCoeff, &
-                                         timeLevelIn=timeLevel)
-      ! compute potentialDensity, the density displaced adiabatically to the mid-depth of top layer.
-      call ocn_equation_of_state_density(statePool, meshPool, activeTracers, tracersSurfaceValue, &
-                                         nCells, 1, 'absolute', potentialDensity, &
-                                         err, timeLevelIn=timeLevel)
-
-      ! compute displacedDensity, density displaced adiabatically to the mid-depth one layer deeper.
-      ! That is, layer k has been displaced to the depth of layer k+1.
-      call ocn_equation_of_state_density(statePool, meshPool, activeTracers, tracersSurfaceValue, &
-                                         nCells, 1, 'relative', displacedDensity, &
-                                         err, timeLevelIn=timeLevel)
+!      call ocn_equation_of_state_density(statePool, meshPool, activeTracers, tracersSurfaceValue, &
+!                                         nCells, 0, 'relative', density, err, &
+!                                         thermExpCoeff, salineContractCoeff, &
+!                                         timeLevelIn=timeLevel)
+!      ! compute potentialDensity, the density displaced adiabatically to the mid-depth of top layer.
+!      call ocn_equation_of_state_density(statePool, meshPool, activeTracers, tracersSurfaceValue, &
+!                                         nCells, 1, 'absolute', potentialDensity, &
+!                                         err, timeLevelIn=timeLevel)
+!
+!      ! compute displacedDensity, density displaced adiabatically to the mid-depth one layer deeper.
+!      ! That is, layer k has been displaced to the depth of layer k+1.
+!      call ocn_equation_of_state_density(statePool, meshPool, activeTracers, tracersSurfaceValue, &
+!                                         nCells, 1, 'relative', displacedDensity, &
+!                                         err, timeLevelIn=timeLevel)
 
       !
       ! Pressure
