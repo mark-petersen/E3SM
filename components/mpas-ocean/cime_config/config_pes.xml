@@ -117,6 +117,29 @@
         </ntasks>
       </pes>
     </mach>
+    <mach name="chicoma-cpu">
+      <pes compset="any" pesize="any">
+        <comment>allactive: default, 1 node x MAX_MPITASKS_PER_NODE mpi x 2 omp @ root 0</comment>
+        <ntasks>
+          <ntasks_atm>-1</ntasks_atm>
+          <ntasks_lnd>-1</ntasks_lnd>
+          <ntasks_rof>-1</ntasks_rof>
+          <ntasks_ice>-1</ntasks_ice>
+          <ntasks_ocn>-1</ntasks_ocn>
+          <ntasks_glc>-1</ntasks_glc>
+          <ntasks_wav>-1</ntasks_wav>
+          <ntasks_cpl>-1</ntasks_cpl>
+        </ntasks>
+        <nthrds>
+          <nthrds_atm>2</nthrds_atm>
+          <nthrds_lnd>2</nthrds_lnd>
+          <nthrds_rof>2</nthrds_rof>
+          <nthrds_ice>2</nthrds_ice>
+          <nthrds_ocn>2</nthrds_ocn>
+          <nthrds_cpl>2</nthrds_cpl>
+        </nthrds>
+      </pes>
+    </mach>
     <mach name="lawrencium-lr3">
       <pes compset="any" pesize="any">
         <comment>mpas-ocean+lawrencium-lr3: default, 2 nodes</comment>
@@ -579,4 +602,41 @@
       </pes>
     </mach>
   </grid>
+  <grid name="a%TL319.+oi%GoM1pt5">
+    <mach name="chicoma-cpu">
+      <pes compset="2000_DATM%JRA-RYF0304_SLND_MPASSI_MPASO%DATMFORCED_DROF%JRA-RYF0304_SGLC_SWAV" pesize="any">
+        <comment>40 nodes RYF G case for submesoscale permitting meshes @ 128x1, ~0.4 SYPD</comment>
+        <MAX_TASKS_PER_NODE>128</MAX_TASKS_PER_NODE>
+        <MAX_MPITASKS_PER_NODE>128</MAX_MPITASKS_PER_NODE>
+        <ntasks>
+          <ntasks_atm>128</ntasks_atm>
+          <ntasks_lnd>128</ntasks_lnd>
+          <ntasks_rof>128</ntasks_rof>
+          <ntasks_ice>256</ntasks_ice>
+          <ntasks_ocn>4864</ntasks_ocn>
+          <ntasks_glc>128</ntasks_glc>
+          <ntasks_wav>128</ntasks_wav>
+          <ntasks_cpl>256</ntasks_cpl>
+        </ntasks>
+        <nthrds>
+          <nthrds_atm>1</nthrds_atm>
+          <nthrds_lnd>1</nthrds_lnd>
+          <nthrds_rof>1</nthrds_rof>
+          <nthrds_ice>1</nthrds_ice>
+          <nthrds_ocn>1</nthrds_ocn>
+          <nthrds_cpl>1</nthrds_cpl>
+        </nthrds>        
+        <rootpe>
+          <rootpe_atm>0</rootpe_atm>
+          <rootpe_lnd>0</rootpe_lnd>
+          <rootpe_rof>0</rootpe_rof>
+          <rootpe_ice>0</rootpe_ice>
+          <rootpe_ocn>256</rootpe_ocn>
+          <rootpe_glc>0</rootpe_glc>
+          <rootpe_wav>0</rootpe_wav>
+          <rootpe_cpl>0</rootpe_cpl>
+        </rootpe>
+      </pes>
+    </mach>
+  </grid> 
 </config_pes>

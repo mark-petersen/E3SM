@@ -628,7 +628,10 @@ def buildnml(case, caseroot, compname):
             lines.append('        filename_interval="00-01-00_00:00:00"')
             lines.append('        clobber_mode="truncate"')
             lines.append('        reference_time="01-01-01_00:00:00"')
-            lines.append('        output_interval="none">')
+            if ocn_grid.startswith("GoM1pt5"):
+                lines.append('        output_interval="00-00-07_00:00:00">')
+            else: 
+                lines.append('        output_interval="none">')
             lines.append('')
             lines.append('    <var_array name="activeTracerHorizontalAdvectionTendency"/>')
             lines.append('    <var_array name="activeTracerVerticalAdvectionTendency"/>')
@@ -963,7 +966,10 @@ def buildnml(case, caseroot, compname):
             lines.append('        filename_template="{}.mpaso{}.hist.am.highFrequencyOutput.$Y-$M-$D_$h.$m.$s.nc"'.format(casename, inst_string))
             lines.append('        filename_interval="00-01-00_00:00:00"')
             lines.append('        reference_time="01-01-01_00:00:00"')
-            lines.append('        output_interval="00-00-05_00:00:00"')
+            if ocn_grid.startswith("GoM1pt5"):
+                lines.append('        output_interval="00-00-00_12:00:00"')
+            else:
+                lines.append('        output_interval="00-00-05_00:00:00"')
             lines.append('        clobber_mode="append"')
             lines.append('        packages="highFrequencyOutputAMPKG">')
             lines.append('')
@@ -1842,10 +1848,15 @@ def buildnml(case, caseroot, compname):
             lines.append('-->')
             lines.append('')
             lines.append('<stream name="forcing"')
-            lines.append('        type="none"')
+            if ocn_grid.startswith("GoM1pt5"):
+                lines.append('        type="output"')
+            else:
+                lines.append('        type="none"')
             lines.append('        io_type="{}"'.format(ocn_pio_typename))
             lines.append('        filename_template="{}.mpaso{}.hist.forcing_variables.$Y-$M-$D_$S.nc"'.format(casename, inst_string))
             lines.append('        filename_interval="00-01-00_00:00:00"')
+            if ocn_grid.startswith("GoM1pt5"):
+                lines.append('        output_interval="stream:highFrequencyOutput:output_interval"')
             lines.append('        clobber_mode="truncate">')
             lines.append('')
             lines.append('    <stream name="mesh"/>')

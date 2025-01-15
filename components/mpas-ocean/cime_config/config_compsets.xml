@@ -148,6 +148,11 @@
   </compset>
 
   <compset>
+    <alias>GMPAS-JRA-RYF0304</alias>
+    <lname>2000_DATM%JRA-RYF0304_SLND_MPASSI_MPASO%DATMFORCED_DROF%JRA-RYF0304_SGLC_SWAV</lname>
+  </compset>
+
+  <compset>
     <alias>GMPAS-IAF-PISMF</alias>
     <lname>2000_DATM%IAF_SLND_MPASSI_MPASO%PISMFDATMFORCED_DROF%IAF_SGLC_SWAV</lname>
   </compset>
