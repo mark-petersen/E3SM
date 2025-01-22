@@ -136,6 +136,7 @@ module ocn_core_interface
       logical, pointer :: submesoActive
       logical, pointer :: timeVaryingAtmosphericForcingPKGActive
       logical, pointer :: timeVaryingLandIceForcingPKGActive
+      logical, pointer :: timeVaryingRiverForcingPKGActive
       logical, pointer :: gotmPKGActive
       logical, pointer :: verticalRemapPKGActive
       logical, pointer :: activeWavePKGActive
@@ -173,6 +174,7 @@ module ocn_core_interface
       logical, pointer :: config_use_vegetation_drag
       logical, pointer :: config_use_time_varying_atmospheric_forcing
       logical, pointer :: config_use_time_varying_land_ice_forcing
+      logical, pointer :: config_use_time_varying_river_forcing
       logical, pointer :: config_use_gotm
       logical, pointer :: config_use_active_wave
       logical, pointer :: config_use_subgrid_wetting_drying
@@ -412,6 +414,12 @@ module ocn_core_interface
       call mpas_pool_get_config(configPool, 'config_use_time_varying_land_ice_forcing', config_use_time_varying_land_ice_forcing)
       if (config_use_time_varying_land_ice_forcing) then
          timeVaryingLandIceForcingPKGActive = .true.
+      endif
+
+      call mpas_pool_get_package(packagePool, 'timeVaryingRiverForcingPKGActive', timeVaryingRiverForcingPKGActive)
+      call mpas_pool_get_config(configPool, 'config_use_time_varying_river_forcing', config_use_time_varying_river_forcing)
+      if (config_use_time_varying_river_forcing) then
+         timeVaryingRiverForcingPKGActive = .true.
       endif
 
       !

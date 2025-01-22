@@ -363,6 +363,14 @@
 <config_sgr_temperature_prescribed>0.0</config_sgr_temperature_prescribed>
 <config_sgr_salinity_prescribed>0.0</config_sgr_salinity_prescribed>
 
+<!-- time-varying forcing -->
+<config_use_time_varying_river_forcing>.false.</config_use_time_varying_river_forcing>
+<config_time_varying_river_forcing_start_time>'0001-01-01_00:00:00'</config_time_varying_river_forcing_start_time>
+<config_time_varying_river_forcing_reference_time>'0001-01-01_00:00:00'</config_time_varying_river_forcing_reference_time>
+<config_time_varying_river_forcing_cycle_start>'0001-01-01_00:00:00'</config_time_varying_river_forcing_cycle_start>
+<config_time_varying_river_forcing_cycle_duration>'10-00-00_00:00:00'</config_time_varying_river_forcing_cycle_duration>
+<config_time_varying_river_forcing_interval>'01:00:00'</config_time_varying_river_forcing_interval>
+
 <!-- coupling -->
 <config_remove_ais_river_runoff>.false.</config_remove_ais_river_runoff>
 <config_remove_ais_ice_runoff>.false.</config_remove_ais_ice_runoff>

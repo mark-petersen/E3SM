@@ -235,6 +235,17 @@ add_default($nl, 'config_use_sgr_opt_salt_prescribed');
 add_default($nl, 'config_sgr_temperature_prescribed');
 add_default($nl, 'config_sgr_salinity_prescribed');
 
+########################################
+# Namelist group: time-varying forcing #
+########################################
+
+add_default($nl, 'config_use_time_varying_river_forcing');
+add_default($nl, 'config_time_varying_river_forcing_start_time');
+add_default($nl, 'config_time_varying_river_forcing_reference_time');
+add_default($nl, 'config_time_varying_river_forcing_cycle_start');
+add_default($nl, 'config_time_varying_river_forcing_cycle_duration');
+add_default($nl, 'config_time_varying_river_forcing_interval');
+
 ############################
 # Namelist group: coupling #
 ############################

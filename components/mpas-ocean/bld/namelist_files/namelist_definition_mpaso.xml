@@ -1268,6 +1268,53 @@ Valid values: Any positive real number
 Default: Defined in namelist_defaults.xml
 </entry>
 
+<!-- time-varying forcing -->
+<entry id="config_use_time_varying_river_forcing" type="logical" 
+	category="forcing" group="ocn_river_forcing">
+If true, use river forcing files 
+
+Valid values:".true." or ".false."
+Default: Defined in namelist_defaults.xml
+</entry>
+<entry id="config_time_varying_river_forcing_start_time" type="character" 
+	category="forcing" group="ocn_river_forcing">
+Forcing time to use at the simulation start time
+
+Valid values: Any valid time stamp e.g. format '0000-00-01_00:00:00' or 'dt'
+Default: Defined in namelist_defaults.xml
+</entry>
+
+<entry id="config_time_varying_river_forcing_reference_time" type="character" 
+	category="forcing" group="ocn_river_forcing">
+Reference time of river forcing
+
+Valid values: Any valid time stamp e.g. format '0000-00-01_00:00:00' or 'dt'
+Default: Defined in namelist_defaults.xml
+</entry>
+
+<entry id="config_time_varying_river_forcing_cycle_start" type="character" 
+	category="forcing" group="ocn_river_forcing">
+Start time of river forcing
+
+Valid values: Any valid time stamp e.g. format '0000-00-01_00:00:00' or 'dt'
+Default: Defined in namelist_defaults.xml
+</entry>
+
+<entry id="config_time_varying_river_forcing_cycle_duration" type="character" 
+	category="forcing" group="ocn_river_forcing">
+Duration of river forcing
+
+Valid values: Any valid time stamp e.g. format '0000-00-01_00:00:00' or 'dt'
+Default: Defined in namelist_defaults.xml
+</entry>
+
+<entry id="config_time_varying_river_forcing_interval" type="character" 
+	category="forcing" group="ocn_river_forcing">
+Time between river forcing steps 
+
+Valid values: Any valid time stamp e.g. format '0000-00-01_00:00:00' or 'dt'
+Default: Defined in namelist_defaults.xml
+</entry>
 
 <!-- coupling -->
 

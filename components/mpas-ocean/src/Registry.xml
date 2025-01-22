@@ -808,6 +808,30 @@
 			description="Time between forcing inputs"
 			possible_values="'YYYY-MM-DD_HH:MM:SS"
 		/>
+		<nml_option name="config_use_time_varying_river_forcing" type="logical" default_value=".false."
+			description="If true calculate input forcing fields."
+			possible_values=".true. or .false."
+		/>
+		<nml_option name="config_time_varying_river_forcing_start_time" type="character" default_value="0001-01-01_00:00:00"
+			description="Forcing time to use at the simulation start time"
+			possible_values="'YYYY-MM-DD_HH:MM:SS"
+		/>
+		<nml_option name="config_time_varying_river_forcing_reference_time" type="character" default_value="0001-01-01_00:00:00"
+			description="Reference time for the forcing"
+			possible_values="'YYYY-MM-DD_HH:MM:SS"
+		/>
+		<nml_option name="config_time_varying_river_forcing_cycle_start" type="character" default_value="0001-01-01_00:00:00"
+			description="Start time for the forcing cycle."
+			possible_values="'YYYY-MM-DD_HH:MM:SS"
+		/>
+		<nml_option name="config_time_varying_river_forcing_cycle_duration" type="character" default_value="10-00-00_00:00:00"
+			description="Duration of the forcing cycle."
+			possible_values="'YYYY-MM-DD_HH:MM:SS"
+		/>
+		<nml_option name="config_time_varying_river_forcing_interval" type="character" default_value="01:00:00"
+			description="Time between forcing inputs"
+			possible_values="'YYYY-MM-DD_HH:MM:SS"
+		/>
 	</nml_record>
 	<nml_record name="coupling" mode="init;forward">
 		<nml_option name="config_remove_ais_river_runoff" type="logical" default_value=".false."
@@ -1714,6 +1738,7 @@
 	<packages>
 		<package name="timeVaryingAtmosphericForcingPKG" description="This package includes variables required for time varying atmospheric forcing"/>
 		<package name="timeVaryingLandIceForcingPKG" description="This package includes variavles required for time varying land-ice forcing"/>
+		<package name="timeVaryingRiverForcingPKG" description="This package includes variavles required for time varying river forcing"/>
 		<package name="variableShortwave" description="This package includes variables required to compute spatially variable shortwave extinction coefficients"/>
 		<package name="splitTimeIntegrator" description="This package includes variables required for either the split or unsplit explicit time integrators."/>
 		<package name="splitAB2TimeIntegrator" description="This package includes variables required for the split explicit AB2 time integrators."/>
@@ -2193,6 +2218,15 @@
 			<var name="landIceFractionForcing"/>
 			<var name="landIceFloatingFractionForcing"/>
 			<var name="landIceDraftForcing"/>
+		</stream>
+		<stream name="river_forcing"
+				type="input"
+				filename_template="river_forcing.nc"
+				filename_interval="none"
+				input_interval="none"
+				packages="timeVaryingRiverForcingPKG"
+				immutable="true">
+			<var name="riverRunoffFluxForcing"/>
 		</stream>
 
 		<!-- Diagnostics streams for forward mode -->
@@ -4233,6 +4267,10 @@
 		<var name="landIceDraftForcing" type="real" dimensions="nCells Time" units="m"
 			description="The elevation of the interface between land ice and the ocean."
 			packages="timeVaryingLandIceForcingPKG"
+		/>
+		<var name="riverRunoffFluxForcing" type="real" dimensions="nCells Time" units="kg m^-2 s^-1"
+			description="Fresh water flux from river runoff at cell centers from coupler. Positive into the ocean."
+			packages="timeVaryingRiverForcingPKG"
 		/>
 	</var_struct>
 	<var_struct name="scratch" time_levs="1">
