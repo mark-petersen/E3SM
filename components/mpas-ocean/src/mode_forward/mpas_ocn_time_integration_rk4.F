@@ -199,6 +199,7 @@ module ocn_time_integration_rk4
       real (kind=RKIND), dimension(:,:,:), pointer :: activeTracersCur, activeTracersNew
 
       real(kind=RKIND), dimension(:,:), pointer :: subgridSshCellTableRange, subgridWetVolumeCellTable
+      integer :: mpi_ierr
 
 
       ! Get config options
@@ -387,15 +388,15 @@ module ocn_time_integration_rk4
         end if
 
 
-        call mpas_timer_start("RK4-diagnostic halo update")
+        !call mpas_timer_start("RK4-diagnostic halo update")
 
 
-        call mpas_dmpar_field_halo_exch(domain, 'normalizedRelativeVorticityEdge')
-        if (config_mom_del4 > 0.0_RKIND) then
-           call mpas_dmpar_field_halo_exch(domain, 'divergence')
-           call mpas_dmpar_field_halo_exch(domain, 'relativeVorticity')
-        end if
-        call mpas_timer_stop("RK4-diagnostic halo update")
+        !call mpas_dmpar_field_halo_exch(domain, 'normalizedRelativeVorticityEdge')
+        !if (config_mom_del4 > 0.0_RKIND) then
+        !   call mpas_dmpar_field_halo_exch(domain, 'divergence')
+        !   call mpas_dmpar_field_halo_exch(domain, 'relativeVorticity')
+        !end if
+        !call mpas_timer_stop("RK4-diagnostic halo update")
 
         ! Compute tendencies for high frequency thickness
         ! In RK4 notation, we are computing the right hand side f(t,y),
@@ -420,8 +421,8 @@ module ocn_time_integration_rk4
 
            call mpas_timer_start("RK4-prognostic halo update")
 
-           call mpas_dmpar_field_halo_exch(domain, 'tendHighFreqThickness')
-           call mpas_dmpar_field_halo_exch(domain, 'tendLowFreqDivergence')
+           !call mpas_dmpar_field_halo_exch(domain, 'tendHighFreqThickness')
+           !call mpas_dmpar_field_halo_exch(domain, 'tendLowFreqDivergence')
 
            call mpas_timer_stop("RK4-prognostic halo update")
 
@@ -491,12 +492,17 @@ module ocn_time_integration_rk4
 
         ! Update halos for prognostic variables.
 
+        ! mrp add barrier:
+        call MPI_Barrier(domain % dminfo % comm, mpi_ierr)
         call mpas_timer_start("RK4 vel/thick prognostic halo update")
+
 
         call mpas_dmpar_field_halo_exch(domain, 'tendNormalVelocity')
         call mpas_dmpar_field_halo_exch(domain, 'tendLayerThickness')
 
         call mpas_timer_stop("RK4 vel/thick prognostic halo update")
+        ! mrp add barrier:
+        call MPI_Barrier(domain % dminfo % comm, mpi_ierr)
 
         call mpas_timer_start("RK4 tracer tendency computations")
 
@@ -589,28 +595,28 @@ module ocn_time_integration_rk4
         block => block % next
       end do
 
-      call mpas_timer_start("RK4-implicit vert mix")
-      ! Update halo on u and tracers, which were just updated for implicit vertical mixing.  If not done,
-      ! this leads to lack of volume conservation.  It is required because halo updates in RK4 are only
-      ! conducted on tendencies, not on the velocity and tracer fields.  So this update is required to
-      ! communicate the change due to implicit vertical mixing across the boundary.
-      call mpas_timer_start("RK4-implicit vert mix halos")
+      !call mpas_timer_start("RK4-implicit vert mix")
+      !! Update halo on u and tracers, which were just updated for implicit vertical mixing.  If not done,
+      !! this leads to lack of volume conservation.  It is required because halo updates in RK4 are only
+      !! conducted on tendencies, not on the velocity and tracer fields.  So this update is required to
+      !! communicate the change due to implicit vertical mixing across the boundary.
+      !call mpas_timer_start("RK4-implicit vert mix halos")
 
-      call mpas_pool_get_subpool(domain % blocklist % structs, 'state', statePool)
-      call mpas_pool_get_subpool(statePool, 'tracers', tracersPool)
+      !call mpas_pool_get_subpool(domain % blocklist % structs, 'state', statePool)
+      !call mpas_pool_get_subpool(statePool, 'tracers', tracersPool)
 
-      call mpas_dmpar_field_halo_exch(domain, 'normalVelocity', timeLevel=2)
+      !call mpas_dmpar_field_halo_exch(domain, 'normalVelocity', timeLevel=2)
 
-      call mpas_pool_begin_iteration(tracersPool)
-      do while ( mpas_pool_get_next_member(tracersPool, groupItr) )
-         if ( groupItr % memberType == MPAS_POOL_FIELD ) then
-            call mpas_dmpar_field_halo_exch(domain, groupItr % memberName, timeLevel=2)
-         end if
-      end do
+      !call mpas_pool_begin_iteration(tracersPool)
+      !do while ( mpas_pool_get_next_member(tracersPool, groupItr) )
+      !   if ( groupItr % memberType == MPAS_POOL_FIELD ) then
+      !      call mpas_dmpar_field_halo_exch(domain, groupItr % memberName, timeLevel=2)
+      !   end if
+      !end do
 
-      call mpas_timer_stop("RK4-implicit vert mix halos")
+      !call mpas_timer_stop("RK4-implicit vert mix halos")
 
-      call mpas_timer_stop("RK4-implicit vert mix")
+      !call mpas_timer_stop("RK4-implicit vert mix")
 
       block => domain % blocklist
       do while (associated(block))
@@ -1637,7 +1643,7 @@ module ocn_time_integration_rk4
       endif
 #endif
       call ocn_diagnostic_solve(dt, statePool, forcingPool, meshPool, verticalMeshPool, scratchPool, tracersPool, 2)
-      call mpas_dmpar_field_halo_exch(domain, 'tangentialVelocity')
+      !call mpas_dmpar_field_halo_exch(domain, 'tangentialVelocity')
 
 #ifdef MPAS_OPENACC
       !$acc update host(layerThickEdgeFlux, layerThickEdgeMean)
