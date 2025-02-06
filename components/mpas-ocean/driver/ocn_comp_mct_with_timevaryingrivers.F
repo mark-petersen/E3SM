@@ -60,6 +60,7 @@ module ocn_comp_mct
       use ocn_surface_land_ice_fluxes
       use ocn_diagnostics
       use ocn_diagnostics_variables
+      ! use ocn_time_varying_forcing
       use ocn_tracer_short_wave_absorption
       use ocn_tracer_short_wave_absorption_variable
       use ocn_tracer_ecosys
@@ -2188,6 +2189,8 @@ module ocn_comp_mct
            end if
            if ( riverRunoffFluxField % isActive ) then
               riverRunoffFlux(i) = x2o_o % rAttr(index_x2o_Foxx_rofl, n)
+              ! call time-varying forcing for rivers
+              !   call ocn_time_varying_river_forcing_get(meshPool, streamManager, domain, simulationClock)
               if (config_remove_ais_river_runoff) then
                  if (latCell(i) < -1.04719666667_RKIND) then ! 60S in radians
                     removedRiverRunoffFlux(i) = riverRunoffFlux(i)
@@ -4591,3 +4594,4 @@ module ocn_comp_mct
    end module ocn_comp_mct
    
    !|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+   
