@@ -1,0 +1,11 @@
+[35mcime_config/testmods_dirs/bench/gmpas_noio/user_nl_mpaso[m[36m:[m[32m3[m[36m:[m[1;31mconfig_am_conservationcheck_enable[m=false
+[35mcime_config/testmods_dirs/bench/noio/user_nl_mpaso[m[36m:[m[32m9[m[36m:[m[1;31mconfig_am_conservationcheck_enable[m=false
+[35mcomponents/mpas-ocean/bld/build-namelist[m[36m:[m[32m1827[m[36m:[madd_default($nl, '[1;31mconfig_AM_conservationCheck_enable[m');
+[35mcomponents/mpas-ocean/bld/build-namelist-section[m[36m:[m[32m1237[m[36m:[madd_default($nl, '[1;31mconfig_AM_conservationCheck_enable[m');
+[35mcomponents/mpas-ocean/bld/namelist_files/namelist_defaults_mpaso.xml[m[36m:[m[32m1310[m[36m:[m<[1;31mconfig_AM_conservationCheck_enable[m>.false.</[1;31mconfig_AM_conservationCheck_enable[m>
+[35mcomponents/mpas-ocean/bld/namelist_files/namelist_defaults_mpaso.xml[m[36m:[m[32m1311[m[36m:[m<[1;31mconfig_AM_conservationCheck_enable[m ocn_grid="SOwISC12to30E3r3">.true.</[1;31mconfig_AM_conservationCheck_enable[m>
+[35mcomponents/mpas-ocean/bld/namelist_files/namelist_definition_mpaso.xml[m[36m:[m[32m6674[m[36m:[m<entry id="[1;31mconfig_AM_conservationCheck_enable[m" type="logical"
+[35mcomponents/mpas-ocean/cime_config/testdefs/testmods_dirs/mpaso/conservation_check/README[m[36m:[m[32m5[m[36m:[m    [1;31mconfig_AM_conservationCheck_enable[m = .true.
+[35mcomponents/mpas-ocean/cime_config/testdefs/testmods_dirs/mpaso/conservation_check/user_nl_mpaso[m[36m:[m[32m1[m[36m:[m [1;31mconfig_AM_conservationCheck_enable[m = .true.
+[35mcomponents/mpas-ocean/src/analysis_members/Registry_conservation_check.xml[m[36m:[m[32m2[m[36m:[m		<nml_option name="[1;31mconfig_AM_conservationCheck_enable[m" type="logical" default_value=".false."
+[35mcomponents/mpas-seaice/bld/build-namelist[m[36m:[m[32m1061[m[36m:[madd_default($nl, '[1;31mconfig_AM_conservationCheck_enable[m');

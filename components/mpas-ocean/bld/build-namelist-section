@@ -239,12 +239,12 @@ add_default($nl, 'config_sgr_salinity_prescribed');
 # Namelist group: time-varying forcing #
 ########################################
 
-add_default($nl, 'config_use_time_varying_river_forcing');
-add_default($nl, 'config_time_varying_river_forcing_start_time');
-add_default($nl, 'config_time_varying_river_forcing_reference_time');
-add_default($nl, 'config_time_varying_river_forcing_cycle_start');
-add_default($nl, 'config_time_varying_river_forcing_cycle_duration');
-add_default($nl, 'config_time_varying_river_forcing_interval');
+# add_default($nl, 'config_use_time_varying_river_forcing');
+# add_default($nl, 'config_time_varying_river_forcing_start_time');
+# add_default($nl, 'config_time_varying_river_forcing_reference_time');
+# add_default($nl, 'config_time_varying_river_forcing_cycle_start');
+# add_default($nl, 'config_time_varying_river_forcing_cycle_duration');
+# add_default($nl, 'config_time_varying_river_forcing_interval');
 
 ############################
 # Namelist group: coupling #
@@ -1241,4 +1241,17 @@ add_default($nl, 'config_AM_conservationCheck_compute_on_startup');
 add_default($nl, 'config_AM_conservationCheck_write_on_startup');
 add_default($nl, 'config_AM_conservationCheck_write_to_logfile');
 add_default($nl, 'config_AM_conservationCheck_restart_stream');
+
+########################################
+# Namelist group: AM_freshwaterThickness #
+########################################
+
+add_default($nl, 'config_AM_freshwaterThickness_enable');
+add_default($nl, 'config_AM_freshwaterThickness_compute_interval');
+add_default($nl, 'config_AM_freshwaterThickness_output_stream');
+add_default($nl, 'config_AM_freshwaterThickness_compute_on_startup');
+add_default($nl, 'config_AM_freshwaterThickness_write_on_startup');
+add_default($nl, 'config_AM_freshwaterThickness_write_to_logfile');
+add_default($nl, 'config_AM_freshwaterThickness_restart_stream');
+
 

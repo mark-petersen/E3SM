@@ -83,5 +83,6 @@ my @groups = qw(run_modes
                 am_sedimentfluxindex
                 am_sedimenttransport
                 am_harmonicanalysis
+                am_freshwaterthickness
                 am_conservationcheck
                 );

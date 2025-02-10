@@ -276,6 +276,7 @@ list(APPEND RAW_SOURCES
   core_ocean/analysis_members/mpas_ocn_eddy_product_variables.F
   core_ocean/analysis_members/mpas_ocn_moc_streamfunction.F
   core_ocean/analysis_members/mpas_ocn_ocean_heat_content.F
+  core_ocean/analysis_members/mpas_ocn_freshwater_thickness.F
   core_ocean/analysis_members/mpas_ocn_mixed_layer_heat_budget.F
   core_ocean/analysis_members/mpas_ocn_sediment_flux_index.F
   core_ocean/analysis_members/mpas_ocn_sediment_transport.F

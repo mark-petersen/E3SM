@@ -382,12 +382,12 @@
 <config_sgr_salinity_prescribed>0.0</config_sgr_salinity_prescribed>
 
 <!-- time-varying forcing -->
-<config_use_time_varying_river_forcing>.false.</config_use_time_varying_river_forcing>
+<!-- <config_use_time_varying_river_forcing>.false.</config_use_time_varying_river_forcing>
 <config_time_varying_river_forcing_start_time>'0001-01-01_00:00:00'</config_time_varying_river_forcing_start_time>
 <config_time_varying_river_forcing_reference_time>'0001-01-01_00:00:00'</config_time_varying_river_forcing_reference_time>
 <config_time_varying_river_forcing_cycle_start>'0001-01-01_00:00:00'</config_time_varying_river_forcing_cycle_start>
 <config_time_varying_river_forcing_cycle_duration>'10-00-00_00:00:00'</config_time_varying_river_forcing_cycle_duration>
-<config_time_varying_river_forcing_interval>'01:00:00'</config_time_varying_river_forcing_interval>
+<config_time_varying_river_forcing_interval>'01:00:00'</config_time_varying_river_forcing_interval> -->
 
 <!-- coupling -->
 <config_remove_ais_river_runoff>.false.</config_remove_ais_river_runoff>
@@ -781,6 +781,7 @@
 
 <!-- tracer_forcing_riverTagTracers -->
 <config_use_riverTagTracers>.false.</config_use_riverTagTracers>
+<config_use_riverTagTracers ocn_grid="GoM1pt5">.true.</config_use_riverTagTracers>
 <config_use_riverTagTracers_surface_bulk_forcing>.true.</config_use_riverTagTracers_surface_bulk_forcing>
 <config_use_riverTagTracers_surface_restoring>.false.</config_use_riverTagTracers_surface_restoring>
 <config_use_riverTagTracers_interior_restoring>.false.</config_use_riverTagTracers_interior_restoring>
@@ -1317,5 +1318,12 @@
 <config_AM_conservationCheck_write_on_startup ocn_grid="SOwISC12to30E3r3">.true.</config_AM_conservationCheck_write_on_startup>
 <config_AM_conservationCheck_write_to_logfile>.true.</config_AM_conservationCheck_write_to_logfile>
 <config_AM_conservationCheck_restart_stream>'conservationCheckRestart'</config_AM_conservationCheck_restart_stream>
+
+<!-- AM_freshwaterThickness -->
+<config_AM_freshwaterThickness_enable>.false.</config_AM_freshwaterThickness_enable>
+<config_AM_freshwaterThickness_compute_interval>'0000-00-00_01:00:00'</config_AM_freshwaterThickness_compute_interval>
+<config_AM_freshwaterThickness_output_stream>'freshwaterThicknessOutput'</config_AM_freshwaterThickness_output_stream>
+<config_AM_freshwaterThickness_compute_on_startup>.false.</config_AM_freshwaterThickness_compute_on_startup>
+<config_AM_freshwaterThickness_write_on_startup>.false.</config_AM_freshwaterThickness_write_on_startup>
 
 </namelist_defaults>

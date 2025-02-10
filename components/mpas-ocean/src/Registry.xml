@@ -808,7 +808,7 @@
 			description="Time between forcing inputs"
 			possible_values="'YYYY-MM-DD_HH:MM:SS"
 		/>
-		<nml_option name="config_use_time_varying_river_forcing" type="logical" default_value=".false."
+		<!-- <nml_option name="config_use_time_varying_river_forcing" type="logical" default_value=".false."
 			description="If true calculate input forcing fields."
 			possible_values=".true. or .false."
 		/>
@@ -831,7 +831,7 @@
 		<nml_option name="config_time_varying_river_forcing_interval" type="character" default_value="01:00:00"
 			description="Time between forcing inputs"
 			possible_values="'YYYY-MM-DD_HH:MM:SS"
-		/>
+		/> -->
 	</nml_record>
 	<nml_record name="coupling" mode="init;forward">
 		<nml_option name="config_remove_ais_river_runoff" type="logical" default_value=".false."

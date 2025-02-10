@@ -1269,7 +1269,7 @@ Default: Defined in namelist_defaults.xml
 </entry>
 
 <!-- time-varying forcing -->
-<entry id="config_use_time_varying_river_forcing" type="logical" 
+<!-- <entry id="config_use_time_varying_river_forcing" type="logical" 
 	category="forcing" group="forcing">
 If true, use river forcing files 
 
@@ -1314,7 +1314,7 @@ Time between river forcing steps
 
 Valid values: Any valid time stamp e.g. format '0000-00-01_00:00:00' or 'dt'
 Default: Defined in namelist_defaults.xml
-</entry>
+</entry> -->
 
 <!-- coupling -->
 
@@ -6727,4 +6727,45 @@ Valid values: A restart stream with state of the conservation check.
 Default: Defined in namelist_defaults.xml
 </entry>
 
+<!-- AM_freshwaterThickness -->
+
+<entry id="config_AM_freshwaterThickness_enable" type="logical"
+	category="AM_freshwaterThickness" group="AM_freshwaterThickness">
+If true, ocean analysis member freshwaterThickness  is called.
+
+Valid values: true or false
+Default: Defined in namelist_defaults.xml
+</entry>
+
+<entry id="config_AM_freshwaterThickness_compute_interval" type="char*1024"
+	category="AM_freshwaterThickness" group="AM_freshwaterThickness">
+Timestamp determining how often analysis member computation should be performed.
+
+Valid values: Any valid time stamp, 'dt', or 'output_interval'
+Default: Defined in namelist_defaults.xml
+</entry>
+
+<entry id="config_AM_freshwaterThickness_output_stream" type="char*1024"
+	category="AM_freshwaterThickness" group="AM_freshwaterThickness">
+Name of the stream that the freshwaterThickness analysis member should be tied to.
+
+Valid values: Any existing stream name or 'none'
+Default: Defined in namelist_defaults.xml
+</entry>
+
+<entry id="config_AM_freshwaterThickness_compute_on_startup" type="logical"
+	category="AM_freshwaterThickness" group="AM_freshwaterThickness">
+Logical flag determining if an analysis member computation occurs on start-up.
+
+Valid values: true or false
+Default: Defined in namelist_defaults.xml
+</entry>
+
+<entry id="config_AM_freshwaterThickness_write_on_startup" type="logical"
+	category="AM_freshwaterThickness" group="AM_freshwaterThickness">
+Logical flag determining if an analysis member write occurs on start-up.
+
+Valid values: true or false
+Default: Defined in namelist_defaults.xml
+</entry>
 </namelist_definition>
