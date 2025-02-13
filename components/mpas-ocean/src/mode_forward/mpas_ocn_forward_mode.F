@@ -19,7 +19,7 @@
 !-----------------------------------------------------------------------
 
 module ocn_forward_mode
-
+   
    use mpas_kind_types
    use mpas_derived_types
    use mpas_pool_routines
@@ -608,7 +608,7 @@ module ocn_forward_mode
 
       type (MPAS_Time_Type) :: currTime
       character(len=StrKIND) :: timeStamp
-      integer :: ierr, err_tmp
+      integer :: ierr, err_tmp, i 
 
       type (mpas_pool_type), pointer :: averagePool
       type (mpas_pool_type), pointer :: meshPool
@@ -671,6 +671,7 @@ module ocn_forward_mode
       ! time-step as opposed at each RK substage as implemented in RK4 
       if (timeIntegratorChoice /= timeIntRK4) then
         call ocn_time_varying_forcing_get(domain % streamManager, domain, domain % clock)
+        call ocn_time_varying_river_forcing_get(i, meshPool, domain % streamManager, domain, domain % clock)
       endif
 
       ! During integration, time level 1 stores the model state at the beginning of the
@@ -789,7 +790,8 @@ module ocn_forward_mode
                 config_use_ecosysTracers .or. &
                 (config_use_activeTracers_surface_restoring .and. config_use_surface_salinity_monthly_restoring) .or. &
                 config_use_time_varying_atmospheric_forcing .or. &
-                config_use_time_varying_land_ice_forcing ) then
+                config_use_time_varying_land_ice_forcing .or. &
+                config_use_time_varying_river_forcing) then
 
                 call ocn_time_varying_forcing_write_restart_times(domain)
             end if
@@ -845,9 +847,11 @@ module ocn_forward_mode
            ! if not using RK4, calculate time varying forcing terms once per
            ! time-step as opposed at each RK substage as implemented in RK4
            call ocn_time_varying_forcing_get(domain % streamManager, domain, domain % clock)
+           call ocn_time_varying_river_forcing_get(i, meshPool, domain % streamManager, domain, domain % clock)
          else
            if (config_use_time_varying_atmospheric_forcing .or. &
-               config_use_time_varying_land_ice_forcing ) then
+               config_use_time_varying_land_ice_forcing .or. &
+               config_use_time_varying_river_forcing) then
              ! increment forcing clock to next time-step
              call mpas_advance_forcing_clock(forcingGroupHead, dt)
            endif

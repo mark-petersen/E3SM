@@ -70,6 +70,7 @@ module ocn_comp_mct
    use ocn_submesoscale_eddies
    use ocn_eddy_parameterization_helpers
    use ocn_scaled_dismf
+   use ocn_time_varying_forcing
 !
 ! !PUBLIC MEMBER FUNCTIONS:
   implicit none
@@ -1759,7 +1760,7 @@ contains
 ! !INPUT/OUTPUT PARAMETERS:
 
     type(mct_aVect)   , intent(inout) :: x2o_o
-
+    
 ! !OUTPUT PARAMETERS:
 
    integer, intent(out) :: &
@@ -2188,6 +2189,10 @@ contains
         end if
         if ( riverRunoffFluxField % isActive ) then
            riverRunoffFlux(i) = x2o_o % rAttr(index_x2o_Foxx_rofl, n)
+           ! call time-varying forcing for rivers. If config_use_time_varying_river_forcing=true, time-varying
+           ! river forcing will activate.
+           call ocn_time_varying_river_forcing_get(i, meshPool, domain % streamManager, domain, domain % clock)
+         !   print *, riverRunoffFlux(i)   
            if (config_remove_ais_river_runoff) then
               if (latCell(i) < -1.04719666667_RKIND) then ! 60S in radians
                  removedRiverRunoffFlux(i) = riverRunoffFlux(i)

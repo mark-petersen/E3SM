@@ -31,6 +31,7 @@ module ocn_time_varying_forcing
      public :: &
           ocn_time_varying_forcing_init, &
           ocn_time_varying_forcing_get, &
+          ocn_time_varying_river_forcing_get, &
           ocn_time_varying_forcing_write_restart_times
    
    contains
@@ -66,9 +67,9 @@ module ocn_time_varying_forcing
        endif
    
        ! init the river runoff flux forcing
-     !   if (config_use_time_varying_river_forcing) then
-     !     call init_river_forcing(domain)
-     !   endif
+       if (config_use_time_varying_river_forcing) then
+         call init_river_forcing(domain)
+       endif
    
        ! init other forcings, to be added later as needed
        !if (config_use_time_varying_****_forcing) then
@@ -238,26 +239,29 @@ module ocn_time_varying_forcing
    
      end subroutine ocn_time_varying_forcing_get!}}}
 
-     ! subroutine ocn_time_varying_river_forcing_get(meshPool, streamManager, domain, simulationClock)!{{{
-     !      type (mpas_pool_type), intent(in) :: meshPool !< Input: mesh information
+     subroutine ocn_time_varying_river_forcing_get(i, meshPool, streamManager, domain, simulationClock)!{{{
+          type (mpas_pool_type), intent(in) :: meshPool !< Input: mesh information
      
-     !      type (MPAS_streamManager_type), intent(inout) :: streamManager
+          type (MPAS_streamManager_type), intent(inout) :: streamManager
+
+          integer :: i
       
-     !      type (domain_type) :: domain
+          type (domain_type) :: domain
       
-     !      type (MPAS_clock_type) :: simulationClock
+          type (MPAS_clock_type) :: simulationClock
          
-     !      if (config_use_time_varying_river_forcing) then
+          if (config_use_time_varying_river_forcing) then
       
-     !         call river_forcing(&
-     !              meshPool, &
-     !              streamManager, &
-     !              domain, &
-     !              simulationClock)
+             call river_forcing(&
+                  i, & 
+                  meshPool, &
+                  streamManager, &
+                  domain, &
+                  simulationClock)
      
-     !      endif
+          endif
       
-     ! end subroutine ocn_time_varying_river_forcing_get!}}}
+     end subroutine ocn_time_varying_river_forcing_get!}}}
    
    !|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
    !
@@ -639,50 +643,50 @@ module ocn_time_varying_forcing
    !
    !> \brief Initialize the forcing objects for ROMS river runoff flux
    !> \author Dylan R. Schlichting, LANL
-   !> \date 1/8/2024
+   !> \date 1/8/2025
    !> \details
    !>  This routine calls the MPAS_forcing module subroutines that initializes
    !>  the forcings type
    !
    !-----------------------------------------------------------------------
    
-     ! subroutine init_river_forcing(domain)
+     subroutine init_river_forcing(domain)
    
-     !   type(domain_type) :: domain
+       type(domain_type) :: domain
    
-     !   ! create the river forcing group
-     !   call MPAS_forcing_init_group(&
-     !        forcingGroupHead, &                     ! forcingGroupHead
-     !        "forcing", &                  ! forcingGroupName
-     !        domain, &                               ! domain
-     !        config_time_varying_river_forcing_start_time, &            ! startTimeStr
-     !        config_time_varying_river_forcing_cycle_start, &           ! forcingCycleStart
-     !        config_time_varying_river_forcing_cycle_duration, &        ! forcingCycleDuration
-     !        config_do_restart)!, &                  ! restart
-     !        !.false.)                               ! forcingCycleStartInclusive
+       ! create the river forcing group
+       call MPAS_forcing_init_group(&
+            forcingGroupHead, &                     ! forcingGroupHead
+            "ocn_river_forcing", &                  ! forcingGroupName
+            domain, &                               ! domain
+            config_time_varying_river_forcing_start_time, &            ! startTimeStr
+            config_time_varying_river_forcing_cycle_start, &           ! forcingCycleStart
+            config_time_varying_river_forcing_cycle_duration, &        ! forcingCycleDuration
+            config_do_restart)!, &                  ! restart
+            !.false.)                               ! forcingCycleStartInclusive
    
-     !   ! river_transport init
-     !   call MPAS_forcing_init_field(&
-     !        domain % streamManager, &               ! streamManager
-     !        forcingGroupHead, &                     ! forcingGroupHead
-     !        "forcing", &                  ! forcingGroupName
-     !        "river_transport", &                    ! forcingName
-     !        "riverRunoffFlux", &                    ! forcingStreamID
-     !        "timeVaryingForcing", &                 ! poolname
-     !        "riverRunoffFluxForcing", &             ! fieldname
-     !        "linear", &                             ! interpolationType
-     !        config_time_varying_river_forcing_reference_time, &                 ! forcingReferenceTimeStr
-     !        config_time_varying_river_forcing_interval)!,                       ! forcingIntervalStr
-     !        !"next")                                ! forcingInitializationType
+       ! riverTransport init
+       call MPAS_forcing_init_field(&
+            domain % streamManager, &               ! streamManager
+            forcingGroupHead, &                     ! forcingGroupHead
+            "ocn_river_forcing", &                  ! forcingGroupName
+            "riverTransport", &                     ! forcingName
+            "river_forcing", &                      ! forcingStreamID
+            "timeVaryingForcing", &                 ! poolname
+            "riverTransport", &                     ! fieldname
+            "linear", &                             ! interpolationType
+            config_time_varying_river_forcing_reference_time, &                 ! forcingReferenceTimeStr
+            config_time_varying_river_forcing_interval)!,                       ! forcingIntervalStr
+            !"next")                                ! forcingInitializationType
    
-     !   call MPAS_forcing_init_field_data(&
-     !        forcingGroupHead, &                     ! forcingGroupHead
-     !        "forcing", &                  ! forcingGroupName
-     !        domain % streamManager, &               ! streamManager
-     !        config_do_restart, &                    ! restart
-     !        .false.)                                ! interpolateAtInit
+       call MPAS_forcing_init_field_data(&
+            forcingGroupHead, &                     ! forcingGroupHead
+            "ocn_river_forcing", &                  ! forcingGroupName
+            domain % streamManager, &               ! streamManager
+            config_do_restart, &                    ! restart
+            .false.)                                ! interpolateAtInit
    
-     ! end subroutine init_river_forcing
+     end subroutine init_river_forcing
    
    !|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
    !
@@ -696,119 +700,113 @@ module ocn_time_varying_forcing
    !
    !-----------------------------------------------------------------------
    
-     ! subroutine river_forcing(meshPool, streamManager, domain, simulationClock)!{{{
+     subroutine river_forcing(i, meshPool, streamManager, domain, simulationClock)!{{{
 
-     !   type (mpas_pool_type), intent(in) :: meshPool !< Input: mesh information
-     !   type (MPAS_streamManager_type), intent(inout) :: streamManager
+       type (mpas_pool_type), intent(in) :: meshPool !< Input: mesh information
+       
+       type (MPAS_streamManager_type), intent(inout) :: streamManager
+       
+       type (domain_type) :: domain
    
-     !   type (domain_type) :: domain
+       type (MPAS_clock_type) :: simulationClock
    
-     !   type (MPAS_clock_type) :: simulationClock
+       type (MPAS_time_type) :: currentForcingTime
    
-     !   type (MPAS_time_type) :: currentForcingTime
+       type (block_type), pointer :: block
    
-     !   type (block_type), pointer :: block
+       character(len=StrKIND) :: timeStamp
    
-     !   character(len=StrKIND) :: timeStamp
+       type (MPAS_timeInterval_type) :: timeStepESMF
    
-     !   type (MPAS_timeInterval_type) :: timeStepESMF
+       real (kind=RKIND) :: dtSim, dtSimReverse
    
-     !   real (kind=RKIND) :: dtSim, dtSimReverse
+       real (kind=RKIND), pointer :: forcingTimeIncrement
    
-     !   real (kind=RKIND), pointer :: forcingTimeIncrement
-
-     !   real (kind=RKIND), dimension(:), pointer :: latCell, lonCell
+       real (kind=RKIND), dimension(:), pointer :: latCell, lonCell, areaCell
+       
+       integer :: err, i 
    
-     !   integer :: err
+       type (mpas_pool_type), pointer :: &
+            mesh, &
+            forcingPool, &
+            timeVaryingForcingPool
    
-     !   type (mpas_pool_type), pointer :: &
-     !        mesh, &
-     !        forcingPool, &
-     !        timeVaryingForcingPool
-   
-     !   real(kind=RKIND), dimension(:), pointer :: &
-     !         riverRunoffFluxForcing, riverRunoffFlux
+       real(kind=RKIND), dimension(:), pointer :: &
+             riverTransport, riverRunoffFlux
       
-     !   integer, pointer :: &
-     !        nCells
-   
-     !   integer :: &
-     !        iCell
+       integer, pointer :: nCellsSolve
      
-     !   call mpas_pool_get_subpool(domain % blocklist % structs, 'forcing', forcingPool)
-     !   call mpas_pool_get_array(forcingPool, 'forcingTimeIncrement', forcingTimeIncrement)
+       call mpas_pool_get_subpool(domain % blocklist % structs, 'forcing', forcingPool)
+       call mpas_pool_get_array(forcingPool, 'forcingTimeIncrement', forcingTimeIncrement)
+       call mpas_pool_get_array(meshPool, 'areaCell', areaCell)
    
-     !   ! convert config_dt to real
-     !   call mpas_set_timeInterval(timeStepESMF, timeString=config_dt,ierr=err)
-     !   call mpas_get_timeInterval(timeStepESMF, dt=dtSim)
+       ! convert config_dt to real
+       call mpas_set_timeInterval(timeStepESMF, timeString=config_dt,ierr=err)
+       call mpas_get_timeInterval(timeStepESMF, dt=dtSim)
    
-     !   dtSim = forcingTimeIncrement
-     !   dtSimReverse = -dtSim
+       dtSim = forcingTimeIncrement
+       dtSimReverse = -dtSim
    
-     !   ! use the forcing layer to get data
-     !   call MPAS_forcing_get_forcing(&
-     !        forcingGroupHead, &               ! forcingGroupHead
-     !        "forcing", &            ! forcingGroupName
-     !        streamManager, &                  ! streamManager
-     !        dtSim)                            ! dt
+       ! use the forcing layer to get data
+       call MPAS_forcing_get_forcing(&
+            forcingGroupHead, &               ! forcingGroupHead
+            "ocn_river_forcing", &            ! forcingGroupName
+            streamManager, &                  ! streamManager
+            dtSim)                            ! dt
    
-     !   call MPAS_forcing_get_forcing_time(&
-     !        forcingGroupHead, &               ! forcingGroupHead
-     !        "forcing", &            ! forcingGroupName
-     !        currentForcingTime)               ! forcingTime
+       call MPAS_forcing_get_forcing_time(&
+            forcingGroupHead, &               ! forcingGroupHead
+            "ocn_river_forcing", &            ! forcingGroupName
+            currentForcingTime)               ! forcingTime
    
-     !   call mpas_get_time(curr_time=currentForcingTime, dateTimeString=timeStamp, ierr=err)
+       call mpas_get_time(curr_time=currentForcingTime, dateTimeString=timeStamp, ierr=err)
      !   call mpas_log_write('Forcing time for ROMS river forcing' // trim(timeStamp))
    
      !   call mpas_advance_forcing_clock(forcingGroupHead, dtSimReverse)
    
      !   call MPAS_forcing_get_forcing_time(&
      !        forcingGroupHead, &               ! forcingGroupHead
-     !        "forcing", &            ! forcingGroupName
+     !        "ocn_river_forcing", &            ! forcingGroupName
      !        currentForcingTime)               ! forcingTime
    
      !   call mpas_get_time(curr_time=currentForcingTime, dateTimeString=timeStamp, ierr=err)
-     !   call mpas_log_write('Forcing time reversed for land ice forcing' // trim(timeStamp))
+     !   call mpas_log_write('Forcing time reversed for river forcing' // trim(timeStamp))
    
-     !   block => domain % blocklist
-     !   do while (associated(block))
+       block => domain % blocklist
+       do while (associated(block))
    
-     !      call MPAS_pool_get_subpool(block % structs, "mesh", mesh)
-     !      call MPAS_pool_get_subpool(block % structs, "forcing", forcingPool)
-     !      call MPAS_pool_get_subpool(block % structs, "timeVaryingForcing", timeVaryingForcingPool)
+          call MPAS_pool_get_subpool(block % structs, "mesh", mesh)
+          call MPAS_pool_get_subpool(block % structs, "forcing", forcingPool)
+          ! call MPAS_pool_get_subpool(block % structs, "timeVaryingForcing", timeVaryingForcingPool)
       
-     !      call MPAS_pool_get_array(timeVaryingForcingPool, "riverRunoffFluxForcing", riverRunoffFluxForcing)
-     !      call MPAS_pool_get_array(forcingPool, "riverRunoffFlux", riverRunoffFlux)
+          ! call MPAS_pool_get_array(timeVaryingForcingPool, "riverTransport", riverTransport)
+          call MPAS_pool_get_array(forcingPool, "riverRunoffFlux", riverRunoffFlux)
    
-     !      call MPAS_pool_get_dimension(mesh, "nCells", nCells)
-     !      call mpas_pool_get_array(meshPool, 'latCell', latCell)
-     !      call mpas_pool_get_array(meshPool, 'lonCell', lonCell)
+          ! call MPAS_pool_get_dimension(mesh, "nCells", nCells)
+          call mpas_pool_get_dimension(meshPool, 'nCellsSolve', nCellsSolve)
+          call mpas_pool_get_array(meshPool, 'latCell', latCell)
+          call mpas_pool_get_array(meshPool, 'lonCell', lonCell)
           
-     !      ! If lat/lon are in the TXLA model domain (except Mobile bay) set riverRunoffFlux to zero to 
-     !      ! override coupler
-     !      do iCell = 1, nCells
-     !           if ( & 
-     !              latCell(iCell) .GT. 0.40039961_RKIND .AND. latCell(iCell) .LT. 0.5386048_RKIND & 
-     !              .AND. lonCell(iCell) .GT. 1.42732683_RKIND .AND. lonCell(iCell) .LT. 1.59697627_RKIND &
-     !              ) then 
-     !           riverRunoffFlux(iCell) = 0.0_RKIND
-     !           print *, riverRunoffFlux(iCell)
-     !         else
-     !           ! Simple test, set all fluxes to zero
-     !           riverRunoffFlux(iCell) = 0.0_RKIND  
-     !           print *, riverRunoffFlux(iCell)
-     !         endif
-     !      enddo
+          ! If lat/lon are in the TXLA model domain (except Mobile bay) set riverRunoffFlux to zero to 
+          ! override coupler
+          do i = 1, nCellsSolve
+               if ( & 
+                  latCell(i) .GT. 0.40039961_RKIND .AND. latCell(i) .LT. 0.5386048_RKIND & 
+                  .AND. lonCell(i) .GT. 1.42732683_RKIND .AND. lonCell(i) .LT. 1.59697627_RKIND &
+                  ) then 
+               riverRunoffFlux(i) = 0.0_RKIND
+               print *, 'River fluxes in GoM are zero', riverRunoffFlux(i)
+             else
+               ! Convert volume flux to kg m^-2 s^-1
+               ! riverRunoffFlux(i) = (riverTransport(i) * rho_sw) / areaCell(i)
+               riverRunoffFlux(i) = 0.0_RKIND
+               print *, 'River fluxes outside GoM are zero', riverRunoffFlux(i)
+             endif
+          enddo
           
-     !      ! Now modify individual MPAS-O cells based on the forcing file. This loops through all cells,
-     !      ! could be optimized to remove all cells outside of the GoM. 
-     !      ! do iCell = 1, nCells
-     !      !      riverRunoffFlux(iCell) = riverRunoffFluxForcing(iCell)
-     !      !      print *, 'riverRunoffFlux is ', riverRunoffFlux(iCell)
-     !      ! enddo
-     !      block => block % next
-     !   end do
+          block => block % next
+       end do
    
-     ! end subroutine river_forcing!}}}
+     end subroutine river_forcing!}}}
    
    end module ocn_time_varying_forcing
