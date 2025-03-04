@@ -12,6 +12,7 @@
 #include "IO.h"
 #include "Logging.h"
 #include "TimeStepper.h"
+#include "Pacer.h"
 
 #include <iostream>
 
@@ -506,8 +507,12 @@ I4 Tracers::updateTimeLevels() {
       return -1;
    }
 
+   Kokkos::fence();
+   Pacer::start("TracerHalo");
    // Exchange halo
    exchangeHalo(1);
+   Kokkos::fence();
+   Pacer::stop("TracerHalo");
 
    CurTimeIndex = (CurTimeIndex + 1) % NTimeLevels;
 
