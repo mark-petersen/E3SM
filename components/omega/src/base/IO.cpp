@@ -199,7 +199,7 @@ int init(const MPI_Comm &InComm // [in] MPI communicator to use
    // extern int SysID;
 
    FileFmt DefaultFileFmt = FileFmtFromString("netcdf4c");
-   int NumIOTasks         = 1;
+   int NumIOTasks         = 8;
    int IOStride           = 1;
    int IOBaseTask         = 0;
    Rearranger Rearrange   = RearrDefault;
