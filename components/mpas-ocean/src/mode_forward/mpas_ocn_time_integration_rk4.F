@@ -201,6 +201,7 @@ module ocn_time_integration_rk4
       real (kind=RKIND), dimension(:,:,:), pointer :: activeTracersCur, activeTracersNew
 
       real(kind=RKIND), dimension(:,:), pointer :: subgridSshCellTableRange, subgridWetVolumeCellTable
+      integer :: mpi_ierr
 
 
       ! Get config options
@@ -510,6 +511,8 @@ module ocn_time_integration_rk4
            block => block % next
         end do
 
+        ! mrp add barrier:
+        call MPI_Barrier(domain % dminfo % comm, mpi_ierr)
         call mpas_timer_stop("RK4 vel/thick tendency computations")
 
         ! Update halos for prognostic variables.
@@ -520,6 +523,8 @@ module ocn_time_integration_rk4
         call mpas_dmpar_field_halo_exch(domain, 'tendLayerThickness')
 
         call mpas_timer_stop("RK4 vel/thick prognostic halo update")
+        ! mrp add barrier:
+        call MPI_Barrier(domain % dminfo % comm, mpi_ierr)
 
         call mpas_timer_start("RK4 tracer tendency computations")
 
