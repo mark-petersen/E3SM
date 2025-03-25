@@ -486,7 +486,7 @@ contains
                                   - tangentialVelAtSFC(iEdge)*sin(angleEdge(iEdge))
            meridionalVelAtSFC(iEdge) = normalVelAtSFC(iEdge)*sin(angleEdge(iEdge)) &
                                        + tangentialVelAtSFC(iEdge)*cos(angleEdge(iEdge))
-
+         
            zonalVelAt250m(iEdge) = normalVelAt250m(iEdge)*cos(angleEdge(iEdge)) &
                                   - tangentialVelAt250m(iEdge)*sin(angleEdge(iEdge))
            meridionalVelAt250m(iEdge) = normalVelAt250m(iEdge)*sin(angleEdge(iEdge)) &
@@ -497,6 +497,45 @@ contains
            meridionalVelAtBottom(iEdge) = normalVelAtBottom(iEdge)*sin(angleEdge(iEdge)) &
                                        + tangentialVelAtBottom(iEdge)*cos(angleEdge(iEdge))
          end do
+
+         ! if (config_calc_strain_rate) then
+
+         !    do iEdge=1,nEdgesOwned 
+         !       ! Calculate 2D total strain rate, alpha = sqrt( (u_x - v_y)^2 + (v_x + u_y)^2 )
+         !       ! Interpole u_E & u_N (surface zonal & meridional velocities) to vertices
+         !       cell1 = cellsOnEdge(1,iEdge)
+         !       cell2 = cellsOnEdge(2,iEdge)
+         !       do iVertex = 1, nVerticesAll
+         !          zonalVelAtSFCVertex(:, iVertex) = 0.0_RKIND
+         !          meridionalVelAtSFCVertex(:, iVertex) = 0.0_RKIND
+         !          do i = 1, vertexDegree
+         !             iEdge = edgesOnVertex(i, iVertex)
+         !             rTmp  = dcEdge(iEdge) * dvEdge(iEdge) * 0.25_RKIND / areaTriangle(iVertex)
+         !             zonalVelAtSFCVertex(iVertex) = zonalVelAtSFCVertex(iVertex) + rTmp * zonalVelAtSFC(iEdge)
+         !             meridionalVelAtSFCVertex(iVertex) = meridionalVelAtSFCVertex(iVertex) + rTmp * meridionalVelAtSFC(iEdge)
+         !          end do
+         !       end do
+         !       u_x(iEdge) = edgeMask(iEdge)*invdcEdge*( &
+         !                       *(pressure(cell2) - &
+         !                         pressure(cell1)))
+         !       ! alpha = angleEdge(iEdge)
+         !       ! Rotate cell (u_E, u_N) to local (u_n, u_t) normal and tangential to edge
+         !       ! [u_n   = [cos alpha sin alpha]  [u_E = [u_E cos alpha - u_N sin alpha
+         !       !  u_t]    [-sin alpha cos alpha]  u_N]    u_E sin alpha + u_N cos alpha]
+         !       a = angleEdge(iEdge)
+
+         !    end do
+
+
+            ! Compute velocity gradient tensor L = [u_x v_x 
+            !                                       u_y v_y]
+       !      u_x = 
+       !      u_y =        
+       !      v_x = 
+       !      v_y = 
+       !      strainAtEdge = sqrt( (u_x - v_y)**2 + (v_x + u_y)**2 )
+       !      relvativeVorticityAtSurfaceEdge = v_x - u_y
+         ! end if
 
          do iCell=1,nCells
            relativeVorticityAtBottom(iCell) = relativeVorticityCell(maxLevelCell(iCell),iCell)

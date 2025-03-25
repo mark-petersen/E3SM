@@ -1502,7 +1502,11 @@ module mpas_timekeeping
          if (size(subStrings) == 3) then
             read(subStrings(1),*) hour
             read(subStrings(2),*) min
-            read(subStrings(3),*) sec
+            ! read(subStrings(3),*) sec
+            sec = 0_I8KIND
+
+            call mpas_log_write(' subStrings(3) ' // subStrings(3) // 'END')
+            call mpas_log_write(' trim(subStrings(3)) ' // trim(subStrings(3)) // 'END')
             deallocate(subStrings)
          else if (size(subStrings) == 2) then
             hour = 0

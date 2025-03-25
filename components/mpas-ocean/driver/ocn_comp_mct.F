@@ -1779,7 +1779,7 @@ contains
       message
 
    integer ::  &
-      i,n
+      i,n,iTimevar
 
    integer, pointer :: indexIT, indexIS
 
@@ -2191,8 +2191,8 @@ contains
            riverRunoffFlux(i) = x2o_o % rAttr(index_x2o_Foxx_rofl, n)
            ! call time-varying forcing for rivers. If config_use_time_varying_river_forcing=true, time-varying
            ! river forcing will activate.
-           call ocn_time_varying_river_forcing_get(i, meshPool, domain % streamManager, domain, domain % clock)
-         !   print *, riverRunoffFlux(i)   
+           iTimevar = i
+           call ocn_time_varying_river_forcing_get(iTimevar, meshPool, domain % streamManager, domain, domain % clock)
            if (config_remove_ais_river_runoff) then
               if (latCell(i) < -1.04719666667_RKIND) then ! 60S in radians
                  removedRiverRunoffFlux(i) = riverRunoffFlux(i)

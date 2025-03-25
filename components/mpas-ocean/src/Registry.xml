@@ -2227,6 +2227,7 @@
 				packages="timeVaryingRiverForcingPKG"
 				immutable="true">
 			<var name="riverTransport"/>
+			<var name="xtime"/>
 		</stream>
 
 		<!-- Diagnostics streams for forward mode -->
@@ -4235,7 +4236,7 @@
 			packages="forwardMode"
 		/>
 	</var_struct>
-	<var_struct name="timeVaryingForcing" time_levs="1">
+	<var_struct name="timeVaryingForcing" time_levs="2">
 		<var name="windSpeedU" type="real" dimensions="nCells Time" units="m s^-1"
 			description="Zonal (eastward) component of wind speed at cell centers from coupler. Positive easthward."
 			packages="timeVaryingAtmosphericForcingPKG"

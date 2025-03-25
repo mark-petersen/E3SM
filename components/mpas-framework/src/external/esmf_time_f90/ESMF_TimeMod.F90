@@ -413,14 +413,19 @@ recursive subroutine ESMF_TimeGet(time, YY, MM, DD, D, Dl, H, M, S, MS, &
 
       ierr = ESMF_SUCCESS
 
+      print *, 'printing time', time 
+
       IF ( PRESENT( YY ) ) THEN
         YY = time%YR
+        print *, 'printing year', YY
       ENDIF
       IF ( PRESENT( MM ) ) THEN
         CALL timegetmonth( time, MM )
+        print *, 'printing month', MM
       ENDIF
       IF ( PRESENT( DD ) ) THEN
         CALL timegetdayofmonth( time, DD )
+        print *, 'printing day', DD
       ENDIF
 
       if (present(d) .or. present(dl)) then
@@ -872,6 +877,7 @@ recursive subroutine ESMF_TimeGet(time, YY, MM, DD, D, Dl, H, M, S, MS, &
       ! requires that time be normalized
 !$$$ bug when Sn>0?  test
 !$$$ add tests
+      print *, 'Calling day of year'
       DayOfYear = ( time%basetime%S / SECONDS_PER_DAY ) + 1
       IF ( PRESENT( rc ) ) rc = ESMF_SUCCESS
       end subroutine ESMF_TimeGetDayOfYearInteger
@@ -1513,7 +1519,7 @@ SUBROUTINE timegetmonth( time, MM )
   TYPE(ESMF_Time), INTENT(IN) :: time
   INTEGER, INTENT(OUT) :: MM
   ! locals
-
+  print *, 'printing time', time
   mm = nmonthinyearsec(time%yr,time%basetime,time%calendar%type)
 
 END SUBROUTINE timegetmonth

@@ -502,7 +502,7 @@ module ocn_time_integration_rk4
         end do
 
         call ocn_time_varying_forcing_get(domain % streamManager, domain, domain % clock)
-        call ocn_time_varying_river_forcing_get(i, meshPool, domain % streamManager, domain, domain % clock)
+      !   call ocn_time_varying_river_forcing_get(i, meshPool, domain % streamManager, domain, domain % clock)
 
         block => domain % blocklist
         do while (associated(block))

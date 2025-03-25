@@ -1,7 +1,7 @@
 module mpas_stream_manager
 
 #define COMMA ,
-#define STREAM_DEBUG_WRITE(M) ! call mpas_log_write(M)
+#define STREAM_DEBUG_WRITE(M)  call mpas_log_write(M)
 #define STREAM_WARNING_WRITE(M) call mpas_log_write( M , messageType=MPAS_LOG_WARN)
 #define STREAM_ERROR_WRITE(M) call mpas_log_write( M , messageType=MPAS_LOG_ERR)
 
@@ -3357,8 +3357,9 @@ module mpas_stream_manager
            end if
 
            if (timeLevel /= stream % timeLevel) then
-
+               STREAM_DEBUG_WRITE( 'text' )
                call update_stream(stream, manager % allFields, timeLevel, mgLevel, local_ierr)
+               STREAM_DEBUG_WRITE( 'text' )
                if (local_ierr /= MPAS_STREAM_NOERR) then
                    ierr = MPAS_STREAM_MGR_ERROR
                    return
@@ -4021,7 +4022,8 @@ module mpas_stream_manager
            end if
 
            if (timeLevel /= stream % timeLevel) then
-
+               print *, 'timelevel', timeLevel
+               print *, 'stream % timeLevel', stream % timeLevel
                call update_stream(stream, manager % allFields, timeLevel, mgLevel, local_ierr)
                if (local_ierr /= MPAS_STREAM_NOERR) then
                    ierr = MPAS_STREAM_MGR_ERROR
@@ -4054,11 +4056,12 @@ module mpas_stream_manager
            ! Exchange halos for all decomposed fields in this stream
            !
            call exch_all_halos(manager % allFields, stream % field_pool, stream % timeLevel, local_ierr)
-
-           !
+           
+           print *, 'Halo exchange complete'
            ! For any connectivity arrays in this stream, convert global indices to local indices
            !
            call postread_reindex(manager % allFields, stream % field_pool)
+           print *, 'Postread reindex complete'
         end if
 
     end subroutine read_stream !}}}
@@ -4768,8 +4771,14 @@ module mpas_stream_manager
                         end if
 
                         if ( is_decomposed_dim(real1DField % dimNames(1))) then
-                            STREAM_DEBUG_WRITE(' -- Exchange halo for '//trim(fieldItr % memberName))
-                            call mpas_dmpar_field_halo_exch(real1DField % block % domain, fieldItr % memberName, timeLevel=timeLevel)
+                            if ( trim(fieldItr % memberName)=='riverTransport_forcing_input' .and. &
+                            timeLevel==2 ) then
+                                STREAM_DEBUG_WRITE(' -- NOT calling: Exchange halo for '//trim(fieldItr % memberName))
+                            else
+                                call mpas_dmpar_field_halo_exch(real1DField % block % domain, fieldItr % memberName, timeLevel=timeLevel)
+                            endif
+                            ! STREAM_DEBUG_WRITE(' -- Exchange halo for '//trim(fieldItr % memberName))
+                            ! call mpas_dmpar_field_halo_exch(real1DField % block % domain, fieldItr % memberName, timeLevel=timeLevel)
                         end if
                     else if ( fieldInfo % fieldType == MPAS_POOL_INTEGER ) then
                         if ( timeLevel <= fieldInfo % nTimeLevels ) then

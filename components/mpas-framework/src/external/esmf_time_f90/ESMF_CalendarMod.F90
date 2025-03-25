@@ -389,6 +389,9 @@ integer function nmonthinyearsec(year,basetime,calkindflag)
   TYPE(ESMF_BaseTime), pointer :: MMbdys(:)
   integer :: mm,i
 
+  print *, 'year is', year
+  print *, 'basetime', basetime
+  print *, 'calkindflag', calkindflag
   IF ( isleap(year,calkindflag) ) THEN
     MMbdys => monthbdysleap
   ELSE
@@ -479,7 +482,8 @@ logical FUNCTION isleap ( year, calkindflag )
   type(ESMF_CalKind_Flag) :: calkindflag
   ! local
   INTEGER :: lyear
-
+  print *, 'printing year in isleap', year
+  print *, 'calkindflag', calkindflag
   lyear = abs(year)  ! make sure it handles negative years
 
   isleap = .false. ! By default, February has 28 days ...
