@@ -597,7 +597,9 @@ contains
 
     call t_startf('mpaso_init2')
     ! Initialize the MPASO core
+    call mpas_log_write('Initializing MPASO core')
     ierr = domain_ptr % core % core_init(domain_ptr, timeStamp)
+    call mpas_log_write('Initialized MPASO core')
     if ( ierr /= 0 ) then
        call mpas_log_write('Core init failed for core ' // trim(domain % core % coreName), MPAS_LOG_CRIT)
     end if

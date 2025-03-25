@@ -75,7 +75,7 @@ module ocn_time_varying_forcing
        !if (config_use_time_varying_****_forcing) then
        !  call init_****_forcing(domain)
        !endif
-   
+     call mpas_log_write('ocn_time_varying_forcing_init: Ending subroutine')
      end subroutine ocn_time_varying_forcing_init!}}}
    
    !|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -320,7 +320,7 @@ module ocn_time_varying_forcing
             "ocn_atmospheric_forcing", &      ! forcingGroupName
             currentForcingTime)               ! forcingTime
        call mpas_get_time(curr_time=currentForcingTime, dateTimeString=timeStamp, ierr=err)
-       !call mpas_log_write('Forcing time for atmospheric forcing' // trim(timeStamp))
+       call mpas_log_write('Forcing time for atmospheric forcing' // trim(timeStamp))
    
        call mpas_advance_forcing_clock(forcingGroupHead, dtSimReverse)
    
@@ -330,7 +330,7 @@ module ocn_time_varying_forcing
             currentForcingTime)               ! forcingTime
    
        call mpas_get_time(curr_time=currentForcingTime, dateTimeString=timeStamp, ierr=err)
-       !call mpas_log_write('Forcing time reversed for atmospheric forcing' // trim(timeStamp))
+       call mpas_log_write('Forcing time reversed for atmospheric forcing' // trim(timeStamp))
    
        ! perform post forcing
        block => domain % blocklist
@@ -691,6 +691,7 @@ module ocn_time_varying_forcing
             config_do_restart, &                    ! restart
             .false.)                                ! interpolateAtInit
    
+     call mpas_log_write('init_river_forcing: Ending subroutine')
      end subroutine init_river_forcing
    
    !|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||

@@ -13,7 +13,7 @@
 module mpas_forcing
 
 #define COMMA ,
-#define FORCING_DEBUG_WRITE(M) !call mpas_log_write( M )
+#define FORCING_DEBUG_WRITE(M) call mpas_log_write( M )
 #define FORCING_WARNING_WRITE(M) call mpas_log_write( M , messageType=MPAS_LOG_WARN)
 #define FORCING_ERROR_WRITE(M) call mpas_log_write( M , messageType=MPAS_LOG_ERR)
 
@@ -130,15 +130,19 @@ contains
     endif
 
     ! set the forcings name
+    FORCING_DEBUG_WRITE("mpas_forcing_init_group: set forcing name")
     forcingGroupNew % forcingGroupName = trim(forcingGroupName)
 
     ! set the forcing group domain
+    FORCING_DEBUG_WRITE("mpas_forcing_init_group: set forcing group domain")
     forcingGroupNew % domain_ptr => domain
 
     ! add forcing group to restart counter
+    FORCING_DEBUG_WRITE("mpas_forcing_init_group: set forcing group to restart counter")
     call add_forcing_group_to_restart_counter(forcingGroupNew)
 
     ! create the forcing clock
+    FORCING_DEBUG_WRITE("mpas_forcing_init_group: create the forcing clock")
     call mpas_set_timeInterval(timeStep, dt=0.0_RKIND)
     call mpas_set_time(stopTime, dateTimeString="9999-12-31_23:59:59") ! shouldnt need to do this!
     if (restart) then
@@ -149,40 +153,48 @@ contains
     endif
 
     ! determine if we will cycle the forcing clock
+    FORCING_DEBUG_WRITE("mpas_forcing_init_group: determine if we cycle the forcing clock")
     forcingGroupNew % forcingCycleUse = .true.
     if (trim(forcingCycleStart) == "none") then
        forcingGroupNew % forcingCycleUse = .false.
     endif
 
     ! set forcing clock cycling
+    FORCING_DEBUG_WRITE("mpas_forcing_init_group: set forcing clock cycling")
     if (forcingGroupNew % forcingCycleUse) then
 
        ! set the forcing cycle times
+       FORCING_DEBUG_WRITE("mpas_forcing_init_group: set forcing cycling times")
        call MPAS_set_time(forcingGroupNew % forcingCycleStart, dateTimeString=forcingCycleStart)
        call MPAS_set_timeInterval(forcingGroupNew % forcingCycleDuration, timeString=forcingCycleDuration)
 
        ! set the forcing end time
+       FORCING_DEBUG_WRITE("mpas_forcing_init_group: set forcing end time")
        call MPAS_set_timeInterval(zeroDuration, DD=0)
 
        if (forcingGroupNew % forcingCycleDuration .gt. zeroDuration) then
           forcingGroupNew % forcingCycleEnd = forcingGroupNew % forcingCycleStart + forcingGroupNew % forcingCycleDuration
        else if (forcingGroupNew % forcingCycleDuration .le. zeroDuration) then
           ! no cycle so set before cycle start
+          FORCING_DEBUG_WRITE("mpas_forcing_init_group:no cycle so set before cycle start")
           call MPAS_set_timeInterval(timeInterval, DD=1000)
           forcingGroupNew % forcingCycleEnd = forcingGroupNew % forcingCycleStart - timeInterval
        endif
 
        ! start time is inclusive or not (default: start is inclusive)
+       FORCING_DEBUG_WRITE("mpas_forcing_init_group: start time is inclusive or not (default: start is inclusive)")
        forcingGroupNew % forcingCycleStartInclusive = .true.
        if (present(forcingCycleStartInclusive)) then
           forcingGroupNew % forcingCycleStartInclusive = forcingCycleStartInclusive
        endif
 
        ! set the forcing cycle alarm
+       FORCING_DEBUG_WRITE("mpas_forcing_init_group: set forcing cycle_alarm")
        call mpas_add_clock_alarm(&
             forcingGroupNew % forcingClock, forcingGroupNew % forcingCycleAlarmID, forcingGroupNew % forcingCycleEnd)
 
     endif
+  FORCING_DEBUG_WRITE("mpas_forcing_init_group: finished subruotine")
 
   end subroutine mpas_forcing_init_group!}}}
 
@@ -281,6 +293,8 @@ contains
     type(MPAS_TimeInterval_type) :: &
          forcingAlarmInterval ! forcing alarm interval
 
+    FORCING_DEBUG_WRITE("mpas_forcing_init_field: Starting subroutine")
+
     ! loop over forcings linked list
     forcingGroup => forcingGroupHead
     do while (associated(forcingGroup))
@@ -370,12 +384,15 @@ contains
                variable_interval_forward, &
                variable_interval_backward)
 
+          FORCING_DEBUG_WRITE("mpas_forcing_init_field: Ending subroutine by return")
           return
        endif
 
        forcingGroup => forcingGroup % next
     end do
 
+  FORCING_DEBUG_WRITE("mpas_forcing_init_field: Ending subroutine")
+  
   end subroutine mpas_forcing_init_field!}}}
 
 !|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -458,6 +475,8 @@ contains
     integer :: &
          ierr
 
+    FORCING_DEBUG_WRITE("create_new_forcing_stream: Starting subroutine")
+
     FORCING_DEBUG_WRITE('-- Forcing: create_new_forcing_stream streamID: '//trim(forcingStreamID))
 
     ! set the forcing stream ID
@@ -536,7 +555,9 @@ contains
                               'for forcing name: ' // trim(forcingName), MPAS_LOG_CRIT )
        endif
     endif
-
+  
+  FORCING_DEBUG_WRITE("create_new_forcing_stream: Ending subroutine")
+  
   end subroutine create_new_forcing_stream!}}}
 
 !|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -614,6 +635,8 @@ contains
 
     type(mpas_forcing_field_type), pointer :: &
          forcingFieldNew
+
+    FORCING_DEBUG_WRITE("add_forcing_field_to_forcing_stream: Starting subroutine")
 
     ! check interpolationType
     if (trim(forcingStream % interpolationType) /= trim(interpolationType)) then
@@ -714,6 +737,8 @@ contains
          streamManager, &
          domain)
 
+  FORCING_DEBUG_WRITE("add_forcing_field_to_forcing_stream: Ending subroutine")       
+
   end subroutine add_forcing_field_to_forcing_stream!}}}
 
 !|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -746,6 +771,8 @@ contains
     logical :: &
          forward_use
 
+    FORCING_DEBUG_WRITE("forcing_interval: Starting function")
+
     forward_use = .true.
     if (present(forward)) forward_use = forward
 
@@ -760,6 +787,8 @@ contains
           forcingInterval = forcingStream % variable_interval_backward_ptr(currentTime)
        endif
     end if
+  
+  FORCING_DEBUG_WRITE("forcing_interva: Ending function")
 
   end function forcing_interval!}}}
 
@@ -794,7 +823,8 @@ contains
 
     integer :: &
          iTime ! index of forcing times
-
+    
+    FORCING_DEBUG_WRITE("get_initial_forcing_times: Starting subroutine")     
     ! set the current forcing time
     currentTime = mpas_get_clock_time(forcingGroup % forcingClock, MPAS_NOW)
 
@@ -841,7 +871,8 @@ contains
        end do forward_search
 
     endif
-
+  
+  FORCING_DEBUG_WRITE("get_initial_forcing_times: Ending subroutine ")   
   end subroutine get_initial_forcing_times!}}}
 
 !|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -879,6 +910,8 @@ contains
 
     character(len=strKIND) :: strout
 
+    FORCING_DEBUG_WRITE("populate_forcing_times: Starting subroutine ")   
+
     ! fill given slot
     forcingStream % forcingTimes(forcingSlot) = forcingTimeSlot
 
@@ -900,6 +933,8 @@ contains
 
     enddo ! iTime
 
+
+  FORCING_DEBUG_WRITE("populate_forcing_times: ending subroutine ")   
   end subroutine populate_forcing_times!}}}
 
 !|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -945,7 +980,8 @@ contains
 
     type(mpas_forcing_stream_type), pointer :: &
          forcingStream ! forcing stream iterator
-
+    
+    FORCING_DEBUG_WRITE("mpas_forcing_init_field_data: starting subroutine ")   
     ! loop over forcings linked list
     forcingGroup => forcingGroupHead
     do while (associated(forcingGroup))
@@ -970,7 +1006,7 @@ contains
 
        forcingGroup => forcingGroup % next
     end do
-
+  FORCING_DEBUG_WRITE("mpas_forcing_init_field_data: ending subroutine ")   
   end subroutine mpas_forcing_init_field_data!}}}
 
 !|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -1021,7 +1057,7 @@ contains
          ierr
 
     FORCING_DEBUG_WRITE('-------------------------------------------')
-
+    FORCING_DEBUG_WRITE("get_initial_forcing_data: starting subroutine ") 
     ! loop over the forcing time slots
     do iTime = 1, forcingStream % nTimeStencil
 
@@ -1140,7 +1176,7 @@ contains
             currentForcingTime)
 
     endif
-
+   FORCING_DEBUG_WRITE("get_initial_forcing_data: ending subroutine ") 
   end subroutine get_initial_forcing_data!}}}
 
 !|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -1185,7 +1221,7 @@ contains
          forcingStream ! forcing stream iterator
 
     FORCING_DEBUG_WRITE('-- Forcing: mpas_forcing_get_forcings: forcingGroup name: '//trim(forcingGroupName))
-
+    FORCING_DEBUG_WRITE("mpas_forcing_get_forcings: starting subroutine ") 
     ! loop over forcings linked list
     forcingGroup => forcingGroupHead
     do while (associated(forcingGroup))
@@ -1226,7 +1262,7 @@ contains
 
        forcingGroup => forcingGroup % next
     end do
-
+    FORCING_DEBUG_WRITE("mpas_forcing_get_forcings: ending subroutine ") 
   end subroutine mpas_forcing_get_forcing!}}}
 
 !|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -1254,12 +1290,13 @@ contains
 
     type(MPAS_TimeInterval_type) :: &
          timeStep ! time step interval
+   FORCING_DEBUG_WRITE("mpas_advance_forcing_clock: starting subroutine ") 
 
     ! increment clock with timestep
     call mpas_set_timeInterval(timeStep, dt=dt)
     !call mpas_log_write('time step from mpas_set_timeInterval: $i $i $i', intArgs=(/int(timeStep%ti%basetime%S), int(timeStep%ti%basetime%Sn), int(timeStep%ti%basetime%Sd) /))
     call mpas_advance_clock(forcingGroup % forcingClock, timeStep)
-
+    FORCING_DEBUG_WRITE("mpas_advance_forcing_clock: ending subroutine ") 
   end subroutine mpas_advance_forcing_clock!}}}
 
 !|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -1289,7 +1326,7 @@ contains
 
     type(mpas_forcing_stream_type), pointer :: &
          forcingStream
-
+         FORCING_DEBUG_WRITE("cycle_forcing_clock: starting subroutine ") 
     ! check if cycling alarm is ringing
     if (mpas_is_alarm_ringing(forcingGroup % forcingClock, forcingGroup % forcingCycleAlarmID)) then
 
@@ -1313,7 +1350,7 @@ contains
        enddo
 
     endif ! forcingCycleAlarmID ringing
-
+    FORCING_DEBUG_WRITE("cycle_forcing_clock: ending subroutine ") 
   end subroutine cycle_forcing_clock!}}}
 
 !|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -1347,7 +1384,7 @@ contains
 
     type(mpas_forcing_group_type), pointer :: &
          forcingGroup ! forcing group iterator
-
+         FORCING_DEBUG_WRITE("mpas_forcing_get_forcing_time: starting subroutine ") 
     ! loop over forcings linked list
     forcingGroup => forcingGroupHead
     do while (associated(forcingGroup))
@@ -1361,7 +1398,7 @@ contains
 
        forcingGroup => forcingGroup % next
     end do
-
+    FORCING_DEBUG_WRITE("mpas_forcing_get_forcing_time: ending subroutine ") 
   end subroutine mpas_forcing_get_forcing_time!}}}
 
 !|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -1402,7 +1439,7 @@ contains
     integer :: &
          iTime, & ! forcing times index
          ierr ! status of stream read
-
+    FORCING_DEBUG_WRITE(" mpas_forcing_get_forcing: starting subroutine ") 
     FORCING_DEBUG_WRITE('-- Forcing: mpas_forcing_get_forcing: $l' COMMA logicArgs=(/mpas_is_alarm_ringing(forcingGroup % forcingClock, forcingStream % forcingAlarmID)/))
 
     ! get current forcing time
@@ -1466,7 +1503,7 @@ contains
          forcingGroup % domain_ptr, &
          forcingStream, &
          currentTime)
-
+   FORCING_DEBUG_WRITE(" mpas_forcing_get_forcing: ending subroutine ") 
   end subroutine get_forcing!}}}
 
 !-----------------------------------------------------------------------
@@ -1500,7 +1537,8 @@ contains
          stencilSize, &      !< Output: the time stencil size
          stencilSizeLower, & !< Output: the time stencil size below the current forcing clock time
          stencilSizeUpper    !< Output: the time stencil size above the current forcing clock time
-
+    
+    FORCING_DEBUG_WRITE(" interpolation_time_stencil_info: starting subroutine ") 
     select case (trim(interpolationType))
     case ("linear")
        stencilSize = 2
@@ -1517,7 +1555,7 @@ contains
     case default
        call mpas_log_write('Forcing: Unknown forcing interpolation type'//trim(interpolationType), MPAS_LOG_CRIT)
     end select
-
+  FORCING_DEBUG_WRITE(" interpolation_time_stencil_info: ending subroutine ") 
   end subroutine interpolation_time_stencil_info!}}}
 
 !|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -1554,7 +1592,7 @@ contains
     case default
        call mpas_log_write('Forcing: Unknown forcing interpolation type'//trim(forcingStream % interpolationType), MPAS_LOG_CRIT)
     end select
-
+   FORCING_DEBUG_WRITE(" get_interpolants: ending subroutine ") 
   end subroutine get_interpolants!}}}
 
 !|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -1590,7 +1628,7 @@ contains
          diffr, &  ! real versions of above
          diffr1, & ! real versions of above
          diffr2    ! real versions of above
-
+   FORCING_DEBUG_WRITE(" get_interpolants_linear: starting subroutine ") 
     diff = forcingStream % forcingTimes(2) - forcingStream % forcingTimes(1)
     diff1 = currentTime - forcingStream % forcingTimes(1)
     diff2 = forcingStream % forcingTimes(2) - currentTime
@@ -1603,7 +1641,7 @@ contains
     interpolants(1) = diffr2 / diffr
     interpolants(2) = 1.0_RKIND - interpolants(1) !diffr1 / diffr
     
-
+    FORCING_DEBUG_WRITE(" get_interpolants_linear: ending subroutine ") 
   end subroutine get_interpolants_linear!}}}
 
 !|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -1644,7 +1682,7 @@ contains
        interpolants(1) = 0.0_RKIND
        interpolants(2) = 1.0_RKIND
     endif
-
+  FORCING_DEBUG_WRITE(" get_interpolants_constant: ending subroutine ") 
   end subroutine get_interpolants_constant!}}}
 
 !|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -1676,7 +1714,7 @@ contains
 
     real(kind=RKIND) :: &
          x0, x1, x2, x3, x4
-
+    FORCING_DEBUG_WRITE(" get_interpolants_four_point_polynomial: starting subroutine ") 
     x0_interval = currentTime - currentTime
     x1_interval = forcingStream % forcingTimes(1) - currentTime
     x2_interval = forcingStream % forcingTimes(2) - currentTime
@@ -1693,7 +1731,7 @@ contains
     interpolants(2) = ((x0 - x1) / (x2 - x1)) * ((x0 - x3) / (x2 - x3)) * ((x0 - x4) / (x2 - x4))
     interpolants(3) = ((x0 - x1) / (x3 - x1)) * ((x0 - x2) / (x3 - x2)) * ((x0 - x4) / (x3 - x4))
     interpolants(4) = ((x0 - x1) / (x4 - x1)) * ((x0 - x2) / (x4 - x2)) * ((x0 - x3) / (x4 - x3))
-
+    FORCING_DEBUG_WRITE(" get_interpolants_four_point_polynomial: ending subroutine ") 
   end subroutine get_interpolants_four_point_polynomial!}}}
 
 !-----------------------------------------------------------------------
@@ -1740,7 +1778,7 @@ contains
 
     type (MPAS_pool_field_info_type) :: &
          forcingPoolInfo ! pool info
-
+         
     ! input and output fields
     type(field0DReal), pointer :: field0DRealInput, field0DRealOutput, field0DRealInputPrev
     type(field1DReal), pointer :: field1DRealInput, field1DRealOutput, field1DRealInputPrev
@@ -1777,7 +1815,7 @@ contains
 
     logical :: &
          lInputPoolCreated
-
+         FORCING_DEBUG_WRITE(" setup_input_fields: starting subroutine ") 
     ! get the input field and pool name
     fieldnameInput = trim(forcingField % fieldname)//"_forcing_input"
     poolnameInput  = trim(forcingField % poolname)//"_forcing_input"
@@ -2150,7 +2188,7 @@ contains
     if (ierr /= 0) then
        call mpas_log_write('Forcing: setup_input_fields: MPAS_stream_mgr_set_property: $i', MPAS_LOG_CRIT, intArgs=(/ierr/))
     endif
-
+    FORCING_DEBUG_WRITE(" setup_input_fields: ending subroutine ") 
   end subroutine setup_input_fields!}}}
 
 !|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -2215,7 +2253,7 @@ contains
 
     type(mpas_forcing_field_type), pointer :: &
          forcingField
-
+         FORCING_DEBUG_WRITE(" forcing_data_interpolations: starting subroutine ") 
     ! get the interpolant weights
     allocate(interpolants(forcingStream % nTimeStencil))
     call get_interpolants(interpolants, forcingStream, currentTime)
@@ -2358,7 +2396,7 @@ contains
     end do
 
     deallocate(interpolants)
-
+    FORCING_DEBUG_WRITE(" forcing_data_interpolations: ending subroutine ") 
   end subroutine forcing_data_interpolation!}}}
 
 !|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -2418,7 +2456,7 @@ contains
 
     type(mpas_forcing_field_type), pointer :: &
          forcingField
-
+         FORCING_DEBUG_WRITE(" forcing_shift_data: starting subroutine ") 
     ! loop over forcing fields in stream
     forcingField => forcingStream % field
     do while (associated(forcingField))
@@ -2477,7 +2515,7 @@ contains
 
        forcingField => forcingField % next
     end do
-
+    FORCING_DEBUG_WRITE(" forcing_shift_data: ending subroutine ") 
   end subroutine forcing_shift_data!}}}
 
 !-----------------------------------------------------------------------
@@ -2525,7 +2563,7 @@ contains
     character(len=strKIND), dimension(:), pointer :: &
          forcingGroupNames, &
          forcingGroupRestartTimes
-
+         FORCING_DEBUG_WRITE(" mpas_forcing_write_restart_times: starting subroutine ") 
     ! loop over forcing groups
     forcingGroup => forcingGroupHead
     do while (associated(forcingGroup))
@@ -2572,7 +2610,7 @@ contains
 
        forcingGroup => forcingGroup % next
     end do
-
+    FORCING_DEBUG_WRITE(" mpas_forcing_write_restart_times: ending subroutine ") 
   end subroutine mpas_forcing_write_restart_times!}}}
 
 !|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -2602,7 +2640,7 @@ contains
 
     type(mpas_pool_type), pointer :: &
          forcingPool
-
+         FORCING_DEBUG_WRITE(" add_forcing_group_to_restart_counter: starting subroutine ") 
     block => forcingGroup % domain_ptr % blocklist
     do while (associated(block))
 
@@ -2626,7 +2664,7 @@ contains
 
        block => block % next
     end do
-
+    FORCING_DEBUG_WRITE(" add_forcing_group_to_restart_counter: ending subroutine ") 
   end subroutine add_forcing_group_to_restart_counter
 
 !|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -2671,7 +2709,7 @@ contains
     character(len=strKIND), dimension(:), pointer :: &
          forcingGroupNames, &
          forcingGroupRestartTimes
-
+      FORCING_DEBUG_WRITE(" get_restart_times: starting subroutine ") 
     call mpas_pool_get_subpool(forcingGroup % domain_ptr % blocklist % structs, "forcing", forcingPool)
 
     call MPAS_pool_get_array(forcingPool, "forcingGroupNames",        forcingGroupNames)
@@ -2690,7 +2728,8 @@ contains
        endif
 
     enddo ! iForcingGroup
-
+  
+    FORCING_DEBUG_WRITE(" get_restart_times: endign subroutine ") 
   end subroutine get_restart_times!}}}
 
 !-----------------------------------------------------------------------

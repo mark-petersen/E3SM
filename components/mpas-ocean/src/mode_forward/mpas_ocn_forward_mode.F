@@ -520,7 +520,7 @@ module ocn_forward_mode
       call ocn_time_varying_forcing_init(domain)
 
    !--------------------------------------------------------------------
-
+   call mpas_log_write('ocn_forward_mode_init: Ending function')
    end function ocn_forward_mode_init!}}}
 
 !***********************************************************************

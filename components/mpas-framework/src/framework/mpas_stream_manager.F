@@ -3639,6 +3639,8 @@ module mpas_stream_manager
 
         if (present(ierr)) ierr = local_ierr
 
+        print *, 'Finishing MPAS_stream_mgr_read'
+
     end subroutine MPAS_stream_mgr_read !}}}
 
 
