@@ -4,6 +4,7 @@ repos:
     rev: v1.9.6
     hooks:
       - id: clang-format
+        args: ["-i"]
       # - id: clang-tidy
       #   args: [--checks=readability-magic-numbers,--warnings-as-errors=*]
       # - id: cppcheck
