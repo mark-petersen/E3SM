@@ -26,6 +26,7 @@
 #include "TimeStepper.h"
 #include "Tracers.h"
 #include "mpi.h"
+#include "Pacer.h"
 #include <chrono>
 #include <thread>
 #include <vector>
@@ -174,6 +175,8 @@ int main(int argc, char **argv) {
    // Initialize the global MPI and Kokkos environments
    MPI_Init(&argc, &argv);
    Kokkos::initialize();
+   Pacer::initialize(MPI_COMM_WORLD);
+   Pacer::setPrefix("Omega:");
    {
 
       Clock *ModelClock = nullptr;

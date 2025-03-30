@@ -23,6 +23,7 @@
 #include "MachEnv.h"
 #include "OmegaKokkos.h"
 #include "mpi.h"
+#include "Pacer.h"
 
 using namespace OMEGA;
 
@@ -160,6 +161,8 @@ int main(int argc, char *argv[]) {
    // Initialize global MPI environment and Kokkos
    MPI_Init(&argc, &argv);
    Kokkos::initialize();
+   Pacer::initialize(MPI_COMM_WORLD);
+   Pacer::setPrefix("Omega:");
    {
 
       // Call Halo test initialization routine
