@@ -14,6 +14,7 @@
 #include "TimeStepper.h"
 #include "Tracers.h"
 #include "mpi.h"
+#include "Pacer.h"
 
 #include <cmath>
 #include <iomanip>
@@ -342,6 +343,8 @@ int main(int argc, char *argv[]) {
 
    MPI_Init(&argc, &argv);
    Kokkos::initialize(argc, argv);
+   Pacer::initialize(MPI_COMM_WORLD);
+   Pacer::setPrefix("Omega:");
 
    RetVal += auxStateTest();
 

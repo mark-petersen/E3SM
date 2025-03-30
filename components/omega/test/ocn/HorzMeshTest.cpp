@@ -19,6 +19,7 @@
 #include "MachEnv.h"
 #include "OmegaKokkos.h"
 #include "mpi.h"
+#include "Pacer.h"
 
 #include <iostream>
 
@@ -147,6 +148,8 @@ int main(int argc, char *argv[]) {
    // Initialize the global MPI environment
    MPI_Init(&argc, &argv);
    Kokkos::initialize();
+   Pacer::initialize(MPI_COMM_WORLD);
+   Pacer::setPrefix("Omega:");
    {
 
       OMEGA::R8 tol = 1e-6;
