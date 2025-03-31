@@ -24,6 +24,7 @@
 #include "Logging.h"
 #include "OceanTestCommon.h"
 #include "OmegaKokkos.h"
+#include "Pacer.h"
 #include "mpi.h"
 
 #include <cmath>
@@ -913,6 +914,8 @@ int main(int argc, char *argv[]) {
 
    MPI_Init(&argc, &argv);
    Kokkos::initialize(argc, argv);
+   Pacer::initialize(MPI_COMM_WORLD);
+   Pacer::setPrefix("Omega:");
 
    RetErr = tendencyTermsTest();
 

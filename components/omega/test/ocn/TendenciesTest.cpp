@@ -12,6 +12,7 @@
 #include "MachEnv.h"
 #include "OceanTestCommon.h"
 #include "OmegaKokkos.h"
+#include "Pacer.h"
 #include "TimeStepper.h"
 #include "mpi.h"
 
@@ -286,6 +287,8 @@ int main(int argc, char *argv[]) {
 
    MPI_Init(&argc, &argv);
    Kokkos::initialize(argc, argv);
+   Pacer::initialize(MPI_COMM_WORLD);
+   Pacer::setPrefix("Omega:");
 
    RetVal += tendenciesTest();
 

@@ -22,6 +22,7 @@
 #include "MachEnv.h"
 #include "OceanState.h"
 #include "OmegaKokkos.h"
+#include "Pacer.h"
 #include "TimeMgr.h"
 #include "TimeStepper.h"
 #include "Tracers.h"
@@ -174,6 +175,8 @@ int main(int argc, char **argv) {
    // Initialize the global MPI and Kokkos environments
    MPI_Init(&argc, &argv);
    Kokkos::initialize();
+   Pacer::initialize(MPI_COMM_WORLD);
+   Pacer::setPrefix("Omega:");
    {
 
       Clock *ModelClock = nullptr;

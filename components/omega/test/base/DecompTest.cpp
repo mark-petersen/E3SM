@@ -17,6 +17,7 @@
 #include "IO.h"
 #include "Logging.h"
 #include "MachEnv.h"
+#include "Pacer.h"
 #include "mpi.h"
 
 #include <iostream>
@@ -70,6 +71,8 @@ int main(int argc, char *argv[]) {
    // Initialize the global MPI environment
    MPI_Init(&argc, &argv);
    Kokkos::initialize();
+   Pacer::initialize(MPI_COMM_WORLD);
+   Pacer::setPrefix("Omega:");
    {
       // Call initialization routine to create the default decomposition
       int Err = initDecompTest();
