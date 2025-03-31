@@ -18,8 +18,8 @@
 #include "Logging.h"
 #include "MachEnv.h"
 #include "OmegaKokkos.h"
-#include "mpi.h"
 #include "Pacer.h"
+#include "mpi.h"
 
 #include <iostream>
 

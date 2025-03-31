@@ -22,11 +22,11 @@
 #include "MachEnv.h"
 #include "OceanState.h"
 #include "OmegaKokkos.h"
+#include "Pacer.h"
 #include "TimeMgr.h"
 #include "TimeStepper.h"
 #include "Tracers.h"
 #include "mpi.h"
-#include "Pacer.h"
 #include <chrono>
 #include <thread>
 #include <vector>

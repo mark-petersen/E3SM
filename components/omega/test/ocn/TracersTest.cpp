@@ -20,9 +20,9 @@
 #include "Logging.h"
 #include "MachEnv.h"
 #include "OmegaKokkos.h"
+#include "Pacer.h"
 #include "TimeStepper.h"
 #include "mpi.h"
-#include "Pacer.h"
 
 #include <iostream>
 

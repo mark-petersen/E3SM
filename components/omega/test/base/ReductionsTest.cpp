@@ -13,8 +13,8 @@
 #include "Logging.h"
 #include "MachEnv.h"
 #include "OmegaKokkos.h"
-#include "Reductions.h"
 #include "Pacer.h"
+#include "Reductions.h"
 
 using namespace OMEGA;
 

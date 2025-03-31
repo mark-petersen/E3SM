@@ -10,8 +10,8 @@
 #include "MachEnv.h"
 #include "OceanTestCommon.h"
 #include "OmegaKokkos.h"
-#include "mpi.h"
 #include "Pacer.h"
+#include "mpi.h"
 
 #include <cmath>
 

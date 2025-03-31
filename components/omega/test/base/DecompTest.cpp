@@ -17,8 +17,8 @@
 #include "IO.h"
 #include "Logging.h"
 #include "MachEnv.h"
-#include "mpi.h"
 #include "Pacer.h"
+#include "mpi.h"
 
 #include <iostream>
 

@@ -11,10 +11,10 @@
 #include "MachEnv.h"
 #include "OceanTestCommon.h"
 #include "OmegaKokkos.h"
+#include "Pacer.h"
 #include "TimeStepper.h"
 #include "Tracers.h"
 #include "mpi.h"
-#include "Pacer.h"
 
 #include <cmath>
 #include <iomanip>

@@ -22,9 +22,9 @@
 #include "MachEnv.h"
 #include "OceanState.h"
 #include "OmegaKokkos.h"
+#include "Pacer.h"
 #include "TimeStepper.h"
 #include "mpi.h"
-#include "Pacer.h"
 
 #include <iostream>
 
