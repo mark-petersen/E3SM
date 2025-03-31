@@ -1503,7 +1503,11 @@ module mpas_timekeeping
             read(subStrings(1),*) hour
             read(subStrings(2),*) min
             ! read(subStrings(3),*) sec
-            sec = 0_I8KIND
+            if (trim(subStrings(3))=='-') then
+               sec = 0_I8KIND
+            else
+               read(subStrings(3),*) sec
+            endif
 
             call mpas_log_write(' subStrings(3) ' // subStrings(3) // 'END')
             call mpas_log_write(' trim(subStrings(3)) ' // trim(subStrings(3)) // 'END')
