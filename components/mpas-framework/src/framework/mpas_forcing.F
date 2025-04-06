@@ -1147,7 +1147,7 @@ contains
 
        ! load the data into the slot
        call mpas_get_time(forcingTimeCycle, dateTimeString=forcingTimeStr)
-       FORCING_DEBUG_WRITE('-- Forcing: get_initial_forcing_data: READ ATTEMPT: '//trim(forcingTimeStr))
+       FORCING_DEBUG_WRITE('-- Forcing: get_initial_forcing_data: READ ATTEMPT: '//trim(forcingStream % forcingStreamID)//" "//trim(forcingTimeStr))
        call MPAS_stream_mgr_read(&
             streamManager, &
             forcingStream % forcingStreamID, &
@@ -2180,6 +2180,9 @@ contains
     ! add the input field to the stream
     call MPAS_stream_mgr_add_field(&
          streamManager, trim(forcingStream % forcingStreamID), trim(fieldnameInput), ierr=ierr)
+    call mpas_log_write('mrp setup_input_fields MPAS_stream_mgr_add_field ')
+    call mpas_log_write('trim(forcingStream % forcingStreamID):'//trim(forcingStream % forcingStreamID))
+    call mpas_log_write('trim(fieldnameInput):'//trim(fieldnameInput))
     if (ierr /= 0) then
        call mpas_log_write('Forcing: setup_input_fields: MPAS_stream_mgr_add_field: $i', MPAS_LOG_CRIT, intArgs=(/ierr/))
     endif
@@ -2298,6 +2301,9 @@ contains
                 do iTime = 2, forcingStream % nTimeStencil
                    call MPAS_pool_get_array(forcingPoolInput,  trim(fieldnameInput), field1DRealInput, iTime)
                    field1DRealOutput = field1DRealOutput + field1DRealInput * interpolants(iTime)
+                   call mpas_log_write( "mrp -- Forcing: forcing_data_interpolation pool: interpolation"  )
+                   call mpas_log_write( "mrp trim(fieldnameInput): "//trim(fieldnameInput))
+                   call mpas_log_write( "mrp field1DRealInput(1:10) $r", realArgs=(/ field1DRealInput(10)/) )
                 enddo ! iTime
 
              case (2)

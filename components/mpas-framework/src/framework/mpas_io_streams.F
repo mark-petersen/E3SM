@@ -2304,7 +2304,14 @@ call mpas_log_write('Adding field to the tail of the list')
 
       field_cursor => stream % fieldList
       do while (associated(field_cursor))
+STREAM_DEBUG_WRITE('mrp1 if (field_cursor % field_type == FIELD_1D_REAL) then')
+ call mpas_log_write("field_cursor % field_type $i FIELD_1D_REAL= $i", intArgs=(/field_cursor % field_type,FIELD_1D_REAL/))
+ field_cursor % field_type = FIELD_1D_REAL
          if (field_cursor % field_type == FIELD_1D_REAL) then
+STREAM_DEBUG_WRITE('mrp1 field_cursor % real1dField % fieldname:'//field_cursor % real1dField % fieldname//'END')
+STREAM_DEBUG_WRITE('mrp1 field % fieldname                     :'//field % fieldname//'END')
+STREAM_DEBUG_WRITE('mrp1 field_cursor % real1dField % dimNames(1):'//field_cursor % real1dField % dimNames(1)//'END')
+STREAM_DEBUG_WRITE('mrp1 field % dimNames(1)                     :'//field % dimNames(1)//'END')
             if (field_cursor % real1dField % fieldname == field % fieldname .and. &
                 field_cursor % real1dField % dimSizes(1) == field % dimSizes(1) .and. &
                 field_cursor % real1dField % dimNames(1) == field % dimNames(1)) then
@@ -2316,7 +2323,7 @@ call mpas_log_write('Adding field to the tail of the list')
          field_cursor => field_cursor % next
       end do
       if (.not. associated(field_cursor)) then
-         STREAM_DEBUG_WRITE( '... 1d real field '//trim(field % fieldname)//' not found in stream' )
+         STREAM_DEBUG_WRITE( '... mrp1 1d real field '//trim(field % fieldname)//' not found in stream' )
          if (present(ierr)) ierr = MPAS_STREAM_FIELD_NOT_FOUND
       end if
 

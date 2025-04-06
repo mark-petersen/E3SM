@@ -625,6 +625,9 @@ module mpas_io
       found = .false.
       field_cursor => handle % fieldlist_head
       do while (associated(field_cursor))
+call mpas_log_write('mrp MPAS_io_inq_var compare: ')
+call mpas_log_write(' fieldname:                            :'//trim(fieldname)//'END')
+call mpas_log_write(' field_cursor % fieldhandle % fieldname:'//trim(field_cursor % fieldhandle % fieldname)//'END')
          if (trim(fieldname) == trim(field_cursor % fieldhandle % fieldname)) then
 !call mpas_log_write('Already found variable in fieldlist')
             found = .true.
