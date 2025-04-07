@@ -13,8 +13,8 @@
 #include "DataTypes.h"
 #include "Logging.h"
 #include "mpi.h"
-#include <spdlog/spdlog.h>
 #include <cpptrace/cpptrace.hpp>
+#include <spdlog/spdlog.h>
 #include <string>
 
 namespace OMEGA {
@@ -27,7 +27,7 @@ Error::Error() {
 
 //------------------------------------------------------------------------------
 // Constructor with no message
-Error::Error(ErrorCode ErrCode  // [in] error code to assign
+Error::Error(ErrorCode ErrCode // [in] error code to assign
 ) {
    Code = ErrCode;
    Msg  = "";
@@ -48,21 +48,17 @@ void Error::reset() {
 void Error::abort() {
    LOG_CRITICAL("Omega aborting");
    int ErrCode = static_cast<int>(ErrorCode::Critical);
-   int Err = MPI_Abort(MPI_COMM_WORLD, ErrCode);
+   int Err     = MPI_Abort(MPI_COMM_WORLD, ErrCode);
 }
 
 //------------------------------------------------------------------------------
 // Query error for success - true if the error code is success
-bool Error::isSuccess() {
-   return (Code == ErrorCode::Success);
-}
+bool Error::isSuccess() { return (Code == ErrorCode::Success); }
 
 //------------------------------------------------------------------------------
 // Query error for failure. True only if error code is fail so this
 // is not equivalent to not success.
-bool Error::isFail() {
-   return (Code == ErrorCode::Fail);
-}
+bool Error::isFail() { return (Code == ErrorCode::Fail); }
 
 //------------------------------------------------------------------------------
 // Templated function createMsg is defined in header
@@ -85,8 +81,7 @@ Error Error::operator+(const Error &Err) const {
 // guarantes the new message is prepended so that the latest message appears
 // first.
 
-Error &
-Error::operator+=(const Error &Err) {
+Error &Error::operator+=(const Error &Err) {
 
    // reuse (+) operator defined above
    *this = Err + *this;
@@ -99,9 +94,9 @@ Error::operator+=(const Error &Err) {
 // placeholder locations and adding a prefix. A newline character is also
 // added to the end.
 std::string Error::createErrMsg(
-   const std::string &Prefix, // [in] prefix with info (can be empty)
-   const std::string &InMsg,  // [in] error message with placeholders
-   std::vector<std::string>  MsgArgs // [in] additional arguments for msg
+    const std::string &Prefix,       // [in] prefix with info (can be empty)
+    const std::string &InMsg,        // [in] error message with placeholders
+    std::vector<std::string> MsgArgs // [in] additional arguments for msg
 ) {
 
    // Initialize the result string with a prefix (can be an empty string)
@@ -113,8 +108,8 @@ std::string Error::createErrMsg(
    int EndPos   = 0;
    int ArgIndex = 0;
    int StartPos = 0;
-   while ((StartPos = Result.find('{',EndPos)) != std::string::npos) {
-      EndPos = Result.find('}',StartPos);
+   while ((StartPos = Result.find('{', EndPos)) != std::string::npos) {
+      EndPos = Result.find('}', StartPos);
       if (EndPos != std::string::npos) {
          // Replace {} with argument
          int Length = EndPos - StartPos + 1;

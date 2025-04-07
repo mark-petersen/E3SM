@@ -105,4 +105,3 @@ if (NOT TARGET cpptrace::cpptrace)
 	  ${CMAKE_CURRENT_BINARY_DIR}/cpptrace
 	)
 endif()
-

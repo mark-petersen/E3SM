@@ -14,8 +14,8 @@
 
 #include "DataTypes.h"
 #include "Logging.h"
-#include <spdlog/spdlog.h>
 #include <cpptrace/cpptrace.hpp>
+#include <spdlog/spdlog.h>
 #include <sstream>
 #include <string>
 #include <utility>
@@ -37,7 +37,6 @@ enum class ErrorCode {
 class Error {
 
  public:
-
    ErrorCode Code;  /// error code to return
    std::string Msg; /// message to return with error code (can be blank)
 
@@ -45,7 +44,7 @@ class Error {
    Error();
 
    /// Constructor with no message
-   Error(ErrorCode ErrCode  ///< [in] error code to assign
+   Error(ErrorCode ErrCode ///< [in] error code to assign
    );
 
    /// Constructor with message and prefix
@@ -54,14 +53,14 @@ class Error {
          int Line,                 ///< [in] line where err occurs (cpp LINE)
          const char *File,         ///< [in] file where err occurs (cpp FILE)
          const std::string &InMsg, ///< [in] error message
-         Args&&... MsgArgs         ///< [in] additional arguments for error msg
+         Args &&...MsgArgs         ///< [in] additional arguments for error msg
    );
 
    /// Constructor with message and no prefix
    template <typename... Args>
    Error(ErrorCode ErrCode,        ///< [in] error code to assign
          const std::string &InMsg, ///< [in] error message
-         Args&&... MsgArgs         ///< [in] additional arguments for error msg
+         Args &&...MsgArgs         ///< [in] additional arguments for error msg
    );
 
    /// Query error for success. True only if the error code is success and is
@@ -90,13 +89,13 @@ class Error {
    Error &operator+=(const Error &);
 
  private:
-
    /// Utility function to create error message by inserting arguments into
    /// placeholder locations and adding a prefix.
    static std::string createErrMsg(
-      const std::string &Prefix, ///< [in] prefix with info (can be empty)
-      const std::string &InMsg,  ///< [in] error message with placeholders
-      std::vector<std::string> MsgArgs ///< [in] additional arguments for error msg
+       const std::string &Prefix, ///< [in] prefix with info (can be empty)
+       const std::string &InMsg,  ///< [in] error message with placeholders
+       std::vector<std::string>
+           MsgArgs ///< [in] additional arguments for error msg
    );
 
 }; // end Error class
@@ -108,10 +107,10 @@ class Error {
 // Utility function to convert arguments to strings and add them to a
 // vector of string arguments
 template <typename T>
-void buildErrorArgList(std::vector<std::string>& ArgVector, T Arg) {
-    std::ostringstream TempStr;
-    TempStr << Arg;
-    ArgVector.push_back(TempStr.str());
+void buildErrorArgList(std::vector<std::string> &ArgVector, T Arg) {
+   std::ostringstream TempStr;
+   TempStr << Arg;
+   ArgVector.push_back(TempStr.str());
 }
 
 //------------------------------------------------------------------------------
@@ -119,12 +118,11 @@ void buildErrorArgList(std::vector<std::string>& ArgVector, T Arg) {
 // level and file/line location. The error message can contain {} placeholders
 // for the additional arguments.
 template <typename... Args>
-Error::Error(
-      ErrorCode ErrCode,        // [in] error code to assign
-      int Line,                 // [in] line where err occurs (cpp __LINE__)
-      const char *File,         // [in] file where err occurs (cpp __FILE__)
-      const std::string &InMsg, // [in] error message
-      Args&&... MsgArgs         // [in] additional arguments for error msg
+Error::Error(ErrorCode ErrCode, // [in] error code to assign
+             int Line,          // [in] line where err occurs (cpp __LINE__)
+             const char *File,  // [in] file where err occurs (cpp __FILE__)
+             const std::string &InMsg, // [in] error message
+             Args &&...MsgArgs // [in] additional arguments for error msg
 ) {
 
    // Convert input variadic arguments to strings and store in a vector of
@@ -174,17 +172,15 @@ Error::Error(
 
    // Store the code
    Code = ErrCode;
-
 }
 
 //------------------------------------------------------------------------------
 // Constructor with error message and no prefix. The error message can contain
 // {} placeholders for the additional arguments.
 template <typename... Args>
-Error::Error(
-      ErrorCode ErrCode,        // [in] error code to assign
-      const std::string &InMsg, // [in] error message
-      Args&&... MsgArgs         // [in] additional arguments for error msg
+Error::Error(ErrorCode ErrCode,        // [in] error code to assign
+             const std::string &InMsg, // [in] error message
+             Args &&...MsgArgs // [in] additional arguments for error msg
 ) {
 
    // Convert input variadic arguments to strings and store in a vector of
@@ -200,7 +196,6 @@ Error::Error(
 
    // Store the code
    Code = ErrCode;
-
 }
 
 } // namespace OMEGA
@@ -253,7 +248,7 @@ Error::Error(
 
 /// This macro checks an existing error code and if it is not success, it
 /// prints a warning message, resets the code and continues the simulation.
-#define ERROR_CHECK_WARN(_ErrChk, _NewMsg, ...)                                  \
+#define ERROR_CHECK_WARN(_ErrChk, _NewMsg, ...)                         \
    if (!_ErrChk.isSuccess()) {                                          \
       _ErrChk += Error(OMEGA::ErrorCode::Warn, _NewMsg, ##__VA_ARGS__); \
       LOG_WARN(_ErrChk.Msg);                                            \
@@ -267,7 +262,7 @@ Error::Error(
       _ErrChk += Error(OMEGA::ErrorCode::Fail, _NewMsg, ##__VA_ARGS__); \
       LOG_CRITICAL(_ErrChk.Msg);                                        \
       cpptrace::generate_trace().print();                               \
-      OMEGA::Error::abort();                                                      \
+      OMEGA::Error::abort();                                            \
    }
 
 //===----------------------------------------------------------------------===//
