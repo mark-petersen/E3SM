@@ -88,6 +88,7 @@ int main(int argc, char **argv) {
    if (ErrDefault.isSuccess()) {
       LOG_INFO("Default error constructor: PASS");
    } else {
+      ++RetVal;
       LOG_ERROR("Default error constructor: FAIL");
    }
 
@@ -96,6 +97,7 @@ int main(int argc, char **argv) {
    if (ErrorTestSuccess2.isSuccess() and !ErrorTestSuccess2.isFail()) {
       LOG_INFO("No message error constructor success: PASS");
    } else {
+      ++RetVal;
       LOG_ERROR("No message error constructor success: FAIL");
    }
    Error ErrorTestWarn2(ErrorCode::Warn);
@@ -103,24 +105,28 @@ int main(int argc, char **argv) {
        ErrorTestWarn2.Code == ErrorCode::Warn) {
       LOG_INFO("No message error constructor warn: PASS");
    } else {
+      ++RetVal;
       LOG_ERROR("No message error constructor warn: FAIL");
    }
    Error ErrorTestFail2(ErrorCode::Fail);
    if (ErrorTestFail2.isFail() and !ErrorTestFail2.isSuccess()) {
       LOG_INFO("No message error constructor fail: PASS");
    } else {
+      ++RetVal;
       LOG_ERROR("No message error constructor fail: FAIL");
    }
 
    // Test constructor with message
    // Create a total error to accumulate codes and messages
-   std::string ExpectMsg =
-       "   [error] [ErrorTest.cpp:121] Initialized to fail String 1\n";
+   std::string LineTxt   = std::to_string(__LINE__ + 4);
+   std::string ExpectMsg = "   [error] [ErrorTest.cpp:" + LineTxt +
+                           "] Initialized to fail String 1\n";
    Error TotalError(ErrorCode::Fail, __LINE__, __FILE__,
                     "Initialized to fail {} {}", "String", 1);
    if (TotalError.isFail() and TotalError.Msg == ExpectMsg) {
       LOG_INFO("Error constructor with message: PASS");
    } else {
+      ++RetVal;
       LOG_ERROR("Error constructor with message: FAIL");
       LOG_ERROR(" Error constructor with message expected: {}", ExpectMsg);
       LOG_ERROR(" Error constructor with message actual:   {}", TotalError.Msg);
@@ -131,6 +137,7 @@ int main(int argc, char **argv) {
    if (TotalError.isSuccess()) {
       LOG_INFO("Reset of error code: PASS");
    } else {
+      ++RetVal;
       ERROR_CHECK(TotalError, "Reset of error code: FAIL");
    }
 
@@ -146,12 +153,19 @@ int main(int argc, char **argv) {
    // The above calls have reset the error so create a new failure
    TotalError += Error(ErrorCode::Fail, __LINE__, __FILE__, "Error in driver");
 
-   // Test critical error
-   passError1(TotalError);
+   // If we've encountered any test failures to this point, return a success
+   // code (since unit test is expecting a failure)
+   if (RetVal > 0) {
+      return 0;
 
-   // Finalize environments
+      // Otherwise, test critical error which should abort
+   } else {
+      passError1(TotalError);
+   }
+
+   // If code reaches here, the critical error test has failed so return a
+   // success code
    MPI_Finalize();
-
-   return RetVal;
+   return 0;
 }
 //------------------------------------------------------------------------------
