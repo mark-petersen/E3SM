@@ -118,7 +118,7 @@ int main(int argc, char **argv) {
 
    // Test constructor with message
    // Create a total error to accumulate codes and messages
-   std::string LineTxt   = std::to_string(__LINE__ + 4);
+   std::string LineTxt   = std::to_string(__LINE__ + 3);
    std::string ExpectMsg = "   [error] [ErrorTest.cpp:" + LineTxt +
                            "] Initialized to fail String 1\n";
    Error TotalError(ErrorCode::Fail, __LINE__, __FILE__,

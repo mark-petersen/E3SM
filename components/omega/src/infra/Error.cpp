@@ -20,18 +20,12 @@
 namespace OMEGA {
 //------------------------------------------------------------------------------
 // Default constructor
-Error::Error() {
-   Code = ErrorCode::Success;
-   Msg  = "";
-}
+Error::Error() : Code{ErrorCode::Success}, Msg{""} {}
 
 //------------------------------------------------------------------------------
 // Constructor with no message
-Error::Error(ErrorCode ErrCode // [in] error code to assign
-) {
-   Code = ErrCode;
-   Msg  = "";
-}
+Error::Error(ErrorCode ErrCode) // [in] error code to assign
+    : Code{ErrCode}, Msg{""} {}
 
 //------------------------------------------------------------------------------
 // Constructor with msg is defined in header
