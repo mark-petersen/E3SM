@@ -7,8 +7,6 @@
 import os
 from datetime import date
 
-import sphinx_rtd_theme
-
 # -- Project information -----------------------------------------------------
 
 project = "Omega"
@@ -54,10 +52,7 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "README.md",
                     "**/README.md"]
 
 intersphinx_mapping = {
-    'geometric_features':
-        ('http://mpas-dev.github.io/geometric_features/stable', None),
     'matplotlib': ('http://matplotlib.org/stable', None),
-    'mpas_tools': ('http://mpas-dev.github.io/MPAS-Tools/stable', None),
     'numpy': ('https://numpy.org/doc/stable', None),
     'polaris': ('https://e3sm-project.github.io/polaris/main', None),
     'python': ('https://docs.python.org', None),
@@ -82,8 +77,6 @@ myst_enable_checkboxes = True
 # -- HTML output -------------------------------------------------
 
 html_theme = 'sphinx_rtd_theme'
-html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
-html_title = ""
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
