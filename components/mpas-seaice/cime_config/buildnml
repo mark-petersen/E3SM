@@ -220,8 +220,8 @@ def buildnml(case, caseroot, compname):
     elif ice_grid == 'ARRMwISC2p4to18E3r1':
         decomp_date = '20240808'
         decomp_prefix = 'partitions/mpas-seaice.graph.info.'
-        grid_date = '20240823'
-        grid_prefix = 'mpassi.ARRMwISC2p4to18E3r1'
+        grid_date = '20250415'
+        grid_prefix = 'mpassi.ARRMwISC2p4to18E3r1.rstFromG-pm'
         if ice_ic_mode == 'spunup':
             grid_date = '240701'
             grid_prefix = 'mpassi.ARRMwISC2p4to18E3r1.rstFrom1monthG-chrys'
