@@ -14,11 +14,11 @@ can be used after including the `Error.h` and after initializing the Logging
 facility (typically done as early as possible in Omega initialization).
 
 The most common use case is to check for critical errors using the
-`ERROR_CRITICAL` macro. For example:
+`ABORT_ERROR` macro. For example:
 ```c++
-  if (condition) ERROR_CRITICAL("Bad value for variable: {}", Value);
+  if (condition) ABORT_ERROR("Bad value for variable: {}", Value);
 ```
-The macro takes a string argument for the error messagae and allows values
+The macro takes a string argument for the error message and allows values
 to be inserted where `{}` placeholders exist, similar to the Logging macros.
 This macro writes the error message and aborts the simulation. If Omega has
 been built with debug information available (either a debug build or the
@@ -28,8 +28,8 @@ a stack trace to provide the calling sequence that generated the error.
 Closely related to this critical error macro are the assert and require
 macros:
 ```c++
-ERROR_ASSERT(Condition, Message, addition args for message);
-ERROR_REQUIRE(Condition, Message, addition args for message);
+OMEGA_ASSERT(Condition, Message, addition args for message);
+OMEGA_REQUIRE(Condition, Message, addition args for message);
 ```
 These emulate the behavior of the C++ assert function.  The `ASSERT` macro
 is only evaluated in debug builds while the `REQUIRE` macro is always
@@ -41,7 +41,7 @@ code and an error message. These can be used as a return code, as in:
 ```c++
 Error MyError = callMyFunction();
 ```
-The error code within the class is an ErrorCode enum that define the severity
+The error code within the class is an ErrorCode enum that defines the severity
 of the error:
 ```c++
 enum class ErrorCode {
@@ -64,12 +64,12 @@ When adding or accumulating errors, the resulting error code is the max (most
 severe) error code and the error messages are concatenated (separated by a
 newline character) so that all messages are retained.
 
-For routines that return an error, we provide an `ERROR_RETURN` macro. For
+For routines that return an error, we provide an `RETURN_ERROR` macro. For
 example,
 ```c++
 Error ReturnVal; // initializes to success
 [do stuff]
-if (Condition) ERROR_RETURN(ReturnVal, ErrorCode::Fail, ErrMsg);
+if (Condition) RETURN_ERROR(ReturnVal, ErrorCode::Fail, ErrMsg);
 ```
 This macro accumulates the new error (Code, ErrMsg) into the return code
 and returns control and the error to the calling routine. The error message
@@ -79,13 +79,13 @@ to take with the returned error code and message.
 To check these returned error codes or any other accumulated errors in a code,
 the following macros can be used:
 ```c++
-ERROR_CHECK(ErrorToBeChecked, NewMessage, MsgArgs...);
-ERROR_CHECK_WARN(ErrorToBeChecked, NewMessage, MsgArgs...);
-ERROR_CHECK_CRITICAL(ErrorToBeChecked, NewMessage, MsgArgs...);
+CHECK_ERROR(ErrorToBeChecked, NewMessage, MsgArgs...);
+CHECK_ERROR_WARN(ErrorToBeChecked, NewMessage, MsgArgs...);
+CHECK_ERROR_ABORT(ErrorToBeChecked, NewMessage, MsgArgs...);
 ```
 These macros check the error and if it is not Success, prints the new message
-along with any other accumulated messages associated with the error to the
-log file. In the first two cases, the error is then reset (back to success
+to the log file along with any other accumulated messages associated with the
+error. In the first two cases, the error is then reset (back to success
 with an empty message) and the simulation continues. In the third case,
 the new message is treated as a critical error, so after printing all the
 messages, it prints a stack trace and aborts.
@@ -117,14 +117,14 @@ Error MyError(ErrorCode, Line, File, ErrorMessage); // as above but adds prefix
 ```
 In the last two cases, the constructor initializes the error message either
 with or without a prefix. In cases where the message is expected to be
-accumulated without an immediate print (eg the `ERROR_RETURN` macros) the prefix
+accumulated without an immediate print (eg the `RETURN_ERROR` macro) the prefix
 case is used and the prefix includes the message severity and the routine name
 and line number where the error occurs (the cpp `__LINE__` and `__FILE__` can
 be used). In the other constructor with a message, the prefix is left off,
 typically for cases where the relevant LOG function will be called underneath
 which adds the approporiate prefix as part of Logging.
 
-In the `ERROR_CHECK` macros, the Error is reset to Success and a blank message
+In the `CHECK_ERROR` macros, the Error is reset to Success and a blank message
 using the function
 ```c++
 MyError.reset();
@@ -136,4 +136,5 @@ message and calls the `MPI_abort()` function to kill the simulation, but
 additional functionality may be added later to clean up before shutting down.
 The abort function assumes it is being called from one of the Error functions
 or macros so does not print any previous accumulated errors and does not
-print a stack trace.
+print a stack trace. It is best to use one of the ABORT macros above rather
+than calling the abort member function directly.

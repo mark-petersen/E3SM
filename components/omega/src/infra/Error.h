@@ -204,7 +204,7 @@ Error::Error(ErrorCode ErrCode,        // [in] error code to assign
 // and preserve the line number at which an error occurs.
 
 ///  The critical error macro prints an error message and aborts the simulation
-#define ERROR_CRITICAL(_Msg, ...)      \
+#define ABORT_ERROR(_Msg, ...)         \
    LOG_CRITICAL(_Msg, ##__VA_ARGS__);  \
    cpptrace::generate_trace().print(); \
    OMEGA::Error::abort();
@@ -212,19 +212,19 @@ Error::Error(ErrorCode ErrCode,        // [in] error code to assign
 /// The assert macro checks for a required condition and exits if not met
 /// It is only active for debug builds.
 #ifdef OMEGA_DEBUG
-#define ERROR_ASSERT(_Condition, _ErrMsg, ...) \
+#define OMEGA_ASSERT(_Condition, _ErrMsg, ...) \
    if (_Condition) {                           \
       LOG_CRITICAL(_ErrMsg, ##__VA_ARGS__);    \
       cpptrace::generate_trace().print();      \
       OMEGA::Error::abort();                   \
    }
 #else
-#define ERROR_ASSERT(_Condition, _ErrMsg, ...)
+#define OMEGA_ASSERT(_Condition, _ErrMsg, ...)
 #endif
 
 /// This macro checks for a required condition and exits if not met
 /// It is always evaluated (unlike ASSERT for debug builds)
-#define ERROR_REQUIRE(_Condition, _ErrMsg, ...) \
+#define OMEGA_REQUIRE(_Condition, _ErrMsg, ...) \
    if (_Condition) {                            \
       LOG_CRITICAL(_ErrMsg, ##__VA_ARGS__);     \
       cpptrace::generate_trace().print();       \
@@ -233,13 +233,13 @@ Error::Error(ErrorCode ErrCode,        // [in] error code to assign
 
 /// This macro adds an error to the return code and returns this code to the
 /// calling routine.
-#define ERROR_RETURN(_ReturnErr, _ErrCode, _ErrMsg, ...)                       \
+#define RETURN_ERROR(_ReturnErr, _ErrCode, _ErrMsg, ...)                       \
    OMEGA::Error _NewErr(_ErrCode, __LINE__, __FILE__, _ErrMsg, ##__VA_ARGS__); \
    return (_ReturnErr += _NewErr);
 
 /// This macro checks an existing error code and if it is not success, it
 /// prints the error message, resets the code and continues the simulation.
-#define ERROR_CHECK(_ErrChk, _NewMsg, ...)                              \
+#define CHECK_ERROR(_ErrChk, _NewMsg, ...)                              \
    if (!_ErrChk.isSuccess()) {                                          \
       _ErrChk += Error(OMEGA::ErrorCode::Fail, _NewMsg, ##__VA_ARGS__); \
       LOG_ERROR(_ErrChk.Msg);                                           \
@@ -248,7 +248,7 @@ Error::Error(ErrorCode ErrCode,        // [in] error code to assign
 
 /// This macro checks an existing error code and if it is not success, it
 /// prints a warning message, resets the code and continues the simulation.
-#define ERROR_CHECK_WARN(_ErrChk, _NewMsg, ...)                         \
+#define CHECK_ERROR_WARN(_ErrChk, _NewMsg, ...)                         \
    if (!_ErrChk.isSuccess()) {                                          \
       _ErrChk += Error(OMEGA::ErrorCode::Warn, _NewMsg, ##__VA_ARGS__); \
       LOG_WARN(_ErrChk.Msg);                                            \
@@ -257,7 +257,7 @@ Error::Error(ErrorCode ErrCode,        // [in] error code to assign
 
 /// This macro checks an existing error code and if it is a fail, it
 /// aborts with a critical error
-#define ERROR_CHECK_CRITICAL(_ErrChk, _NewMsg, ...)                     \
+#define CHECK_ERROR_ABORT(_ErrChk, _NewMsg, ...)                        \
    if (_ErrChk.isFail()) {                                              \
       _ErrChk += Error(OMEGA::ErrorCode::Fail, _NewMsg, ##__VA_ARGS__); \
       LOG_CRITICAL(_ErrChk.Msg);                                        \

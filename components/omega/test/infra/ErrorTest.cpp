@@ -26,7 +26,7 @@ using namespace OMEGA;
 Error returnErrorRoutine3(void) {
    Error RetVal; // init to success
    int Level = 3;
-   ERROR_RETURN(RetVal, ErrorCode::Warn, "Test warning at level {}", Level);
+   RETURN_ERROR(RetVal, ErrorCode::Warn, "Test warning at level {}", Level);
 }
 
 // At second level, add another warning message
@@ -34,7 +34,7 @@ Error returnErrorRoutine2(void) {
    Error RetVal; // init to success
    int Level = 2;
    RetVal += returnErrorRoutine3(); // tests accumulator
-   ERROR_RETURN(RetVal, ErrorCode::Warn, "Test warning at level {}", Level);
+   RETURN_ERROR(RetVal, ErrorCode::Warn, "Test warning at level {}", Level);
 }
 
 Error returnErrorRoutine1(void) {
@@ -43,7 +43,7 @@ Error returnErrorRoutine1(void) {
    Error ErrorTmp2 = returnErrorRoutine2();
    Error RetVal    = ErrorTmp1 + ErrorTmp2;
    // upgrade from warning to fail
-   ERROR_RETURN(RetVal, ErrorCode::Fail, "Test error at level {}", Level);
+   RETURN_ERROR(RetVal, ErrorCode::Fail, "Test error at level {}", Level);
 }
 
 //------------------------------------------------------------------------------
@@ -54,18 +54,18 @@ void passError2(Error &Err) {
    I4 MsgArgInt          = 5;
    std::string MsgArgStr = "Random";
    if (!Err.isSuccess())
-      ERROR_CRITICAL("Expected critical error with args: {} {} {}", MsgArgStr,
-                     MsgArgInt, MsgArgReal);
+      ABORT_ERROR("Expected critical error with args: {} {} {}", MsgArgStr,
+                  MsgArgInt, MsgArgReal);
    // Alternative critical failure tests
-   // ERROR_CHECK_CRITICAL(Err, "Expected critical error with args: {} {} {}",
-   //                     MsgArgStr, MsgArgInt, MsgArgReal);
-   // ERROR_REQUIRE(!Err.isSuccess(),
-   //              "Expected Error with args: {} {} {}", MsgArgStr, MsgArgInt,
-   //               MsgArgReal);
+   // CHECK_ERROR_ABORT(Err, "Expected critical error with args: {} {} {}",
+   //                   MsgArgStr, MsgArgInt, MsgArgReal);
+   // OMEGA_REQUIRE(!Err.isSuccess(),
+   //               "Expected Error with args: {} {} {}", MsgArgStr, MsgArgInt,
+   //                MsgArgReal);
    // This one requires a debug build
-   // ERROR_ASSERT(!Err.isSuccess(),
-   //             "Expected Error with args: {} {} {}", MsgArgStr, MsgArgInt,
-   //             MsgArgReal);
+   // OMEGA_ASSERT(!Err.isSuccess(),
+   //              "Expected Error with args: {} {} {}", MsgArgStr, MsgArgInt,
+   //              MsgArgReal);
 }
 
 void passError1(Error &Err) { passError2(Err); }
@@ -138,17 +138,17 @@ int main(int argc, char **argv) {
       LOG_INFO("Reset of error code: PASS");
    } else {
       ++RetVal;
-      ERROR_CHECK(TotalError, "Reset of error code: FAIL");
+      CHECK_ERROR(TotalError, "Reset of error code: FAIL");
    }
 
    // Call routines to check error return functions
    TotalError += returnErrorRoutine1();
 
    // Test ERROR_CHECK for adding and printing error message
-   ERROR_CHECK(TotalError, "Encountered error in returnErrorRoutine1");
+   CHECK_ERROR(TotalError, "Encountered error in returnErrorRoutine1");
 
    // Test ERROR_CHECK for adding warning and error message
-   ERROR_CHECK_WARN(TotalError, "Encountered error in returnErrorRoutine1");
+   CHECK_ERROR_WARN(TotalError, "Encountered error in returnErrorRoutine1");
 
    // The above calls have reset the error so create a new failure
    TotalError += Error(ErrorCode::Fail, __LINE__, __FILE__, "Error in driver");
