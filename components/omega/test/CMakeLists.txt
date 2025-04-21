@@ -117,6 +117,18 @@ add_omega_test(
     "-n;8"
 )
 
+##################
+# Error test
+##################
+
+add_omega_test(
+    ERROR_TEST
+    testError.exe
+    infra/ErrorTest.cpp
+    "-n;8"
+)
+set_tests_properties(ERROR_TEST PROPERTIES WILL_FAIL true)
+
 ##########################
 # Decomp test using 1 task
 ##########################
