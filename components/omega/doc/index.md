@@ -91,6 +91,7 @@ devGuide/TridiagonalSolvers
 :maxdepth: 1
 
 design/OmegaV0ShallowWater
+design/OmegaV1GoverningEqns
 design/Broadcast
 design/Config
 design/DataTypes
