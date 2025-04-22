@@ -25,7 +25,7 @@ The Omega implementation should be compared with the test value published in Roq
 The EOS code should include a check on the range of ocean properties to assess use of TEOS-10 (equivalent to the ``ocean funnel'' check), and a truncation of state variables to use the polynomial only in the valid range (similar to the truncation in MPAS-Ocean). 
 
 ### 2.7 Requirement: provide adiabatically-displaced density
-The EOS code should be able to be used to calculate density adiabatically displaced to i) the layer above, ii) the surface. This is needed to calculate the Brunt-Vaisala and for mixed-layer parameterizations. This operation should be done as efficiently as possible (e.g. can we reuse parts of the polynomial? this may also be a candidate for Kernel Fusion?).
+The EOS code should be able to be used to calculate density adiabatically displaced to i) the layer below, ii) the surface. This is needed to calculate the Brunt-Vaisala and for mixed-layer parameterizations. This operation should be done as efficiently as possible (e.g. we will explore reusing parts of the polynomial or leveraging Kernel Fusion).
 
 ### 2.8 Desired: freezing temperature calculation
 Later versions should include calculating the freezing temperature of seawater.
@@ -43,6 +43,7 @@ Later versions should include functions to convert between conservative and pote
 Later versions should include functions to calculate the layer potential enthalpy from enthalpy fluxes to convert coupling fluxes to changes in conservative temperature in a rigorous manner. 
 
 ## 3 Algorithmic Formulation
+The formulation of the specific volume calculation will be the 75-term polynomial as documented in [Roquet et al. 2015](https://www.sciencedirect.com/science/article/pii/S1463500315000566). The implementation of the displaced density calculation may be altered to improve performance by reusing some polynomial coefficients, but should produce the same results as the full 75-term polynomial. 
 
 ## 4 Design
 The GSW-C toolbox will be incorporated into Omega as a submodule. In order to abide by the license of the toolbox, the toolbox will only be used in testing to check our implementation. The coefficients for the Roquet et al. 2015 expansion will be based on the published values (Appendix). A Kokkos implementation of the function to compute specific volume will be ported to Omega. The GSW-C toolbox submodule will serve as a baseline reference for our ports in unit tests. 
@@ -175,7 +176,7 @@ A unit test will verify that the result of the Omega implementation of the Roque
 A unit test will verify that the result of the Omega and GSW-C toolbox implementations for the Roquet et al. 2015 expansion are within machine precision over a range of conservative temperature, absolute salinity, and pressure ranges.
 
 ### 5.4 Test: Verification of linear EOS
-The linear EOS should be close, but not equal (to machine precision)  to the TEOS-10 result. It should be exactly linear in T,S. It will be verified against known values from the MPAS-Ocean model for a range of temperature and salinity values.
+The linear EOS should be close, but not equal to the TEOS-10 result. The calculated density should be exactly linear in T,S. It will be verified against known values from the MPAS-Ocean model for a range of temperature and salinity values.
 
 ### 5.5 Test: conservation of potential enthalpy
 The total potential enthalpy, or equivalently, the conservative temperature should be conserved in the absence of external energy fluxes. This could be based on the tracer conservation test (e.g. merry-go-round), applied to active tracers.
