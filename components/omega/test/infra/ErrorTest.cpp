@@ -59,11 +59,11 @@ void passError2(Error &Err) {
    // Alternative critical failure tests
    // CHECK_ERROR_ABORT(Err, "Expected critical error with args: {} {} {}",
    //                   MsgArgStr, MsgArgInt, MsgArgReal);
-   // OMEGA_REQUIRE(!Err.isSuccess(),
+   // OMEGA_REQUIRE(Err.isSuccess(),
    //               "Expected Error with args: {} {} {}", MsgArgStr, MsgArgInt,
    //                MsgArgReal);
    // This one requires a debug build
-   // OMEGA_ASSERT(!Err.isSuccess(),
+   // OMEGA_ASSERT(Err.isSuccess(),
    //              "Expected Error with args: {} {} {}", MsgArgStr, MsgArgInt,
    //              MsgArgReal);
 }
