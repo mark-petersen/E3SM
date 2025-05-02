@@ -13,7 +13,7 @@ Add later, if it seems necessary. There is a toc on the left bar.
 
 ## 1. Overview
 
-This design document describes the governing equations for Omega, the Ocean Model for E3SM Global Applications. Overall, Omega is an unstructured-mesh ocean model based on TRiSK numerical methods ([Thuburn et al. 2009](https://www.sciencedirect.com/science/article/pii/S0021999109004434)) that is specifically designed for modern exascale computing architectures. The algorithms in Omega will be mostly identical to those in MPAS-Ocean, but it will be written in c++ rather than Fortran in order to take advantage of libraries to run on GPUs, such as Kokkos ([Trott et al. 2022](https://ieeexplore.ieee.org/document/9485033)). Significant differences between MPAS-Ocean and Omega are:
+This design document describes the governing equations for Omega, the Ocean Model for E3SM Global Applications. Overall, Omega is an unstructured-mesh ocean model based on TRiSK numerical methods ([Thuburn et al. 2009](https://www.sciencedirect.com/science/article/pii/S0021999109004434)) that is specifically designed for modern exascale computing architectures. The algorithms in Omega will be mostly identical to those in MPAS-Ocean, but it will be written in c++ rather than Fortran in order to take advantage of the Kokkos performance portability library to run on GPUs ([Trott et al. 2022](https://ieeexplore.ieee.org/document/9485033)). Significant differences between MPAS-Ocean and Omega are:
 
 1. Omega is non-Boussinesq. This means that the full 3D density is used everywhere, and results in a mass-conserving model. MPAS-Ocean and POP were Boussinesq, so that a reference density $\rho_0$ is used in the pressure gradient term, and were therefore volume-conserving models. In Omega the layered mass-conservation equation is in terms of mass-thickness ($h=\rho \Delta z$). In MPAS-Ocean the simple thickness ($h=\Delta z$) is the prognostic volume variable (normalized by horizontal cell area).
 1. Omega will use the updated equation of state TEOS10, while MPAS-Ocean used the Jackett-McDougall equation of state.
@@ -43,7 +43,7 @@ See forthcoming design documents on the pressure gradient, vertical mixing, and 
 
 ## 3. Continuous Equations
 
-The continuous form of the conservation equations are as follows [Kundu et al. 2024](https://www.amazon.com/Fluid-Mechanics-Pijush-K-Kundu/dp/012405935X), chapter 4, eqns 4.7 and 4.22. This is before any assumptions are made, so this is a compressible, non-hydrostatic, non-Boussinesq fluid. Here all variables are a function of $(x,y,z)$, ${\bf u}_{3D}$ denotes the three-dimensional velocity vector, ${\bf u}_{3D} \otimes {\bf u}_{3D} = {\bf u}_{3D}{\bf u}_{3D}^T$ is the tensor product, $\nabla_{3D}$ is the three-dimensional gradient, $D/Dt$ is the material derivative, and other variables defined in the [Variable Definition Section](#variable-definitions) below.
+The continuous form of the conservation equations are as follows [Kundu et al. 2024](https://www.amazon.com/Fluid-Mechanics-Pijush-K-Kundu/dp/012405935X), chapter 4, eqns 4.7 and 4.22. This is before any assumptions are made, so this is a compressible, hydrostatic, non-Boussinesq fluid. Here all variables are a function of $(x,y,z)$, ${\bf u}_{3D}$ denotes the three-dimensional velocity vector, ${\bf u}_{3D} \otimes {\bf u}_{3D} = {\bf u}_{3D}{\bf u}_{3D}^T$ is the tensor product, $\nabla_{3D}$ is the three-dimensional gradient, $D/Dt$ is the material derivative, and other variables defined in the [Variable Definition Section](#variable-definitions) below.
 
 momentum:
 
@@ -83,15 +83,18 @@ $$
 + {\bf D}^u + {\bf F}^u
 $$ (continuous-momentum-rho)
 
-Geophysical fluids such as the ocean and atmosphere are rotating and stratified, and horizontal velocities are orders of magnitude larger than vertical velocities. It is therefore convenient to separate the horizontal and vertical as ${\bf u}_{3D} = \left( {\bf u}, w \right)$ and $\nabla_{3D} = \left( \nabla_z, d/dz \right)$ where $z$ is the vertical direction in a local coordinate frame on the Earth's surface and $w$ is the vertical velocity. The $z$ subscript on $\nabla_z$ is to remind us that this is the true horizontal gradient (perpendicular to $z$), as opposed to gradients within tilted layers used in the following section. The gravitational force $g {\bf k}$ is added in the vertical. The rotating frame of reference results in the Coriolis force $f {\bf k} \times {\bf u} \equiv f {\bf u}^\perp$, where $f$ is the Coriolis parameter and ${\bf u}^\perp$ is the horizontal velocity rotated $90^o$ from $\bf u$. See any textbook in the [References](#references) for a full derivation.
+Geophysical fluids such as the ocean and atmosphere are rotating and stratified, and horizontal velocities are orders of magnitude larger than vertical velocities. It is therefore convenient to separate the horizontal and vertical as ${\bf u}_{3D} = \left( {\bf u}, w \right)$ and $\nabla_{3D} = \left( \nabla_z, d/dz \right)$ where $z$ is the vertical direction in a local coordinate frame on the Earth's surface and $w$ is the vertical velocity. The $z$ subscript on $\nabla_z$ is to remind us that this is the true horizontal gradient (perpendicular to $z$), as opposed to gradients within tilted layers used in the following section. The gravitational force $g {\bf k}$ is included in ${\bf F}^u$. The rotating frame of reference results in the Coriolis force $f {\bf k} \times {\bf u} \equiv f {\bf u}^\perp$, where $f$ is the Coriolis parameter and ${\bf u}^\perp$ is the horizontal velocity rotated $90^o$ from $\bf u$. See any textbook in the [References](#references) for a full derivation.
 
 The horizontal parts of the advective term may be replaced with the vector identity
 
 $$
-\nabla_z \cdot \left( {\bf u} \otimes {\bf u}  \right) =
-\boldsymbol{u} \cdot \nabla_z \boldsymbol{u} &= (\nabla_z \times \boldsymbol{u}) \times \boldsymbol{u} + \nabla_z \frac{|\boldsymbol{u}|^2}{2} \\
+\begin{aligned}
+\nabla_z \cdot \left( {\bf u} \otimes {\bf u}  \right) &=
+\boldsymbol{u} \cdot \nabla_z \boldsymbol{u} \\
+&= (\nabla_z \times \boldsymbol{u}) \times \boldsymbol{u} + \nabla_z \frac{|\boldsymbol{u}|^2}{2} \\
 &= \{\boldsymbol{k} \cdot (\nabla_z \times \boldsymbol{u})\} \boldsymbol{k} \times \boldsymbol{u} + \nabla_z \frac{|\boldsymbol{u}|^2}{2} \\
 &= \zeta \boldsymbol{u}^{\perp} + \nabla_z K.
+\end{aligned}
 $$ (advection-identity)
 
 where $\zeta$ is relative vorticity and $K$ is kinetic energy. This step separates the horizontal advection into non-divergent and non-rotational components, which is useful in the final TRiSK formulation.
@@ -136,7 +139,7 @@ where conservative temperature, $\Theta$, and salinity, $S$, are examples of tra
 
 #### Final Continuous Equations
 
-The final form of the continuous conservation equations for a non-Boussinesq, incompressible, non-hydrostatic ocean are
+The final form of the continuous conservation equations for a non-Boussinesq, incompressible, hydrostatic ocean are
 
 momentum:
 
@@ -294,7 +297,7 @@ $$ (layered-tracer-1)
 
 
 Equivalently, one could have multiplied  [](z-integration-momentum), [](z-integration-mass), [](z-integration-tracers) by $g$ and expressed the integrals in terms of pressure, with integration limits from $p_k^{top}$ to $p_k^{bot}$.
-Derivations of ocean model equations with pressure as the vertical variable may be found in de Szoeke and Samelson 2002 (link: `https://journals.ametsoc.org/doi/full/10.1175/1520-0485(2002)032%3C2194%3ATDBTBA%3E2.0.CO%3B2`)  and [Losch et al. 2003](https://journals.ametsoc.org/view/journals/phoc/34/1/1520-0485_2004_034_0306_hsacgc_2.0.co_2.xml).
+Derivations of ocean model equations with pressure as the vertical variable may be found in [de Szoeke and Samelson 2002](https://journals.ametsoc.org/view/journals/phoc/32/7/1520-0485_2002_032_2194_tdbtba_2.0.co_2.xml) and [Losch et al. 2003](https://journals.ametsoc.org/view/journals/phoc/34/1/1520-0485_2004_034_0306_hsacgc_2.0.co_2.xml). 
 
 The vertical advection terms use the fundamental theorem of calculus to integrate a derivative in $z$, resulting in boundary conditions at the layer interfaces. This makes intuitive sense as a mass balance. For example, in the absence of horizontal advection and sources, the mass equation is simply
 
@@ -349,21 +352,25 @@ $$
 \nabla_z \varphi = \nabla_r \varphi - \frac{\partial \varphi}{\partial z} \nabla_r z.
 $$ (dvarphidnabla)
 
+
 ### Pressure Gradient
 
 The most important change due to general vertical coordinates is in the pressure gradient term.  Using the pressure in [](#dvarphidnabla),
 
 $$
+\begin{aligned}
 -\frac{1}{\rho} \nabla_z p
-=-\frac{1}{\rho}  \nabla_r p +\frac{1}{\rho}  \frac{\partial p}{\partial z} \nabla_r z \\
-=-\frac{1}{\rho}  \nabla_r p - g \nabla_r z \\
-= - v \nabla_r p -   \nabla_r \Phi
+&=-\frac{1}{\rho}  \nabla_r p +\frac{1}{\rho}  \frac{\partial p}{\partial z} \nabla_r z \\
+&=-\frac{1}{\rho}  \nabla_r p - g \nabla_r z \\
+&= - v \nabla_r p -   \nabla_r \Phi
+\end{aligned}
 $$ (gradp)
 
 where we have substituted hydrostatic balance [](hydrostatic-balance) and specific volume $v\equiv 1/\rho$. The geopoential due to a constant gravitational field is $d \Phi/dz=g$, so that $\Phi = gz + c$ where $c$ is an arbitrary constant. Thus in the equation above, $\nabla_r \Phi = g \nabla_r z$. The geopotential is a more general form than a constant $g$, and allows for alterations in the gravitational field due to self attraction and loading and tidal forces. Further details will be provided in the forthcoming pressure gradient design document.
 
 See [Adcroft and Hallberg 2006](https://www.sciencedirect.com/science/article/pii/S1463500305000090) eqn. 1 and [Griffies et al](http://sciencedirect.com/science/article/pii/S1463500300000147) eqn 2 for an example of the pressure gradient in tilted coordinates. The additional terms due to the expansion of $\nabla_z$ to $\nabla_r$ in the rest of the equations are small and are ignored.
 
+Some publications state that the transition from Boussinesq to non-Boussinesq equations is accompanied by a change from z-coordinate to pressure-coordinates. However, we use a general vertical coordinate, so the vertical may be referenced to $z$ or $p$. In a purely z-coordinate model like POP, only the $\nabla p$ term is used in [](gradp). In a purely p-coordinate model, only $\nabla z$ remains, as described in  [de Szoeke and Samelson 2002](https://journals.ametsoc.org/view/journals/phoc/32/7/1520-0485_2002_032_2194_tdbtba_2.0.co_2.xml). In a general vertical coordinate the layer interface placement is up to the user's specification, and so both terms are kept.
 
 ### Vertical Transport
 The integration in [](#z-integration-momentum) to [](#z-integration-tracers) changes the vertical velocity $w$ in m/s to a vertical mass-thickness transport $\omega=\rho w$ in kg/s/m$^2$. Here $w$ is the Latin letter and $\omega$ is the Greek letter omega.  One can think of fluid velocity $w$ as a volume transport, normalized by area, in units of length per time. Analogously, $\omega$ is mass-thickness transport a mass transport (per unit area). The variables $w$ and $\omega$ have the same sign convention of upward (positive $z$) for positive transport.
@@ -430,22 +437,23 @@ $$
 $$ (discrete-tracer)
 
 $$
-v_{i,k} = f_{eos}(p_{i,k},\Theta_{i,k},S_{i,k})
-$$ (discrete-eos)
-
-$$
 p_{i,k} = p_{i}^{surf} + \sum_{k'=1}^{k-1} g h_{i,k'} + \frac{1}{2} g h_{i,k}
 $$ (discrete-pressure)
+
+$$
+v_{i,k} = f_{eos}(p_{i,k},\Theta_{i,k},S_{i,k})
+$$ (discrete-eos)
 
 $$
 z_{i,k}^{top} = z_{i}^{floor} + \sum_{k'=k}^{K_{max}} v_{i,k'}h_{i,k'}
 $$ (discrete-z)
 
-The subscripts $i$, $e$, and $v$ indicate cell, edge, and vertex locations and subscript $k$ is the layer.  Square brackets $[\cdot]_e$ and $[\cdot]_v$ are quantities that are interpolated to edge and vertex locations. For vector quantities, $u_{e,k}$ denotes the normal component at the center of the edge, while $u_{e,k}^\perp$ denotes the tangential component. The superscripts $top$ and $bot$ refer to the top and bottom of individual layers, while $surf$ and $floor$ are the surface and floor of the full ocean column. All variables without these superscripts indicate that they are layer-averaged, as defined in [](def-mass-thickness-average), and can be considered to represent a mid-layer value in the vertical. The mid-layer location is equivalently the average in $z$, $p$, or $h$ (mass), since density $\rho_{i,k}$ is considered constant in the cell.
+The subscripts $i$, $e$, and $v$ indicate cell, edge, and vertex locations and subscript $k$ is the layer.  Square brackets $[\cdot]_e$ and $[\cdot]_v$ are quantities that are interpolated to edge and vertex locations. For vector quantities, $u_{e,k}$ denotes the normal component at the center of the edge, while $u_{e,k}^\perp$ denotes the tangential component. The superscripts $top$ and $bot$ refer to the top and bottom of individual layers, and may be referred to as $k-1/2$ and $k+1/2$ elsewhere. The superscripts $surf$ and $floor$ are the surface and floor of the full ocean column. All variables without these superscripts indicate that they are layer-averaged, as defined in [](def-mass-thickness-average), and can be considered to represent a mid-layer value in the vertical. The mid-layer location is equivalently the average in $z$, $p$, or $h$ (mass), since density $\rho_{i,k}$ is considered constant in the cell.
+
+We refer to these as the discrete equations, but time derivatives remain continuous. The time discretization is described in the [time stepping design document](TimeStepping.md). The velocity, mass-thickness, and tracers are solved prognostically using [](discrete-momentum), [](discrete-thickness), [](discrete-tracer). At the new time, these variables are used to compute pressure [](discrete-pressure), specific volume [](discrete-eos), and z-locations [](discrete-z). Additional variables are computed diagnostically at the new time: $u^{\perp}$, $K$, $\omega$, $z^{mid}$, $\Phi$, etc. The initial geopotential is simply $\Phi=gz$, but additional gravitational terms may be added later.
 
 The horizontal operators $\nabla$, $\nabla\cdot$, and $\nabla \times$ are now in their discrete form. In the TRiSK design, gradients ($\nabla$) map cell centers to edges; divergence ($\nabla \cdot$) maps edge quantities to cells; and curl ($\nabla \times$) maps edges to vertices. The exact form of operators and interpolation stencils remain the same as those given in [Omega-0 design document](OmegaV0ShallowWater.md#operator-formulation). The discrete version of terms common with Omega-0, such as advection, potential vorticity, and $\nabla K$, can be found in [Omega-0 Momentum Terms](OmegaV0ShallowWater.md#momentum-terms) and [Omega-0 Thickness and Tracer Terms](OmegaV0ShallowWater.md#thickness-and-tracer-terms).
 
-We refer to these as the discrete equations, but time derivative remains continuous. The time discretization is described in the [time stepping design document](TimeStepping.md).
 
 ### Momentum Dissipation
 
