@@ -92,8 +92,9 @@ $$
 \nabla_z \cdot \left( {\bf u} \otimes {\bf u}  \right) &=
 \boldsymbol{u} \cdot \nabla_z \boldsymbol{u} \\
 &= (\nabla_z \times \boldsymbol{u}) \times \boldsymbol{u} + \nabla_z \frac{|\boldsymbol{u}|^2}{2} \\
-&= \{\boldsymbol{k} \cdot (\nabla_z \times \boldsymbol{u})\} \boldsymbol{k} \times \boldsymbol{u} + \nabla_z \frac{|\boldsymbol{u}|^2}{2} \\
-&= \zeta \boldsymbol{u}^{\perp} + \nabla_z K.
+&= \left( \boldsymbol{k} \cdot (\nabla_z \times \boldsymbol{u})\right)
+\left( \boldsymbol{k} \times \boldsymbol{u} \right) + \nabla_z \frac{|\boldsymbol{u}|^2}{2} \\
+&= \zeta \boldsymbol{u}^{\perp} + \nabla_z K,
 \end{aligned}
 $$ (advection-identity)
 
@@ -338,12 +339,14 @@ $$ (dvarphidx)
 We may define the tilted horizontal variable $x'$ as we please. The simplest definition is $x'(x)\equiv x$. Then $\partial x / \partial x'=1$. Rearranging [](#dvarphidx) and repeating for $y$,
 
 $$
-\frac{\partial \varphi}{\partial x} =
+\begin{aligned}
+\frac{\partial \varphi}{\partial x} &=
 \frac{\partial \varphi}{\partial x'}
 - \frac{\partial \varphi}{\partial z} \frac{\partial z}{\partial x'}\\
-\frac{\partial \varphi}{\partial y} =
+\frac{\partial \varphi}{\partial y} &=
 \frac{\partial \varphi}{\partial y'}
 - \frac{\partial \varphi}{\partial z} \frac{\partial z}{\partial y'}.
+\end{aligned}
 $$ (dvarphidxy)
 
 This may be written in vector form as
@@ -362,18 +365,17 @@ $$
 -\frac{1}{\rho} \nabla_z p
 &=-\frac{1}{\rho}  \nabla_r p +\frac{1}{\rho}  \frac{\partial p}{\partial z} \nabla_r z \\
 &=-\frac{1}{\rho}  \nabla_r p - g \nabla_r z \\
-&= - v \nabla_r p -   \nabla_r \Phi
+&= - v \nabla_r p -   \nabla_r \Phi,
 \end{aligned}
 $$ (gradp)
 
 where we have substituted hydrostatic balance [](hydrostatic-balance) and specific volume $v\equiv 1/\rho$. The geopoential due to a constant gravitational field is $d \Phi/dz=g$, so that $\Phi = gz + c$ where $c$ is an arbitrary constant. Thus in the equation above, $\nabla_r \Phi = g \nabla_r z$. The geopotential is a more general form than a constant $g$, and allows for alterations in the gravitational field due to self attraction and loading and tidal forces. Further details will be provided in the forthcoming pressure gradient design document.
+See [Adcroft and Hallberg 2006](https://www.sciencedirect.com/science/article/pii/S1463500305000090) eqn. 1 and [Griffies et al](http://sciencedirect.com/science/article/pii/S1463500300000147) eqn 2 for additional examples of the pressure gradient in tilted coordinates. The additional terms due to the expansion of $\nabla_z$ to $\nabla_r$ in the rest of the equations are small and are ignored.
 
-See [Adcroft and Hallberg 2006](https://www.sciencedirect.com/science/article/pii/S1463500305000090) eqn. 1 and [Griffies et al](http://sciencedirect.com/science/article/pii/S1463500300000147) eqn 2 for an example of the pressure gradient in tilted coordinates. The additional terms due to the expansion of $\nabla_z$ to $\nabla_r$ in the rest of the equations are small and are ignored.
-
-Some publications state that the transition from Boussinesq to non-Boussinesq equations is accompanied by a change from z-coordinate to pressure-coordinates. However, we use a general vertical coordinate, so the vertical may be referenced to $z$ or $p$. In a purely z-coordinate model like POP, only the $\nabla p$ term is used in [](gradp). In a purely p-coordinate model, only $\nabla z$ remains, as described in  [de Szoeke and Samelson 2002](https://journals.ametsoc.org/view/journals/phoc/32/7/1520-0485_2002_032_2194_tdbtba_2.0.co_2.xml). In a general vertical coordinate the layer interface placement is up to the user's specification, and so both terms are kept.
+Some publications state that the transition from Boussinesq to non-Boussinesq equations is accompanied by a change from z-coordinate to pressure-coordinates. However, we use a general vertical coordinate, so the vertical may be referenced to $z$ or $p$. In a purely z-coordinate model like POP, only the $\nabla p$ term is used in [](gradp). In a purely p-coordinate model, only $\nabla z$ remains, as described in  [de Szoeke and Samelson 2002](https://journals.ametsoc.org/view/journals/phoc/32/7/1520-0485_2002_032_2194_tdbtba_2.0.co_2.xml). In a general vertical coordinate model the layer interface placement is up to the user's specification, and so both terms are kept.
 
 ### Vertical Transport
-The integration in [](#z-integration-momentum) to [](#z-integration-tracers) changes the vertical velocity $w$ in m/s to a vertical mass-thickness transport $\omega=\rho w$ in kg/s/m$^2$. Here $w$ is the Latin letter and $\omega$ is the Greek letter omega.  One can think of fluid velocity $w$ as a volume transport, normalized by area, in units of length per time. Analogously, $\omega$ is mass-thickness transport a mass transport (per unit area). The variables $w$ and $\omega$ have the same sign convention of upward (positive $z$) for positive transport.
+The integration in [](#z-integration-momentum) to [](#z-integration-tracers) changes the vertical velocity $w$ in m/s to a vertical mass-thickness transport $\omega=\rho w$ in kg/s/m$^2$. Here $w$ is the Latin letter and $\omega$ is the Greek letter omega.  One can think of fluid velocity $w$ as a volume transport, normalized by area, in units of length per time. Analogously, $\omega$ is mass-thickness transport, which is mass transport per unit area (kg/s/m$^2$). The variables $w$ and $\omega$ have the same sign convention of upward (positive $z$) for positive transport.
 
 ### Final Layered Equations
 
