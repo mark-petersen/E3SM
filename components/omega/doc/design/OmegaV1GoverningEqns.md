@@ -32,7 +32,7 @@ This document describes the governing equations for the layered ocean model, whi
 
 The requirements in the [Omega-0 design document](OmegaV0ShallowWater) still apply. Additional design requirements for Omega-1 are:
 
-### Omega will be an incompressible, hydrostatic, non-Boussinesq ocean model.
+### Omega will be a hydrostatic, non-Boussinesq ocean model.
 See discussion in introduction. The non-Boussinesq formulation uses the full density throughout resulting in governing equations that conserve mass rather than volume. The substantial change is that the ``thickness'' variable, $h$, is now a mass-thickness, $h = \rho \Delta z$. This is explained in the derivation of the [layered equations below](#layered-equations).
 
 ### Omega will use TEOS10 for the equation of state.
@@ -43,7 +43,7 @@ See forthcoming design documents on the pressure gradient, vertical mixing, and 
 
 ## 3. Continuous Equations
 
-The continuous form of the conservation equations are as follows [Kundu et al. 2024](https://www.amazon.com/Fluid-Mechanics-Pijush-K-Kundu/dp/012405935X), chapter 4, eqns 4.7 and 4.22. This is before any assumptions are made, so this is a compressible, hydrostatic, non-Boussinesq fluid. Here all variables are a function of $(x,y,z)$, ${\bf u}_{3D}$ denotes the three-dimensional velocity vector, ${\bf u}_{3D} \otimes {\bf u}_{3D} = {\bf u}_{3D}{\bf u}_{3D}^T$ is the tensor product, $\nabla_{3D}$ is the three-dimensional gradient, $D/Dt$ is the material derivative, and other variables defined in the [Variable Definition Section](#variable-definitions) below.
+The continuous form of the conservation equations are as follows [Kundu et al. 2024](https://www.amazon.com/Fluid-Mechanics-Pijush-K-Kundu/dp/012405935X), chapter 4, eqns 4.7 and 4.22. This is before any assumptions are made, so this is a compressible, non-hydrostatic, non-Boussinesq fluid. Here all variables are a function of $(x,y,z)$, ${\bf u}_{3D}$ denotes the three-dimensional velocity vector, ${\bf u}_{3D} \otimes {\bf u}_{3D} = {\bf u}_{3D}{\bf u}_{3D}^T$ is the tensor product, $\nabla_{3D}$ is the three-dimensional gradient, $D/Dt$ is the material derivative, and other variables defined in the [Variable Definition Section](#variable-definitions) below.
 
 momentum:
 
@@ -78,23 +78,30 @@ Here we have express the following terms as a general operators, with examples o
 $$
 \frac{D {\bf u}_{3D} }{D t} \equiv
 \frac{\partial {\bf u}_{3D}}{\partial t}
- + \nabla_{3D} \cdot \left( {\bf u}_{3D} \otimes {\bf u}_{3D}  \right)
++ {\bf u}_{3D}\cdot \nabla_{3D} {\bf u}_{3D}
   = - \frac{1}{\rho} \nabla_{3D} p
 + {\bf D}^u + {\bf F}^u
 $$ (continuous-momentum-rho)
 
 Geophysical fluids such as the ocean and atmosphere are rotating and stratified, and horizontal velocities are orders of magnitude larger than vertical velocities. It is therefore convenient to separate the horizontal and vertical as ${\bf u}_{3D} = \left( {\bf u}, w \right)$ and $\nabla_{3D} = \left( \nabla_z, d/dz \right)$ where $z$ is the vertical direction in a local coordinate frame on the Earth's surface and $w$ is the vertical velocity. The $z$ subscript on $\nabla_z$ is to remind us that this is the true horizontal gradient (perpendicular to $z$), as opposed to gradients within tilted layers used in the following section. The gravitational force $g {\bf k}$ is included in ${\bf F}^u$. The rotating frame of reference results in the Coriolis force $f {\bf k} \times {\bf u} \equiv f {\bf u}^\perp$, where $f$ is the Coriolis parameter and ${\bf u}^\perp$ is the horizontal velocity rotated $90^o$ from $\bf u$. See any textbook in the [References](#references) for a full derivation.
 
-The horizontal parts of the advective term may be replaced with the vector identity
+The advection term may be separated into horizontal and vertical parts as
+
+$$
+{\bf u}_{3D}\cdot \nabla_{3D} {\bf u}_{3D}
+=
+{\bf u} \cdot \nabla_z {\bf u} + w \frac{\partial {\bf u}}{\partial z}.
+$$ (advection-3d2d)
+
+The horizontal component may be replaced with the vector identity
 
 $$
 \begin{aligned}
-\nabla_z \cdot \left( {\bf u} \otimes {\bf u}  \right) &=
-\boldsymbol{u} \cdot \nabla_z \boldsymbol{u} \\
-&= (\nabla_z \times \boldsymbol{u}) \times \boldsymbol{u} + \nabla_z \frac{|\boldsymbol{u}|^2}{2} \\
-&= \left( \boldsymbol{k} \cdot (\nabla_z \times \boldsymbol{u})\right)
-\left( \boldsymbol{k} \times \boldsymbol{u} \right) + \nabla_z \frac{|\boldsymbol{u}|^2}{2} \\
-&= \zeta \boldsymbol{u}^{\perp} + \nabla_z K,
+{\bf u} \cdot \nabla_z {\bf u}
+&= (\nabla_z \times {\bf u}) \times {\bf u} + \nabla_z \frac{|{\bf u}|^2}{2} \\
+&= \left( \boldsymbol{k} \cdot (\nabla_z \times {\bf u})\right)
+\left( \boldsymbol{k} \times {\bf u} \right) + \nabla_z \frac{|{\bf u}|^2}{2} \\
+&= \zeta {\bf u}^{\perp} + \nabla_z K,
 \end{aligned}
 $$ (advection-identity)
 
@@ -102,13 +109,7 @@ where $\zeta$ is relative vorticity and $K$ is kinetic energy. This step separat
 
 #### Assumptions
 
-For a primitive equation ocean model, we assume the fluid is incompressible and hydrostatic. For Omega we are not making the Boussinesq assumption, so all density terms are the full density. In particular, the density coefficient of the pressure gradient in [](#continuous-momentum) is not a constant, as it is in primitive equation models like POP and MPAS-Ocean.
-
-**Incompressible:** Assume that the three-dimensional velocity field is nondivergent,
-
-$$
- \nabla_z \cdot {\bf u} + \frac{\partial w}{\partial z}  = 0.
-$$ (continuous-incompressible)
+For a primitive equation ocean model, we assume the fluid is hydrostatic. For Omega we are not making the Boussinesq assumption, so all density-dependent terms use the full density. In particular, the density coefficient of the pressure gradient in [](#continuous-momentum) is not a constant, as it is in primitive equation models like POP and MPAS-Ocean.
 
 **Hydrostatic:** Beginning with the vertical momentum equation,
 
@@ -136,11 +137,14 @@ $$
 \rho = f_{eos}(p,\Theta,S).
 $$ (continuous-eos)
 
-where conservative temperature, $\Theta$, and salinity, $S$, are examples of tracers $\varphi$.
+where conservative temperature, $\Theta$, and absolute salinity, $S$, are examples of tracers $\varphi$.
+
+The Boussinesq primitive equations also make an incompressibility assumption, which is identical to an assumption of constant density. Non-Boussinesq models do not make thiat assumption and are not explicitly incompressible. However, the mass conservation equation [](continuous-mass), along with an equation of state for sea water where density only varies slightly, results in a fluid that is nearly incompressible.
+
 
 #### Final Continuous Equations
 
-The final form of the continuous conservation equations for a non-Boussinesq, incompressible, hydrostatic ocean are
+The final form of the continuous conservation equations for a non-Boussinesq, hydrostatic ocean are
 
 momentum:
 
@@ -249,13 +253,13 @@ $$(def-mass-thickness-average)
 
 At this point our derivation has not made any assumptions about density, and may be used for both Boussinesq and non-Boussinesq fluids. A Boussinesq derivation would now assume small variations in density and replace $\rho(x,y,z,t)$ with a constant $\rho_0$ everywhere but the pressure gradient coefficient. In that case $\rho$ divides out in [](#def-mass-thickness-average) the Boussinesq layer quantities would simply be thickness-weighted averages.
 
-We can now derive the layered equations. Writing the momentum equation [](continuous-momentum-final) with $\rho$ included as in [](continuous-momentum), we integrate the continuous equations [](continuous-momentum-final), [](continuous-mass-final), [](continuous-tracer-final) in $z$ from $z_k^{bot}$ to $z_k^{top}$,
+We can now derive the layered equations. Integrate the continuous equations [](continuous-momentum-final), [](continuous-mass-final), [](continuous-tracer-final) in $z$ from $z_k^{bot}$ to $z_k^{top}$,
 
 $$
-\frac{\partial }{\partial t} \int_{z_k^{bot}}^{z_k^{top}} \rho{\bf u} dz
-+  \int_{z_k^{bot}}^{z_k^{top}} \rho \left( \zeta + f \right){\bf u}^\perp dz
-+  \int_{z_k^{bot}}^{z_k^{top}} \frac{\partial }{\partial z} \left( \rho w{\bf u} \right) dz
-  =  \int_{z_k^{bot}}^{z_k^{top}} \rho \left[- \frac{1}{\rho}\nabla_z p - \nabla_z K
+\frac{\partial }{\partial t} \int_{z_k^{bot}}^{z_k^{top}} {\bf u} dz
++  \int_{z_k^{bot}}^{z_k^{top}}  \left( \zeta + f \right){\bf u}^\perp dz
++  \int_{z_k^{bot}}^{z_k^{top}} \frac{\partial }{\partial z} \left(  w{\bf u} \right) dz
+  =  \int_{z_k^{bot}}^{z_k^{top}}  \left[- \frac{1}{\rho}\nabla_z p - \nabla_z K
 + {\bf D}^u + {\bf F}^u \right] dz
 $$ (z-integration-momentum)
 
@@ -273,13 +277,13 @@ $$
 = \int_{z_k^{bot}}^{z_k^{top}} \left( D^\varphi + Q^\varphi \right) dz
 $$ (z-integration-tracers)
 
-This results in variables that are vertically mass-averaged, as defined in [](def-mass-thickness-average). The subscript $k$ denotes a variable that has been vertically mass-averaged over layer $k$. This system is now discrete in the vertical, but remains continuous in the horizontal and in time.
+This results in conservation equations that are valid over the layer. The momentum variables are simply vertically averaged. Tracer variables are vertically mass-averaged, as defined in [](def-mass-thickness-average). The subscript $k$ denotes a variable average over layer $k$. This system is now discrete in the vertical, but remains continuous in the horizontal and in time.
 
 $$
 \frac{\partial {\bf u}_k}{\partial t}
 + \zeta_k {\bf u}_k^{\perp}
 + f {\bf u}_k^{\perp}
-+ \left[ \rho_k  w_k {\bf u}_k \right]^{top} - \left[ \rho_k w_k {\bf u}_k \right]^{bot}
++ \left[ w_k {\bf u}_k \right]^{top} - \left[  w_k {\bf u}_k \right]^{bot}
 =
 - \frac{1}{\rho} \nabla_z p_k
 - \nabla_z K_k
@@ -298,7 +302,7 @@ $$ (layered-tracer-1)
 
 
 Equivalently, one could have multiplied  [](z-integration-momentum), [](z-integration-mass), [](z-integration-tracers) by $g$ and expressed the integrals in terms of pressure, with integration limits from $p_k^{top}$ to $p_k^{bot}$.
-Derivations of ocean model equations with pressure as the vertical variable may be found in [de Szoeke and Samelson 2002](https://journals.ametsoc.org/view/journals/phoc/32/7/1520-0485_2002_032_2194_tdbtba_2.0.co_2.xml) and [Losch et al. 2003](https://journals.ametsoc.org/view/journals/phoc/34/1/1520-0485_2004_034_0306_hsacgc_2.0.co_2.xml). 
+Derivations of ocean model equations with pressure as the vertical variable may be found in [de Szoeke and Samelson 2002](https://journals.ametsoc.org/view/journals/phoc/32/7/1520-0485_2002_032_2194_tdbtba_2.0.co_2.xml) and [Losch et al. 2003](https://journals.ametsoc.org/view/journals/phoc/34/1/1520-0485_2004_034_0306_hsacgc_2.0.co_2.xml).
 
 The vertical advection terms use the fundamental theorem of calculus to integrate a derivative in $z$, resulting in boundary conditions at the layer interfaces. This makes intuitive sense as a mass balance. For example, in the absence of horizontal advection and sources, the mass equation is simply
 
@@ -329,7 +333,7 @@ r(x,y,z_k^{mid}(x,y,t),t) = k
 $$ (def-r)
 and interpolate linearly in the vertical between mid-layers. When we write the layered form of the equations, we must take into account of the tilted layers using the chain rule.
 
-We now rewrite derivatives in order to convert from horizontal coordinates to tilted coordinates. Let $(x,y)$ be the original horizontal coordinates, which are perpendicular to $z$, and the horizontal gradient be written as $\nabla_z=(\partial/\partial x, \partial/\partial y)$, as above. Now define a tilted coordinate system using the layers defined by $r$, where the within-layer horizontal coordinates are $(x',y')$ and the along-layer gradient is written as $\nabla_r=(\partial/\partial x', \partial/\partial y')$. We construct $r$ to be monotonic in $z$, so we can invert it as $z(x',y',r,t)$. Now horizontal derivatives along the tilted direction $x'$ for any field $\varphi(x,y,z,t)$ can be expanded as
+We now rewrite derivatives in order to convert from horizontal coordinates to tilted coordinates. Let $(x,y)$ be the original horizontal coordinates, which are perpendicular to $z$, and the horizontal gradient be written as $\nabla_z=(\partial/\partial x, \partial/\partial y)$, as above. Now define a tilted coordinate system using the layers defined by $r$, where the within-layer horizontal coordinates are $(x',y')$ and the along-layer gradient is written as $\nabla_r=(\partial/\partial x', \partial/\partial y')$. We construct $r$ to be monotonic in $z$, so we can invert it as $z(x',y',r,t)$. Now horizontal derivatives along the tilted direction $x'$ for any field $\varphi(x,y,z,t)$ can be expanded using the chain rule as
 
 $$
 \frac{\partial }{\partial x'} \left[ \varphi(x(x'),y(y'),z(x',y',r,t),t) \right]
@@ -358,18 +362,26 @@ $$ (dvarphidnabla)
 
 ### Pressure Gradient
 
-The most important change due to general vertical coordinates is in the pressure gradient term.  Using the pressure in [](#dvarphidnabla),
+The most important change due to general vertical coordinates is in the pressure gradient term.  Substituting pressure for $\varphi$ in [](#dvarphidnabla),
 
 $$
 \begin{aligned}
 -\frac{1}{\rho} \nabla_z p
 &=-\frac{1}{\rho}  \nabla_r p +\frac{1}{\rho}  \frac{\partial p}{\partial z} \nabla_r z \\
 &=-\frac{1}{\rho}  \nabla_r p - g \nabla_r z \\
-&= - v \nabla_r p -   \nabla_r \Phi,
+&= - v \nabla_r p - \nabla_r \Phi,
 \end{aligned}
 $$ (gradp)
 
-where we have substituted hydrostatic balance [](hydrostatic-balance) and specific volume $v\equiv 1/\rho$. The geopoential due to a constant gravitational field is $d \Phi/dz=g$, so that $\Phi = gz + c$ where $c$ is an arbitrary constant. Thus in the equation above, $\nabla_r \Phi = g \nabla_r z$. The geopotential is a more general form than a constant $g$, and allows for alterations in the gravitational field due to self attraction and loading and tidal forces. Further details will be provided in the forthcoming pressure gradient design document.
+where we have substituted hydrostatic balance [](hydrostatic-balance) and specific volume $v\equiv 1/\rho$. The geopotential due to a constant gravitational field is $d \Phi/dz=g$, so that
+
+$$
+\Phi(x,y,z,t) = gz + \Phi_0(x,y,t)
+$$ (def-geopotential)
+
+where $\Phi_0(x,y,t)$ is constant in $z$ due to the integration.
+Thus $\nabla_r \Phi = g \nabla_r z + \nabla_r \Phi_0$. The geopotential is a more general form than a constant gravitational force $g{\bf k}$, and allows for alterations in the gravitational field due to self attraction and loading and tidal forces, which are specified in $\Phi_0$. For versions 1.0 and 2.0 of Omega we only consider a constant gravitational force, and set $\Phi_0=0$.  Further details will be provided in the forthcoming pressure gradient design document.
+
 See [Adcroft and Hallberg 2006](https://www.sciencedirect.com/science/article/pii/S1463500305000090) eqn. 1 and [Griffies et al](http://sciencedirect.com/science/article/pii/S1463500300000147) eqn 2 for additional examples of the pressure gradient in tilted coordinates. The additional terms due to the expansion of $\nabla_z$ to $\nabla_r$ in the rest of the equations are small and are ignored.
 
 Some publications state that the transition from Boussinesq to non-Boussinesq equations is accompanied by a change from z-coordinate to pressure-coordinates. However, we use a general vertical coordinate, so the vertical may be referenced to $z$ or $p$. In a purely z-coordinate model like POP, only the $\nabla p$ term is used in [](gradp). In a purely p-coordinate model, only $\nabla z$ remains, as described in  [de Szoeke and Samelson 2002](https://journals.ametsoc.org/view/journals/phoc/32/7/1520-0485_2002_032_2194_tdbtba_2.0.co_2.xml). In a general vertical coordinate model the layer interface placement is up to the user's specification, and so both terms are kept.
@@ -384,7 +396,7 @@ momentum:
 $$
 \frac{\partial {\bf u}_k}{\partial t}
 + q_k h_k {\bf u}_k^{\perp}
-+ \omega_k^{top} {\bf u}_k^{top} - \omega_k^{bot}{\bf u}_k^{bot}
++ \frac{\omega_k^{top}}{\rho_k^{top}} {\bf u}_k^{top} - \frac{\omega_k^{bot}}{\rho_k^{bot}}{\bf u}_k^{bot}
 =
 - v_k \nabla_r p_k - \nabla_r \Phi_k
 - \nabla_r K_k
@@ -420,7 +432,7 @@ The horizontally discretized layered equations are as follows. We have dropped t
 
 $$
 \frac{\partial u_{e,k}}{\partial t} + \left[ \frac{{\bf k} \cdot \nabla \times u_{e,k} +f_v}{[h_{i,k}]_v}\right]_e\left([h_{i,k}]_e u_{e,k}^{\perp}\right)
-+ \left[ \omega_{i,k}^{top} \right]_e u_{e,k}^{top} - \left[ \omega_{i,k}^{bot} \right]_e u_{e,k}^{bot}
++ \left[ v_{i,k}^{top}\omega_{i,k}^{top} \right]_e u_{e,k}^{top} - \left[ v_{i,k+1}^{top}\omega_{i,k+1}^{top} \right]_e u_{e,k+1}^{top}
 =
 - v_{i,k} \nabla p_{i,k} - \nabla \Phi_{i,k}
 - \nabla K_{i,k} +  { \bf D}^u_{e,k} + {\bf F}^u_{e,k}
@@ -428,13 +440,13 @@ $$ (discrete-momentum)
 
 $$
 \frac{\partial h_{i,k}}{\partial t} + \nabla \cdot \left([h_{i,k}]_e u_{e,k}\right)
-+ \omega_{i,k}^{top} - \omega_{i,k}^{bot}
++ \omega_{i,k}^{top} - \omega_{i,k+1}^{top}
 = Q^h_{i,k}
 $$ (discrete-thickness)
 
 $$
 \frac{\partial h_{i,k} \varphi_{i,k}}{\partial t} + \nabla \cdot \left(u_{e,k} [h_{i,k} \varphi_{i,k}]_e \right)
-+ \varphi_{i,k}^{top} \omega_{i,k}^{top} - \varphi_{i,k}^{bot}\omega_{i,k}^{bot}
++ \varphi_{i,k}^{top} \omega_{i,k}^{top} - \varphi_{i,k+1}^{top}\omega_{i,k+1}^{top}
 = D^\varphi_{i,k} + Q^\varphi_{i,k}
 $$ (discrete-tracer)
 
@@ -450,7 +462,7 @@ $$
 z_{i,k}^{top} = z_{i}^{floor} + \sum_{k'=k}^{K_{max}} v_{i,k'}h_{i,k'}
 $$ (discrete-z)
 
-The subscripts $i$, $e$, and $v$ indicate cell, edge, and vertex locations and subscript $k$ is the layer.  Square brackets $[\cdot]_e$ and $[\cdot]_v$ are quantities that are interpolated to edge and vertex locations. For vector quantities, $u_{e,k}$ denotes the normal component at the center of the edge, while $u_{e,k}^\perp$ denotes the tangential component. The superscripts $top$ and $bot$ refer to the top and bottom of individual layers, and may be referred to as $k-1/2$ and $k+1/2$ elsewhere. The superscripts $surf$ and $floor$ are the surface and floor of the full ocean column. All variables without these superscripts indicate that they are layer-averaged, as defined in [](def-mass-thickness-average), and can be considered to represent a mid-layer value in the vertical. The mid-layer location is equivalently the average in $z$, $p$, or $h$ (mass), since density $\rho_{i,k}$ is considered constant in the cell.
+The subscripts $i$, $e$, and $v$ indicate cell, edge, and vertex locations and subscript $k$ is the layer.  Square brackets $[\cdot]_e$ and $[\cdot]_v$ are quantities that are interpolated to edge and vertex locations. For vector quantities, $u_{e,k}$ denotes the normal component at the center of the edge, while $u_{e,k}^\perp$ denotes the tangential component. We have switched from $\varphi_{i,k}^{bot}$ to the identical $\varphi_{i,k+1}^{top}$ for all variables in order for the notation to match the array names in the code.  The superscripts $surf$ and $floor$ are the surface and floor of the full ocean column. All variables without these superscripts indicate that they are layer-averaged, as defined in [](def-mass-thickness-average), and can be considered to represent a mid-layer value in the vertical. The mid-layer location is equivalently the average in $z$, $p$, or $h$ (mass), since density $\rho_{i,k}$ is considered constant in the cell.
 
 We refer to these as the discrete equations, but time derivatives remain continuous. The time discretization is described in the [time stepping design document](TimeStepping.md). The velocity, mass-thickness, and tracers are solved prognostically using [](discrete-momentum), [](discrete-thickness), [](discrete-tracer). At the new time, these variables are used to compute pressure [](discrete-pressure), specific volume [](discrete-eos), and z-locations [](discrete-z). Additional variables are computed diagnostically at the new time: $u^{\perp}$, $K$, $\omega$, $z^{mid}$, $\Phi$, etc. The initial geopotential is simply $\Phi=gz$, but additional gravitational terms may be added later.
 
@@ -525,7 +537,7 @@ $$
 \right)
 $$ (discrete-mom-vert-diff)
 
-The native locations for $z$ and $\nu$ are at the mid-layer and cell center, so they must be interpolated to the vertical layer interface and horizontal edge for this computation. This stencil is applied as an implicit tri-diagonal solve at the end of the time step. See details in the [tridiagonal solver design document](TridiagonalSolver) and forthcoming vertical mixing design document.
+This stencil is applied as an implicit tri-diagonal solve at the end of the time step. See details in the [tridiagonal solver design document](TridiagonalSolver) and forthcoming vertical mixing design document.
 
 ### Momentum Forcing
 The discretized momentum forcing ${ \bf F}^u_{e,k}$ may include:
@@ -651,10 +663,10 @@ Table 1. Definition of variables. Geometric variables may be found in the [Omega
 | symbol  | name   | units    | location | name in code | notes  |
 |---------------------|-----------------------------|----------|-|---------|-------------------------------------------------------|
 |$D_{i,k}$   | divergence | 1/s      | cell | Divergence  |$D=\nabla\cdot\bf u$ |
-|${\bf D}^u_{k} $, $ D^u_{e,k} $ | momentum dissipation terms | m/s$^2$ | edge | |see [Momentum Dissipation Section](#momentum-dissipation) | 
-|$ D_{e,k}^\varphi$ | tracer diffusion terms | | cell | |see [Tracer Diffusion Section](#tracer-diffusion) | 
+|${\bf D}^u_{k} $, $ D^u_{e,k} $ | momentum dissipation terms | m/s$^2$ | edge | |see [Momentum Dissipation Section](#momentum-dissipation) |
+|$ D_{e,k}^\varphi$ | tracer diffusion terms | | cell | |see [Tracer Diffusion Section](#tracer-diffusion) |
 |$f_v$       | Coriolis parameter| 1/s      | vertex   | FVertex  |  $f = 2\Omega sin(\phi)$, $\Omega$ rotation rate, $\phi$ latitude|
-|${\bf F}^u_{k} $, $ F^u_{e,k} $      | momentum forcing | m/s$^2$    | edge     |   | see [Momentum Forcing Section](#momentum-forcing) | 
+|${\bf F}^u_{k} $, $ F^u_{e,k} $      | momentum forcing | m/s$^2$    | edge     |   | see [Momentum Forcing Section](#momentum-forcing) |
 |$f_{eos}$ | equation of state | -  | any | function call | may produce density or specific volume |
 |$g$ | gravitational acceleration | m/s$^2$ | constant  | Gravity |
 |$h_{i,k}$ | layer mass-thickness | kg/m$^2$  | cell | LayerThickness | see [](def-h) |
