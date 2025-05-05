@@ -360,10 +360,11 @@ $$
 \nabla_z \varphi = \nabla_r \varphi - \frac{\partial \varphi}{\partial z} \nabla_r z.
 $$ (dvarphidnabla)
 
-
 ### Pressure Gradient
 
-The most important change due to general vertical coordinates is in the pressure gradient term.  Substituting pressure for $\varphi$ in [](#dvarphidnabla),
+For most terms, we can safely assume $\nabla_z \approx \nabla_r$ because the vertical to horizontal aspect ratio even at very high horizontal resolution is on the order of $\epsilon ~ 10^{-3}$ (thought may need to re-assess this assumption if we decide to use strongly sloped layers). This applies, for example, to the curl operator uset to compute the relative vorticity and the gradient applied to the kinetic energy in [](z-integration-momentum).  
+
+The exception is the pressure gradient term.  This is becasue strong vertical and week horizontal pressure gradients mean that both terms in the chain rule [](dvarphidnabla) are of the same order and must be retained.  Substituting pressure for $\varphi$ in [](#dvarphidnabla),
 
 $$
 \begin{aligned}
