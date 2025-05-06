@@ -139,7 +139,7 @@ $$ (continuous-eos)
 
 where conservative temperature, $\Theta$, and absolute salinity, $S$, are examples of tracers $\varphi$.
 
-The Boussinesq primitive equations also make an incompressibility assumption, which is identical to an assumption of constant density. Non-Boussinesq models do not make thiat assumption and are not explicitly incompressible. However, the mass conservation equation [](continuous-mass), along with an equation of state for sea water where density only varies slightly, results in a fluid that is nearly incompressible.
+The Boussinesq primitive equations also make an incompressibility assumption, which is identical to an assumption of constant density. Non-Boussinesq models do not make that assumption and are not explicitly incompressible. However, the mass conservation equation [](continuous-mass), along with an equation of state for sea water where density only varies slightly, results in a fluid that is nearly incompressible.
 
 A concern when using the full, compressible continuity equation is that this might support acoustic waves with wave speeds on the order of 1500 m/s, requiring an extremely small time step. According to [Griffies and Adcroft (2008)](https://agupubs.onlinelibrary.wiley.com/doi/10.1029/177GM18) and [de Szoeke and Samelson (2002)](https://doi.org/10.1175/1520-0485(2002)032%3C2194:TDBTBA%3E2.0.CO;2), the hydrostatic approximation removes vertical sound waves, leaving only barotropic acoustic modes called Lamb waves.  Fortunately, the Lamb waves can be "subsumed" into the external gravity mode because the scale height of the ocean is much larger (200 km) than its depth (~5 km).  This suggests that Lamb waves should not produce any additional constraints on our barotropic time step (though we should keep an eye on this).  For more details on Lamb waves, see [Dukowicz (2013)](https://doi.org/10.1175/MWR-D-13-00148.1)
 
@@ -676,7 +676,7 @@ Table 1. Definition of variables. Geometric variables may be found in the [Omega
 |${\bf k}$ | vertical unit vector |  |
 |$K_{min}$ | shallowest active layer |  |
 |$K_{max}$ | deepest active layer |  |
-|$K_{e,k}$  | kinetic energy    | m$^2$/s$^2$  | cell     | KineticEnergyCell  |$K = \left\| {\bf u} \right\|^2 / 2$ |
+|$K_{i,k}$  | kinetic energy    | m$^2$/s$^2$  | cell     | KineticEnergyCell  |$K = \left\| {\bf u} \right\|^2 / 2$ |
 |$p_{i,k}$ | pressure | Pa | cell | Pressure | see [](discrete-pressure) |
 |$p^{floor}_i$ | bottom pressure | Pa | cell | PFloor | pressure at ocean floor
 |$p^{surf}_i$ | surface pressure | Pa | cell | PSurface | due to atm. pressure, sea ice, ice shelves
