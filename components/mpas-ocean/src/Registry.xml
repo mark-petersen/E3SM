@@ -1341,16 +1341,6 @@
 					possible_values="Any positive real value."
 		/>
 	</nml_record>
-	<nml_record name="vegetation_drag" mode="init;forward">
-		<nml_option name="config_use_vegetation_drag" type="logical" default_value=".false."
-					description="Controls if vegetation_drag is used to compute Manning's roughness coefficient."
-					possible_values=".true. or .false."
-		/>
-		<nml_option name="config_vegetation_drag_coefficient" type="real" default_value="1.09"
-					description="Vegetation drag coefficient"
-					possible_values="O(1)"
-		/>
-	</nml_record>
 
 	<nml_record name="wetting_drying" mode="init;forward">
 		<nml_option name="config_use_wetting_drying" type="logical" default_value=".false."
