@@ -300,7 +300,7 @@ contains
         endif
 ! entire globe source for dyeVolIceMeltFormNS
 ! COMMENT OUT AFTER SOURCES ARE TURNED OFF
-!        dyeSurfaceFluxRunoff(indexdyeVolIceMeltFormNS, iCell) = seaIceFreshWaterFlux(iCell)
+        dyeSurfaceFluxRunoff(indexdyeVolIceMeltFormNS, iCell) = seaIceFreshWaterFlux(iCell)
 
 ! do vertical integrals
         do k = minLevelCell(iCell), maxLevelCell(iCell)
