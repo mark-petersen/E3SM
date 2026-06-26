@@ -2022,6 +2022,8 @@
 			<var name="dyeObMask"/>
 			<var name="dyeYeneseiMask"/>
 			<var name="dyeLenaMask"/>
+			<var name="dyeYukonMask"/>
+			<var name="dyeKolymaMask"/>
 			<var name="dyeArcticMask"/>
 		</stream>
 
@@ -2949,6 +2951,12 @@
                         />
                         <var name="dyeLenaMask" type="real" dimensions="nCells" units="kg m^{-2}"
                         description="mask defining dyeLena river runoff"
+                        />
+                        <var name="dyeYukonMask" type="real" dimensions="nCells" units="kg m^{-2}"
+                        description="mask defining dyeYukon river runoff"
+                        />
+                        <var name="dyeKolymaMask" type="real" dimensions="nCells" units="kg m^{-2}"
+                        description="mask defining dyeKolyma river runoff"
                         />
                         <var name="dyeArcticMask" type="real" dimensions="nCells" units="kg m^{-2}"
                         description="mask defining Arctic domain"

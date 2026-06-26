@@ -592,8 +592,17 @@ contains
          indxdyeVolOb,       &! tracer index for dyeVolOb
          indxdyeVolYenesei,  &! tracer index for dyeVolYenesei
          indxdyeVolLena,     &! tracer index for dyeVolLena
+         indxdyeVolKolyma,     &! tracer index for dyeVolKolyma
          indxdyeVolPrecipEvap,   &! tracer index for dyeVolPrecipEvap
          indxdyeVolIceMeltForm,  &! tracer index for dyeVolIceMeltForm
+         indxdyeVolMackenzieNS,&! tracer index for dyeVolMackenzieNS
+         indxdyeVolObNS,       &! tracer index for dyeVolObNS
+         indxdyeVolYeneseiNS,  &! tracer index for dyeVolYeneseiNS
+         indxdyeVolLenaNS,     &! tracer index for dyeVolLenaNS
+         indxdyeVolYukonNS,    &! tracer index for dyeVolYukonNS
+         indxdyeVolKolymaNS,     &! tracer index for dyeVolKolymaNS
+         indxdyeVolPrecipEvapNS,   &! tracer index for dyeVolPrecipEvapNS
+         indxdyeVolIceMeltFormNS,  &! tracer index for dyeVolIceMeltFormNS
          nTracersGroup,      &! number of tracers in each tracer group
          nTracersEcosys       ! number of ecosystem tracers
 
@@ -632,8 +641,17 @@ contains
          indexdyeVolOb,        & ! tracer indicies for dyes
          indexdyeVolYenesei,   & ! tracer indicies for dyes
          indexdyeVolLena,      & ! tracer indicies for dyes
+         indexdyeVolKolyma,      & ! tracer indicies for dyes
          indexdyeVolPrecipEvap,& ! tracer indicies for dyes
-         indexdyeVolIceMeltForm  ! tracer indicies for dyes
+         indexdyeVolIceMeltForm,&! tracer indicies for dyes
+         indexdyeVolMackenzieNS, & ! tracer indicies for dyes
+         indexdyeVolObNS,        & ! tracer indicies for dyes
+         indexdyeVolYeneseiNS,   & ! tracer indicies for dyes
+         indexdyeVolLenaNS,      & ! tracer indicies for dyes
+         indexdyeVolYukonNS,     & ! tracer indicies for dyes
+         indexdyeVolKolymaNS,      & ! tracer indicies for dyes
+         indexdyeVolPrecipEvapNS,& ! tracer indicies for dyes
+         indexdyeVolIceMeltFormNS  ! tracer indicies for dyes
 
       logical, pointer :: & ! option configuration flags
          config_use_tracerField, &
@@ -1075,12 +1093,40 @@ contains
             indxdyeVolLena = 0
             call mpas_pool_get_dimension(tracersPool, 'index_dyeVolLena', indexdyeVolLena)
             indxdyeVolLena = indexdyeVolLena ! convert to int scalar due to problems with int scalar pointers
+            indxdyeVolKolyma = 0
+            call mpas_pool_get_dimension(tracersPool, 'index_dyeVolKolyma', indexdyeVolKolyma)
+            indxdyeVolKolyma = indexdyeVolKolyma ! convert to int scalar due to problems with int scalar pointers
             indxdyeVolPrecipEvap = 0
             call mpas_pool_get_dimension(tracersPool, 'index_dyeVolPrecipEvap', indexdyeVolPrecipEvap)
             indxdyeVolPrecipEvap = indexdyeVolPrecipEvap ! convert to int scalar due to problems with int scalar pointers
             indxdyeVolIceMeltForm = 0
             call mpas_pool_get_dimension(tracersPool, 'index_dyeVolIceMeltForm', indexdyeVolIceMeltForm)
             indxdyeVolIceMeltForm = indexdyeVolIceMeltForm ! convert to int scalar due to problems with int scalar pointers
+
+            indxdyeVolMackenzieNS = 0
+            call mpas_pool_get_dimension(tracersPool, 'index_dyeVolMackenzieNS', indexdyeVolMackenzieNS)
+            indxdyeVolMackenzieNS = indexdyeVolMackenzieNS ! convert to int scalar due to problems with int scalar pointers
+            indxdyeVolObNS = 0
+            call mpas_pool_get_dimension(tracersPool, 'index_dyeVolObNS', indexdyeVolObNS)
+            indxdyeVolObNS = indexdyeVolObNS ! convert to int scalar due to problems with int scalar pointers
+            indxdyeVolYeneseiNS = 0
+            call mpas_pool_get_dimension(tracersPool, 'index_dyeVolYeneseiNS', indexdyeVolYeneseiNS)
+            indxdyeVolYeneseiNS = indexdyeVolYeneseiNS ! convert to int scalar due to problems with int scalar pointers
+            indxdyeVolLenaNS = 0
+            call mpas_pool_get_dimension(tracersPool, 'index_dyeVolLenaNS', indexdyeVolLenaNS)
+            indxdyeVolLenaNS = indexdyeVolLenaNS ! convert to int scalar due to problems with int scalar pointers
+            indxdyeVolYukonNS = 0
+            call mpas_pool_get_dimension(tracersPool, 'index_dyeVolYukonNS', indexdyeVolYukonNS)
+            indxdyeVolYukonNS = indexdyeVolYukonNS ! convert to int scalar due to problems with int scalar pointers
+            indxdyeVolKolymaNS = 0
+            call mpas_pool_get_dimension(tracersPool, 'index_dyeVolKolymaNS', indexdyeVolKolymaNS)
+            indxdyeVolKolymaNS = indexdyeVolKolymaNS ! convert to int scalar due to problems with int scalar pointers
+            indxdyeVolPrecipEvapNS = 0
+            call mpas_pool_get_dimension(tracersPool, 'index_dyeVolPrecipEvapNS', indexdyeVolPrecipEvapNS)
+            indxdyeVolPrecipEvapNS = indexdyeVolPrecipEvapNS ! convert to int scalar due to problems with int scalar pointers
+            indxdyeVolIceMeltFormNS = 0
+            call mpas_pool_get_dimension(tracersPool, 'index_dyeVolIceMeltFormNS', indexdyeVolIceMeltFormNS)
+            indxdyeVolIceMeltFormNS = indexdyeVolIceMeltFormNS ! convert to int scalar due to problems with int scalar pointers
                                                  
             call ocn_tracer_dye_surface_flux_compute( &
                                         tracerGroup, forcingPool, meshPool,  &
@@ -1088,8 +1134,13 @@ contains
                                         minLevelCell, maxLevelCell, nVertLevels, layerThickness, &
                                         tracerGroupSurfaceFlux, tracerGroupSurfaceFluxRunoff,  &
                                         indxdyeVolMackenzie, indxdyeVolOb,   &
-                                        indxdyeVolYenesei, indxdyeVolLena,  &
-                                        indxdyeVolPrecipEvap, indxdyeVolIceMeltForm, err)
+                                        indxdyeVolYenesei, indxdyeVolLena, indxdyeVolKolyma, &
+                                        indexdyeVolPrecipEvap, indexdyeVolIceMeltForm, &
+                                        indexdyeVolMackenzieNS, indexdyeVolObNS, &
+                                        indexdyeVolYeneseiNS, indexdyeVolLenaNS, &
+                                        indexdyeVolYukonNS, indxdyeVolKolymaNS,  &
+                                        indexdyeVolPrecipEvapNS, indexdyeVolIceMeltFormNS, &
+                                        err)
          endif ! dye
 
          !

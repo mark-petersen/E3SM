@@ -194,7 +194,21 @@ module ocn_time_integration_split
          indxdyeVolYenesei,  &
          indxdyeVolLena,  &
          indxdyeVolPrecipEvap,  &
-         indxdyeVolIceMeltForm
+         indxdyeVolIceMeltForm,  &
+         indxdyeVolKolyma,  &
+         indxdyeVolBarentsNS,    &! tracer index for dyeVolBarentsNS
+         indxdyeVolBeringNS,    &! tracer index for dyeVolBeringNS
+         indxdyeVolFramNS,    &! tracer index for dyeVolFramNS
+         indxdyeVolDavisNS,    &! tracer index for dyeVolDavisNS
+         indxdyeVolFuryHeclaNS,    &! tracer index for dyeVolFuryHeclaNS
+         indxdyeVolMackenzieNS,  &
+         indxdyeVolObNS,  &
+         indxdyeVolYeneseiNS,  &
+         indxdyeVolLenaNS,  &
+         indxdyeVolYukonNS,  &
+         indxdyeVolKolymaNS,  &
+         indxdyeVolPrecipEvapNS,  &
+         indxdyeVolIceMeltFormNS
 
       integer, pointer :: &
          indexdyeVolBarents, indexdyeSaltBarents, & ! tracer indicies for transect dyes
@@ -207,7 +221,21 @@ module ocn_time_integration_split
          indexdyeVolYenesei,  &
          indexdyeVolLena,  &
          indexdyeVolPrecipEvap,  &
-         indexdyeVolIceMeltForm
+         indexdyeVolIceMeltForm, &
+         indexdyeVolKolyma,  &
+         indexdyeVolBarentsNS, & ! tracer indicies for transect dyes
+         indexdyeVolBeringNS, & ! tracer indicies for transect dyes
+         indexdyeVolFramNS,  & ! tracer indicies for transect dyes
+         indexdyeVolDavisNS, & ! tracer indicies for transect dyes
+         indexdyeVolFuryHeclaNS, & ! tracer indicies for transect dyes
+         indexdyeVolMackenzieNS,  &
+         indexdyeVolObNS,  &
+         indexdyeVolYeneseiNS,  &
+         indexdyeVolLenaNS,  &
+         indexdyeVolYukonNS,  &
+         indexdyeVolKolymaNS,  &
+         indexdyeVolPrecipEvapNS,  &
+         indexdyeVolIceMeltFormNS
 
       real (kind=RKIND), dimension(:,:,:), pointer, contiguous :: &
          activeTracers   ! retain active tracers for Salt dyes
@@ -224,7 +252,12 @@ module ocn_time_integration_split
          dyeVolDavis_zint,  &
          dyeSaltDavis_zint, &
          dyeVolFuryHecla_zint,  &
-         dyeSaltFuryHecla_zint
+         dyeSaltFuryHecla_zint, &
+         dyeVolBarentsNS_zint,  &
+         dyeVolBeringNS_zint,  &
+         dyeVolFramNS_zint,  &
+         dyeVolDavisNS_zint,  &
+         dyeVolFuryHeclaNS_zint
    
       real (kind=RKIND), dimension(:), pointer :: &
          dyeBarentsSourceMask,  &
@@ -2388,6 +2421,63 @@ module ocn_time_integration_split
                         call mpas_pool_get_dimension(tracersPool, 'index_dyeVolIceMeltForm', indexdyeVolIceMeltForm)
                         indxdyeVolIceMeltForm = indexdyeVolIceMeltForm ! convert to int scalar due to problems with int scalar pointers
 
+                        indxdyeVolKolyma = 0
+                        call mpas_pool_get_dimension(tracersPool, 'index_dyeVolKolyma', indexdyeVolKolyma)
+                        indxdyeVolKolyma = indexdyeVolKolyma ! convert to int scalar due to problems with int scalar pointers
+
+! now NS fields
+                        indxdyeVolBarentsNS = 0
+                        call mpas_pool_get_dimension(tracersPool, 'index_dyeVolBarentsNS', indexdyeVolBarentsNS)
+                        indxdyeVolBarentsNS = indexdyeVolBarentsNS ! convert to int scalar due to problems with int scalar pointers
+
+                        indxdyeVolBeringNS = 0
+                        call mpas_pool_get_dimension(tracersPool, 'index_dyeVolBeringNS', indexdyeVolBeringNS)
+                        indxdyeVolBeringNS = indexdyeVolBeringNS ! convert to int scalar due to problems with int scalar pointers
+
+                        indxdyeVolFramNS = 0
+                        call mpas_pool_get_dimension(tracersPool, 'index_dyeVolFramNS', indexdyeVolFramNS)
+                        indxdyeVolFramNS = indexdyeVolFramNS ! convert to int scalar due to problems with int scalar pointers
+
+                        indxdyeVolDavisNS = 0
+                        call mpas_pool_get_dimension(tracersPool, 'index_dyeVolDavisNS', indexdyeVolDavisNS)
+                        indxdyeVolDavisNS = indexdyeVolDavisNS ! convert to int scalar due to problems with int scalar pointers
+
+                        indxdyeVolFuryHeclaNS = 0
+                        call mpas_pool_get_dimension(tracersPool, 'index_dyeVolFuryHeclaNS', indexdyeVolFuryHeclaNS)
+                        indxdyeVolFuryHeclaNS = indexdyeVolFuryHeclaNS ! convert to int scalar due to problems with int scalar pointers
+
+                        indxdyeVolMackenzieNS = 0
+                        call mpas_pool_get_dimension(tracersPool, 'index_dyeVolMackenzieNS', indexdyeVolMackenzieNS)
+                        indxdyeVolMackenzieNS = indexdyeVolMackenzieNS ! convert to int scalar due to problems with int scalar pointers
+
+                        indxdyeVolObNS = 0
+                        call mpas_pool_get_dimension(tracersPool, 'index_dyeVolObNS', indexdyeVolObNS)
+                        indxdyeVolObNS = indexdyeVolObNS ! convert to int scalar due to problems with int scalar pointers
+
+                        indxdyeVolYeneseiNS = 0
+                        call mpas_pool_get_dimension(tracersPool, 'index_dyeVolYeneseiNS', indexdyeVolYeneseiNS)
+                        indxdyeVolYeneseiNS = indexdyeVolYeneseiNS ! convert to int scalar due to problems with int scalar pointers
+
+                        indxdyeVolLenaNS = 0
+                        call mpas_pool_get_dimension(tracersPool, 'index_dyeVolLenaNS', indexdyeVolLenaNS)
+                        indxdyeVolLenaNS = indexdyeVolLenaNS ! convert to int scalar due to problems with int scalar pointers
+
+                        indxdyeVolYukonNS = 0
+                        call mpas_pool_get_dimension(tracersPool, 'index_dyeVolYukonNS', indexdyeVolYukonNS)
+                        indxdyeVolYukonNS = indexdyeVolYukonNS ! convert to int scalar due to problems with int scalar pointers
+
+                        indxdyeVolKolymaNS = 0
+                        call mpas_pool_get_dimension(tracersPool, 'index_dyeVolKolymaNS', indexdyeVolKolymaNS)
+                        indxdyeVolKolymaNS = indexdyeVolKolymaNS ! convert to int scalar due to problems with int scalar pointers
+
+                        indxdyeVolPrecipEvapNS = 0
+                        call mpas_pool_get_dimension(tracersPool, 'index_dyeVolPrecipEvapNS', indexdyeVolPrecipEvapNS)
+                        indxdyeVolPrecipEvapNS = indexdyeVolPrecipEvapNS ! convert to int scalar due to problems with int scalar pointers
+
+                        indxdyeVolIceMeltFormNS = 0
+                        call mpas_pool_get_dimension(tracersPool, 'index_dyeVolIceMeltFormNS', indexdyeVolIceMeltFormNS)
+                        indxdyeVolIceMeltFormNS = indexdyeVolIceMeltFormNS ! convert to int scalar due to problems with int scalar pointers
+
                         call mpas_pool_get_subpool(forcingPool, 'dyeDiagFields', dyeDiagFields)
                         call mpas_pool_get_array(meshPool, 'dyeBarentsSourceMask', dyeBarentsSourceMask)
                         call mpas_pool_get_array(meshPool, 'dyeBarentsSinkMask', dyeBarentsSinkMask)
@@ -2410,6 +2500,12 @@ module ocn_time_integration_split
                         call mpas_pool_get_array(dyeDiagFields, 'dyeVolFuryHecla_zint', dyeVolFuryHecla_zint)
                         call mpas_pool_get_array(dyeDiagFields, 'dyeSaltFuryHecla_zint', dyeSaltFuryHecla_zint)
 
+                        call mpas_pool_get_array(dyeDiagFields, 'dyeVolBarentsNS_zint', dyeVolBarentsNS_zint)
+                        call mpas_pool_get_array(dyeDiagFields, 'dyeVolBeringNS_zint', dyeVolBeringNS_zint)
+                        call mpas_pool_get_array(dyeDiagFields, 'dyeVolFramNS_zint', dyeVolFramNS_zint)
+                        call mpas_pool_get_array(dyeDiagFields, 'dyeVolDavisNS_zint', dyeVolDavisNS_zint)
+                        call mpas_pool_get_array(dyeDiagFields, 'dyeVolFuryHeclaNS_zint', dyeVolFuryHeclaNS_zint)
+
                         call mpas_pool_get_array(tracersPool, 'activeTracers', activeTracers, 2)
 
                         ! initialize vertical integrals
@@ -2423,6 +2519,11 @@ module ocn_time_integration_split
                         dyeSaltDavis_zint = 0.0_RKIND
                         dyeVolFuryHecla_zint = 0.0_RKIND
                         dyeSaltFuryHecla_zint = 0.0_RKIND
+                        dyeVolBarentsNS_zint = 0.0_RKIND
+                        dyeVolBeringNS_zint = 0.0_RKIND
+                        dyeVolFramNS_zint = 0.0_RKIND
+                        dyeVolDavisNS_zint = 0.0_RKIND
+                        dyeVolFuryHeclaNS_zint = 0.0_RKIND
 
                         !$omp parallel
                         !$omp do schedule(runtime) private(k, lat)
@@ -2434,27 +2535,32 @@ module ocn_time_integration_split
                              if(dyeBarentsSourceMask(iCell) == 1.0_RKIND) then
                                 tracersGroupNew(indxdyeVolBarents,k,iCell) = 1.0_RKIND
                                 tracersGroupNew(indxdyeSaltBarents,k,iCell) = activeTracers(indexSalinity,k,iCell)
+                                tracersGroupNew(indxdyeVolBarentsNS,k,iCell) = 1.0_RKIND
                              endif
-!                            if(dyeBeringSourceMask(iCell) == 1.0_RKIND) then
-!                               tracersGroupNew(indxdyeVolBering,k,iCell) = 1.0_RKIND
+                             if(dyeBeringSourceMask(iCell) == 1.0_RKIND) then
+                                tracersGroupNew(indxdyeVolBering,k,iCell) = 1.0_RKIND
+                                tracersGroupNew(indxdyeSaltBering,k,iCell) = activeTracers(indexSalinity,k,iCell)
+                                tracersGroupNew(indxdyeVolBeringNS,k,iCell) = 1.0_RKIND
+                             endif
+!maltrud 2 rows
+!                            if(dyeBeringSourceMask(iCell) > 0.0_RKIND) then
+!                               tracersGroupNew(indxdyeVolBering,k,iCell) = dyeBeringSourceMask(iCell)
 !                               tracersGroupNew(indxdyeSaltBering,k,iCell) = activeTracers(indexSalinity,k,iCell)
 !                            endif
-!maltrud 2 rows
-                             if(dyeBeringSourceMask(iCell) > 0.0_RKIND) then
-                                tracersGroupNew(indxdyeVolBering,k,iCell) = dyeBeringSourceMask(iCell)
-                                tracersGroupNew(indxdyeSaltBering,k,iCell) = activeTracers(indexSalinity,k,iCell)
-                             endif
                              if(dyeFramSourceMask(iCell) == 1.0_RKIND) then
                                 tracersGroupNew(indxdyeVolFram,k,iCell) = 1.0_RKIND
                                 tracersGroupNew(indxdyeSaltFram,k,iCell) = activeTracers(indexSalinity,k,iCell)
+                                tracersGroupNew(indxdyeVolFramNS,k,iCell) = 1.0_RKIND
                              endif
                              if(dyeDavisSourceMask(iCell) == 1.0_RKIND) then
                                 tracersGroupNew(indxdyeVolDavis,k,iCell) = 1.0_RKIND
                                 tracersGroupNew(indxdyeSaltDavis,k,iCell) = activeTracers(indexSalinity,k,iCell)
+                                tracersGroupNew(indxdyeVolDavisNS,k,iCell) = 1.0_RKIND
                              endif
                              if(dyeFuryHeclaSourceMask(iCell) == 1.0_RKIND) then
                                 tracersGroupNew(indxdyeVolFuryHecla,k,iCell) = 1.0_RKIND
                                 tracersGroupNew(indxdyeSaltFuryHecla,k,iCell) = activeTracers(indexSalinity,k,iCell)
+                                tracersGroupNew(indxdyeVolFuryHeclaNS,k,iCell) = 1.0_RKIND
                              endif
 
                              if(dyeBarentsSinkMask(iCell) > 0.0_RKIND) then
@@ -2478,6 +2584,21 @@ module ocn_time_integration_split
                                tracersGroupNew(indxdyeSaltFuryHecla,k,iCell) = 0.0_RKIND
                              endif
 
+! UNCOMMENT the following when gateway sources are turned off
+! sum of any 2 gateway sink masks hould be > 0 for all
+                            if(dyeBarentsSinkMask(iCell) + dyeBeringSinkMask(iCell) > 0.0_RKIND) then
+                              tracersGroupNew(indxdyeVolBarents,k,iCell) = 0.0_RKIND
+                              tracersGroupNew(indxdyeSaltBarents,k,iCell) = 0.0_RKIND
+                              tracersGroupNew(indxdyeVolBering,k,iCell) = 0.0_RKIND
+                              tracersGroupNew(indxdyeSaltBering,k,iCell) = 0.0_RKIND
+                              tracersGroupNew(indxdyeVolFram,k,iCell) = 0.0_RKIND
+                              tracersGroupNew(indxdyeSaltFram,k,iCell) = 0.0_RKIND
+                              tracersGroupNew(indxdyeVolDavis,k,iCell) = 0.0_RKIND
+                              tracersGroupNew(indxdyeSaltDavis,k,iCell) = 0.0_RKIND
+                              tracersGroupNew(indxdyeVolFuryHecla,k,iCell) = 0.0_RKIND
+                              tracersGroupNew(indxdyeSaltFuryHecla,k,iCell) = 0.0_RKIND
+                            endif
+
 ! now do rivers, precip, ice melt
 ! want to always remove these at gateways, and sum of any 2 should be > 0 for all
                              if(dyeBarentsSinkMask(iCell) + dyeBeringSinkMask(iCell) > 0.0_RKIND) then
@@ -2487,6 +2608,7 @@ module ocn_time_integration_split
                                tracersGroupNew(indxdyeVolLena,k,iCell) = 0.0_RKIND
                                tracersGroupNew(indxdyeVolPrecipEvap,k,iCell) = 0.0_RKIND
                                tracersGroupNew(indxdyeVolIceMeltForm,k,iCell) = 0.0_RKIND
+                               tracersGroupNew(indxdyeVolKolyma,k,iCell) = 0.0_RKIND
                              endif
 
                              dyeVolBarents_zint(iCell) = dyeVolBarents_zint(iCell) &
@@ -2509,6 +2631,17 @@ module ocn_time_integration_split
                                + layerThicknessNew(k,iCell)*tracersGroupNew(indexdyeVolFuryHecla, k, iCell)
                              dyeSaltFuryHecla_zint(iCell) = dyeSaltFuryHecla_zint(iCell) &
                                + layerThicknessNew(k,iCell)*tracersGroupNew(indexdyeSaltFuryHecla, k, iCell)
+
+                             dyeVolBarentsNS_zint(iCell) = dyeVolBarentsNS_zint(iCell) &
+                               + layerThicknessNew(k,iCell)*tracersGroupNew(indexdyeVolBarentsNS, k, iCell)
+                             dyeVolBeringNS_zint(iCell) = dyeVolBeringNS_zint(iCell) &
+                               + layerThicknessNew(k,iCell)*tracersGroupNew(indexdyeVolBeringNS, k, iCell)
+                             dyeVolFramNS_zint(iCell) = dyeVolFramNS_zint(iCell) &
+                               + layerThicknessNew(k,iCell)*tracersGroupNew(indexdyeVolFramNS, k, iCell)
+                             dyeVolDavisNS_zint(iCell) = dyeVolDavisNS_zint(iCell) &
+                               + layerThicknessNew(k,iCell)*tracersGroupNew(indexdyeVolDavisNS, k, iCell)
+                             dyeVolFuryHeclaNS_zint(iCell) = dyeVolFuryHeclaNS_zint(iCell) &
+                               + layerThicknessNew(k,iCell)*tracersGroupNew(indexdyeVolFuryHeclaNS, k, iCell)
                            end do
 
                         end do ! cells

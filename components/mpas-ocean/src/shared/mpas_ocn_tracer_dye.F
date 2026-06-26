@@ -93,8 +93,11 @@ contains
    subroutine ocn_tracer_dye_surface_flux_compute(dyeTracers, forcingPool, meshPool, nTracers,   &
       nCellsSolve, minLevelCell, maxLevelCell, nVertLevels, layerThickness, &
       dyeSurfaceFlux, dyeSurfaceFluxRunoff, &
-      indexdyeVolMackenzie, indexdyeVolOb, indexdyeVolYenesei, indexdyeVolLena, &
+      indexdyeVolMackenzie, indexdyeVolOb, indexdyeVolYenesei, indexdyeVolLena, indexdyeVolKolyma, &
       indexdyeVolPrecipEvap, indexdyeVolIceMeltForm, &
+      indexdyeVolMackenzieNS, indexdyeVolObNS, indexdyeVolYeneseiNS, indexdyeVolLenaNS, &
+      indexdyeVolYukonNS, indexdyeVolKolymaNS, &
+      indexdyeVolPrecipEvapNS, indexdyeVolIceMeltFormNS, &
       err)!{{{
       
 
@@ -122,8 +125,17 @@ contains
          indexdyeVolOb,  &
          indexdyeVolYenesei,  &
          indexdyeVolLena,  &
+         indexdyeVolKolyma,  &
          indexdyeVolPrecipEvap,  &
-         indexdyeVolIceMeltForm
+         indexdyeVolIceMeltForm,  &
+         indexdyeVolMackenzieNS,  &
+         indexdyeVolObNS,  &
+         indexdyeVolYeneseiNS,  &
+         indexdyeVolLenaNS,  &
+         indexdyeVolYukonNS,  &
+         indexdyeVolKolymaNS,  &
+         indexdyeVolPrecipEvapNS,  &
+         indexdyeVolIceMeltFormNS
 
       !-----------------------------------------------------------------
       !
@@ -169,8 +181,20 @@ contains
          dyeYeneseiMask,      &
          dyeVolLena_zint,  &
          dyeLenaMask,  &
+         dyeVolKolyma_zint,  &
+         dyeKolymaMask,  &
          dyeVolPrecipEvap_zint,  &
          dyeVolIceMeltForm_zint,  &
+
+         dyeVolMackenzieNS_zint,  &
+         dyeVolObNS_zint,  &
+         dyeVolYeneseiNS_zint,  &
+         dyeVolLenaNS_zint,  &
+         dyeVolYukonNS_zint,  &
+         dyeYukonMask,  &
+         dyeVolKolymaNS_zint,  &
+         dyeVolPrecipEvapNS_zint,  &
+         dyeVolIceMeltFormNS_zint,  &
          dyeArcticMask
 
       real (kind=RKIND) :: totalRunoff
@@ -201,16 +225,38 @@ contains
       call mpas_pool_get_array(meshPool, 'dyeYeneseiMask', dyeYeneseiMask)
       call mpas_pool_get_array(dyeDiagFields, 'dyeVolLena_zint', dyeVolLena_zint)
       call mpas_pool_get_array(meshPool, 'dyeLenaMask', dyeLenaMask)
+      call mpas_pool_get_array(dyeDiagFields, 'dyeVolKolyma_zint', dyeVolKolyma_zint)
+      call mpas_pool_get_array(meshPool, 'dyeKolymaMask', dyeKolymaMask)
       call mpas_pool_get_array(dyeDiagFields, 'dyeVolPrecipEvap_zint', dyeVolPrecipEvap_zint)
       call mpas_pool_get_array(dyeDiagFields, 'dyeVolIceMeltForm_zint', dyeVolIceMeltForm_zint)
       call mpas_pool_get_array(meshPool, 'dyeArcticMask', dyeArcticMask)
+
+      call mpas_pool_get_array(dyeDiagFields, 'dyeVolMackenzieNS_zint', dyeVolMackenzieNS_zint)
+      call mpas_pool_get_array(dyeDiagFields, 'dyeVolObNS_zint', dyeVolObNS_zint)
+      call mpas_pool_get_array(dyeDiagFields, 'dyeVolYeneseiNS_zint', dyeVolYeneseiNS_zint)
+      call mpas_pool_get_array(dyeDiagFields, 'dyeVolLenaNS_zint', dyeVolLenaNS_zint)
+      call mpas_pool_get_array(dyeDiagFields, 'dyeVolYukonNS_zint', dyeVolYukonNS_zint)
+      call mpas_pool_get_array(meshPool, 'dyeYukonMask', dyeYukonMask)
+      call mpas_pool_get_array(dyeDiagFields, 'dyeVolKolymaNS_zint', dyeVolKolymaNS_zint)
+      call mpas_pool_get_array(dyeDiagFields, 'dyeVolPrecipEvapNS_zint', dyeVolPrecipEvapNS_zint)
+      call mpas_pool_get_array(dyeDiagFields, 'dyeVolIceMeltFormNS_zint', dyeVolIceMeltFormNS_zint)
 
       dyeVolMackenzie_zint = 0.0_RKIND
       dyeVolOb_zint = 0.0_RKIND
       dyeVolYenesei_zint = 0.0_RKIND
       dyeVolLena_zint = 0.0_RKIND
+      dyeVolKolyma_zint = 0.0_RKIND
       dyeVolPrecipEvap_zint = 0.0_RKIND
       dyeVolIceMeltForm_zint = 0.0_RKIND
+
+      dyeVolMackenzieNS_zint = 0.0_RKIND
+      dyeVolObNS_zint = 0.0_RKIND
+      dyeVolYeneseiNS_zint = 0.0_RKIND
+      dyeVolLenaNS_zint = 0.0_RKIND
+      dyeVolYukonNS_zint = 0.0_RKIND
+      dyeVolKolymaNS_zint = 0.0_RKIND
+      dyeVolPrecipEvapNS_zint = 0.0_RKIND
+      dyeVolIceMeltFormNS_zint = 0.0_RKIND
 
       !DWJ 08/05/2016: This loop needs OpenMP added to it.
       do iCell=1,nCellsSolve
@@ -227,14 +273,34 @@ contains
           dyeSurfaceFluxRunoff(indexdyeVolYenesei, iCell) = totalRunoff*1.e-6_RKIND
         if (dyeLenaMask(iCell) > 0.0_RKIND)   &
           dyeSurfaceFluxRunoff(indexdyeVolLena, iCell) = totalRunoff*1.e-6_RKIND
+        if (dyeKolymaMask(iCell) > 0.0_RKIND)   &
+          dyeSurfaceFluxRunoff(indexdyeVolKolyma, iCell) = totalRunoff*1.e-6_RKIND
+
+        if (dyeMackenzieMask(iCell) > 0.0_RKIND)   &
+          dyeSurfaceFluxRunoff(indexdyeVolMackenzieNS, iCell) = totalRunoff*1.e-6_RKIND
+        if (dyeObMask(iCell) > 0.0_RKIND)   &
+          dyeSurfaceFluxRunoff(indexdyeVolObNS, iCell) = totalRunoff*1.e-6_RKIND
+        if (dyeYeneseiMask(iCell) > 0.0_RKIND)   &
+          dyeSurfaceFluxRunoff(indexdyeVolYeneseiNS, iCell) = totalRunoff*1.e-6_RKIND
+        if (dyeLenaMask(iCell) > 0.0_RKIND)   &
+          dyeSurfaceFluxRunoff(indexdyeVolLenaNS, iCell) = totalRunoff*1.e-6_RKIND
+        if (dyeYukonMask(iCell) > 0.0_RKIND)   &
+          dyeSurfaceFluxRunoff(indexdyeVolYukonNS, iCell) = totalRunoff*1.e-6_RKIND
+        if (dyeKolymaMask(iCell) > 0.0_RKIND)   &
+          dyeSurfaceFluxRunoff(indexdyeVolKolymaNS, iCell) = totalRunoff*1.e-6_RKIND
 
 !maltrud debug
 !if (iCell == 1) write(*,*)' DEBUG02: ',iCell, dyeArcticMask(iCell), indexdyeVolPrecipEvap,indexdyeVolIceMeltForm
         if (dyeArcticMask(iCell) > 0.0_RKIND) then
           dyeSurfaceFluxRunoff(indexdyeVolPrecipEvap, iCell) =  &
              rainFlux(iCell) + snowFlux(iCell) + evaporationFlux(iCell)
+          dyeSurfaceFluxRunoff(indexdyeVolPrecipEvapNS, iCell) =  &
+             rainFlux(iCell) + snowFlux(iCell) + evaporationFlux(iCell)
           dyeSurfaceFluxRunoff(indexdyeVolIceMeltForm, iCell) = seaIceFreshWaterFlux(iCell)
         endif
+! entire globe source for dyeVolIceMeltFormNS
+! COMMENT OUT AFTER SOURCES ARE TURNED OFF
+!        dyeSurfaceFluxRunoff(indexdyeVolIceMeltFormNS, iCell) = seaIceFreshWaterFlux(iCell)
 
 ! do vertical integrals
         do k = minLevelCell(iCell), maxLevelCell(iCell)
@@ -246,10 +312,28 @@ contains
                             + layerThickness(k,iCell)*dyeTracers(indexdyeVolYenesei, k, iCell)
           dyeVolLena_zint(iCell) = dyeVolLena_zint(iCell) &
                             + layerThickness(k,iCell)*dyeTracers(indexdyeVolLena, k, iCell)
+          dyeVolKolyma_zint(iCell) = dyeVolKolyma_zint(iCell) &
+                            + layerThickness(k,iCell)*dyeTracers(indexdyeVolKolyma, k, iCell)
           dyeVolPrecipEvap_zint(iCell) = dyeVolPrecipEvap_zint(iCell) &
                             + layerThickness(k,iCell)*dyeTracers(indexdyeVolPrecipEvap, k, iCell)
           dyeVolIceMeltForm_zint(iCell) = dyeVolIceMeltForm_zint(iCell) &
                             + layerThickness(k,iCell)*dyeTracers(indexdyeVolIceMeltForm, k, iCell)
+          dyeVolMackenzieNS_zint(iCell) = dyeVolMackenzieNS_zint(iCell) &
+                            + layerThickness(k,iCell)*dyeTracers(indexdyeVolMackenzieNS, k, iCell)
+          dyeVolObNS_zint(iCell) = dyeVolObNS_zint(iCell) &
+                            + layerThickness(k,iCell)*dyeTracers(indexdyeVolObNS, k, iCell)
+          dyeVolYeneseiNS_zint(iCell) = dyeVolYeneseiNS_zint(iCell) &
+                            + layerThickness(k,iCell)*dyeTracers(indexdyeVolYeneseiNS, k, iCell)
+          dyeVolLenaNS_zint(iCell) = dyeVolLenaNS_zint(iCell) &
+                            + layerThickness(k,iCell)*dyeTracers(indexdyeVolLenaNS, k, iCell)
+          dyeVolYukonNS_zint(iCell) = dyeVolYukonNS_zint(iCell) &
+                            + layerThickness(k,iCell)*dyeTracers(indexdyeVolYukonNS, k, iCell)
+          dyeVolKolymaNS_zint(iCell) = dyeVolKolymaNS_zint(iCell) &
+                            + layerThickness(k,iCell)*dyeTracers(indexdyeVolKolymaNS, k, iCell)
+          dyeVolPrecipEvapNS_zint(iCell) = dyeVolPrecipEvapNS_zint(iCell) &
+                            + layerThickness(k,iCell)*dyeTracers(indexdyeVolPrecipEvapNS, k, iCell)
+          dyeVolIceMeltFormNS_zint(iCell) = dyeVolIceMeltFormNS_zint(iCell) &
+                            + layerThickness(k,iCell)*dyeTracers(indexdyeVolIceMeltFormNS, k, iCell)
         enddo  !  k
 
 ! maltrud now do virtual flux losses
