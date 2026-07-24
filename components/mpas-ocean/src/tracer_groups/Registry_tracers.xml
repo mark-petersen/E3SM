@@ -7,4 +7,7 @@
 #include "Registry_idealAge.xml"
 #include "Registry_CFC.xml"
 #include "Registry_dyeTracers.xml"
+#include "Registry_sedGrp1.xml"
+#include "Registry_sedGrp2.xml"
+#include "Registry_sedGrp3.xml"
 //#include "Registry_TEMPLATEGRP.xml"

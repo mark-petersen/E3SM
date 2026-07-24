@@ -289,6 +289,20 @@
 					possible_values="any positive real"
 		/>
 	</nml_record>
+	<nml_record name="sediments" mode="forward">
+		<nml_option name="config_settling_vel_sedGrp1" type="real" default_value="-1.0e-5" units="m s^-1"
+					description="Sediments settling velocity, positive upwards"
+					possible_values="any real"
+		/>
+		<nml_option name="config_settling_vel_sedGrp2" type="real" default_value="-4.0e-6" units="m s^-1"
+					description="Sediments settling velocity, positive upwards"
+					possible_values="any real"
+		/>
+		<nml_option name="config_settling_vel_sedGrp2" type="real" default_value="-1.0e-6" units="m s^-1"
+					description="Sediments settling velocity, positive upwards"
+					possible_values="any real"
+		/>
+	</nml_record>
 	<nml_record name="hmix_Leith" mode="forward">
 		<nml_option name="config_use_Leith_del2" type="logical" default_value=".false."
 					description="If true, the Leith enstrophy-cascade closure is turned on"
