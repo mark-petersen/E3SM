@@ -127,59 +127,59 @@
 				<var name="dyeVolKolymaNS" array_group="dyeGRP" units="kg m^{-3}"
 			description="dyeVolKolymaNS"
 				/>
-				<var name="dyeVolMackenzieSG1" array_group="dyeGRP" units="kg m^{-3}"
-			description="dyeVolMackenzieSG1 Sediment Group 1"
+				<var name="SedGrp1Mackenzie" array_group="dyeGRP" units="kg m^{-3}"
+			description="SedGrp1Mackenzie Sediment Group 1"
 				/>
-				<var name="dyeVolObSG1" array_group="dyeGRP" units="kg m^{-3}"
-			description="dyeVolObSG1 Sediment Group 1"
+				<var name="SedGrp1Ob" array_group="dyeGRP" units="kg m^{-3}"
+			description="SedGrp1Ob Sediment Group 1"
 				/>
-				<var name="dyeVolYeneseiSG1" array_group="dyeGRP" units="kg m^{-3}"
-			description="dyeVolYeneseiSG1 Sediment Group 1"
+				<var name="SedGrp1Yenesei" array_group="dyeGRP" units="kg m^{-3}"
+			description="SedGrp1Yenesei Sediment Group 1"
 				/>
-				<var name="dyeVolLenaSG1" array_group="dyeGRP" units="kg m^{-3}"
-			description="dyeVolLenaSG1 Sediment Group 1"
+				<var name="SedGrp1Lena" array_group="dyeGRP" units="kg m^{-3}"
+			description="SedGrp1Lena Sediment Group 1"
 				/>
-				<var name="dyeVolYukonSG1" array_group="dyeGRP" units="kg m^{-3}"
-			description="dyeVolYukonSG1 Sediment Group 1"
+				<var name="SedGrp1Yukon" array_group="dyeGRP" units="kg m^{-3}"
+			description="SedGrp1Yukon Sediment Group 1"
 				/>
-				<var name="dyeVolKolymaSG1" array_group="dyeGRP" units="kg m^{-3}"
-			description="dyeVolKolymaSG1 Sediment Group 1"
+				<var name="SedGrp1Kolyma" array_group="dyeGRP" units="kg m^{-3}"
+			description="SedGrp1Kolyma Sediment Group 1"
 				/>
-				<var name="dyeVolMackenzieSG2" array_group="dyeGRP" units="kg m^{-3}"
-			description="dyeVolMackenzieSG2 Sediment Group 2"
+				<var name="SedGrp2Mackenzie" array_group="dyeGRP" units="kg m^{-3}"
+			description="SedGrp2Mackenzie Sediment Group 2"
 				/>
-				<var name="dyeVolObSG2" array_group="dyeGRP" units="kg m^{-3}"
-			description="dyeVolObSG2 Sediment Group 2"
+				<var name="SedGrp2Ob" array_group="dyeGRP" units="kg m^{-3}"
+			description="SedGrp2Ob Sediment Group 2"
 				/>
-				<var name="dyeVolYeneseiSG2" array_group="dyeGRP" units="kg m^{-3}"
-			description="dyeVolYeneseiSG2 Sediment Group 2"
+				<var name="SedGrp2Yenesei" array_group="dyeGRP" units="kg m^{-3}"
+			description="SedGrp2Yenesei Sediment Group 2"
 				/>
-				<var name="dyeVolLenaSG2" array_group="dyeGRP" units="kg m^{-3}"
-			description="dyeVolLenaSG2 Sediment Group 2"
+				<var name="SedGrp2Lena" array_group="dyeGRP" units="kg m^{-3}"
+			description="SedGrp2Lena Sediment Group 2"
 				/>
-				<var name="dyeVolYukonSG2" array_group="dyeGRP" units="kg m^{-3}"
-			description="dyeVolYukonSG2 Sediment Group 2"
+				<var name="SedGrp2Yukon" array_group="dyeGRP" units="kg m^{-3}"
+			description="SedGrp2Yukon Sediment Group 2"
 				/>
-				<var name="dyeVolKolymaSG2" array_group="dyeGRP" units="kg m^{-3}"
-			description="dyeVolKolymaSG2 Sediment Group 2"
+				<var name="SedGrp2Kolyma" array_group="dyeGRP" units="kg m^{-3}"
+			description="SedGrp2Kolyma Sediment Group 2"
 				/>
-				<var name="dyeVolMackenzieSG3" array_group="dyeGRP" units="kg m^{-3}"
-			description="dyeVolMackenzieSG3 Sediment Group 3"
+				<var name="SedGrp3Mackenzie" array_group="dyeGRP" units="kg m^{-3}"
+			description="SedGrp3Mackenzie Sediment Group 3"
 				/>
-				<var name="dyeVolObSG3" array_group="dyeGRP" units="kg m^{-3}"
-			description="dyeVolObSG3 Sediment Group 3"
+				<var name="SedGrp3Ob" array_group="dyeGRP" units="kg m^{-3}"
+			description="SedGrp3Ob Sediment Group 3"
 				/>
-				<var name="dyeVolYeneseiSG3" array_group="dyeGRP" units="kg m^{-3}"
-			description="dyeVolYeneseiSG3 Sediment Group 3"
+				<var name="SedGrp3Yenesei" array_group="dyeGRP" units="kg m^{-3}"
+			description="SedGrp3Yenesei Sediment Group 3"
 				/>
-				<var name="dyeVolLenaSG3" array_group="dyeGRP" units="kg m^{-3}"
-			description="dyeVolLenaSG3 Sediment Group 3"
+				<var name="SedGrp3Lena" array_group="dyeGRP" units="kg m^{-3}"
+			description="SedGrp3Lena Sediment Group 3"
 				/>
-				<var name="dyeVolYukonSG3" array_group="dyeGRP" units="kg m^{-3}"
-			description="dyeVolYukonSG3 Sediment Group 3"
+				<var name="SedGrp3Yukon" array_group="dyeGRP" units="kg m^{-3}"
+			description="SedGrp3Yukon Sediment Group 3"
 				/>
-				<var name="dyeVolKolymaSG3" array_group="dyeGRP" units="kg m^{-3}"
-			description="dyeVolKolymaSG3 Sediment Group 3"
+				<var name="SedGrp3Kolyma" array_group="dyeGRP" units="kg m^{-3}"
+			description="SedGrp3Kolyma Sediment Group 3"
 				/>
 				<var name="dyeVolPrecipEvapNS" array_group="dyeGRP" units="kg m^{-3}"
 			description="dyeVolPrecipEvapNS"
@@ -279,59 +279,59 @@
 				<var name="dyeVolKolymaNSTend" array_group="dyeGRP" units="kg m^{-3} s^{-1}"
 			description="dyeVolKolymaNS Tendency"
 				/>
-				<var name="dyeVolMackenzieSG1Tend" array_group="dyeGRP" units="kg m^{-3} s^{-1}"
-			description="dyeVolMackenzieSG1 Tendency"
+				<var name="SedGrp1MackenzieTend" array_group="dyeGRP" units="kg m^{-3} s^{-1}"
+			description="SedGrp1Mackenzie Tendency"
 				/>
-				<var name="dyeVolObSG1Tend" array_group="dyeGRP" units="kg m^{-3} s^{-1}"
-			description="dyeVolObSG1 Tendency"
+				<var name="SedGrp1ObTend" array_group="dyeGRP" units="kg m^{-3} s^{-1}"
+			description="SedGrp1Ob Tendency"
 				/>
-				<var name="dyeVolYeneseiSG1Tend" array_group="dyeGRP" units="kg m^{-3} s^{-1}"
-			description="dyeVolYeneseiSG1 Tendency"
+				<var name="SedGrp1YeneseiTend" array_group="dyeGRP" units="kg m^{-3} s^{-1}"
+			description="SedGrp1Yenesei Tendency"
 				/>
-				<var name="dyeVolLenaSG1Tend" array_group="dyeGRP" units="kg m^{-3} s^{-1}"
-			description="dyeVolLenaSG1 Tendency"
+				<var name="SedGrp1LenaTend" array_group="dyeGRP" units="kg m^{-3} s^{-1}"
+			description="SedGrp1Lena Tendency"
 				/>
-				<var name="dyeVolYukonSG1Tend" array_group="dyeGRP" units="kg m^{-3} s^{-1}"
-			description="dyeVolYukonSG1 Tendency"
+				<var name="SedGrp1YukonTend" array_group="dyeGRP" units="kg m^{-3} s^{-1}"
+			description="SedGrp1Yukon Tendency"
 				/>
-				<var name="dyeVolKolymaSG1Tend" array_group="dyeGRP" units="kg m^{-3} s^{-1}"
-			description="dyeVolKolymaSG1 Tendency"
+				<var name="SedGrp1KolymaTend" array_group="dyeGRP" units="kg m^{-3} s^{-1}"
+			description="SedGrp1Kolyma Tendency"
 				/>
-				<var name="dyeVolMackenzieSG2Tend" array_group="dyeGRP" units="kg m^{-3} s^{-1}"
-			description="dyeVolMackenzieSG2 Tendency"
+				<var name="SedGrp2MackenzieTend" array_group="dyeGRP" units="kg m^{-3} s^{-1}"
+			description="SedGrp2Mackenzie Tendency"
 				/>
-				<var name="dyeVolObSG2Tend" array_group="dyeGRP" units="kg m^{-3} s^{-1}"
-			description="dyeVolObSG2 Tendency"
+				<var name="SedGrp2ObTend" array_group="dyeGRP" units="kg m^{-3} s^{-1}"
+			description="SedGrp2Ob Tendency"
 				/>
-				<var name="dyeVolYeneseiSG2Tend" array_group="dyeGRP" units="kg m^{-3} s^{-1}"
-			description="dyeVolYeneseiSG2 Tendency"
+				<var name="SedGrp2YeneseiTend" array_group="dyeGRP" units="kg m^{-3} s^{-1}"
+			description="SedGrp2Yenesei Tendency"
 				/>
-				<var name="dyeVolLenaSG2Tend" array_group="dyeGRP" units="kg m^{-3} s^{-1}"
-			description="dyeVolLenaSG2 Tendency"
+				<var name="SedGrp2LenaTend" array_group="dyeGRP" units="kg m^{-3} s^{-1}"
+			description="SedGrp2Lena Tendency"
 				/>
-				<var name="dyeVolYukonSG2Tend" array_group="dyeGRP" units="kg m^{-3} s^{-1}"
-			description="dyeVolYukonSG2 Tendency"
+				<var name="SedGrp2YukonTend" array_group="dyeGRP" units="kg m^{-3} s^{-1}"
+			description="SedGrp2Yukon Tendency"
 				/>
-				<var name="dyeVolKolymaSG2Tend" array_group="dyeGRP" units="kg m^{-3} s^{-1}"
-			description="dyeVolKolymaSG2 Tendency"
+				<var name="SedGrp2KolymaTend" array_group="dyeGRP" units="kg m^{-3} s^{-1}"
+			description="SedGrp2Kolyma Tendency"
 				/>
-				<var name="dyeVolMackenzieSG3Tend" array_group="dyeGRP" units="kg m^{-3} s^{-1}"
-			description="dyeVolMackenzieSG3 Tendency"
+				<var name="SedGrp3MackenzieTend" array_group="dyeGRP" units="kg m^{-3} s^{-1}"
+			description="SedGrp3Mackenzie Tendency"
 				/>
-				<var name="dyeVolObSG3Tend" array_group="dyeGRP" units="kg m^{-3} s^{-1}"
-			description="dyeVolObSG3 Tendency"
+				<var name="SedGrp3ObTend" array_group="dyeGRP" units="kg m^{-3} s^{-1}"
+			description="SedGrp3Ob Tendency"
 				/>
-				<var name="dyeVolYeneseiSG3Tend" array_group="dyeGRP" units="kg m^{-3} s^{-1}"
-			description="dyeVolYeneseiSG3 Tendency"
+				<var name="SedGrp3YeneseiTend" array_group="dyeGRP" units="kg m^{-3} s^{-1}"
+			description="SedGrp3Yenesei Tendency"
 				/>
-				<var name="dyeVolLenaSG3Tend" array_group="dyeGRP" units="kg m^{-3} s^{-1}"
-			description="dyeVolLenaSG3 Tendency"
+				<var name="SedGrp3LenaTend" array_group="dyeGRP" units="kg m^{-3} s^{-1}"
+			description="SedGrp3Lena Tendency"
 				/>
-				<var name="dyeVolYukonSG3Tend" array_group="dyeGRP" units="kg m^{-3} s^{-1}"
-			description="dyeVolYukonSG3 Tendency"
+				<var name="SedGrp3YukonTend" array_group="dyeGRP" units="kg m^{-3} s^{-1}"
+			description="SedGrp3Yukon Tendency"
 				/>
-				<var name="dyeVolKolymaSG3Tend" array_group="dyeGRP" units="kg m^{-3} s^{-1}"
-			description="dyeVolKolymaSG3 Tendency"
+				<var name="SedGrp3KolymaTend" array_group="dyeGRP" units="kg m^{-3} s^{-1}"
+			description="SedGrp3Kolyma Tendency"
 				/>
 				<var name="dyeVolPrecipEvapNSTend" array_group="dyeGRP" units="kg m^{-3} s^{-1}"
 			description="dyeVolPrecipEvapNS Tendency"
@@ -431,59 +431,59 @@
 				<var name="dyeVolKolymaNSSurfaceFlux" array_group="dyeSurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
 			description="dyeVolKolymaNS Surface Flux"
 				/>
-				<var name="dyeVolMackenzieSG1SurfaceFlux" array_group="dyeSurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
-			description="dyeVolMackenzieSG1 Surface Flux"
+				<var name="SedGrp1MackenzieSurfaceFlux" array_group="dyeSurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
+			description="SedGrp1Mackenzie Surface Flux"
 				/>
-				<var name="dyeVolObSG1SurfaceFlux" array_group="dyeSurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
-			description="dyeVolObSG1 Surface Flux"
+				<var name="SedGrp1ObSurfaceFlux" array_group="dyeSurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
+			description="SedGrp1Ob Surface Flux"
 				/>
-				<var name="dyeVolYeneseiSG1SurfaceFlux" array_group="dyeSurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
-			description="dyeVolYeneseiSG1 Surface Flux"
+				<var name="SedGrp1YeneseiSurfaceFlux" array_group="dyeSurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
+			description="SedGrp1Yenesei Surface Flux"
 				/>
-				<var name="dyeVolLenaSG1SurfaceFlux" array_group="dyeSurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
-			description="dyeVolLenaSG1 Surface Flux"
+				<var name="SedGrp1LenaSurfaceFlux" array_group="dyeSurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
+			description="SedGrp1Lena Surface Flux"
 				/>
-				<var name="dyeVolYukonSG1SurfaceFlux" array_group="dyeSurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
-			description="dyeVolYukonSG1 Surface Flux"
+				<var name="SedGrp1YukonSurfaceFlux" array_group="dyeSurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
+			description="SedGrp1Yukon Surface Flux"
 				/>
-				<var name="dyeVolKolymaSG1SurfaceFlux" array_group="dyeSurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
-			description="dyeVolKolymaSG1 Surface Flux"
+				<var name="SedGrp1KolymaSurfaceFlux" array_group="dyeSurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
+			description="SedGrp1Kolyma Surface Flux"
 				/>
-				<var name="dyeVolMackenzieSG2SurfaceFlux" array_group="dyeSurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
-			description="dyeVolMackenzieSG2 Surface Flux"
+				<var name="SedGrp2MackenzieSurfaceFlux" array_group="dyeSurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
+			description="SedGrp2Mackenzie Surface Flux"
 				/>
-				<var name="dyeVolObSG2SurfaceFlux" array_group="dyeSurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
-			description="dyeVolObSG2 Surface Flux"
+				<var name="SedGrp2ObSurfaceFlux" array_group="dyeSurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
+			description="SedGrp2Ob Surface Flux"
 				/>
-				<var name="dyeVolYeneseiSG2SurfaceFlux" array_group="dyeSurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
-			description="dyeVolYeneseiSG2 Surface Flux"
+				<var name="SedGrp2YeneseiSurfaceFlux" array_group="dyeSurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
+			description="SedGrp2Yenesei Surface Flux"
 				/>
-				<var name="dyeVolLenaSG2SurfaceFlux" array_group="dyeSurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
-			description="dyeVolLenaSG2 Surface Flux"
+				<var name="SedGrp2LenaSurfaceFlux" array_group="dyeSurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
+			description="SedGrp2Lena Surface Flux"
 				/>
-				<var name="dyeVolYukonSG2SurfaceFlux" array_group="dyeSurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
-			description="dyeVolYukonSG2 Surface Flux"
+				<var name="SedGrp2YukonSurfaceFlux" array_group="dyeSurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
+			description="SedGrp2Yukon Surface Flux"
 				/>
-				<var name="dyeVolKolymaSG2SurfaceFlux" array_group="dyeSurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
-			description="dyeVolKolymaSG2 Surface Flux"
+				<var name="SedGrp2KolymaSurfaceFlux" array_group="dyeSurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
+			description="SedGrp2Kolyma Surface Flux"
 				/>
-				<var name="dyeVolMackenzieSG3SurfaceFlux" array_group="dyeSurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
-			description="dyeVolMackenzieSG3 Surface Flux"
+				<var name="SedGrp3MackenzieSurfaceFlux" array_group="dyeSurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
+			description="SedGrp3Mackenzie Surface Flux"
 				/>
-				<var name="dyeVolObSG3SurfaceFlux" array_group="dyeSurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
-			description="dyeVolObSG3 Surface Flux"
+				<var name="SedGrp3ObSurfaceFlux" array_group="dyeSurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
+			description="SedGrp3Ob Surface Flux"
 				/>
-				<var name="dyeVolYeneseiSG3SurfaceFlux" array_group="dyeSurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
-			description="dyeVolYeneseiSG3 Surface Flux"
+				<var name="SedGrp3YeneseiSurfaceFlux" array_group="dyeSurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
+			description="SedGrp3Yenesei Surface Flux"
 				/>
-				<var name="dyeVolLenaSG3SurfaceFlux" array_group="dyeSurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
-			description="dyeVolLenaSG3 Surface Flux"
+				<var name="SedGrp3LenaSurfaceFlux" array_group="dyeSurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
+			description="SedGrp3Lena Surface Flux"
 				/>
-				<var name="dyeVolYukonSG3SurfaceFlux" array_group="dyeSurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
-			description="dyeVolYukonSG3 Surface Flux"
+				<var name="SedGrp3YukonSurfaceFlux" array_group="dyeSurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
+			description="SedGrp3Yukon Surface Flux"
 				/>
-				<var name="dyeVolKolymaSG3SurfaceFlux" array_group="dyeSurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
-			description="dyeVolKolymaSG3 Surface Flux"
+				<var name="SedGrp3KolymaSurfaceFlux" array_group="dyeSurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
+			description="SedGrp3Kolyma Surface Flux"
 				/>
 				<var name="dyeVolPrecipEvapNSSurfaceFlux" array_group="dyeSurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
 			description="dyeVolPrecipEvapNS Surface Flux"
@@ -578,59 +578,59 @@
 				<var name="dyeVolKolymaNSSurfaceFluxRunoff" array_group="dyeSurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
 					description="dyeVolKolymaNS Surface Flux Due to Runoff"
 				/>
-				<var name="dyeVolMackenzieSG1SurfaceFluxRunoff" array_group="dyeSurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
-					description="dyeVolMackenzieSG1 Surface Flux Due to Runoff"
+				<var name="SedGrp1MackenzieSurfaceFluxRunoff" array_group="dyeSurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
+					description="SedGrp1Mackenzie Surface Flux Due to Runoff"
 				/>
-				<var name="dyeVolObSG1SurfaceFluxRunoff" array_group="dyeSurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
-					description="dyeVolObSG1 Surface Flux Due to Runoff"
+				<var name="SedGrp1ObSurfaceFluxRunoff" array_group="dyeSurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
+					description="SedGrp1Ob Surface Flux Due to Runoff"
 				/>
-				<var name="dyeVolYeneseiSG1SurfaceFluxRunoff" array_group="dyeSurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
-					description="dyeVolYeneseiSG1 Surface Flux Due to Runoff"
+				<var name="SedGrp1YeneseiSurfaceFluxRunoff" array_group="dyeSurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
+					description="SedGrp1Yenesei Surface Flux Due to Runoff"
 				/>
-				<var name="dyeVolLenaSG1SurfaceFluxRunoff" array_group="dyeSurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
-					description="dyeVolLenaSG1 Surface Flux Due to Runoff"
+				<var name="SedGrp1LenaSurfaceFluxRunoff" array_group="dyeSurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
+					description="SedGrp1Lena Surface Flux Due to Runoff"
 				/>
-				<var name="dyeVolYukonSG1SurfaceFluxRunoff" array_group="dyeSurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
-					description="dyeVolYukonSG1 Surface Flux Due to Runoff"
+				<var name="SedGrp1YukonSurfaceFluxRunoff" array_group="dyeSurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
+					description="SedGrp1Yukon Surface Flux Due to Runoff"
 				/>
-				<var name="dyeVolKolymaSG1SurfaceFluxRunoff" array_group="dyeSurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
-					description="dyeVolKolymaSG1 Surface Flux Due to Runoff"
+				<var name="SedGrp1KolymaSurfaceFluxRunoff" array_group="dyeSurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
+					description="SedGrp1Kolyma Surface Flux Due to Runoff"
 				/>
-				<var name="dyeVolMackenzieSG2SurfaceFluxRunoff" array_group="dyeSurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
-					description="dyeVolMackenzieSG2 Surface Flux Due to Runoff"
+				<var name="SedGrp2MackenzieSurfaceFluxRunoff" array_group="dyeSurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
+					description="SedGrp2Mackenzie Surface Flux Due to Runoff"
 				/>
-				<var name="dyeVolObSG2SurfaceFluxRunoff" array_group="dyeSurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
-					description="dyeVolObSG2 Surface Flux Due to Runoff"
+				<var name="SedGrp2ObSurfaceFluxRunoff" array_group="dyeSurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
+					description="SedGrp2Ob Surface Flux Due to Runoff"
 				/>
-				<var name="dyeVolYeneseiSG2SurfaceFluxRunoff" array_group="dyeSurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
-					description="dyeVolYeneseiSG2 Surface Flux Due to Runoff"
+				<var name="SedGrp2YeneseiSurfaceFluxRunoff" array_group="dyeSurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
+					description="SedGrp2Yenesei Surface Flux Due to Runoff"
 				/>
-				<var name="dyeVolLenaSG2SurfaceFluxRunoff" array_group="dyeSurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
-					description="dyeVolLenaSG2 Surface Flux Due to Runoff"
+				<var name="SedGrp2LenaSurfaceFluxRunoff" array_group="dyeSurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
+					description="SedGrp2Lena Surface Flux Due to Runoff"
 				/>
-				<var name="dyeVolYukonSG2SurfaceFluxRunoff" array_group="dyeSurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
-					description="dyeVolYukonSG2 Surface Flux Due to Runoff"
+				<var name="SedGrp2YukonSurfaceFluxRunoff" array_group="dyeSurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
+					description="SedGrp2Yukon Surface Flux Due to Runoff"
 				/>
-				<var name="dyeVolKolymaSG2SurfaceFluxRunoff" array_group="dyeSurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
-					description="dyeVolKolymaSG2 Surface Flux Due to Runoff"
+				<var name="SedGrp2KolymaSurfaceFluxRunoff" array_group="dyeSurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
+					description="SedGrp2Kolyma Surface Flux Due to Runoff"
 				/>
-				<var name="dyeVolMackenzieSG3SurfaceFluxRunoff" array_group="dyeSurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
-					description="dyeVolMackenzieSG3 Surface Flux Due to Runoff"
+				<var name="SedGrp3MackenzieSurfaceFluxRunoff" array_group="dyeSurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
+					description="SedGrp3Mackenzie Surface Flux Due to Runoff"
 				/>
-				<var name="dyeVolObSG3SurfaceFluxRunoff" array_group="dyeSurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
-					description="dyeVolObSG3 Surface Flux Due to Runoff"
+				<var name="SedGrp3ObSurfaceFluxRunoff" array_group="dyeSurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
+					description="SedGrp3Ob Surface Flux Due to Runoff"
 				/>
-				<var name="dyeVolYeneseiSG3SurfaceFluxRunoff" array_group="dyeSurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
-					description="dyeVolYeneseiSG3 Surface Flux Due to Runoff"
+				<var name="SedGrp3YeneseiSurfaceFluxRunoff" array_group="dyeSurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
+					description="SedGrp3Yenesei Surface Flux Due to Runoff"
 				/>
-				<var name="dyeVolLenaSG3SurfaceFluxRunoff" array_group="dyeSurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
-					description="dyeVolLenaSG3 Surface Flux Due to Runoff"
+				<var name="SedGrp3LenaSurfaceFluxRunoff" array_group="dyeSurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
+					description="SedGrp3Lena Surface Flux Due to Runoff"
 				/>
-				<var name="dyeVolYukonSG3SurfaceFluxRunoff" array_group="dyeSurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
-					description="dyeVolYukonSG3 Surface Flux Due to Runoff"
+				<var name="SedGrp3YukonSurfaceFluxRunoff" array_group="dyeSurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
+					description="SedGrp3Yukon Surface Flux Due to Runoff"
 				/>
-				<var name="dyeVolKolymaSG3SurfaceFluxRunoff" array_group="dyeSurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
-					description="dyeVolKolymaSG3 Surface Flux Due to Runoff"
+				<var name="SedGrp3KolymaSurfaceFluxRunoff" array_group="dyeSurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
+					description="SedGrp3Kolyma Surface Flux Due to Runoff"
 				/>
 				<var name="dyeVolPrecipEvapNSSurfaceFluxRunoff" array_group="dyeSurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
 					description="dyeVolPrecipEvapNS Surface Flux Due to Runoff"
@@ -725,59 +725,59 @@
 				<var name="dyeVolKolymaNSSurfaceFluxRemoved" array_group="dyeSurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
 					description="dyeVolKolymaNS Surface Flux that is ignored"
 				/>
-				<var name="dyeVolMackenzieSG1SurfaceFluxRemoved" array_group="dyeSurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
-					description="dyeVolMackenzieSG1 Surface Flux that is ignored"
+				<var name="SedGrp1MackenzieSurfaceFluxRemoved" array_group="dyeSurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
+					description="SedGrp1Mackenzie Surface Flux that is ignored"
 				/>
-				<var name="dyeVolObSG1SurfaceFluxRemoved" array_group="dyeSurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
-					description="dyeVolObSG1 Surface Flux that is ignored"
+				<var name="SedGrp1ObSurfaceFluxRemoved" array_group="dyeSurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
+					description="SedGrp1Ob Surface Flux that is ignored"
 				/>
-				<var name="dyeVolYeneseiSG1SurfaceFluxRemoved" array_group="dyeSurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
-					description="dyeVolYeneseiSG1 Surface Flux that is ignored"
+				<var name="SedGrp1YeneseiSurfaceFluxRemoved" array_group="dyeSurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
+					description="SedGrp1Yenesei Surface Flux that is ignored"
 				/>
-				<var name="dyeVolLenaSG1SurfaceFluxRemoved" array_group="dyeSurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
-					description="dyeVolLenaSG1 Surface Flux that is ignored"
+				<var name="SedGrp1LenaSurfaceFluxRemoved" array_group="dyeSurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
+					description="SedGrp1Lena Surface Flux that is ignored"
 				/>
-				<var name="dyeVolYukonSG1SurfaceFluxRemoved" array_group="dyeSurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
-					description="dyeVolYukonSG1 Surface Flux that is ignored"
+				<var name="SedGrp1YukonSurfaceFluxRemoved" array_group="dyeSurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
+					description="SedGrp1Yukon Surface Flux that is ignored"
 				/>
-				<var name="dyeVolKolymaSG1SurfaceFluxRemoved" array_group="dyeSurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
-					description="dyeVolKolymaSG1 Surface Flux that is ignored"
+				<var name="SedGrp1KolymaSurfaceFluxRemoved" array_group="dyeSurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
+					description="SedGrp1Kolyma Surface Flux that is ignored"
 				/>
-				<var name="dyeVolMackenzieSG2SurfaceFluxRemoved" array_group="dyeSurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
-					description="dyeVolMackenzieSG2 Surface Flux that is ignored"
+				<var name="SedGrp2MackenzieSurfaceFluxRemoved" array_group="dyeSurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
+					description="SedGrp2Mackenzie Surface Flux that is ignored"
 				/>
-				<var name="dyeVolObSG2SurfaceFluxRemoved" array_group="dyeSurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
-					description="dyeVolObSG2 Surface Flux that is ignored"
+				<var name="SedGrp2ObSurfaceFluxRemoved" array_group="dyeSurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
+					description="SedGrp2Ob Surface Flux that is ignored"
 				/>
-				<var name="dyeVolYeneseiSG2SurfaceFluxRemoved" array_group="dyeSurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
-					description="dyeVolYeneseiSG2 Surface Flux that is ignored"
+				<var name="SedGrp2YeneseiSurfaceFluxRemoved" array_group="dyeSurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
+					description="SedGrp2Yenesei Surface Flux that is ignored"
 				/>
-				<var name="dyeVolLenaSG2SurfaceFluxRemoved" array_group="dyeSurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
-					description="dyeVolLenaSG2 Surface Flux that is ignored"
+				<var name="SedGrp2LenaSurfaceFluxRemoved" array_group="dyeSurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
+					description="SedGrp2Lena Surface Flux that is ignored"
 				/>
-				<var name="dyeVolYukonSG2SurfaceFluxRemoved" array_group="dyeSurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
-					description="dyeVolYukonSG2 Surface Flux that is ignored"
+				<var name="SedGrp2YukonSurfaceFluxRemoved" array_group="dyeSurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
+					description="SedGrp2Yukon Surface Flux that is ignored"
 				/>
-				<var name="dyeVolKolymaSG2SurfaceFluxRemoved" array_group="dyeSurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
-					description="dyeVolKolymaSG2 Surface Flux that is ignored"
+				<var name="SedGrp2KolymaSurfaceFluxRemoved" array_group="dyeSurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
+					description="SedGrp2Kolyma Surface Flux that is ignored"
 				/>
-				<var name="dyeVolMackenzieSG3SurfaceFluxRemoved" array_group="dyeSurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
-					description="dyeVolMackenzieSG3 Surface Flux that is ignored"
+				<var name="SedGrp3MackenzieSurfaceFluxRemoved" array_group="dyeSurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
+					description="SedGrp3Mackenzie Surface Flux that is ignored"
 				/>
-				<var name="dyeVolObSG3SurfaceFluxRemoved" array_group="dyeSurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
-					description="dyeVolObSG3 Surface Flux that is ignored"
+				<var name="SedGrp3ObSurfaceFluxRemoved" array_group="dyeSurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
+					description="SedGrp3Ob Surface Flux that is ignored"
 				/>
-				<var name="dyeVolYeneseiSG3SurfaceFluxRemoved" array_group="dyeSurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
-					description="dyeVolYeneseiSG3 Surface Flux that is ignored"
+				<var name="SedGrp3YeneseiSurfaceFluxRemoved" array_group="dyeSurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
+					description="SedGrp3Yenesei Surface Flux that is ignored"
 				/>
-				<var name="dyeVolLenaSG3SurfaceFluxRemoved" array_group="dyeSurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
-					description="dyeVolLenaSG3 Surface Flux that is ignored"
+				<var name="SedGrp3LenaSurfaceFluxRemoved" array_group="dyeSurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
+					description="SedGrp3Lena Surface Flux that is ignored"
 				/>
-				<var name="dyeVolYukonSG3SurfaceFluxRemoved" array_group="dyeSurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
-					description="dyeVolYukonSG3 Surface Flux that is ignored"
+				<var name="SedGrp3YukonSurfaceFluxRemoved" array_group="dyeSurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
+					description="SedGrp3Yukon Surface Flux that is ignored"
 				/>
-				<var name="dyeVolKolymaSG3SurfaceFluxRemoved" array_group="dyeSurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
-					description="dyeVolKolymaSG3 Surface Flux that is ignored"
+				<var name="SedGrp3KolymaSurfaceFluxRemoved" array_group="dyeSurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
+					description="SedGrp3Kolyma Surface Flux that is ignored"
 				/>
 				<var name="dyeVolPrecipEvapNSSurfaceFluxRemoved" array_group="dyeSurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
 					description="dyeVolPrecipEvapNS Surface Flux that is ignored"
@@ -873,59 +873,59 @@
 				<var name="dyeVolKolymaNSPistonVelocity" array_group="dyePVGRP" units="m s^{-1}"
 				description="A non-negative field controlling the rate at which dyeVolKolymaNS is restored to dyeVolKolymaNSSurfaceRestoringValue"
 				/>
-				<var name="dyeVolMackenzieSG1PistonVelocity" array_group="dyePVGRP" units="m s^{-1}"
-				description="A non-negative field controlling the rate at which dyeVolMackenzieSG1 is restored to dyeVolMackenzieSG1SurfaceRestoringValue"
+				<var name="SedGrp1MackenziePistonVelocity" array_group="dyePVGRP" units="m s^{-1}"
+				description="A non-negative field controlling the rate at which SedGrp1Mackenzie is restored to SedGrp1MackenzieSurfaceRestoringValue"
 				/>
-				<var name="dyeVolObSG1PistonVelocity" array_group="dyePVGRP" units="m s^{-1}"
-				description="A non-negative field controlling the rate at which dyeVolObSG1 is restored to dyeVolObSG1SurfaceRestoringValue"
+				<var name="SedGrp1ObPistonVelocity" array_group="dyePVGRP" units="m s^{-1}"
+				description="A non-negative field controlling the rate at which SedGrp1Ob is restored to SedGrp1ObSurfaceRestoringValue"
 				/>
-				<var name="dyeVolYeneseiSG1PistonVelocity" array_group="dyePVGRP" units="m s^{-1}"
-				description="A non-negative field controlling the rate at which dyeVolYeneseiSG1 is restored to dyeVolYeneseiSG1SurfaceRestoringValue"
+				<var name="SedGrp1YeneseiPistonVelocity" array_group="dyePVGRP" units="m s^{-1}"
+				description="A non-negative field controlling the rate at which SedGrp1Yenesei is restored to SedGrp1YeneseiSurfaceRestoringValue"
 				/>
-				<var name="dyeVolLenaSG1PistonVelocity" array_group="dyePVGRP" units="m s^{-1}"
-				description="A non-negative field controlling the rate at which dyeVolLenaSG1 is restored to dyeVolLenaSG1SurfaceRestoringValue"
+				<var name="SedGrp1LenaPistonVelocity" array_group="dyePVGRP" units="m s^{-1}"
+				description="A non-negative field controlling the rate at which SedGrp1Lena is restored to SedGrp1LenaSurfaceRestoringValue"
 				/>
-				<var name="dyeVolYukonSG1PistonVelocity" array_group="dyePVGRP" units="m s^{-1}"
-				description="A non-negative field controlling the rate at which dyeVolYukonSG1 is restored to dyeVolYukonSG1SurfaceRestoringValue"
+				<var name="SedGrp1YukonPistonVelocity" array_group="dyePVGRP" units="m s^{-1}"
+				description="A non-negative field controlling the rate at which SedGrp1Yukon is restored to SedGrp1YukonSurfaceRestoringValue"
 				/>
-				<var name="dyeVolKolymaSG1PistonVelocity" array_group="dyePVGRP" units="m s^{-1}"
-				description="A non-negative field controlling the rate at which dyeVolKolymaSG1 is restored to dyeVolKolymaSG1SurfaceRestoringValue"
+				<var name="SedGrp1KolymaPistonVelocity" array_group="dyePVGRP" units="m s^{-1}"
+				description="A non-negative field controlling the rate at which SedGrp1Kolyma is restored to SedGrp1KolymaSurfaceRestoringValue"
 				/>
-				<var name="dyeVolMackenzieSG2PistonVelocity" array_group="dyePVGRP" units="m s^{-1}"
-				description="A non-negative field controlling the rate at which dyeVolMackenzieSG2 is restored to dyeVolMackenzieSG2SurfaceRestoringValue"
+				<var name="SedGrp2MackenziePistonVelocity" array_group="dyePVGRP" units="m s^{-1}"
+				description="A non-negative field controlling the rate at which SedGrp2Mackenzie is restored to SedGrp2MackenzieSurfaceRestoringValue"
 				/>
-				<var name="dyeVolObSG2PistonVelocity" array_group="dyePVGRP" units="m s^{-1}"
-				description="A non-negative field controlling the rate at which dyeVolObSG2 is restored to dyeVolObSG2SurfaceRestoringValue"
+				<var name="SedGrp2ObPistonVelocity" array_group="dyePVGRP" units="m s^{-1}"
+				description="A non-negative field controlling the rate at which SedGrp2Ob is restored to SedGrp2ObSurfaceRestoringValue"
 				/>
-				<var name="dyeVolYeneseiSG2PistonVelocity" array_group="dyePVGRP" units="m s^{-1}"
-				description="A non-negative field controlling the rate at which dyeVolYeneseiSG2 is restored to dyeVolYeneseiSG2SurfaceRestoringValue"
+				<var name="SedGrp2YeneseiPistonVelocity" array_group="dyePVGRP" units="m s^{-1}"
+				description="A non-negative field controlling the rate at which SedGrp2Yenesei is restored to SedGrp2YeneseiSurfaceRestoringValue"
 				/>
-				<var name="dyeVolLenaSG2PistonVelocity" array_group="dyePVGRP" units="m s^{-1}"
-				description="A non-negative field controlling the rate at which dyeVolLenaSG2 is restored to dyeVolLenaSG2SurfaceRestoringValue"
+				<var name="SedGrp2LenaPistonVelocity" array_group="dyePVGRP" units="m s^{-1}"
+				description="A non-negative field controlling the rate at which SedGrp2Lena is restored to SedGrp2LenaSurfaceRestoringValue"
 				/>
-				<var name="dyeVolYukonSG2PistonVelocity" array_group="dyePVGRP" units="m s^{-1}"
-				description="A non-negative field controlling the rate at which dyeVolYukonSG2 is restored to dyeVolYukonSG2SurfaceRestoringValue"
+				<var name="SedGrp2YukonPistonVelocity" array_group="dyePVGRP" units="m s^{-1}"
+				description="A non-negative field controlling the rate at which SedGrp2Yukon is restored to SedGrp2YukonSurfaceRestoringValue"
 				/>
-				<var name="dyeVolKolymaSG2PistonVelocity" array_group="dyePVGRP" units="m s^{-1}"
-				description="A non-negative field controlling the rate at which dyeVolKolymaSG2 is restored to dyeVolKolymaSG2SurfaceRestoringValue"
+				<var name="SedGrp2KolymaPistonVelocity" array_group="dyePVGRP" units="m s^{-1}"
+				description="A non-negative field controlling the rate at which SedGrp2Kolyma is restored to SedGrp2KolymaSurfaceRestoringValue"
 				/>
-				<var name="dyeVolMackenzieSG3PistonVelocity" array_group="dyePVGRP" units="m s^{-1}"
-				description="A non-negative field controlling the rate at which dyeVolMackenzieSG3 is restored to dyeVolMackenzieSG3SurfaceRestoringValue"
+				<var name="SedGrp3MackenziePistonVelocity" array_group="dyePVGRP" units="m s^{-1}"
+				description="A non-negative field controlling the rate at which SedGrp3Mackenzie is restored to SedGrp3MackenzieSurfaceRestoringValue"
 				/>
-				<var name="dyeVolObSG3PistonVelocity" array_group="dyePVGRP" units="m s^{-1}"
-				description="A non-negative field controlling the rate at which dyeVolObSG3 is restored to dyeVolObSG3SurfaceRestoringValue"
+				<var name="SedGrp3ObPistonVelocity" array_group="dyePVGRP" units="m s^{-1}"
+				description="A non-negative field controlling the rate at which SedGrp3Ob is restored to SedGrp3ObSurfaceRestoringValue"
 				/>
-				<var name="dyeVolYeneseiSG3PistonVelocity" array_group="dyePVGRP" units="m s^{-1}"
-				description="A non-negative field controlling the rate at which dyeVolYeneseiSG3 is restored to dyeVolYeneseiSG3SurfaceRestoringValue"
+				<var name="SedGrp3YeneseiPistonVelocity" array_group="dyePVGRP" units="m s^{-1}"
+				description="A non-negative field controlling the rate at which SedGrp3Yenesei is restored to SedGrp3YeneseiSurfaceRestoringValue"
 				/>
-				<var name="dyeVolLenaSG3PistonVelocity" array_group="dyePVGRP" units="m s^{-1}"
-				description="A non-negative field controlling the rate at which dyeVolLenaSG3 is restored to dyeVolLenaSG3SurfaceRestoringValue"
+				<var name="SedGrp3LenaPistonVelocity" array_group="dyePVGRP" units="m s^{-1}"
+				description="A non-negative field controlling the rate at which SedGrp3Lena is restored to SedGrp3LenaSurfaceRestoringValue"
 				/>
-				<var name="dyeVolYukonSG3PistonVelocity" array_group="dyePVGRP" units="m s^{-1}"
-				description="A non-negative field controlling the rate at which dyeVolYukonSG3 is restored to dyeVolYukonSG3SurfaceRestoringValue"
+				<var name="SedGrp3YukonPistonVelocity" array_group="dyePVGRP" units="m s^{-1}"
+				description="A non-negative field controlling the rate at which SedGrp3Yukon is restored to SedGrp3YukonSurfaceRestoringValue"
 				/>
-				<var name="dyeVolKolymaSG3PistonVelocity" array_group="dyePVGRP" units="m s^{-1}"
-				description="A non-negative field controlling the rate at which dyeVolKolymaSG3 is restored to dyeVolKolymaSG3SurfaceRestoringValue"
+				<var name="SedGrp3KolymaPistonVelocity" array_group="dyePVGRP" units="m s^{-1}"
+				description="A non-negative field controlling the rate at which SedGrp3Kolyma is restored to SedGrp3KolymaSurfaceRestoringValue"
 				/>
 				<var name="dyeVolPrecipEvapNSPistonVelocity" array_group="dyePVGRP" units="m s^{-1}"
 				description="A non-negative field controlling the rate at which dyeVolPrecipEvapNS is restored to dyeVolPrecipEvapNSSurfaceRestoringValue"
@@ -1019,59 +1019,59 @@
 				<var name="dyeVolKolymaNSSurfaceRestoringValue" array_group="dyeSRVGRP" units="kg m^{3}"
 				description="Tracer is restored toward this field at a rate controlled by dyeVolKolymaNSPistonVelocity."
 				/>
-				<var name="dyeVolMackenzieSG1SurfaceRestoringValue" array_group="dyeSRVGRP" units="kg m^{3}"
-				description="Tracer is restored toward this field at a rate controlled by dyeVolMackenzieSG1PistonVelocity."
+				<var name="SedGrp1MackenzieSurfaceRestoringValue" array_group="dyeSRVGRP" units="kg m^{3}"
+				description="Tracer is restored toward this field at a rate controlled by SedGrp1MackenziePistonVelocity."
 				/>
-				<var name="dyeVolObSG1SurfaceRestoringValue" array_group="dyeSRVGRP" units="kg m^{3}"
-				description="Tracer is restored toward this field at a rate controlled by dyeVolObSG1PistonVelocity."
+				<var name="SedGrp1ObSurfaceRestoringValue" array_group="dyeSRVGRP" units="kg m^{3}"
+				description="Tracer is restored toward this field at a rate controlled by SedGrp1ObPistonVelocity."
 				/>
-				<var name="dyeVolYeneseiSG1SurfaceRestoringValue" array_group="dyeSRVGRP" units="kg m^{3}"
-				description="Tracer is restored toward this field at a rate controlled by dyeVolYeneseiSG1PistonVelocity."
+				<var name="SedGrp1YeneseiSurfaceRestoringValue" array_group="dyeSRVGRP" units="kg m^{3}"
+				description="Tracer is restored toward this field at a rate controlled by SedGrp1YeneseiPistonVelocity."
 				/>
-				<var name="dyeVolLenaSG1SurfaceRestoringValue" array_group="dyeSRVGRP" units="kg m^{3}"
-				description="Tracer is restored toward this field at a rate controlled by dyeVolLenaSG1PistonVelocity."
+				<var name="SedGrp1LenaSurfaceRestoringValue" array_group="dyeSRVGRP" units="kg m^{3}"
+				description="Tracer is restored toward this field at a rate controlled by SedGrp1LenaPistonVelocity."
 				/>
-				<var name="dyeVolYukonSG1SurfaceRestoringValue" array_group="dyeSRVGRP" units="kg m^{3}"
-				description="Tracer is restored toward this field at a rate controlled by dyeVolYukonSG1PistonVelocity."
+				<var name="SedGrp1YukonSurfaceRestoringValue" array_group="dyeSRVGRP" units="kg m^{3}"
+				description="Tracer is restored toward this field at a rate controlled by SedGrp1YukonPistonVelocity."
 				/>
-				<var name="dyeVolKolymaSG1SurfaceRestoringValue" array_group="dyeSRVGRP" units="kg m^{3}"
-				description="Tracer is restored toward this field at a rate controlled by dyeVolKolymaSG1PistonVelocity."
+				<var name="SedGrp1KolymaSurfaceRestoringValue" array_group="dyeSRVGRP" units="kg m^{3}"
+				description="Tracer is restored toward this field at a rate controlled by SedGrp1KolymaPistonVelocity."
 				/>
-				<var name="dyeVolMackenzieSG2SurfaceRestoringValue" array_group="dyeSRVGRP" units="kg m^{3}"
-				description="Tracer is restored toward this field at a rate controlled by dyeVolMackenzieSG2PistonVelocity."
+				<var name="SedGrp2MackenzieSurfaceRestoringValue" array_group="dyeSRVGRP" units="kg m^{3}"
+				description="Tracer is restored toward this field at a rate controlled by SedGrp2MackenziePistonVelocity."
 				/>
-				<var name="dyeVolObSG2SurfaceRestoringValue" array_group="dyeSRVGRP" units="kg m^{3}"
-				description="Tracer is restored toward this field at a rate controlled by dyeVolObSG2PistonVelocity."
+				<var name="SedGrp2ObSurfaceRestoringValue" array_group="dyeSRVGRP" units="kg m^{3}"
+				description="Tracer is restored toward this field at a rate controlled by SedGrp2ObPistonVelocity."
 				/>
-				<var name="dyeVolYeneseiSG2SurfaceRestoringValue" array_group="dyeSRVGRP" units="kg m^{3}"
-				description="Tracer is restored toward this field at a rate controlled by dyeVolYeneseiSG2PistonVelocity."
+				<var name="SedGrp2YeneseiSurfaceRestoringValue" array_group="dyeSRVGRP" units="kg m^{3}"
+				description="Tracer is restored toward this field at a rate controlled by SedGrp2YeneseiPistonVelocity."
 				/>
-				<var name="dyeVolLenaSG2SurfaceRestoringValue" array_group="dyeSRVGRP" units="kg m^{3}"
-				description="Tracer is restored toward this field at a rate controlled by dyeVolLenaSG2PistonVelocity."
+				<var name="SedGrp2LenaSurfaceRestoringValue" array_group="dyeSRVGRP" units="kg m^{3}"
+				description="Tracer is restored toward this field at a rate controlled by SedGrp2LenaPistonVelocity."
 				/>
-				<var name="dyeVolYukonSG2SurfaceRestoringValue" array_group="dyeSRVGRP" units="kg m^{3}"
-				description="Tracer is restored toward this field at a rate controlled by dyeVolYukonSG2PistonVelocity."
+				<var name="SedGrp2YukonSurfaceRestoringValue" array_group="dyeSRVGRP" units="kg m^{3}"
+				description="Tracer is restored toward this field at a rate controlled by SedGrp2YukonPistonVelocity."
 				/>
-				<var name="dyeVolKolymaSG2SurfaceRestoringValue" array_group="dyeSRVGRP" units="kg m^{3}"
-				description="Tracer is restored toward this field at a rate controlled by dyeVolKolymaSG2PistonVelocity."
+				<var name="SedGrp2KolymaSurfaceRestoringValue" array_group="dyeSRVGRP" units="kg m^{3}"
+				description="Tracer is restored toward this field at a rate controlled by SedGrp2KolymaPistonVelocity."
 				/>
-				<var name="dyeVolMackenzieSG3SurfaceRestoringValue" array_group="dyeSRVGRP" units="kg m^{3}"
-				description="Tracer is restored toward this field at a rate controlled by dyeVolMackenzieSG3PistonVelocity."
+				<var name="SedGrp3MackenzieSurfaceRestoringValue" array_group="dyeSRVGRP" units="kg m^{3}"
+				description="Tracer is restored toward this field at a rate controlled by SedGrp3MackenziePistonVelocity."
 				/>
-				<var name="dyeVolObSG3SurfaceRestoringValue" array_group="dyeSRVGRP" units="kg m^{3}"
-				description="Tracer is restored toward this field at a rate controlled by dyeVolObSG3PistonVelocity."
+				<var name="SedGrp3ObSurfaceRestoringValue" array_group="dyeSRVGRP" units="kg m^{3}"
+				description="Tracer is restored toward this field at a rate controlled by SedGrp3ObPistonVelocity."
 				/>
-				<var name="dyeVolYeneseiSG3SurfaceRestoringValue" array_group="dyeSRVGRP" units="kg m^{3}"
-				description="Tracer is restored toward this field at a rate controlled by dyeVolYeneseiSG3PistonVelocity."
+				<var name="SedGrp3YeneseiSurfaceRestoringValue" array_group="dyeSRVGRP" units="kg m^{3}"
+				description="Tracer is restored toward this field at a rate controlled by SedGrp3YeneseiPistonVelocity."
 				/>
-				<var name="dyeVolLenaSG3SurfaceRestoringValue" array_group="dyeSRVGRP" units="kg m^{3}"
-				description="Tracer is restored toward this field at a rate controlled by dyeVolLenaSG3PistonVelocity."
+				<var name="SedGrp3LenaSurfaceRestoringValue" array_group="dyeSRVGRP" units="kg m^{3}"
+				description="Tracer is restored toward this field at a rate controlled by SedGrp3LenaPistonVelocity."
 				/>
-				<var name="dyeVolYukonSG3SurfaceRestoringValue" array_group="dyeSRVGRP" units="kg m^{3}"
-				description="Tracer is restored toward this field at a rate controlled by dyeVolYukonSG3PistonVelocity."
+				<var name="SedGrp3YukonSurfaceRestoringValue" array_group="dyeSRVGRP" units="kg m^{3}"
+				description="Tracer is restored toward this field at a rate controlled by SedGrp3YukonPistonVelocity."
 				/>
-				<var name="dyeVolKolymaSG3SurfaceRestoringValue" array_group="dyeSRVGRP" units="kg m^{3}"
-				description="Tracer is restored toward this field at a rate controlled by dyeVolKolymaSG3PistonVelocity."
+				<var name="SedGrp3KolymaSurfaceRestoringValue" array_group="dyeSRVGRP" units="kg m^{3}"
+				description="Tracer is restored toward this field at a rate controlled by SedGrp3KolymaPistonVelocity."
 				/>
 				<var name="dyeVolPrecipEvapNSSurfaceRestoringValue" array_group="dyeSRVGRP" units="kg m^{3}"
 				description="Tracer is restored toward this field at a rate controlled by dyeVolPrecipEvapNSPistonVelocity."
@@ -1167,59 +1167,59 @@
 				<var name="dyeVolKolymaNSInteriorRestoringRate" array_group="dyeIRRGRP" units="{s}^-1"
 				description="A non-negative field controlling the rate at which dyeVolKolymaNS is restored to dyeVolKolymaNSInteriorRestoringValue"
 				/>
-				<var name="dyeVolMackenzieSG1InteriorRestoringRate" array_group="dyeIRRGRP" units="{s}^-1"
-				description="A non-negative field controlling the rate at which dyeVolMackenzieSG1 is restored to dyeVolMackenzieSG1InteriorRestoringValue"
+				<var name="SedGrp1MackenzieInteriorRestoringRate" array_group="dyeIRRGRP" units="{s}^-1"
+				description="A non-negative field controlling the rate at which SedGrp1Mackenzie is restored to SedGrp1MackenzieInteriorRestoringValue"
 				/>
-				<var name="dyeVolObSG1InteriorRestoringRate" array_group="dyeIRRGRP" units="{s}^-1"
-				description="A non-negative field controlling the rate at which dyeVolObSG1 is restored to dyeVolObSG1InteriorRestoringValue"
+				<var name="SedGrp1ObInteriorRestoringRate" array_group="dyeIRRGRP" units="{s}^-1"
+				description="A non-negative field controlling the rate at which SedGrp1Ob is restored to SedGrp1ObInteriorRestoringValue"
 				/>
-				<var name="dyeVolYeneseiSG1InteriorRestoringRate" array_group="dyeIRRGRP" units="{s}^-1"
-				description="A non-negative field controlling the rate at which dyeVolYeneseiSG1 is restored to dyeVolYeneseiSG1InteriorRestoringValue"
+				<var name="SedGrp1YeneseiInteriorRestoringRate" array_group="dyeIRRGRP" units="{s}^-1"
+				description="A non-negative field controlling the rate at which SedGrp1Yenesei is restored to SedGrp1YeneseiInteriorRestoringValue"
 				/>
-				<var name="dyeVolLenaSG1InteriorRestoringRate" array_group="dyeIRRGRP" units="{s}^-1"
-				description="A non-negative field controlling the rate at which dyeVolLenaSG1 is restored to dyeVolLenaSG1InteriorRestoringValue"
+				<var name="SedGrp1LenaInteriorRestoringRate" array_group="dyeIRRGRP" units="{s}^-1"
+				description="A non-negative field controlling the rate at which SedGrp1Lena is restored to SedGrp1LenaInteriorRestoringValue"
 				/>
-				<var name="dyeVolYukonSG1InteriorRestoringRate" array_group="dyeIRRGRP" units="{s}^-1"
-				description="A non-negative field controlling the rate at which dyeVolYukonSG1 is restored to dyeVolYukonSG1InteriorRestoringValue"
+				<var name="SedGrp1YukonInteriorRestoringRate" array_group="dyeIRRGRP" units="{s}^-1"
+				description="A non-negative field controlling the rate at which SedGrp1Yukon is restored to SedGrp1YukonInteriorRestoringValue"
 				/>
-				<var name="dyeVolKolymaSG1InteriorRestoringRate" array_group="dyeIRRGRP" units="{s}^-1"
-				description="A non-negative field controlling the rate at which dyeVolKolymaSG1 is restored to dyeVolKolymaSG1InteriorRestoringValue"
+				<var name="SedGrp1KolymaInteriorRestoringRate" array_group="dyeIRRGRP" units="{s}^-1"
+				description="A non-negative field controlling the rate at which SedGrp1Kolyma is restored to SedGrp1KolymaInteriorRestoringValue"
 				/>
-				<var name="dyeVolMackenzieSG2InteriorRestoringRate" array_group="dyeIRRGRP" units="{s}^-1"
-				description="A non-negative field controlling the rate at which dyeVolMackenzieSG2 is restored to dyeVolMackenzieSG2InteriorRestoringValue"
+				<var name="SedGrp2MackenzieInteriorRestoringRate" array_group="dyeIRRGRP" units="{s}^-1"
+				description="A non-negative field controlling the rate at which SedGrp2Mackenzie is restored to SedGrp2MackenzieInteriorRestoringValue"
 				/>
-				<var name="dyeVolObSG2InteriorRestoringRate" array_group="dyeIRRGRP" units="{s}^-1"
-				description="A non-negative field controlling the rate at which dyeVolObSG2 is restored to dyeVolObSG2InteriorRestoringValue"
+				<var name="SedGrp2ObInteriorRestoringRate" array_group="dyeIRRGRP" units="{s}^-1"
+				description="A non-negative field controlling the rate at which SedGrp2Ob is restored to SedGrp2ObInteriorRestoringValue"
 				/>
-				<var name="dyeVolYeneseiSG2InteriorRestoringRate" array_group="dyeIRRGRP" units="{s}^-1"
-				description="A non-negative field controlling the rate at which dyeVolYeneseiSG2 is restored to dyeVolYeneseiSG2InteriorRestoringValue"
+				<var name="SedGrp2YeneseiInteriorRestoringRate" array_group="dyeIRRGRP" units="{s}^-1"
+				description="A non-negative field controlling the rate at which SedGrp2Yenesei is restored to SedGrp2YeneseiInteriorRestoringValue"
 				/>
-				<var name="dyeVolLenaSG2InteriorRestoringRate" array_group="dyeIRRGRP" units="{s}^-1"
-				description="A non-negative field controlling the rate at which dyeVolLenaSG2 is restored to dyeVolLenaSG2InteriorRestoringValue"
+				<var name="SedGrp2LenaInteriorRestoringRate" array_group="dyeIRRGRP" units="{s}^-1"
+				description="A non-negative field controlling the rate at which SedGrp2Lena is restored to SedGrp2LenaInteriorRestoringValue"
 				/>
-				<var name="dyeVolYukonSG2InteriorRestoringRate" array_group="dyeIRRGRP" units="{s}^-1"
-				description="A non-negative field controlling the rate at which dyeVolYukonSG2 is restored to dyeVolYukonSG2InteriorRestoringValue"
+				<var name="SedGrp2YukonInteriorRestoringRate" array_group="dyeIRRGRP" units="{s}^-1"
+				description="A non-negative field controlling the rate at which SedGrp2Yukon is restored to SedGrp2YukonInteriorRestoringValue"
 				/>
-				<var name="dyeVolKolymaSG2InteriorRestoringRate" array_group="dyeIRRGRP" units="{s}^-1"
-				description="A non-negative field controlling the rate at which dyeVolKolymaSG2 is restored to dyeVolKolymaSG2InteriorRestoringValue"
+				<var name="SedGrp2KolymaInteriorRestoringRate" array_group="dyeIRRGRP" units="{s}^-1"
+				description="A non-negative field controlling the rate at which SedGrp2Kolyma is restored to SedGrp2KolymaInteriorRestoringValue"
 				/>
-				<var name="dyeVolMackenzieSG3InteriorRestoringRate" array_group="dyeIRRGRP" units="{s}^-1"
-				description="A non-negative field controlling the rate at which dyeVolMackenzieSG3 is restored to dyeVolMackenzieSG3InteriorRestoringValue"
+				<var name="SedGrp3MackenzieInteriorRestoringRate" array_group="dyeIRRGRP" units="{s}^-1"
+				description="A non-negative field controlling the rate at which SedGrp3Mackenzie is restored to SedGrp3MackenzieInteriorRestoringValue"
 				/>
-				<var name="dyeVolObSG3InteriorRestoringRate" array_group="dyeIRRGRP" units="{s}^-1"
-				description="A non-negative field controlling the rate at which dyeVolObSG3 is restored to dyeVolObSG3InteriorRestoringValue"
+				<var name="SedGrp3ObInteriorRestoringRate" array_group="dyeIRRGRP" units="{s}^-1"
+				description="A non-negative field controlling the rate at which SedGrp3Ob is restored to SedGrp3ObInteriorRestoringValue"
 				/>
-				<var name="dyeVolYeneseiSG3InteriorRestoringRate" array_group="dyeIRRGRP" units="{s}^-1"
-				description="A non-negative field controlling the rate at which dyeVolYeneseiSG3 is restored to dyeVolYeneseiSG3InteriorRestoringValue"
+				<var name="SedGrp3YeneseiInteriorRestoringRate" array_group="dyeIRRGRP" units="{s}^-1"
+				description="A non-negative field controlling the rate at which SedGrp3Yenesei is restored to SedGrp3YeneseiInteriorRestoringValue"
 				/>
-				<var name="dyeVolLenaSG3InteriorRestoringRate" array_group="dyeIRRGRP" units="{s}^-1"
-				description="A non-negative field controlling the rate at which dyeVolLenaSG3 is restored to dyeVolLenaSG3InteriorRestoringValue"
+				<var name="SedGrp3LenaInteriorRestoringRate" array_group="dyeIRRGRP" units="{s}^-1"
+				description="A non-negative field controlling the rate at which SedGrp3Lena is restored to SedGrp3LenaInteriorRestoringValue"
 				/>
-				<var name="dyeVolYukonSG3InteriorRestoringRate" array_group="dyeIRRGRP" units="{s}^-1"
-				description="A non-negative field controlling the rate at which dyeVolYukonSG3 is restored to dyeVolYukonSG3InteriorRestoringValue"
+				<var name="SedGrp3YukonInteriorRestoringRate" array_group="dyeIRRGRP" units="{s}^-1"
+				description="A non-negative field controlling the rate at which SedGrp3Yukon is restored to SedGrp3YukonInteriorRestoringValue"
 				/>
-				<var name="dyeVolKolymaSG3InteriorRestoringRate" array_group="dyeIRRGRP" units="{s}^-1"
-				description="A non-negative field controlling the rate at which dyeVolKolymaSG3 is restored to dyeVolKolymaSG3InteriorRestoringValue"
+				<var name="SedGrp3KolymaInteriorRestoringRate" array_group="dyeIRRGRP" units="{s}^-1"
+				description="A non-negative field controlling the rate at which SedGrp3Kolyma is restored to SedGrp3KolymaInteriorRestoringValue"
 				/>
 				<var name="dyeVolPrecipEvapNSInteriorRestoringRate" array_group="dyeIRRGRP" units="{s}^-1"
 				description="A non-negative field controlling the rate at which dyeVolPrecipEvapNS is restored to dyeVolPrecipEvapNSInteriorRestoringValue"
@@ -1313,59 +1313,59 @@
 				<var name="dyeVolKolymaNSInteriorRestoringValue" array_group="dyeIRVGRP" units="kg m^{3}"
 				description="Tracer is restored toward this field at a rate controlled by dyeVolKolymaNSInteriorRestoringRate."
 				/>
-				<var name="dyeVolMackenzieSG1InteriorRestoringValue" array_group="dyeIRVGRP" units="kg m^{3}"
-				description="Tracer is restored toward this field at a rate controlled by dyeVolMackenzieSG1InteriorRestoringRate."
+				<var name="SedGrp1MackenzieInteriorRestoringValue" array_group="dyeIRVGRP" units="kg m^{3}"
+				description="Tracer is restored toward this field at a rate controlled by SedGrp1MackenzieInteriorRestoringRate."
 				/>
-				<var name="dyeVolObSG1InteriorRestoringValue" array_group="dyeIRVGRP" units="kg m^{3}"
-				description="Tracer is restored toward this field at a rate controlled by dyeVolObSG1InteriorRestoringRate."
+				<var name="SedGrp1ObInteriorRestoringValue" array_group="dyeIRVGRP" units="kg m^{3}"
+				description="Tracer is restored toward this field at a rate controlled by SedGrp1ObInteriorRestoringRate."
 				/>
-				<var name="dyeVolYeneseiSG1InteriorRestoringValue" array_group="dyeIRVGRP" units="kg m^{3}"
-				description="Tracer is restored toward this field at a rate controlled by dyeVolYeneseiSG1InteriorRestoringRate."
+				<var name="SedGrp1YeneseiInteriorRestoringValue" array_group="dyeIRVGRP" units="kg m^{3}"
+				description="Tracer is restored toward this field at a rate controlled by SedGrp1YeneseiInteriorRestoringRate."
 				/>
-				<var name="dyeVolLenaSG1InteriorRestoringValue" array_group="dyeIRVGRP" units="kg m^{3}"
-				description="Tracer is restored toward this field at a rate controlled by dyeVolLenaSG1InteriorRestoringRate."
+				<var name="SedGrp1LenaInteriorRestoringValue" array_group="dyeIRVGRP" units="kg m^{3}"
+				description="Tracer is restored toward this field at a rate controlled by SedGrp1LenaInteriorRestoringRate."
 				/>
-				<var name="dyeVolYukonSG1InteriorRestoringValue" array_group="dyeIRVGRP" units="kg m^{3}"
-				description="Tracer is restored toward this field at a rate controlled by dyeVolYukonSG1InteriorRestoringRate."
+				<var name="SedGrp1YukonInteriorRestoringValue" array_group="dyeIRVGRP" units="kg m^{3}"
+				description="Tracer is restored toward this field at a rate controlled by SedGrp1YukonInteriorRestoringRate."
 				/>
-				<var name="dyeVolKolymaSG1InteriorRestoringValue" array_group="dyeIRVGRP" units="kg m^{3}"
-				description="Tracer is restored toward this field at a rate controlled by dyeVolKolymaSG1InteriorRestoringRate."
+				<var name="SedGrp1KolymaInteriorRestoringValue" array_group="dyeIRVGRP" units="kg m^{3}"
+				description="Tracer is restored toward this field at a rate controlled by SedGrp1KolymaInteriorRestoringRate."
 				/>
-				<var name="dyeVolMackenzieSG2InteriorRestoringValue" array_group="dyeIRVGRP" units="kg m^{3}"
-				description="Tracer is restored toward this field at a rate controlled by dyeVolMackenzieSG2InteriorRestoringRate."
+				<var name="SedGrp2MackenzieInteriorRestoringValue" array_group="dyeIRVGRP" units="kg m^{3}"
+				description="Tracer is restored toward this field at a rate controlled by SedGrp2MackenzieInteriorRestoringRate."
 				/>
-				<var name="dyeVolObSG2InteriorRestoringValue" array_group="dyeIRVGRP" units="kg m^{3}"
-				description="Tracer is restored toward this field at a rate controlled by dyeVolObSG2InteriorRestoringRate."
+				<var name="SedGrp2ObInteriorRestoringValue" array_group="dyeIRVGRP" units="kg m^{3}"
+				description="Tracer is restored toward this field at a rate controlled by SedGrp2ObInteriorRestoringRate."
 				/>
-				<var name="dyeVolYeneseiSG2InteriorRestoringValue" array_group="dyeIRVGRP" units="kg m^{3}"
-				description="Tracer is restored toward this field at a rate controlled by dyeVolYeneseiSG2InteriorRestoringRate."
+				<var name="SedGrp2YeneseiInteriorRestoringValue" array_group="dyeIRVGRP" units="kg m^{3}"
+				description="Tracer is restored toward this field at a rate controlled by SedGrp2YeneseiInteriorRestoringRate."
 				/>
-				<var name="dyeVolLenaSG2InteriorRestoringValue" array_group="dyeIRVGRP" units="kg m^{3}"
-				description="Tracer is restored toward this field at a rate controlled by dyeVolLenaSG2InteriorRestoringRate."
+				<var name="SedGrp2LenaInteriorRestoringValue" array_group="dyeIRVGRP" units="kg m^{3}"
+				description="Tracer is restored toward this field at a rate controlled by SedGrp2LenaInteriorRestoringRate."
 				/>
-				<var name="dyeVolYukonSG2InteriorRestoringValue" array_group="dyeIRVGRP" units="kg m^{3}"
-				description="Tracer is restored toward this field at a rate controlled by dyeVolYukonSG2InteriorRestoringRate."
+				<var name="SedGrp2YukonInteriorRestoringValue" array_group="dyeIRVGRP" units="kg m^{3}"
+				description="Tracer is restored toward this field at a rate controlled by SedGrp2YukonInteriorRestoringRate."
 				/>
-				<var name="dyeVolKolymaSG2InteriorRestoringValue" array_group="dyeIRVGRP" units="kg m^{3}"
-				description="Tracer is restored toward this field at a rate controlled by dyeVolKolymaSG2InteriorRestoringRate."
+				<var name="SedGrp2KolymaInteriorRestoringValue" array_group="dyeIRVGRP" units="kg m^{3}"
+				description="Tracer is restored toward this field at a rate controlled by SedGrp2KolymaInteriorRestoringRate."
 				/>
-				<var name="dyeVolMackenzieSG3InteriorRestoringValue" array_group="dyeIRVGRP" units="kg m^{3}"
-				description="Tracer is restored toward this field at a rate controlled by dyeVolMackenzieSG3InteriorRestoringRate."
+				<var name="SedGrp3MackenzieInteriorRestoringValue" array_group="dyeIRVGRP" units="kg m^{3}"
+				description="Tracer is restored toward this field at a rate controlled by SedGrp3MackenzieInteriorRestoringRate."
 				/>
-				<var name="dyeVolObSG3InteriorRestoringValue" array_group="dyeIRVGRP" units="kg m^{3}"
-				description="Tracer is restored toward this field at a rate controlled by dyeVolObSG3InteriorRestoringRate."
+				<var name="SedGrp3ObInteriorRestoringValue" array_group="dyeIRVGRP" units="kg m^{3}"
+				description="Tracer is restored toward this field at a rate controlled by SedGrp3ObInteriorRestoringRate."
 				/>
-				<var name="dyeVolYeneseiSG3InteriorRestoringValue" array_group="dyeIRVGRP" units="kg m^{3}"
-				description="Tracer is restored toward this field at a rate controlled by dyeVolYeneseiSG3InteriorRestoringRate."
+				<var name="SedGrp3YeneseiInteriorRestoringValue" array_group="dyeIRVGRP" units="kg m^{3}"
+				description="Tracer is restored toward this field at a rate controlled by SedGrp3YeneseiInteriorRestoringRate."
 				/>
-				<var name="dyeVolLenaSG3InteriorRestoringValue" array_group="dyeIRVGRP" units="kg m^{3}"
-				description="Tracer is restored toward this field at a rate controlled by dyeVolLenaSG3InteriorRestoringRate."
+				<var name="SedGrp3LenaInteriorRestoringValue" array_group="dyeIRVGRP" units="kg m^{3}"
+				description="Tracer is restored toward this field at a rate controlled by SedGrp3LenaInteriorRestoringRate."
 				/>
-				<var name="dyeVolYukonSG3InteriorRestoringValue" array_group="dyeIRVGRP" units="kg m^{3}"
-				description="Tracer is restored toward this field at a rate controlled by dyeVolYukonSG3InteriorRestoringRate."
+				<var name="SedGrp3YukonInteriorRestoringValue" array_group="dyeIRVGRP" units="kg m^{3}"
+				description="Tracer is restored toward this field at a rate controlled by SedGrp3YukonInteriorRestoringRate."
 				/>
-				<var name="dyeVolKolymaSG3InteriorRestoringValue" array_group="dyeIRVGRP" units="kg m^{3}"
-				description="Tracer is restored toward this field at a rate controlled by dyeVolKolymaSG3InteriorRestoringRate."
+				<var name="SedGrp3KolymaInteriorRestoringValue" array_group="dyeIRVGRP" units="kg m^{3}"
+				description="Tracer is restored toward this field at a rate controlled by SedGrp3KolymaInteriorRestoringRate."
 				/>
 				<var name="dyeVolPrecipEvapNSInteriorRestoringValue" array_group="dyeIRVGRP" units="kg m^{3}"
 				description="Tracer is restored toward this field at a rate controlled by dyeVolPrecipEvapNSInteriorRestoringRate."
@@ -1461,59 +1461,59 @@
 				<var name="dyeVolKolymaNSExponentialDecayRate" array_group="dyeGRP" units="s"
 				description="A non-negative field controlling the exponential decay of dyeVolKolymaNS"
 				/>
-				<var name="dyeVolMackenzieSG1ExponentialDecayRate" array_group="dyeGRP" units="s"
-				description="A non-negative field controlling the exponential decay of dyeVolMackenzieSG1 Sediment Group 1"
+				<var name="SedGrp1MackenzieExponentialDecayRate" array_group="dyeGRP" units="s"
+				description="A non-negative field controlling the exponential decay of SedGrp1Mackenzie Sediment Group 1"
 				/>
-				<var name="dyeVolObSG1ExponentialDecayRate" array_group="dyeGRP" units="s"
-				description="A non-negative field controlling the exponential decay of dyeVolObSG1 Sediment Group 1"
+				<var name="SedGrp1ObExponentialDecayRate" array_group="dyeGRP" units="s"
+				description="A non-negative field controlling the exponential decay of SedGrp1Ob Sediment Group 1"
 				/>
-				<var name="dyeVolYeneseiSG1ExponentialDecayRate" array_group="dyeGRP" units="s"
-				description="A non-negative field controlling the exponential decay of dyeVolYeneseiSG1 Sediment Group 1"
+				<var name="SedGrp1YeneseiExponentialDecayRate" array_group="dyeGRP" units="s"
+				description="A non-negative field controlling the exponential decay of SedGrp1Yenesei Sediment Group 1"
 				/>
-				<var name="dyeVolLenaSG1ExponentialDecayRate" array_group="dyeGRP" units="s"
-				description="A non-negative field controlling the exponential decay of dyeVolLenaSG1 Sediment Group 1"
+				<var name="SedGrp1LenaExponentialDecayRate" array_group="dyeGRP" units="s"
+				description="A non-negative field controlling the exponential decay of SedGrp1Lena Sediment Group 1"
 				/>
-				<var name="dyeVolYukonSG1ExponentialDecayRate" array_group="dyeGRP" units="s"
-				description="A non-negative field controlling the exponential decay of dyeVolYukonSG1 Sediment Group 1"
+				<var name="SedGrp1YukonExponentialDecayRate" array_group="dyeGRP" units="s"
+				description="A non-negative field controlling the exponential decay of SedGrp1Yukon Sediment Group 1"
 				/>
-				<var name="dyeVolKolymaSG1ExponentialDecayRate" array_group="dyeGRP" units="s"
-				description="A non-negative field controlling the exponential decay of dyeVolKolymaSG1 Sediment Group 1"
+				<var name="SedGrp1KolymaExponentialDecayRate" array_group="dyeGRP" units="s"
+				description="A non-negative field controlling the exponential decay of SedGrp1Kolyma Sediment Group 1"
 				/>
-				<var name="dyeVolMackenzieSG2ExponentialDecayRate" array_group="dyeGRP" units="s"
-				description="A non-negative field controlling the exponential decay of dyeVolMackenzieSG2 Sediment Group 2"
+				<var name="SedGrp2MackenzieExponentialDecayRate" array_group="dyeGRP" units="s"
+				description="A non-negative field controlling the exponential decay of SedGrp2Mackenzie Sediment Group 2"
 				/>
-				<var name="dyeVolObSG2ExponentialDecayRate" array_group="dyeGRP" units="s"
-				description="A non-negative field controlling the exponential decay of dyeVolObSG2 Sediment Group 2"
+				<var name="SedGrp2ObExponentialDecayRate" array_group="dyeGRP" units="s"
+				description="A non-negative field controlling the exponential decay of SedGrp2Ob Sediment Group 2"
 				/>
-				<var name="dyeVolYeneseiSG2ExponentialDecayRate" array_group="dyeGRP" units="s"
-				description="A non-negative field controlling the exponential decay of dyeVolYeneseiSG2 Sediment Group 2"
+				<var name="SedGrp2YeneseiExponentialDecayRate" array_group="dyeGRP" units="s"
+				description="A non-negative field controlling the exponential decay of SedGrp2Yenesei Sediment Group 2"
 				/>
-				<var name="dyeVolLenaSG2ExponentialDecayRate" array_group="dyeGRP" units="s"
-				description="A non-negative field controlling the exponential decay of dyeVolLenaSG2 Sediment Group 2"
+				<var name="SedGrp2LenaExponentialDecayRate" array_group="dyeGRP" units="s"
+				description="A non-negative field controlling the exponential decay of SedGrp2Lena Sediment Group 2"
 				/>
-				<var name="dyeVolYukonSG2ExponentialDecayRate" array_group="dyeGRP" units="s"
-				description="A non-negative field controlling the exponential decay of dyeVolYukonSG2 Sediment Group 2"
+				<var name="SedGrp2YukonExponentialDecayRate" array_group="dyeGRP" units="s"
+				description="A non-negative field controlling the exponential decay of SedGrp2Yukon Sediment Group 2"
 				/>
-				<var name="dyeVolKolymaSG2ExponentialDecayRate" array_group="dyeGRP" units="s"
-				description="A non-negative field controlling the exponential decay of dyeVolKolymaSG2 Sediment Group 2"
+				<var name="SedGrp2KolymaExponentialDecayRate" array_group="dyeGRP" units="s"
+				description="A non-negative field controlling the exponential decay of SedGrp2Kolyma Sediment Group 2"
 				/>
-				<var name="dyeVolMackenzieSG3ExponentialDecayRate" array_group="dyeGRP" units="s"
-				description="A non-negative field controlling the exponential decay of dyeVolMackenzieSG3 Sediment Group 3"
+				<var name="SedGrp3MackenzieExponentialDecayRate" array_group="dyeGRP" units="s"
+				description="A non-negative field controlling the exponential decay of SedGrp3Mackenzie Sediment Group 3"
 				/>
-				<var name="dyeVolObSG3ExponentialDecayRate" array_group="dyeGRP" units="s"
-				description="A non-negative field controlling the exponential decay of dyeVolObSG3 Sediment Group 3"
+				<var name="SedGrp3ObExponentialDecayRate" array_group="dyeGRP" units="s"
+				description="A non-negative field controlling the exponential decay of SedGrp3Ob Sediment Group 3"
 				/>
-				<var name="dyeVolYeneseiSG3ExponentialDecayRate" array_group="dyeGRP" units="s"
-				description="A non-negative field controlling the exponential decay of dyeVolYeneseiSG3 Sediment Group 3"
+				<var name="SedGrp3YeneseiExponentialDecayRate" array_group="dyeGRP" units="s"
+				description="A non-negative field controlling the exponential decay of SedGrp3Yenesei Sediment Group 3"
 				/>
-				<var name="dyeVolLenaSG3ExponentialDecayRate" array_group="dyeGRP" units="s"
-				description="A non-negative field controlling the exponential decay of dyeVolLenaSG3 Sediment Group 3"
+				<var name="SedGrp3LenaExponentialDecayRate" array_group="dyeGRP" units="s"
+				description="A non-negative field controlling the exponential decay of SedGrp3Lena Sediment Group 3"
 				/>
-				<var name="dyeVolYukonSG3ExponentialDecayRate" array_group="dyeGRP" units="s"
-				description="A non-negative field controlling the exponential decay of dyeVolYukonSG3 Sediment Group 3"
+				<var name="SedGrp3YukonExponentialDecayRate" array_group="dyeGRP" units="s"
+				description="A non-negative field controlling the exponential decay of SedGrp3Yukon Sediment Group 3"
 				/>
-				<var name="dyeVolKolymaSG3ExponentialDecayRate" array_group="dyeGRP" units="s"
-				description="A non-negative field controlling the exponential decay of dyeVolKolymaSG3 Sediment Group 3"
+				<var name="SedGrp3KolymaExponentialDecayRate" array_group="dyeGRP" units="s"
+				description="A non-negative field controlling the exponential decay of SedGrp3Kolyma Sediment Group 3"
 				/>
 				<var name="dyeVolPrecipEvapNSExponentialDecayRate" array_group="dyeGRP" units="s"
 				description="A non-negative field controlling the exponential decay of dyeVolPrecipEvapNS"
@@ -1609,59 +1609,59 @@
 				<var name="dyeVolKolymaNSIdealAgeMask" array_group="dyeGRP" units="unitless"
 				description="In top layer, dyeVolKolymaNS is reset to dyeVolKolymaNS * dyeVolKolymaNSIdealAgeMask, valid values of dyeVolKolymaNSIdealAgeMask or 0 and 1"
 				/>
-				<var name="dyeVolMackenzieSG1IdealAgeMask" array_group="dyeGRP" units="unitless"
-				description="In top layer, dyeVolMackenzieSG1 is reset to dyeVolMackenzieSG1 * dyeVolMackenzieSG1IdealAgeMask, valid values of dyeVolMackenzieSG1IdealAgeMask or 0 and 1"
+				<var name="SedGrp1MackenzieIdealAgeMask" array_group="dyeGRP" units="unitless"
+				description="In top layer, SedGrp1Mackenzie is reset to SedGrp1Mackenzie * SedGrp1MackenzieIdealAgeMask, valid values of SedGrp1MackenzieIdealAgeMask or 0 and 1"
 				/>
-				<var name="dyeVolObSG1IdealAgeMask" array_group="dyeGRP" units="unitless"
-				description="In top layer, dyeVolObSG1 is reset to dyeVolObSG1 * dyeVolObSG1IdealAgeMask, valid values of dyeVolObSG1IdealAgeMask or 0 and 1"
+				<var name="SedGrp1ObIdealAgeMask" array_group="dyeGRP" units="unitless"
+				description="In top layer, SedGrp1Ob is reset to SedGrp1Ob * SedGrp1ObIdealAgeMask, valid values of SedGrp1ObIdealAgeMask or 0 and 1"
 				/>
-				<var name="dyeVolYeneseiSG1IdealAgeMask" array_group="dyeGRP" units="unitless"
-				description="In top layer, dyeVolYeneseiSG1 is reset to dyeVolYeneseiSG1 * dyeVolYeneseiSG1IdealAgeMask, valid values of dyeVolYeneseiSG1IdealAgeMask or 0 and 1"
+				<var name="SedGrp1YeneseiIdealAgeMask" array_group="dyeGRP" units="unitless"
+				description="In top layer, SedGrp1Yenesei is reset to SedGrp1Yenesei * SedGrp1YeneseiIdealAgeMask, valid values of SedGrp1YeneseiIdealAgeMask or 0 and 1"
 				/>
-				<var name="dyeVolLenaSG1IdealAgeMask" array_group="dyeGRP" units="unitless"
-				description="In top layer, dyeVolLenaSG1 is reset to dyeVolLenaSG1 * dyeVolLenaSG1IdealAgeMask, valid values of dyeVolLenaSG1IdealAgeMask or 0 and 1"
+				<var name="SedGrp1LenaIdealAgeMask" array_group="dyeGRP" units="unitless"
+				description="In top layer, SedGrp1Lena is reset to SedGrp1Lena * SedGrp1LenaIdealAgeMask, valid values of SedGrp1LenaIdealAgeMask or 0 and 1"
 				/>
-				<var name="dyeVolYukonSG1IdealAgeMask" array_group="dyeGRP" units="unitless"
-				description="In top layer, dyeVolYukonSG1 is reset to dyeVolYukonSG1 * dyeVolYukonSG1IdealAgeMask, valid values of dyeVolYukonSG1IdealAgeMask or 0 and 1"
+				<var name="SedGrp1YukonIdealAgeMask" array_group="dyeGRP" units="unitless"
+				description="In top layer, SedGrp1Yukon is reset to SedGrp1Yukon * SedGrp1YukonIdealAgeMask, valid values of SedGrp1YukonIdealAgeMask or 0 and 1"
 				/>
-				<var name="dyeVolKolymaSG1IdealAgeMask" array_group="dyeGRP" units="unitless"
-				description="In top layer, dyeVolKolymaSG1 is reset to dyeVolKolymaSG1 * dyeVolKolymaSG1IdealAgeMask, valid values of dyeVolKolymaSG1IdealAgeMask or 0 and 1"
+				<var name="SedGrp1KolymaIdealAgeMask" array_group="dyeGRP" units="unitless"
+				description="In top layer, SedGrp1Kolyma is reset to SedGrp1Kolyma * SedGrp1KolymaIdealAgeMask, valid values of SedGrp1KolymaIdealAgeMask or 0 and 1"
 				/>
-				<var name="dyeVolMackenzieSG2IdealAgeMask" array_group="dyeGRP" units="unitless"
-				description="In top layer, dyeVolMackenzieSG2 is reset to dyeVolMackenzieSG2 * dyeVolMackenzieSG2IdealAgeMask, valid values of dyeVolMackenzieSG2IdealAgeMask or 0 and 1"
+				<var name="SedGrp2MackenzieIdealAgeMask" array_group="dyeGRP" units="unitless"
+				description="In top layer, SedGrp2Mackenzie is reset to SedGrp2Mackenzie * SedGrp2MackenzieIdealAgeMask, valid values of SedGrp2MackenzieIdealAgeMask or 0 and 1"
 				/>
-				<var name="dyeVolObSG2IdealAgeMask" array_group="dyeGRP" units="unitless"
-				description="In top layer, dyeVolObSG2 is reset to dyeVolObSG2 * dyeVolObSG2IdealAgeMask, valid values of dyeVolObSG2IdealAgeMask or 0 and 1"
+				<var name="SedGrp2ObIdealAgeMask" array_group="dyeGRP" units="unitless"
+				description="In top layer, SedGrp2Ob is reset to SedGrp2Ob * SedGrp2ObIdealAgeMask, valid values of SedGrp2ObIdealAgeMask or 0 and 1"
 				/>
-				<var name="dyeVolYeneseiSG2IdealAgeMask" array_group="dyeGRP" units="unitless"
-				description="In top layer, dyeVolYeneseiSG2 is reset to dyeVolYeneseiSG2 * dyeVolYeneseiSG2IdealAgeMask, valid values of dyeVolYeneseiSG2IdealAgeMask or 0 and 1"
+				<var name="SedGrp2YeneseiIdealAgeMask" array_group="dyeGRP" units="unitless"
+				description="In top layer, SedGrp2Yenesei is reset to SedGrp2Yenesei * SedGrp2YeneseiIdealAgeMask, valid values of SedGrp2YeneseiIdealAgeMask or 0 and 1"
 				/>
-				<var name="dyeVolLenaSG2IdealAgeMask" array_group="dyeGRP" units="unitless"
-				description="In top layer, dyeVolLenaSG2 is reset to dyeVolLenaSG2 * dyeVolLenaSG2IdealAgeMask, valid values of dyeVolLenaSG2IdealAgeMask or 0 and 1"
+				<var name="SedGrp2LenaIdealAgeMask" array_group="dyeGRP" units="unitless"
+				description="In top layer, SedGrp2Lena is reset to SedGrp2Lena * SedGrp2LenaIdealAgeMask, valid values of SedGrp2LenaIdealAgeMask or 0 and 1"
 				/>
-				<var name="dyeVolYukonSG2IdealAgeMask" array_group="dyeGRP" units="unitless"
-				description="In top layer, dyeVolYukonSG2 is reset to dyeVolYukonSG2 * dyeVolYukonSG2IdealAgeMask, valid values of dyeVolYukonSG2IdealAgeMask or 0 and 1"
+				<var name="SedGrp2YukonIdealAgeMask" array_group="dyeGRP" units="unitless"
+				description="In top layer, SedGrp2Yukon is reset to SedGrp2Yukon * SedGrp2YukonIdealAgeMask, valid values of SedGrp2YukonIdealAgeMask or 0 and 1"
 				/>
-				<var name="dyeVolKolymaSG2IdealAgeMask" array_group="dyeGRP" units="unitless"
-				description="In top layer, dyeVolKolymaSG2 is reset to dyeVolKolymaSG2 * dyeVolKolymaSG2IdealAgeMask, valid values of dyeVolKolymaSG2IdealAgeMask or 0 and 1"
+				<var name="SedGrp2KolymaIdealAgeMask" array_group="dyeGRP" units="unitless"
+				description="In top layer, SedGrp2Kolyma is reset to SedGrp2Kolyma * SedGrp2KolymaIdealAgeMask, valid values of SedGrp2KolymaIdealAgeMask or 0 and 1"
 				/>
-				<var name="dyeVolMackenzieSG3IdealAgeMask" array_group="dyeGRP" units="unitless"
-				description="In top layer, dyeVolMackenzieSG3 is reset to dyeVolMackenzieSG3 * dyeVolMackenzieSG3IdealAgeMask, valid values of dyeVolMackenzieSG3IdealAgeMask or 0 and 1"
+				<var name="SedGrp3MackenzieIdealAgeMask" array_group="dyeGRP" units="unitless"
+				description="In top layer, SedGrp3Mackenzie is reset to SedGrp3Mackenzie * SedGrp3MackenzieIdealAgeMask, valid values of SedGrp3MackenzieIdealAgeMask or 0 and 1"
 				/>
-				<var name="dyeVolObSG3IdealAgeMask" array_group="dyeGRP" units="unitless"
-				description="In top layer, dyeVolObSG3 is reset to dyeVolObSG3 * dyeVolObSG3IdealAgeMask, valid values of dyeVolObSG3IdealAgeMask or 0 and 1"
+				<var name="SedGrp3ObIdealAgeMask" array_group="dyeGRP" units="unitless"
+				description="In top layer, SedGrp3Ob is reset to SedGrp3Ob * SedGrp3ObIdealAgeMask, valid values of SedGrp3ObIdealAgeMask or 0 and 1"
 				/>
-				<var name="dyeVolYeneseiSG3IdealAgeMask" array_group="dyeGRP" units="unitless"
-				description="In top layer, dyeVolYeneseiSG3 is reset to dyeVolYeneseiSG3 * dyeVolYeneseiSG3IdealAgeMask, valid values of dyeVolYeneseiSG3IdealAgeMask or 0 and 1"
+				<var name="SedGrp3YeneseiIdealAgeMask" array_group="dyeGRP" units="unitless"
+				description="In top layer, SedGrp3Yenesei is reset to SedGrp3Yenesei * SedGrp3YeneseiIdealAgeMask, valid values of SedGrp3YeneseiIdealAgeMask or 0 and 1"
 				/>
-				<var name="dyeVolLenaSG3IdealAgeMask" array_group="dyeGRP" units="unitless"
-				description="In top layer, dyeVolLenaSG3 is reset to dyeVolLenaSG3 * dyeVolLenaSG3IdealAgeMask, valid values of dyeVolLenaSG3IdealAgeMask or 0 and 1"
+				<var name="SedGrp3LenaIdealAgeMask" array_group="dyeGRP" units="unitless"
+				description="In top layer, SedGrp3Lena is reset to SedGrp3Lena * SedGrp3LenaIdealAgeMask, valid values of SedGrp3LenaIdealAgeMask or 0 and 1"
 				/>
-				<var name="dyeVolYukonSG3IdealAgeMask" array_group="dyeGRP" units="unitless"
-				description="In top layer, dyeVolYukonSG3 is reset to dyeVolYukonSG3 * dyeVolYukonSG3IdealAgeMask, valid values of dyeVolYukonSG3IdealAgeMask or 0 and 1"
+				<var name="SedGrp3YukonIdealAgeMask" array_group="dyeGRP" units="unitless"
+				description="In top layer, SedGrp3Yukon is reset to SedGrp3Yukon * SedGrp3YukonIdealAgeMask, valid values of SedGrp3YukonIdealAgeMask or 0 and 1"
 				/>
-				<var name="dyeVolKolymaSG3IdealAgeMask" array_group="dyeGRP" units="unitless"
-				description="In top layer, dyeVolKolymaSG3 is reset to dyeVolKolymaSG3 * dyeVolKolymaSG3IdealAgeMask, valid values of dyeVolKolymaSG3IdealAgeMask or 0 and 1"
+				<var name="SedGrp3KolymaIdealAgeMask" array_group="dyeGRP" units="unitless"
+				description="In top layer, SedGrp3Kolyma is reset to SedGrp3Kolyma * SedGrp3KolymaIdealAgeMask, valid values of SedGrp3KolymaIdealAgeMask or 0 and 1"
 				/>
 				<var name="dyeVolPrecipEvapNSIdealAgeMask" array_group="dyeGRP" units="unitless"
 				description="In top layer, dyeVolPrecipEvapNS is reset to dyeVolPrecipEvapNS * dyeVolPrecipEvapNSIdealAgeMask, valid values of dyeVolPrecipEvapNSIdealAgeMask or 0 and 1"
@@ -1757,59 +1757,59 @@
 				<var name="dyeVolKolymaNSTTDMask" array_group="dyeGRP" units="unitless"
 				description="In top layer, dyeVolKolymaNS is reset to dyeVolKolymaTTDMask, valid values of dyeVolKolymaNSTTDMask or 0 and 1"
 				/>
-				<var name="dyeVolMackenzieSG1TTDMask" array_group="dyeGRP" units="unitless"
-				description="In top layer, dyeVolMackenzieSG1 is reset to dyeVolMackenzieTTDMask, valid values of dyeVolMackenzieSG1TTDMask or 0 and 1"
+				<var name="SedGrp1MackenzieTTDMask" array_group="dyeGRP" units="unitless"
+				description="In top layer, SedGrp1Mackenzie is reset to dyeVolMackenzieTTDMask, valid values of SedGrp1MackenzieTTDMask or 0 and 1"
 				/>
-				<var name="dyeVolObSG1TTDMask" array_group="dyeGRP" units="unitless"
-				description="In top layer, dyeVolObSG1 is reset to dyeVolObTTDMask, valid values of dyeVolObSG1TTDMask or 0 and 1"
+				<var name="SedGrp1ObTTDMask" array_group="dyeGRP" units="unitless"
+				description="In top layer, SedGrp1Ob is reset to dyeVolObTTDMask, valid values of SedGrp1ObTTDMask or 0 and 1"
 				/>
-				<var name="dyeVolYeneseiSG1TTDMask" array_group="dyeGRP" units="unitless"
-				description="In top layer, dyeVolYeneseiSG1 is reset to dyeVolYeneseiTTDMask, valid values of dyeVolYeneseiSG1TTDMask or 0 and 1"
+				<var name="SedGrp1YeneseiTTDMask" array_group="dyeGRP" units="unitless"
+				description="In top layer, SedGrp1Yenesei is reset to dyeVolYeneseiTTDMask, valid values of SedGrp1YeneseiTTDMask or 0 and 1"
 				/>
-				<var name="dyeVolLenaSG1TTDMask" array_group="dyeGRP" units="unitless"
-				description="In top layer, dyeVolLenaSG1 is reset to dyeVolLenaTTDMask, valid values of dyeVolLenaSG1TTDMask or 0 and 1"
+				<var name="SedGrp1LenaTTDMask" array_group="dyeGRP" units="unitless"
+				description="In top layer, SedGrp1Lena is reset to dyeVolLenaTTDMask, valid values of SedGrp1LenaTTDMask or 0 and 1"
 				/>
-				<var name="dyeVolYukonSG1TTDMask" array_group="dyeGRP" units="unitless"
-				description="In top layer, dyeVolYukonSG1 is reset to dyeVolYukonTTDMask, valid values of dyeVolYukonSG1TTDMask or 0 and 1"
+				<var name="SedGrp1YukonTTDMask" array_group="dyeGRP" units="unitless"
+				description="In top layer, SedGrp1Yukon is reset to dyeVolYukonTTDMask, valid values of SedGrp1YukonTTDMask or 0 and 1"
 				/>
-				<var name="dyeVolKolymaSG1TTDMask" array_group="dyeGRP" units="unitless"
-				description="In top layer, dyeVolKolymaSG1 is reset to dyeVolKolymaTTDMask, valid values of dyeVolKolymaSG1TTDMask or 0 and 1"
+				<var name="SedGrp1KolymaTTDMask" array_group="dyeGRP" units="unitless"
+				description="In top layer, SedGrp1Kolyma is reset to dyeVolKolymaTTDMask, valid values of SedGrp1KolymaTTDMask or 0 and 1"
 				/>
-				<var name="dyeVolMackenzieSG2TTDMask" array_group="dyeGRP" units="unitless"
-				description="In top layer, dyeVolMackenzieSG2 is reset to dyeVolMackenzieTTDMask, valid values of dyeVolMackenzieSG2TTDMask or 0 and 1"
+				<var name="SedGrp2MackenzieTTDMask" array_group="dyeGRP" units="unitless"
+				description="In top layer, SedGrp2Mackenzie is reset to dyeVolMackenzieTTDMask, valid values of SedGrp2MackenzieTTDMask or 0 and 1"
 				/>
-				<var name="dyeVolObSG2TTDMask" array_group="dyeGRP" units="unitless"
-				description="In top layer, dyeVolObSG2 is reset to dyeVolObTTDMask, valid values of dyeVolObSG2TTDMask or 0 and 1"
+				<var name="SedGrp2ObTTDMask" array_group="dyeGRP" units="unitless"
+				description="In top layer, SedGrp2Ob is reset to dyeVolObTTDMask, valid values of SedGrp2ObTTDMask or 0 and 1"
 				/>
-				<var name="dyeVolYeneseiSG2TTDMask" array_group="dyeGRP" units="unitless"
-				description="In top layer, dyeVolYeneseiSG2 is reset to dyeVolYeneseiTTDMask, valid values of dyeVolYeneseiSG2TTDMask or 0 and 1"
+				<var name="SedGrp2YeneseiTTDMask" array_group="dyeGRP" units="unitless"
+				description="In top layer, SedGrp2Yenesei is reset to dyeVolYeneseiTTDMask, valid values of SedGrp2YeneseiTTDMask or 0 and 1"
 				/>
-				<var name="dyeVolLenaSG2TTDMask" array_group="dyeGRP" units="unitless"
-				description="In top layer, dyeVolLenaSG2 is reset to dyeVolLenaTTDMask, valid values of dyeVolLenaSG2TTDMask or 0 and 1"
+				<var name="SedGrp2LenaTTDMask" array_group="dyeGRP" units="unitless"
+				description="In top layer, SedGrp2Lena is reset to dyeVolLenaTTDMask, valid values of SedGrp2LenaTTDMask or 0 and 1"
 				/>
-				<var name="dyeVolYukonSG2TTDMask" array_group="dyeGRP" units="unitless"
-				description="In top layer, dyeVolYukonSG2 is reset to dyeVolYukonTTDMask, valid values of dyeVolYukonSG2TTDMask or 0 and 1"
+				<var name="SedGrp2YukonTTDMask" array_group="dyeGRP" units="unitless"
+				description="In top layer, SedGrp2Yukon is reset to dyeVolYukonTTDMask, valid values of SedGrp2YukonTTDMask or 0 and 1"
 				/>
-				<var name="dyeVolKolymaSG2TTDMask" array_group="dyeGRP" units="unitless"
-				description="In top layer, dyeVolKolymaSG2 is reset to dyeVolKolymaTTDMask, valid values of dyeVolKolymaSG2TTDMask or 0 and 1"
+				<var name="SedGrp2KolymaTTDMask" array_group="dyeGRP" units="unitless"
+				description="In top layer, SedGrp2Kolyma is reset to dyeVolKolymaTTDMask, valid values of SedGrp2KolymaTTDMask or 0 and 1"
 				/>
-				<var name="dyeVolMackenzieSG3TTDMask" array_group="dyeGRP" units="unitless"
-				description="In top layer, dyeVolMackenzieSG3 is reset to dyeVolMackenzieTTDMask, valid values of dyeVolMackenzieSG3TTDMask or 0 and 1"
+				<var name="SedGrp3MackenzieTTDMask" array_group="dyeGRP" units="unitless"
+				description="In top layer, SedGrp3Mackenzie is reset to dyeVolMackenzieTTDMask, valid values of SedGrp3MackenzieTTDMask or 0 and 1"
 				/>
-				<var name="dyeVolObSG3TTDMask" array_group="dyeGRP" units="unitless"
-				description="In top layer, dyeVolObSG3 is reset to dyeVolObTTDMask, valid values of dyeVolObSG3TTDMask or 0 and 1"
+				<var name="SedGrp3ObTTDMask" array_group="dyeGRP" units="unitless"
+				description="In top layer, SedGrp3Ob is reset to dyeVolObTTDMask, valid values of SedGrp3ObTTDMask or 0 and 1"
 				/>
-				<var name="dyeVolYeneseiSG3TTDMask" array_group="dyeGRP" units="unitless"
-				description="In top layer, dyeVolYeneseiSG3 is reset to dyeVolYeneseiTTDMask, valid values of dyeVolYeneseiSG3TTDMask or 0 and 1"
+				<var name="SedGrp3YeneseiTTDMask" array_group="dyeGRP" units="unitless"
+				description="In top layer, SedGrp3Yenesei is reset to dyeVolYeneseiTTDMask, valid values of SedGrp3YeneseiTTDMask or 0 and 1"
 				/>
-				<var name="dyeVolLenaSG3TTDMask" array_group="dyeGRP" units="unitless"
-				description="In top layer, dyeVolLenaSG3 is reset to dyeVolLenaTTDMask, valid values of dyeVolLenaSG3TTDMask or 0 and 1"
+				<var name="SedGrp3LenaTTDMask" array_group="dyeGRP" units="unitless"
+				description="In top layer, SedGrp3Lena is reset to dyeVolLenaTTDMask, valid values of SedGrp3LenaTTDMask or 0 and 1"
 				/>
-				<var name="dyeVolYukonSG3TTDMask" array_group="dyeGRP" units="unitless"
-				description="In top layer, dyeVolYukonSG3 is reset to dyeVolYukonTTDMask, valid values of dyeVolYukonSG3TTDMask or 0 and 1"
+				<var name="SedGrp3YukonTTDMask" array_group="dyeGRP" units="unitless"
+				description="In top layer, SedGrp3Yukon is reset to dyeVolYukonTTDMask, valid values of SedGrp3YukonTTDMask or 0 and 1"
 				/>
-				<var name="dyeVolKolymaSG3TTDMask" array_group="dyeGRP" units="unitless"
-				description="In top layer, dyeVolKolymaSG3 is reset to dyeVolKolymaTTDMask, valid values of dyeVolKolymaSG3TTDMask or 0 and 1"
+				<var name="SedGrp3KolymaTTDMask" array_group="dyeGRP" units="unitless"
+				description="In top layer, SedGrp3Kolyma is reset to dyeVolKolymaTTDMask, valid values of SedGrp3KolymaTTDMask or 0 and 1"
 				/>
 				<var name="dyeVolPrecipEvapNSTTDMask" array_group="dyeGRP" units="unitless"
 				description="In top layer, dyeVolPrecipEvapNS is reset to dyeVolPrecipEvapTTDMask, valid values of dyeVolPrecipEvapNSTTDMask or 0 and 1"
@@ -1904,59 +1904,59 @@
 			<var name="dyeVolKolymaNS_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
 			description="Vertical integral of dyeVolKolymaNS"
 			/>
-			<var name="dyeVolMackenzieSG1_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
-			description="Vertical integral of dyeVolMackenzieSG1 Sediment Group 1"
+			<var name="SedGrp1Mackenzie_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
+			description="Vertical integral of SedGrp1Mackenzie Sediment Group 1"
 			/>
-			<var name="dyeVolObSG1_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
-			description="Vertical integral of dyeVolObSG1 Sediment Group 1"
+			<var name="SedGrp1Ob_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
+			description="Vertical integral of SedGrp1Ob Sediment Group 1"
 			/>
-			<var name="dyeVolYeneseiSG1_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
-			description="Vertical integral of dyeVolYeneseiSG1 Sediment Group 1"
+			<var name="SedGrp1Yenesei_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
+			description="Vertical integral of SedGrp1Yenesei Sediment Group 1"
 			/>
-			<var name="dyeVolLenaSG1_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
-			description="Vertical integral of dyeVolLenaSG1 Sediment Group 1"
+			<var name="SedGrp1Lena_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
+			description="Vertical integral of SedGrp1Lena Sediment Group 1"
 			/>
-			<var name="dyeVolYukonSG1_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
-			description="Vertical integral of dyeVolYukonSG1 Sediment Group 1"
+			<var name="SedGrp1Yukon_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
+			description="Vertical integral of SedGrp1Yukon Sediment Group 1"
 			/>
-			<var name="dyeVolKolymaSG1_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
-			description="Vertical integral of dyeVolKolymaSG1 Sediment Group 1"
+			<var name="SedGrp1Kolyma_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
+			description="Vertical integral of SedGrp1Kolyma Sediment Group 1"
 			/>
-			<var name="dyeVolMackenzieSG2_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
-			description="Vertical integral of dyeVolMackenzieSG2 Sediment Group 2"
+			<var name="SedGrp2Mackenzie_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
+			description="Vertical integral of SedGrp2Mackenzie Sediment Group 2"
 			/>
-			<var name="dyeVolObSG2_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
-			description="Vertical integral of dyeVolObSG2 Sediment Group 2"
+			<var name="SedGrp2Ob_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
+			description="Vertical integral of SedGrp2Ob Sediment Group 2"
 			/>
-			<var name="dyeVolYeneseiSG2_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
-			description="Vertical integral of dyeVolYeneseiSG2 Sediment Group 2"
+			<var name="SedGrp2Yenesei_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
+			description="Vertical integral of SedGrp2Yenesei Sediment Group 2"
 			/>
-			<var name="dyeVolLenaSG2_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
-			description="Vertical integral of dyeVolLenaSG2 Sediment Group 2"
+			<var name="SedGrp2Lena_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
+			description="Vertical integral of SedGrp2Lena Sediment Group 2"
 			/>
-			<var name="dyeVolYukonSG2_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
-			description="Vertical integral of dyeVolYukonSG2 Sediment Group 2"
+			<var name="SedGrp2Yukon_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
+			description="Vertical integral of SedGrp2Yukon Sediment Group 2"
 			/>
-			<var name="dyeVolKolymaSG2_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
-			description="Vertical integral of dyeVolKolymaSG2 Sediment Group 2"
+			<var name="SedGrp2Kolyma_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
+			description="Vertical integral of SedGrp2Kolyma Sediment Group 2"
 			/>
-			<var name="dyeVolMackenzieSG3_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
-			description="Vertical integral of dyeVolMackenzieSG3 Sediment Group 3"
+			<var name="SedGrp3Mackenzie_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
+			description="Vertical integral of SedGrp3Mackenzie Sediment Group 3"
 			/>
-			<var name="dyeVolObSG3_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
-			description="Vertical integral of dyeVolObSG3 Sediment Group 3"
+			<var name="SedGrp3Ob_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
+			description="Vertical integral of SedGrp3Ob Sediment Group 3"
 			/>
-			<var name="dyeVolYeneseiSG3_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
-			description="Vertical integral of dyeVolYeneseiSG3 Sediment Group 3"
+			<var name="SedGrp3Yenesei_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
+			description="Vertical integral of SedGrp3Yenesei Sediment Group 3"
 			/>
-			<var name="dyeVolLenaSG3_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
-			description="Vertical integral of dyeVolLenaSG3 Sediment Group 3"
+			<var name="SedGrp3Lena_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
+			description="Vertical integral of SedGrp3Lena Sediment Group 3"
 			/>
-			<var name="dyeVolYukonSG3_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
-			description="Vertical integral of dyeVolYukonSG3 Sediment Group 3"
+			<var name="SedGrp3Yukon_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
+			description="Vertical integral of SedGrp3Yukon Sediment Group 3"
 			/>
-			<var name="dyeVolKolymaSG3_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
-			description="Vertical integral of dyeVolKolymaSG3 Sediment Group 3"
+			<var name="SedGrp3Kolyma_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
+			description="Vertical integral of SedGrp3Kolyma Sediment Group 3"
 			/>
 			<var name="dyeVolPrecipEvapNS_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
 			description="Vertical integral of dyeVolPrecipEvapNS"
