@@ -3868,6 +3868,15 @@
 			description="topographic wave drag multiplicative factor"
 			packages="tidalPotentialForcingPKG"
 		/>
+		<var name="sedBotAccGrp1" type="real" dimensions="SIX nCells" units="kg m^{-2}"
+			description="sediment accumulated at the bottom"
+		/>
+		<var name="sedBotAccGrp2" type="real" dimensions="SIX nCells" units="kg m^{-2}"
+			description="sediment accumulated at the bottom"
+		/>
+		<var name="sedBotAccGrp3" type="real" dimensions="SIX nCells" units="kg m^{-2}"
+			description="sediment accumulated at the bottom"
+		/>
 	</var_struct>
 	<var_struct name="shortwave" time_levs="1">
 		<!-- **********************************************************************
