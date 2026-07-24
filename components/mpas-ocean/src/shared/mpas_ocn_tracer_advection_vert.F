@@ -65,7 +65,7 @@ module ocn_tracer_advection_vert
 
 !maltrud advection hack
    subroutine ocn_tracer_advection_vert_flx(tracer, w, layerThick, &
-                                            vertFlx, advectionOrderHack)
+                                            vertFlx, advectionOrderHack, settlingVelocity)
 !                                           vertFlx)
 
       !-----------------------------------------------------------------
@@ -89,6 +89,8 @@ module ocn_tracer_advection_vert
 !maltrud advection hack
       integer, intent(in) :: advectionOrderHack
 
+      real (kind=RKIND), intent(in) :: &
+         settlingVelocity                   ! Settling Velocity
       !-----------------------------------------------------------------
       ! Local variables
       !-----------------------------------------------------------------
@@ -146,7 +148,7 @@ module ocn_tracer_advection_vert
             kmin = minLevelCell(iCell)
             kmax = maxLevelCell(iCell)
             do k=kmin+2,kmax-1
-               vertFlx(k, iCell) = w(k,iCell)* &
+               vertFlx(k, iCell) = (w(k,iCell) + settlingVelocity) * &
                                    ( 7.0_RKIND*(tracer(k  ,iCell)+ &
                                                 tracer(k-1,iCell)) &
                                              - (tracer(k+1,iCell)+ &
@@ -173,12 +175,12 @@ module ocn_tracer_advection_vert
             kmin = minLevelCell(iCell)
             kmax = maxLevelCell(iCell)
             do k=kmin+2,kmax-1
-               vertFlx(k, iCell) = (w(k,iCell)* &
+               vertFlx(k, iCell) = ( (w(k,iCell) + settlingVelocity) * &
                                    (7.0_RKIND * (tracer(k  ,iCell)+ &
                                                  tracer(k-1,iCell)) - &
                                                 (tracer(k+1,iCell)+ &
                                                  tracer(k-2,iCell))) - &
-                                coef3rdOrder*abs(w(k,iCell))* &
+                                coef3rdOrder*abs((w(k,iCell) + settlingVelocity))* &
                                                ((tracer(k+1,iCell)- &
                                                  tracer(k-2,iCell)) - &
                                       3.0_RKIND*(tracer(k  ,iCell)- &
@@ -213,7 +215,7 @@ module ocn_tracer_advection_vert
                verticalWeightKm1 = layerThick(k  ,iCell) / &
                                   (layerThick(k  ,iCell) + &
                                    layerThick(k-1,iCell))
-               vertFlx(k,iCell) = w(k, iCell) * &
+               vertFlx(k,iCell) = (w(k,iCell) + settlingVelocity) * &
                            (verticalWeightK  *tracer(k  ,iCell) + &
                             verticalWeightKm1*tracer(k-1,iCell))
             end do ! vertical loop
@@ -253,7 +255,7 @@ module ocn_tracer_advection_vert
             verticalWeightKm1 = layerThick(k  ,iCell) / &
                                (layerThick(k  ,iCell) + &
                                 layerThick(k-1,iCell))
-            vertFlx(k,iCell) = w(k,iCell)&
+            vertFlx(k,iCell) = (w(k,iCell) + settlingVelocity) &
                           *(verticalWeightK  *tracer(k  ,iCell) + &
                             verticalWeightKm1*tracer(k-1,iCell))
             ! Deepest active level also at 2nd order
@@ -264,7 +266,7 @@ module ocn_tracer_advection_vert
             verticalWeightKm1 = layerThick(k  ,iCell) / &
                                (layerThick(k  ,iCell) + &
                                 layerThick(k-1,iCell))
-            vertFlx(k,iCell) = w(k,iCell)* &
+            vertFlx(k,iCell) = (w(k,iCell) + settlingVelocity)* &
                           (verticalWeightK  *tracer(k  ,iCell) + &
                            verticalWeightKm1*tracer(k-1,iCell))
          end if ! kmax > kmin

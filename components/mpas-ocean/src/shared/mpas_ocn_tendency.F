@@ -663,6 +663,9 @@ contains
          config_use_tracerGroup_idealAge_forcing,     &
          config_use_tracerGroup_ttd_forcing
 
+      real (kind=RKIND) :: &
+         settlingVelocity                   ! Settling Velocity
+
       real (kind=RKIND), dimension(:), pointer, contiguous :: &
          penetrativeTemperatureFlux, &! heat flux penetrating below sfc
          tracerGroupExponentialDecayRate ! exp decay rate for forcing
@@ -1317,10 +1320,21 @@ contains
       advectionOrderHack = 2
       if (groupName=='activeTracers') advectionOrderHack = 3
 
+!petersen add settling velocity
+         if (groupName=='sedGrp1') then
+            settlingVelocity = config_settling_vel_sedGrp1
+         elseif (groupName=='sedGrp2') then
+            settlingVelocity = config_settling_vel_sedGrp2
+         elseif (groupName=='sedGrp3') then
+            settlingVelocity = config_settling_vel_sedGrp3
+         else
+            settlingVelocity = 0.0_RKIND
+         endif
+
          call ocn_tracer_advection_tend(tracerGroup, &
                             normalThicknessFlux, vertAleTransportTop, &
                             layerThickness, dt, tracerGroupTend, &
-                            computeBudgets, skipTracer, advectionOrderHack)
+                            computeBudgets, skipTracer, advectionOrderHack, settlingVelocity)
          deallocate(skipTracer)
 
          !$acc update host (activeTracerHorizontalAdvectionEdgeFlux, &

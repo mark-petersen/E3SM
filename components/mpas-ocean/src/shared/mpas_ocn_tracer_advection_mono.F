@@ -67,7 +67,7 @@ module ocn_tracer_advection_mono
    subroutine ocn_tracer_advection_mono_tend( &
                                         tend, tracers, layerThickness, &
                                         normalThicknessFlux, w, dt,    &
-                                        computeBudgets, skipTracer, advectionOrderHack)!{{{
+                                        computeBudgets, skipTracer, advectionOrderHack, settlingVelocity)!{{{
 
       !-----------------------------------------------------------------
       ! Input/Output parameters
@@ -98,6 +98,8 @@ module ocn_tracer_advection_mono
          skipTracer            !< [in] Flag to skip tracer in tracers
 !maltrud advection hack
       integer, intent(in) :: advectionOrderHack
+      real (kind=RKIND), intent(in) :: &
+         settlingVelocity                   ! Settling Velocity
 
       !-----------------------------------------------------------------
       ! Local variables
@@ -729,7 +731,7 @@ module ocn_tracer_advection_mono
 !maltrud advection hack
         call ocn_tracer_advection_vert_flx(tracerCur, w, hProv, &
                                            highOrderFlx, advectionOrderHack)
-!                                          highOrderFlx)
+!                                          highOrderFlx, settlingVelocity)
 
 #ifdef _ADV_TIMERS
         call mpas_timer_stop('vertical flux high')

@@ -66,7 +66,7 @@ module ocn_tracer_advection
 !maltrud advection hack
    subroutine ocn_tracer_advection_tend(tracers, normalThicknessFlux, &
                                         w, layerThickness, dt, tend,  &
-                                        computeBudgets, skipTracer, advectionOrderHack)!{{{
+                                        computeBudgets, skipTracer, advectionOrderHack, settlingVelocity)!{{{
 
       !*** Input/Output parameters
 
@@ -94,6 +94,9 @@ module ocn_tracer_advection
 !maltrud advection hack
       integer, intent(in) :: advectionOrderHack
 
+      real (kind=RKIND), intent(in) :: &
+         settlingVelocity                   ! Settling Velocity
+
       ! end of preamble
       !----------------
       ! begin code
@@ -108,7 +111,7 @@ module ocn_tracer_advection
 !maltrud advection hack
          call ocn_tracer_advection_mono_tend(tend, tracers, layerThickness,    &
                                              normalThicknessFlux, w, dt,       &
-                                             computeBudgets, skipTracer, advectionOrderHack)
+                                             computeBudgets, skipTracer, advectionOrderHack, settlingVelocity)
 
       else
          call ocn_tracer_advection_std_tend(tracers, normalThicknessFlux, &
