@@ -730,7 +730,7 @@ module ocn_tracer_advection_mono
 
 !maltrud advection hack
         call ocn_tracer_advection_vert_flx(tracerCur, w, hProv, &
-                                           highOrderFlx, advectionOrderHack)
+                                           highOrderFlx, advectionOrderHack, settlingVelocity)
 !                                          highOrderFlx, settlingVelocity)
 
 #ifdef _ADV_TIMERS

@@ -116,7 +116,7 @@ module ocn_tracer_advection
       else
          call ocn_tracer_advection_std_tend(tracers, normalThicknessFlux, &
                                             w, layerThickness, dt, tend,  &
-                                            skipTracer)
+                                            skipTracer, settlingVelocity)
       endif
 
       call mpas_timer_stop("tracer adv")

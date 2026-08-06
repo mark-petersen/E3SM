@@ -60,7 +60,7 @@ module ocn_tracer_advection_std
 
    subroutine ocn_tracer_advection_std_tend(tracers, normalThicknessFlux, &
                                             w, layerThickness, dt, tend, &
-                                            skipTracer)
+                                            skipTracer, settlingVelocity)
 
       !-----------------------------------------------------------------
       ! Input/Output variables
@@ -86,6 +86,9 @@ module ocn_tracer_advection_std
 
       logical, dimension(:), intent(in) :: &
          skipTracer            !< [in] Flag to skip tracer in tracers
+
+      real (kind=RKIND), intent(in) :: &
+         settlingVelocity                   ! Settling Velocity
 
       !-----------------------------------------------------------------
       ! Local variables
@@ -170,7 +173,7 @@ module ocn_tracer_advection_std
 ! need an integer to be consistent with the monotone case
         k = 1
         call ocn_tracer_advection_vert_flx(tracerCur, w, &
-                           layerThickness, highOrderFlxVert, k)
+                           layerThickness, highOrderFlxVert, k, settlingVelocity)
 !                          layerThickness, highOrderFlxVert)
 
         ! Compute the high order horizontal flux

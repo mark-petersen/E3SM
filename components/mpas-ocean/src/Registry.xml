@@ -298,7 +298,7 @@
 					description="Sediments settling velocity, positive upwards"
 					possible_values="any real"
 		/>
-		<nml_option name="config_settling_vel_sedGrp2" type="real" default_value="-1.0e-6" units="m s^-1"
+		<nml_option name="config_settling_vel_sedGrp3" type="real" default_value="-1.0e-6" units="m s^-1"
 					description="Sediments settling velocity, positive upwards"
 					possible_values="any real"
 		/>

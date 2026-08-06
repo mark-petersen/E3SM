@@ -69,6 +69,9 @@ module ocn_diagnostics_variables
    real (kind=RKIND), dimension(:,:), pointer :: normalTransportVelocity
    real (kind=RKIND), dimension(:,:), pointer :: RiTopOfCell
    real (kind=RKIND), dimension(:,:), pointer :: RiTopOfEdge
+   real (kind=RKIND), dimension(:,:), pointer :: sedBotAccGrp1
+   real (kind=RKIND), dimension(:,:), pointer :: sedBotAccGrp2
+   real (kind=RKIND), dimension(:,:), pointer :: sedBotAccGrp3
 
    real (kind=RKIND), dimension(:), pointer :: upwindFactor
    real (kind=RKIND), dimension(:), pointer :: gradSSH
@@ -482,6 +485,9 @@ contains
 
          call mpas_pool_get_array(diagnosticsPool, 'RiTopOfCell', RiTopOfCell)
          call mpas_pool_get_array(diagnosticsPool, 'RiTopOfEdge', RiTopOfEdge)
+         call mpas_pool_get_array(diagnosticsPool, 'sedBotAccGrp1', sedBotAccGrp1)
+         call mpas_pool_get_array(diagnosticsPool, 'sedBotAccGrp2', sedBotAccGrp2)
+         call mpas_pool_get_array(diagnosticsPool, 'sedBotAccGrp3', sedBotAccGrp3)
 
          call mpas_pool_get_array(diagnosticsPool, 'slopeTriadUp', &
                    slopeTriadUp)
@@ -809,6 +815,9 @@ contains
          !$acc                   divergence,                      &
          !$acc                   RiTopOfCell,                     &
          !$acc                   RiTopOfEdge,                     &
+         !$acc                   sedBotAccGrp1,                     &
+         !$acc                   sedBotAccGrp2,                     &
+         !$acc                   sedBotAccGrp3,                     &
          !$acc                   SSHGradient,                     &
          !$acc                   circulation,                     &
          !$acc                   slopeTriadUp,                    &
@@ -1071,6 +1080,9 @@ contains
          !$acc                   divergence,                      &
          !$acc                   RiTopOfCell,                     &
          !$acc                   RiTopOfEdge,                     &
+         !$acc                   sedBotAccGrp1,                     &
+         !$acc                   sedBotAccGrp2,                     &
+         !$acc                   sedBotAccGrp3,                     &
          !$acc                   SSHGradient,                     &
          !$acc                   circulation,                     &
          !$acc                   slopeTriadUp,                    &
@@ -1281,6 +1293,9 @@ contains
                  divergence,                      &
                  RiTopOfCell,                     &
                  RiTopOfEdge,                     &
+                 sedBotAccGrp1,                     &
+                 sedBotAccGrp2,                     &
+                 sedBotAccGrp3,                     &
                  SSHGradient,                     &
                  circulation,                     &
                  slopeTriadUp,                    &
