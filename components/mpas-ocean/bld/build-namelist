@@ -562,6 +562,14 @@ add_default($nl, 'config_use_tracer_del4');
 add_default($nl, 'config_tracer_del4');
 
 ##############################
+# Namelist group: sediments #
+##############################
+
+add_default($nl, 'config_settling_vel_sedGrp1');
+add_default($nl, 'config_settling_vel_sedGrp2');
+add_default($nl, 'config_settling_vel_sedGrp3');
+
+##############################
 # Namelist group: hmix_Leith #
 ##############################
 
