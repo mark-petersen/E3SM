@@ -172,16 +172,16 @@
 <config_use_tracer_del4>.false.</config_use_tracer_del4>
 <config_tracer_del4>0.0</config_tracer_del4>
 
-<!-- sediments -->
-<config_settling_vel_sedGrp1>-3.4e-4</config_settling_vel_sedGrp1>
-<config_settling_vel_sedGrp2>-3.4e-5</config_settling_vel_sedGrp2>
-<config_settling_vel_sedGrp3>-3.4e-6</config_settling_vel_sedGrp3>
-
 <!-- hmix_Leith -->
 <config_use_Leith_del2>.false.</config_use_Leith_del2>
 <config_Leith_parameter>1.0</config_Leith_parameter>
 <config_Leith_dx>15000.0</config_Leith_dx>
 <config_Leith_visc2_max>2.5e3</config_Leith_visc2_max>
+
+<!-- sediments -->
+<config_settling_vel_sedGrp1>-3.4e-4</config_settling_vel_sedGrp1>
+<config_settling_vel_sedGrp2>-3.4e-5</config_settling_vel_sedGrp2>
+<config_settling_vel_sedGrp3>-3.4e-6</config_settling_vel_sedGrp3>
 
 <!-- Redi_isopycnal_mixing -->
 <config_use_Redi>.true.</config_use_Redi>

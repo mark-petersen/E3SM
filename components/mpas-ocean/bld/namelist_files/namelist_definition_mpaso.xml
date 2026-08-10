@@ -348,23 +348,6 @@ Valid values: any positive real
 Default: Defined in namelist_defaults.xml
 </entry>
 
-<!-- sediments -->
-
-<entry id="config_settling_vel_sedGrp1" type="real"
-	category="sediments" group="sediments">
-text
-</entry>
-
-<entry id="config_settling_vel_sedGrp2" type="real"
-	category="sediments" group="sediments">
-text
-</entry>
-
-<entry id="config_settling_vel_sedGrp3" type="real"
-	category="sediments" group="sediments">
-text
-</entry>
-
 <entry id="config_mom_del4_div_factor" type="real"
 	category="hmix_del4" group="hmix_del4">
 The divergence portion of the del4 operator is scaled by this factor.
@@ -372,7 +355,6 @@ The divergence portion of the del4 operator is scaled by this factor.
 Valid values: any positive real
 Default: Defined in namelist_defaults.xml
 </entry>
-config_settling_vel_sedGrp1
 
 <!-- hmix_Leith -->
 
@@ -406,6 +388,23 @@ Upper bound on the allowable value of Leith-computed viscosity
 
 Valid values: any positive real
 Default: Defined in namelist_defaults.xml
+</entry>
+
+<!-- sediments -->
+
+<entry id="config_settling_vel_sedGrp1" type="real"
+	category="sediments" group="sediments">
+text
+</entry>
+
+<entry id="config_settling_vel_sedGrp2" type="real"
+	category="sediments" group="sediments">
+text
+</entry>
+
+<entry id="config_settling_vel_sedGrp3" type="real"
+	category="sediments" group="sediments">
+text
 </entry>
 
 

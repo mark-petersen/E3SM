@@ -8,6 +8,7 @@ my @groups = qw(run_modes
                 hmix_del2
                 hmix_del4
                 hmix_leith
+                sediments
                 redi_isopycnal_mixing
                 submesoscale_eddy_parameterization
                 gm_eddy_parameterization

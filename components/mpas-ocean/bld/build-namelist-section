@@ -92,6 +92,14 @@ add_default($nl, 'config_Leith_parameter');
 add_default($nl, 'config_Leith_dx');
 add_default($nl, 'config_Leith_visc2_max');
 
+##############################
+# Namelist group: sediments #
+##############################
+
+add_default($nl, 'config_settling_vel_sedGrp1');
+add_default($nl, 'config_settling_vel_sedGrp2');
+add_default($nl, 'config_settling_vel_sedGrp3');
+
 #########################################
 # Namelist group: Redi_isopycnal_mixing #
 #########################################

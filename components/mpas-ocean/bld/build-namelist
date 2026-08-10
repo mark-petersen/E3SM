@@ -562,14 +562,6 @@ add_default($nl, 'config_use_tracer_del4');
 add_default($nl, 'config_tracer_del4');
 
 ##############################
-# Namelist group: sediments #
-##############################
-
-add_default($nl, 'config_settling_vel_sedGrp1');
-add_default($nl, 'config_settling_vel_sedGrp2');
-add_default($nl, 'config_settling_vel_sedGrp3');
-
-##############################
 # Namelist group: hmix_Leith #
 ##############################
 
@@ -577,6 +569,14 @@ add_default($nl, 'config_use_Leith_del2');
 add_default($nl, 'config_Leith_parameter');
 add_default($nl, 'config_Leith_dx');
 add_default($nl, 'config_Leith_visc2_max');
+
+##############################
+# Namelist group: sediments #
+##############################
+
+add_default($nl, 'config_settling_vel_sedGrp1');
+add_default($nl, 'config_settling_vel_sedGrp2');
+add_default($nl, 'config_settling_vel_sedGrp3');
 
 #########################################
 # Namelist group: Redi_isopycnal_mixing #
@@ -1933,6 +1933,7 @@ my @groups = qw(run_modes
                 hmix_del2
                 hmix_del4
                 hmix_leith
+                sediments
                 redi_isopycnal_mixing
                 submesoscale_eddy_parameterization
                 gm_eddy_parameterization
