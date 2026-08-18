@@ -1,36 +1,36 @@
 	<nml_record name="tracer_forcing_sedGrp2">
 		<nml_option name="config_use_sedGrp2" type="logical" default_value=".false." units="unitless"
-			description="if true, the 'sedGRP2' category is enabled for the run"
+			description="if true, the 'sedGrp2' category is enabled for the run"
 			possible_values=".true. or .false."
 		/>
 		<nml_option name="config_use_sedGrp2_surface_bulk_forcing" type="logical" default_value=".false." units="unitless"
-			description="if true, surface bulk forcing from coupler is added to surfaceTracerFlux in 'sedGRP2' category"
+			description="if true, surface bulk forcing from coupler is added to surfaceTracerFlux in 'sedGrp2' category"
 			possible_values=".true. or .false."
 		/>
 		<nml_option name="config_use_sedGrp2_surface_restoring" type="logical" default_value=".false." units="unitless"
-			description="if true, surface restoring source is applied to tracers in 'sedGRP2' category"
+			description="if true, surface restoring source is applied to tracers in 'sedGrp2' category"
 			possible_values=".true. or .false."
 		/>
 		<nml_option name="config_use_sedGrp2_interior_restoring" type="logical" default_value=".false." units="unitless"
-			description="if true, interior restoring source is applied to tracers in 'sedGRP2' category"
+			description="if true, interior restoring source is applied to tracers in 'sedGrp2' category"
 			possible_values=".true. or .false."
 		/>
 		<nml_option name="config_use_sedGrp2_exponential_decay" type="logical" default_value=".false." units="unitless"
-			description="if true, exponential decay source is applied to tracers in 'sedGRP2' category"
+			description="if true, exponential decay source is applied to tracers in 'sedGrp2' category"
 			possible_values=".true. or .false."
 		/>
 		<nml_option name="config_use_sedGrp2_idealAge_forcing" type="logical" default_value=".false." units="unitless"
-			description="if true, idealAge forcing source is applied to tracers in 'sedGRP2' category"
+			description="if true, idealAge forcing source is applied to tracers in 'sedGrp2' category"
 			possible_values=".true. or .false."
 		/>
 		<nml_option name="config_use_sedGrp2_ttd_forcing" type="logical" default_value=".false." units="unitless"
-			description="if true, transit time distribution forcing source is applied to tracers in 'sedGRP2' category"
+			description="if true, transit time distribution forcing source is applied to tracers in 'sedGrp2' category"
 			possible_values=".true. or .false."
 		/>
 	</nml_record>
 
 	<packages>
-		<package name="sedGrp2PKG" description="This package includes variables required to include sedGRP2."/>
+		<package name="sedGrp2PKG" description="This package includes variables required to include sedGrp2."/>
 		<package name="sedGrp2BulkRestoringPKG" description="This package includes variables required to compute bulk restoring on the sedGrp2 tracer group."/>
 		<package name="sedGrp2SurfaceRestoringPKG" description="This package includes variables required to compute surface restoring on the sedGrp2 tracer group."/>
 		<package name="sedGrp2InteriorRestoringPKG" description="This package includes variables required to compute interior restoring on the sedGrp2 tracer group."/>
@@ -43,22 +43,22 @@
 		<var_struct name="tracers" time_levs="2">
 			<var_array name="sedGrp2" dimensions="nVertLevels nCells Time" type="real" packages="sedGrp2PKG"  default_value="0.0">
 				<!-- Add constituents of tracer group -->
-				<var name="SedGrp2Mackenzie" array_group="sedGRP2" units="kg m^{-3}"
+				<var name="SedGrp2Mackenzie" array_group="sedGrp2" units="kg m^{-3}"
 			description="SedGrp2Mackenzie Sediment Group 1"
 				/>
-				<var name="SedGrp2Ob" array_group="sedGRP2" units="kg m^{-3}"
+				<var name="SedGrp2Ob" array_group="sedGrp2" units="kg m^{-3}"
 			description="SedGrp2Ob Sediment Group 1"
 				/>
-				<var name="SedGrp2Yenesei" array_group="sedGRP2" units="kg m^{-3}"
+				<var name="SedGrp2Yenesei" array_group="sedGrp2" units="kg m^{-3}"
 			description="SedGrp2Yenesei Sediment Group 1"
 				/>
-				<var name="SedGrp2Lena" array_group="sedGRP2" units="kg m^{-3}"
+				<var name="SedGrp2Lena" array_group="sedGrp2" units="kg m^{-3}"
 			description="SedGrp2Lena Sediment Group 1"
 				/>
-				<var name="SedGrp2Yukon" array_group="sedGRP2" units="kg m^{-3}"
+				<var name="SedGrp2Yukon" array_group="sedGrp2" units="kg m^{-3}"
 			description="SedGrp2Yukon Sediment Group 1"
 				/>
-				<var name="SedGrp2Kolyma" array_group="sedGRP2" units="kg m^{-3}"
+				<var name="SedGrp2Kolyma" array_group="sedGrp2" units="kg m^{-3}"
 			description="SedGrp2Kolyma Sediment Group 1"
 				/>
 			</var_array>
@@ -69,22 +69,22 @@
 		<var_struct name="tracersTend" time_levs="1">
 			<var_array name="sedGrp2Tend" type="real" dimensions="nVertLevels nCells Time" packages="sedGrp2PKG">
 				<!-- Add constituents of tracer group -->
-				<var name="SedGrp2MackenzieTend" array_group="sedGRP2" units="kg m^{-3} s^{-1}"
+				<var name="SedGrp2MackenzieTend" array_group="sedGrp2" units="kg m^{-3} s^{-1}"
 			description="SedGrp2Mackenzie Tendency"
 				/>
-				<var name="SedGrp2ObTend" array_group="sedGRP2" units="kg m^{-3} s^{-1}"
+				<var name="SedGrp2ObTend" array_group="sedGrp2" units="kg m^{-3} s^{-1}"
 			description="SedGrp2Ob Tendency"
 				/>
-				<var name="SedGrp2YeneseiTend" array_group="sedGRP2" units="kg m^{-3} s^{-1}"
+				<var name="SedGrp2YeneseiTend" array_group="sedGrp2" units="kg m^{-3} s^{-1}"
 			description="SedGrp2Yenesei Tendency"
 				/>
-				<var name="SedGrp2LenaTend" array_group="sedGRP2" units="kg m^{-3} s^{-1}"
+				<var name="SedGrp2LenaTend" array_group="sedGrp2" units="kg m^{-3} s^{-1}"
 			description="SedGrp2Lena Tendency"
 				/>
-				<var name="SedGrp2YukonTend" array_group="sedGRP2" units="kg m^{-3} s^{-1}"
+				<var name="SedGrp2YukonTend" array_group="sedGrp2" units="kg m^{-3} s^{-1}"
 			description="SedGrp2Yukon Tendency"
 				/>
-				<var name="SedGrp2KolymaTend" array_group="sedGRP2" units="kg m^{-3} s^{-1}"
+				<var name="SedGrp2KolymaTend" array_group="sedGrp2" units="kg m^{-3} s^{-1}"
 			description="SedGrp2Kolyma Tendency"
 				/>
 			</var_array>
@@ -243,66 +243,66 @@
 		</var_struct>
 		<var_struct name="tracersExponentialDecayFields" time_levs="1">
 			<var_array name="sedGrp2ExponentialDecayRate" type="real" dimensions="Time" packages="sedGrp2ExponentialDecayPKG">
-				<var name="SedGrp2MackenzieExponentialDecayRate" array_group="sedGRP2" units="s"
+				<var name="SedGrp2MackenzieExponentialDecayRate" array_group="sedGrp2" units="s"
 				description="A non-negative field controlling the exponential decay of SedGrp2Mackenzie Sediment Group 1"
 				/>
-				<var name="SedGrp2ObExponentialDecayRate" array_group="sedGRP2" units="s"
+				<var name="SedGrp2ObExponentialDecayRate" array_group="sedGrp2" units="s"
 				description="A non-negative field controlling the exponential decay of SedGrp2Ob Sediment Group 1"
 				/>
-				<var name="SedGrp2YeneseiExponentialDecayRate" array_group="sedGRP2" units="s"
+				<var name="SedGrp2YeneseiExponentialDecayRate" array_group="sedGrp2" units="s"
 				description="A non-negative field controlling the exponential decay of SedGrp2Yenesei Sediment Group 1"
 				/>
-				<var name="SedGrp2LenaExponentialDecayRate" array_group="sedGRP2" units="s"
+				<var name="SedGrp2LenaExponentialDecayRate" array_group="sedGrp2" units="s"
 				description="A non-negative field controlling the exponential decay of SedGrp2Lena Sediment Group 1"
 				/>
-				<var name="SedGrp2YukonExponentialDecayRate" array_group="sedGRP2" units="s"
+				<var name="SedGrp2YukonExponentialDecayRate" array_group="sedGrp2" units="s"
 				description="A non-negative field controlling the exponential decay of SedGrp2Yukon Sediment Group 1"
 				/>
-				<var name="SedGrp2KolymaExponentialDecayRate" array_group="sedGRP2" units="s"
+				<var name="SedGrp2KolymaExponentialDecayRate" array_group="sedGrp2" units="s"
 				description="A non-negative field controlling the exponential decay of SedGrp2Kolyma Sediment Group 1"
 				/>
 			</var_array>
 		</var_struct>
 		<var_struct name="tracersIdealAgeFields" time_levs="1">
 			<var_array name="sedGrp2IdealAgeMask" type="real" dimensions="nCells Time" packages="sedGrp2IdealAgePKG">
-				<var name="SedGrp2MackenzieIdealAgeMask" array_group="sedGRP2" units="unitless"
+				<var name="SedGrp2MackenzieIdealAgeMask" array_group="sedGrp2" units="unitless"
 				description="In top layer, SedGrp2Mackenzie is reset to SedGrp2Mackenzie * SedGrp2MackenzieIdealAgeMask, valid values of SedGrp2MackenzieIdealAgeMask or 0 and 1"
 				/>
-				<var name="SedGrp2ObIdealAgeMask" array_group="sedGRP2" units="unitless"
+				<var name="SedGrp2ObIdealAgeMask" array_group="sedGrp2" units="unitless"
 				description="In top layer, SedGrp2Ob is reset to SedGrp2Ob * SedGrp2ObIdealAgeMask, valid values of SedGrp2ObIdealAgeMask or 0 and 1"
 				/>
-				<var name="SedGrp2YeneseiIdealAgeMask" array_group="sedGRP2" units="unitless"
+				<var name="SedGrp2YeneseiIdealAgeMask" array_group="sedGrp2" units="unitless"
 				description="In top layer, SedGrp2Yenesei is reset to SedGrp2Yenesei * SedGrp2YeneseiIdealAgeMask, valid values of SedGrp2YeneseiIdealAgeMask or 0 and 1"
 				/>
-				<var name="SedGrp2LenaIdealAgeMask" array_group="sedGRP2" units="unitless"
+				<var name="SedGrp2LenaIdealAgeMask" array_group="sedGrp2" units="unitless"
 				description="In top layer, SedGrp2Lena is reset to SedGrp2Lena * SedGrp2LenaIdealAgeMask, valid values of SedGrp2LenaIdealAgeMask or 0 and 1"
 				/>
-				<var name="SedGrp2YukonIdealAgeMask" array_group="sedGRP2" units="unitless"
+				<var name="SedGrp2YukonIdealAgeMask" array_group="sedGrp2" units="unitless"
 				description="In top layer, SedGrp2Yukon is reset to SedGrp2Yukon * SedGrp2YukonIdealAgeMask, valid values of SedGrp2YukonIdealAgeMask or 0 and 1"
 				/>
-				<var name="SedGrp2KolymaIdealAgeMask" array_group="sedGRP2" units="unitless"
+				<var name="SedGrp2KolymaIdealAgeMask" array_group="sedGrp2" units="unitless"
 				description="In top layer, SedGrp2Kolyma is reset to SedGrp2Kolyma * SedGrp2KolymaIdealAgeMask, valid values of SedGrp2KolymaIdealAgeMask or 0 and 1"
 				/>
 			</var_array>
 		</var_struct>
 		<var_struct name="tracersTTDFields" time_levs="1">
 			<var_array name="sedGrp2TTDMask" type="real" dimensions="nCells Time" packages="sedGrp2TTDPKG">
-				<var name="SedGrp2MackenzieTTDMask" array_group="sedGRP2" units="unitless"
+				<var name="SedGrp2MackenzieTTDMask" array_group="sedGrp2" units="unitless"
 				description="In top layer, SedGrp2Mackenzie is reset to sedGrp2VolMackenzieTTDMask, valid values of SedGrp2MackenzieTTDMask or 0 and 1"
 				/>
-				<var name="SedGrp2ObTTDMask" array_group="sedGRP2" units="unitless"
+				<var name="SedGrp2ObTTDMask" array_group="sedGrp2" units="unitless"
 				description="In top layer, SedGrp2Ob is reset to sedGrp2VolObTTDMask, valid values of SedGrp2ObTTDMask or 0 and 1"
 				/>
-				<var name="SedGrp2YeneseiTTDMask" array_group="sedGRP2" units="unitless"
+				<var name="SedGrp2YeneseiTTDMask" array_group="sedGrp2" units="unitless"
 				description="In top layer, SedGrp2Yenesei is reset to sedGrp2VolYeneseiTTDMask, valid values of SedGrp2YeneseiTTDMask or 0 and 1"
 				/>
-				<var name="SedGrp2LenaTTDMask" array_group="sedGRP2" units="unitless"
+				<var name="SedGrp2LenaTTDMask" array_group="sedGrp2" units="unitless"
 				description="In top layer, SedGrp2Lena is reset to sedGrp2VolLenaTTDMask, valid values of SedGrp2LenaTTDMask or 0 and 1"
 				/>
-				<var name="SedGrp2YukonTTDMask" array_group="sedGRP2" units="unitless"
+				<var name="SedGrp2YukonTTDMask" array_group="sedGrp2" units="unitless"
 				description="In top layer, SedGrp2Yukon is reset to sedGrp2VolYukonTTDMask, valid values of SedGrp2YukonTTDMask or 0 and 1"
 				/>
-				<var name="SedGrp2KolymaTTDMask" array_group="sedGRP2" units="unitless"
+				<var name="SedGrp2KolymaTTDMask" array_group="sedGrp2" units="unitless"
 				description="In top layer, SedGrp2Kolyma is reset to sedGrp2VolKolymaTTDMask, valid values of SedGrp2KolymaTTDMask or 0 and 1"
 				/>
 			</var_array>
