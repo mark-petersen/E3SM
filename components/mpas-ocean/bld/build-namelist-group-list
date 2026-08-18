@@ -7,8 +7,8 @@ my @groups = qw(run_modes
                 hmix
                 hmix_del2
                 hmix_del4
-                hmix_leith
                 sediments
+                hmix_leith
                 redi_isopycnal_mixing
                 submesoscale_eddy_parameterization
                 gm_eddy_parameterization
@@ -54,6 +54,10 @@ my @groups = qw(run_modes
                 tracer_forcing_macromoleculestracers
                 tracer_forcing_idealagetracers
                 tracer_forcing_cfctracers
+                tracer_forcing_dyetracers
+                tracer_forcing_sedgrp1
+                tracer_forcing_sedgrp2
+                tracer_forcing_sedgrp3
                 am_globalstats
                 am_surfaceareaweightedaverages
                 am_watermasscensus
