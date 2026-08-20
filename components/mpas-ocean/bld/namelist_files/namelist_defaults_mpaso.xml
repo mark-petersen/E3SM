@@ -887,32 +887,32 @@
 <config_use_dyeTracers_idealAge_forcing>.false.</config_use_dyeTracers_idealAge_forcing>
 <config_use_dyeTracers_ttd_forcing>.false.</config_use_dyeTracers_ttd_forcing>
 
-<!-- tracer_forcing_sedGrp1 -->
-<config_use_sedGrp1>.false.</config_use_sedGrp1>
-<config_use_sedGrp1_surface_bulk_forcing>.false.</config_use_sedGrp1_surface_bulk_forcing>
-<config_use_sedGrp1_surface_restoring>.false.</config_use_sedGrp1_surface_restoring>
-<config_use_sedGrp1_interior_restoring>.false.</config_use_sedGrp1_interior_restoring>
-<config_use_sedGrp1_exponential_decay>.false.</config_use_sedGrp1_exponential_decay>
-<config_use_sedGrp1_idealAge_forcing>.false.</config_use_sedGrp1_idealAge_forcing>
-<config_use_sedGrp1_ttd_forcing>.false.</config_use_sedGrp1_ttd_forcing>
+<!-- tracer_forcing_sedGrp1Tracers -->
+<config_use_sedGrp1Tracers>.false.</config_use_sedGrp1Tracers>
+<config_use_sedGrp1Tracers_surface_bulk_forcing>.false.</config_use_sedGrp1Tracers_surface_bulk_forcing>
+<config_use_sedGrp1Tracers_surface_restoring>.false.</config_use_sedGrp1Tracers_surface_restoring>
+<config_use_sedGrp1Tracers_interior_restoring>.false.</config_use_sedGrp1Tracers_interior_restoring>
+<config_use_sedGrp1Tracers_exponential_decay>.false.</config_use_sedGrp1Tracers_exponential_decay>
+<config_use_sedGrp1Tracers_idealAge_forcing>.false.</config_use_sedGrp1Tracers_idealAge_forcing>
+<config_use_sedGrp1Tracers_ttd_forcing>.false.</config_use_sedGrp1Tracers_ttd_forcing>
 
-<!-- tracer_forcing_sedGrp2 -->
-<config_use_sedGrp2>.false.</config_use_sedGrp2>
-<config_use_sedGrp2_surface_bulk_forcing>.false.</config_use_sedGrp2_surface_bulk_forcing>
-<config_use_sedGrp2_surface_restoring>.false.</config_use_sedGrp2_surface_restoring>
-<config_use_sedGrp2_interior_restoring>.false.</config_use_sedGrp2_interior_restoring>
-<config_use_sedGrp2_exponential_decay>.false.</config_use_sedGrp2_exponential_decay>
-<config_use_sedGrp2_idealAge_forcing>.false.</config_use_sedGrp2_idealAge_forcing>
-<config_use_sedGrp2_ttd_forcing>.false.</config_use_sedGrp2_ttd_forcing>
+<!-- tracer_forcing_sedGrp2Tracers -->
+<config_use_sedGrp2Tracers>.false.</config_use_sedGrp2Tracers>
+<config_use_sedGrp2Tracers_surface_bulk_forcing>.false.</config_use_sedGrp2Tracers_surface_bulk_forcing>
+<config_use_sedGrp2Tracers_surface_restoring>.false.</config_use_sedGrp2Tracers_surface_restoring>
+<config_use_sedGrp2Tracers_interior_restoring>.false.</config_use_sedGrp2Tracers_interior_restoring>
+<config_use_sedGrp2Tracers_exponential_decay>.false.</config_use_sedGrp2Tracers_exponential_decay>
+<config_use_sedGrp2Tracers_idealAge_forcing>.false.</config_use_sedGrp2Tracers_idealAge_forcing>
+<config_use_sedGrp2Tracers_ttd_forcing>.false.</config_use_sedGrp2Tracers_ttd_forcing>
 
-<!-- tracer_forcing_sedGrp3 -->
-<config_use_sedGrp3>.false.</config_use_sedGrp3>
-<config_use_sedGrp3_surface_bulk_forcing>.false.</config_use_sedGrp3_surface_bulk_forcing>
-<config_use_sedGrp3_surface_restoring>.false.</config_use_sedGrp3_surface_restoring>
-<config_use_sedGrp3_interior_restoring>.false.</config_use_sedGrp3_interior_restoring>
-<config_use_sedGrp3_exponential_decay>.false.</config_use_sedGrp3_exponential_decay>
-<config_use_sedGrp3_idealAge_forcing>.false.</config_use_sedGrp3_idealAge_forcing>
-<config_use_sedGrp3_ttd_forcing>.false.</config_use_sedGrp3_ttd_forcing>
+<!-- tracer_forcing_sedGrp3Tracers -->
+<config_use_sedGrp3Tracers>.false.</config_use_sedGrp3Tracers>
+<config_use_sedGrp3Tracers_surface_bulk_forcing>.false.</config_use_sedGrp3Tracers_surface_bulk_forcing>
+<config_use_sedGrp3Tracers_surface_restoring>.false.</config_use_sedGrp3Tracers_surface_restoring>
+<config_use_sedGrp3Tracers_interior_restoring>.false.</config_use_sedGrp3Tracers_interior_restoring>
+<config_use_sedGrp3Tracers_exponential_decay>.false.</config_use_sedGrp3Tracers_exponential_decay>
+<config_use_sedGrp3Tracers_idealAge_forcing>.false.</config_use_sedGrp3Tracers_idealAge_forcing>
+<config_use_sedGrp3Tracers_ttd_forcing>.false.</config_use_sedGrp3Tracers_ttd_forcing>
 
 <!-- AM_globalStats -->
 <config_AM_globalStats_enable>.true.</config_AM_globalStats_enable>

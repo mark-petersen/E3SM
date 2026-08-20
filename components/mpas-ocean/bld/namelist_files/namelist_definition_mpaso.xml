@@ -3829,177 +3829,177 @@ Valid values: .true. or .false.
 Default: Defined in namelist_defaults.xml
 </entry>
 
-<!-- tracer_forcing_sedGrp1 -->
+<!-- tracer_forcing_sedGrp1Tracers -->
 
-<entry id="config_use_sedGrp1" type="logical"
-        category="tracer_forcing_sedGrp1" group="tracer_forcing_sedGrp1">
-if true, the 'sedGrp1' category is enabled for the run
-
-Valid values: .true. or .false.
-Default: Defined in namelist_defaults.xml
-</entry>
-
-<entry id="config_use_sedGrp1_surface_bulk_forcing" type="logical"
-        category="tracer_forcing_sedGrp1" group="tracer_forcing_sedGrp1">
-if true, surface bulk forcing from coupler is added to surfaceTracerFlux in 'sedGrp1' category
+<entry id="config_use_sedGrp1Tracers" type="logical"
+        category="tracer_forcing_sedGrp1Tracers" group="tracer_forcing_sedGrp1Tracers">
+if true, the 'sedGrp1Tracers' category is enabled for the run
 
 Valid values: .true. or .false.
 Default: Defined in namelist_defaults.xml
 </entry>
 
-<entry id="config_use_sedGrp1_surface_restoring" type="logical"
-        category="tracer_forcing_sedGrp1" group="tracer_forcing_sedGrp1">
-if true, surface restoring source is applied to tracers in 'sedGrp1' category
+<entry id="config_use_sedGrp1Tracers_surface_bulk_forcing" type="logical"
+        category="tracer_forcing_sedGrp1Tracers" group="tracer_forcing_sedGrp1Tracers">
+if true, surface bulk forcing from coupler is added to surfaceTracerFlux in 'sedGrp1Tracers' category
 
 Valid values: .true. or .false.
 Default: Defined in namelist_defaults.xml
 </entry>
 
-<entry id="config_use_sedGrp1_interior_restoring" type="logical"
-        category="tracer_forcing_sedGrp1" group="tracer_forcing_sedGrp1">
-if true, interior restoring source is applied to tracers in 'sedGrp1' category
+<entry id="config_use_sedGrp1Tracers_surface_restoring" type="logical"
+        category="tracer_forcing_sedGrp1Tracers" group="tracer_forcing_sedGrp1Tracers">
+if true, surface restoring source is applied to tracers in 'sedGrp1Tracers' category
 
 Valid values: .true. or .false.
 Default: Defined in namelist_defaults.xml
 </entry>
 
-<entry id="config_use_sedGrp1_exponential_decay" type="logical"
-        category="tracer_forcing_sedGrp1" group="tracer_forcing_sedGrp1">
-if true, exponential decay source is applied to tracers in 'sedGrp1' category
+<entry id="config_use_sedGrp1Tracers_interior_restoring" type="logical"
+        category="tracer_forcing_sedGrp1Tracers" group="tracer_forcing_sedGrp1Tracers">
+if true, interior restoring source is applied to tracers in 'sedGrp1Tracers' category
 
 Valid values: .true. or .false.
 Default: Defined in namelist_defaults.xml
 </entry>
 
-<entry id="config_use_sedGrp1_idealAge_forcing" type="logical"
-        category="tracer_forcing_sedGrp1" group="tracer_forcing_sedGrp1">
-if true, idealAge forcing source is applied to tracers in 'sedGrp1' category
+<entry id="config_use_sedGrp1Tracers_exponential_decay" type="logical"
+        category="tracer_forcing_sedGrp1Tracers" group="tracer_forcing_sedGrp1Tracers">
+if true, exponential decay source is applied to tracers in 'sedGrp1Tracers' category
 
 Valid values: .true. or .false.
 Default: Defined in namelist_defaults.xml
 </entry>
 
-<entry id="config_use_sedGrp1_ttd_forcing" type="logical"
-        category="tracer_forcing_sedGrp1" group="tracer_forcing_sedGrp1">
-if true, transit time distribution forcing source is applied to tracers in 'sedGrp1' category
+<entry id="config_use_sedGrp1Tracers_idealAge_forcing" type="logical"
+        category="tracer_forcing_sedGrp1Tracers" group="tracer_forcing_sedGrp1Tracers">
+if true, idealAge forcing source is applied to tracers in 'sedGrp1Tracers' category
 
 Valid values: .true. or .false.
 Default: Defined in namelist_defaults.xml
 </entry>
 
-
-<!-- tracer_forcing_sedGrp2 -->
-
-<entry id="config_use_sedGrp2" type="logical"
-        category="tracer_forcing_sedGrp2" group="tracer_forcing_sedGrp2">
-if true, the 'sedGrp2' category is enabled for the run
-
-Valid values: .true. or .false.
-Default: Defined in namelist_defaults.xml
-</entry>
-
-<entry id="config_use_sedGrp2_surface_bulk_forcing" type="logical"
-        category="tracer_forcing_sedGrp2" group="tracer_forcing_sedGrp2">
-if true, surface bulk forcing from coupler is added to surfaceTracerFlux in 'sedGrp2' category
-
-Valid values: .true. or .false.
-Default: Defined in namelist_defaults.xml
-</entry>
-
-<entry id="config_use_sedGrp2_surface_restoring" type="logical"
-        category="tracer_forcing_sedGrp2" group="tracer_forcing_sedGrp2">
-if true, surface restoring source is applied to tracers in 'sedGrp2' category
-
-Valid values: .true. or .false.
-Default: Defined in namelist_defaults.xml
-</entry>
-
-<entry id="config_use_sedGrp2_interior_restoring" type="logical"
-        category="tracer_forcing_sedGrp2" group="tracer_forcing_sedGrp2">
-if true, interior restoring source is applied to tracers in 'sedGrp2' category
-
-Valid values: .true. or .false.
-Default: Defined in namelist_defaults.xml
-</entry>
-
-<entry id="config_use_sedGrp2_exponential_decay" type="logical"
-        category="tracer_forcing_sedGrp2" group="tracer_forcing_sedGrp2">
-if true, exponential decay source is applied to tracers in 'sedGrp2' category
-
-Valid values: .true. or .false.
-Default: Defined in namelist_defaults.xml
-</entry>
-
-<entry id="config_use_sedGrp2_idealAge_forcing" type="logical"
-        category="tracer_forcing_sedGrp2" group="tracer_forcing_sedGrp2">
-if true, idealAge forcing source is applied to tracers in 'sedGrp2' category
-
-Valid values: .true. or .false.
-Default: Defined in namelist_defaults.xml
-</entry>
-
-<entry id="config_use_sedGrp2_ttd_forcing" type="logical"
-        category="tracer_forcing_sedGrp2" group="tracer_forcing_sedGrp2">
-if true, transit time distribution forcing source is applied to tracers in 'sedGrp2' category
+<entry id="config_use_sedGrp1Tracers_ttd_forcing" type="logical"
+        category="tracer_forcing_sedGrp1Tracers" group="tracer_forcing_sedGrp1Tracers">
+if true, transit time distribution forcing source is applied to tracers in 'sedGrp1Tracers' category
 
 Valid values: .true. or .false.
 Default: Defined in namelist_defaults.xml
 </entry>
 
 
-<!-- tracer_forcing_sedGrp3 -->
+<!-- tracer_forcing_sedGrp2Tracers -->
 
-<entry id="config_use_sedGrp3" type="logical"
-        category="tracer_forcing_sedGrp3" group="tracer_forcing_sedGrp3">
-if true, the 'sedGrp3' category is enabled for the run
-
-Valid values: .true. or .false.
-Default: Defined in namelist_defaults.xml
-</entry>
-
-<entry id="config_use_sedGrp3_surface_bulk_forcing" type="logical"
-        category="tracer_forcing_sedGrp3" group="tracer_forcing_sedGrp3">
-if true, surface bulk forcing from coupler is added to surfaceTracerFlux in 'sedGrp3' category
+<entry id="config_use_sedGrp2Tracers" type="logical"
+        category="tracer_forcing_sedGrp2Tracers" group="tracer_forcing_sedGrp2Tracers">
+if true, the 'sedGrp2Tracers' category is enabled for the run
 
 Valid values: .true. or .false.
 Default: Defined in namelist_defaults.xml
 </entry>
 
-<entry id="config_use_sedGrp3_surface_restoring" type="logical"
-        category="tracer_forcing_sedGrp3" group="tracer_forcing_sedGrp3">
-if true, surface restoring source is applied to tracers in 'sedGrp3' category
+<entry id="config_use_sedGrp2Tracers_surface_bulk_forcing" type="logical"
+        category="tracer_forcing_sedGrp2Tracers" group="tracer_forcing_sedGrp2Tracers">
+if true, surface bulk forcing from coupler is added to surfaceTracerFlux in 'sedGrp2Tracers' category
 
 Valid values: .true. or .false.
 Default: Defined in namelist_defaults.xml
 </entry>
 
-<entry id="config_use_sedGrp3_interior_restoring" type="logical"
-        category="tracer_forcing_sedGrp3" group="tracer_forcing_sedGrp3">
-if true, interior restoring source is applied to tracers in 'sedGrp3' category
+<entry id="config_use_sedGrp2Tracers_surface_restoring" type="logical"
+        category="tracer_forcing_sedGrp2Tracers" group="tracer_forcing_sedGrp2Tracers">
+if true, surface restoring source is applied to tracers in 'sedGrp2Tracers' category
 
 Valid values: .true. or .false.
 Default: Defined in namelist_defaults.xml
 </entry>
 
-<entry id="config_use_sedGrp3_exponential_decay" type="logical"
-        category="tracer_forcing_sedGrp3" group="tracer_forcing_sedGrp3">
-if true, exponential decay source is applied to tracers in 'sedGrp3' category
+<entry id="config_use_sedGrp2Tracers_interior_restoring" type="logical"
+        category="tracer_forcing_sedGrp2Tracers" group="tracer_forcing_sedGrp2Tracers">
+if true, interior restoring source is applied to tracers in 'sedGrp2Tracers' category
 
 Valid values: .true. or .false.
 Default: Defined in namelist_defaults.xml
 </entry>
 
-<entry id="config_use_sedGrp3_idealAge_forcing" type="logical"
-        category="tracer_forcing_sedGrp3" group="tracer_forcing_sedGrp3">
-if true, idealAge forcing source is applied to tracers in 'sedGrp3' category
+<entry id="config_use_sedGrp2Tracers_exponential_decay" type="logical"
+        category="tracer_forcing_sedGrp2Tracers" group="tracer_forcing_sedGrp2Tracers">
+if true, exponential decay source is applied to tracers in 'sedGrp2Tracers' category
 
 Valid values: .true. or .false.
 Default: Defined in namelist_defaults.xml
 </entry>
 
-<entry id="config_use_sedGrp3_ttd_forcing" type="logical"
-        category="tracer_forcing_sedGrp3" group="tracer_forcing_sedGrp3">
-if true, transit time distribution forcing source is applied to tracers in 'sedGrp3' category
+<entry id="config_use_sedGrp2Tracers_idealAge_forcing" type="logical"
+        category="tracer_forcing_sedGrp2Tracers" group="tracer_forcing_sedGrp2Tracers">
+if true, idealAge forcing source is applied to tracers in 'sedGrp2Tracers' category
+
+Valid values: .true. or .false.
+Default: Defined in namelist_defaults.xml
+</entry>
+
+<entry id="config_use_sedGrp2Tracers_ttd_forcing" type="logical"
+        category="tracer_forcing_sedGrp2Tracers" group="tracer_forcing_sedGrp2Tracers">
+if true, transit time distribution forcing source is applied to tracers in 'sedGrp2Tracers' category
+
+Valid values: .true. or .false.
+Default: Defined in namelist_defaults.xml
+</entry>
+
+
+<!-- tracer_forcing_sedGrp3Tracers -->
+
+<entry id="config_use_sedGrp3Tracers" type="logical"
+        category="tracer_forcing_sedGrp3Tracers" group="tracer_forcing_sedGrp3Tracers">
+if true, the 'sedGrp3Tracers' category is enabled for the run
+
+Valid values: .true. or .false.
+Default: Defined in namelist_defaults.xml
+</entry>
+
+<entry id="config_use_sedGrp3Tracers_surface_bulk_forcing" type="logical"
+        category="tracer_forcing_sedGrp3Tracers" group="tracer_forcing_sedGrp3Tracers">
+if true, surface bulk forcing from coupler is added to surfaceTracerFlux in 'sedGrp3Tracers' category
+
+Valid values: .true. or .false.
+Default: Defined in namelist_defaults.xml
+</entry>
+
+<entry id="config_use_sedGrp3Tracers_surface_restoring" type="logical"
+        category="tracer_forcing_sedGrp3Tracers" group="tracer_forcing_sedGrp3Tracers">
+if true, surface restoring source is applied to tracers in 'sedGrp3Tracers' category
+
+Valid values: .true. or .false.
+Default: Defined in namelist_defaults.xml
+</entry>
+
+<entry id="config_use_sedGrp3Tracers_interior_restoring" type="logical"
+        category="tracer_forcing_sedGrp3Tracers" group="tracer_forcing_sedGrp3Tracers">
+if true, interior restoring source is applied to tracers in 'sedGrp3Tracers' category
+
+Valid values: .true. or .false.
+Default: Defined in namelist_defaults.xml
+</entry>
+
+<entry id="config_use_sedGrp3Tracers_exponential_decay" type="logical"
+        category="tracer_forcing_sedGrp3Tracers" group="tracer_forcing_sedGrp3Tracers">
+if true, exponential decay source is applied to tracers in 'sedGrp3Tracers' category
+
+Valid values: .true. or .false.
+Default: Defined in namelist_defaults.xml
+</entry>
+
+<entry id="config_use_sedGrp3Tracers_idealAge_forcing" type="logical"
+        category="tracer_forcing_sedGrp3Tracers" group="tracer_forcing_sedGrp3Tracers">
+if true, idealAge forcing source is applied to tracers in 'sedGrp3Tracers' category
+
+Valid values: .true. or .false.
+Default: Defined in namelist_defaults.xml
+</entry>
+
+<entry id="config_use_sedGrp3Tracers_ttd_forcing" type="logical"
+        category="tracer_forcing_sedGrp3Tracers" group="tracer_forcing_sedGrp3Tracers">
+if true, transit time distribution forcing source is applied to tracers in 'sedGrp3Tracers' category
 
 Valid values: .true. or .false.
 Default: Defined in namelist_defaults.xml
