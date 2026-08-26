@@ -2359,16 +2359,17 @@ module ocn_time_integration_split
                      end if ! debug tracers
 
                      ! collect sediment from bottom layer
-                     if (trim(groupItr % memberName) == 'sedGrp1') then
+                     if (trim(groupItr % memberName) == 'sedGrp1Tracers') then
                         do iTracer = 1,size(tracersGroupCur,1)
                         do iCell = 1, nCellsAll
                            k = maxLevelCell(iCell)
-                           sedBotAccGrp1(iTracer,iCell) = sedBotAccGrp1(iTracer,iCell) + tracersGroupNew(iTracer,k,iCell)/layerThicknessNew(k,iCell)
-                           tracersGroupNew(iTracer,k,iCell) = 0.0_RKIND
+                           sedRemoved = tracersGroupNew(iTracer,k,iCell)/layerThicknessNew(k,iCell)
+                           sedBotAccGrp1(iTracer,iCell) = sedBotAccGrp1(iTracer,iCell) + sedRemoved
+                           tracersGroupNew(iTracer,k,iCell) = tracersGroupNew(iTracer,k,iCell) - sedRemoved
                         end do
                         end do
                      endif
-                     if (trim(groupItr % memberName) == 'sedGrp2') then
+                     if (trim(groupItr % memberName) == 'sedGrp2Tracers') then
                         do iTracer = 1,size(tracersGroupCur,1)
                         do iCell = 1, nCellsAll
                            k = maxLevelCell(iCell)
@@ -2377,7 +2378,7 @@ module ocn_time_integration_split
                         end do
                         end do
                      endif
-                     if (trim(groupItr % memberName) == 'sedGrp3') then
+                     if (trim(groupItr % memberName) == 'sedGrp3Tracers') then
                         do iTracer = 1,size(tracersGroupCur,1)
                         do iCell = 1, nCellsAll
                            k = maxLevelCell(iCell)
