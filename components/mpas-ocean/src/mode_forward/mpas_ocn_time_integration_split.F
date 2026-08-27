@@ -362,6 +362,7 @@ module ocn_time_integration_split
       real (kind=RKIND), dimension(:), pointer :: tidalPotentialEta
 
       real (kind=RKIND) :: totalDepth
+      real (kind=RKIND) :: sedRemoved
       real (kind=RKIND), dimension(:), pointer :: tidalInputMask, tidalBCValue
       real (kind=RKIND), dimension(:,:), pointer :: restingThickness
 
@@ -2363,9 +2364,9 @@ module ocn_time_integration_split
                         do iTracer = 1,size(tracersGroupCur,1)
                         do iCell = 1, nCellsAll
                            k = maxLevelCell(iCell)
-                           sedRemoved = tracersGroupNew(iTracer,k,iCell)/layerThicknessNew(k,iCell)
+                           sedRemoved = -config_settling_vel_sedGrp1*tracersGroupNew(iTracer,k,iCell)*dt
                            sedBotAccGrp1(iTracer,iCell) = sedBotAccGrp1(iTracer,iCell) + sedRemoved
-                           tracersGroupNew(iTracer,k,iCell) = tracersGroupNew(iTracer,k,iCell) - sedRemoved
+                           tracersGroupNew(iTracer,k,iCell) = tracersGroupNew(iTracer,k,iCell) - sedRemoved/layerThicknessNew(k,iCell)
                         end do
                         end do
                      endif
@@ -2373,8 +2374,9 @@ module ocn_time_integration_split
                         do iTracer = 1,size(tracersGroupCur,1)
                         do iCell = 1, nCellsAll
                            k = maxLevelCell(iCell)
-                           sedBotAccGrp2(iTracer,iCell) = sedBotAccGrp2(iTracer,iCell) + tracersGroupNew(iTracer,k,iCell)/layerThicknessNew(k,iCell)
-                           tracersGroupNew(iTracer,k,iCell) = 0.0_RKIND
+                           sedRemoved = -config_settling_vel_sedGrp2*tracersGroupNew(iTracer,k,iCell)*dt
+                           sedBotAccGrp2(iTracer,iCell) = sedBotAccGrp2(iTracer,iCell) + sedRemoved
+                           tracersGroupNew(iTracer,k,iCell) = tracersGroupNew(iTracer,k,iCell) - sedRemoved/layerThicknessNew(k,iCell)
                         end do
                         end do
                      endif
@@ -2382,8 +2384,9 @@ module ocn_time_integration_split
                         do iTracer = 1,size(tracersGroupCur,1)
                         do iCell = 1, nCellsAll
                            k = maxLevelCell(iCell)
-                           sedBotAccGrp3(iTracer,iCell) = sedBotAccGrp3(iTracer,iCell) + tracersGroupNew(iTracer,k,iCell)/layerThicknessNew(k,iCell)
-                           tracersGroupNew(iTracer,k,iCell) = 0.0_RKIND
+                           sedRemoved = -config_settling_vel_sedGrp2*tracersGroupNew(iTracer,k,iCell)*dt
+                           sedBotAccGrp2(iTracer,iCell) = sedBotAccGrp2(iTracer,iCell) + sedRemoved
+                           tracersGroupNew(iTracer,k,iCell) = tracersGroupNew(iTracer,k,iCell) - sedRemoved/layerThicknessNew(k,iCell)
                         end do
                         end do
                      endif
