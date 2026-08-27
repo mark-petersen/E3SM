@@ -48,6 +48,7 @@ module ocn_tracer_dye
 
    public :: ocn_tracer_dye_compute, &
              ocn_tracer_dye_surface_flux_compute,  &
+             ocn_tracer_sed_surface_flux_compute,  &
              ocn_tracer_dye_init
 
    !--------------------------------------------------------------------
@@ -356,6 +357,155 @@ contains
    !--------------------------------------------------------------------
 
    end subroutine ocn_tracer_dye_surface_flux_compute!}}}
+
+!***********************************************************************
+!
+!  routine ocn_tracer_sed_surface_flux_compute
+!
+!> \brief   computes a tracer tendency due to sediment surface fluxes
+!> \author  Mark Petersen
+!> \date    08/22/2026
+!> \details
+!>  This routine computes a tracer tendency due to sediment surface fluxes
+!
+!-----------------------------------------------------------------------
+
+   subroutine ocn_tracer_sed_surface_flux_compute(sedTracers, forcingPool, meshPool, nTracers,   &
+      nCellsSolve, minLevelCell, maxLevelCell, nVertLevels, layerThickness, &
+      sedSurfaceFlux, sedSurfaceFluxRunoff, &
+      indexSedMackenzie, indexSedOb, indexSedYenesei, indexSedLena, &
+      indexSedYukon, indexSedKolyma, &
+      err)!{{{
+      
+
+ use ocn_config
+
+      !-----------------------------------------------------------------
+      !
+      ! input variables
+      !
+      !-----------------------------------------------------------------
+
+      ! three dimensional arrays
+      real (kind=RKIND), dimension(:,:,:), intent(in) :: &
+         sedTracers
+
+      real (kind=RKIND), dimension(:,:), intent(in) :: &
+         layerThickness
+
+      integer, dimension(:), intent(in) :: &
+         minLevelCell, maxLevelCell
+
+      ! scalars
+      integer, intent(in) :: nTracers, nCellsSolve, nVertLevels, &
+         indexSedMackenzie,  &
+         indexSedOb,  &
+         indexSedYenesei,  &
+         indexSedLena,  &
+         indexSedYukon,  &
+         indexSedKolyma,  &
+         indexSedPrecipEvap,  &
+         indexSedIceMeltForm
+
+      !-----------------------------------------------------------------
+      !
+      ! input/output variables
+      !
+      !-----------------------------------------------------------------
+
+      ! two dimensional arrays
+      real (kind=RKIND), dimension(:,:), intent(inout) :: &
+         sedSurfaceFlux, sedSurfaceFluxRunoff
+
+      type (mpas_pool_type), intent(inout) :: forcingPool
+      type (mpas_pool_type), intent(in) :: meshPool
+
+      !-----------------------------------------------------------------
+      !
+      ! output variables
+      !
+      !-----------------------------------------------------------------
+
+      integer, intent(out) :: err !< Output: Error flag
+
+      !-----------------------------------------------------------------
+      !
+      ! local variables
+      !
+      !-----------------------------------------------------------------
+
+      integer :: iCell, iTracer, k
+
+      real (kind=RKIND), dimension(:), pointer :: seaIceFreshWaterFlux
+      real (kind=RKIND), dimension(:), pointer :: riverRunoffFlux, iceRunoffFlux,  &
+         rainFlux, snowFlux, evaporationFlux
+
+      type (mpas_pool_type), pointer :: sedDiagFields
+
+      real (kind=RKIND), dimension(:), pointer :: &
+         dyeMackenzieMask,      &
+         dyeObMask,      &
+         dyeYeneseiMask,      &
+         dyeLenaMask,  &
+         dyeKolymaMask,  &
+         dyeYukonMask,  &
+         sedArcticMask
+
+      real (kind=RKIND) :: totalRunoff
+      real (kind=RKIND) :: totalNonRunoff
+
+      err = 0
+
+      call mpas_timer_start("sed surface flux")
+
+      if (.not. config_use_sedTracers) return
+
+! get runoff fluxes
+      call mpas_pool_get_array(forcingPool, 'riverRunoffFlux', riverRunoffFlux)
+      call mpas_pool_get_array(forcingPool, 'iceRunoffFlux', iceRunoffFlux)
+! get other freshwater fluxes
+      call mpas_pool_get_array(forcingPool, 'rainFlux', rainFlux)
+      call mpas_pool_get_array(forcingPool, 'snowFlux', snowFlux)
+      call mpas_pool_get_array(forcingPool, 'evaporationFlux', evaporationFlux)
+      call mpas_pool_get_array(forcingPool, 'seaIceFreshWaterFlux', seaIceFreshWaterFlux)
+
+! get masks and diagnostic arrays
+      call mpas_pool_get_subpool(forcingPool, 'sedDiagFields', sedDiagFields)
+      call mpas_pool_get_array(meshPool, 'dyeArcticMask', dyeArcticMask)
+      call mpas_pool_get_array(meshPool, 'dyeMackenzieMask', dyeMackenzieMask)
+      call mpas_pool_get_array(meshPool, 'dyeObMask', dyeObMask)
+      call mpas_pool_get_array(meshPool, 'dyeYeneseiMask', dyeYeneseiMask)
+      call mpas_pool_get_array(meshPool, 'dyeLenaMask', dyeLenaMask)
+      call mpas_pool_get_array(meshPool, 'dyeYukonMask', sedYukonMask)
+      call mpas_pool_get_array(meshPool, 'dyeKolymaMask', dyeKolymaMask)
+      call mpas_pool_get_array(meshPool, 'dyeArcticMask', dyeArcticMask)
+
+      do iCell=1,nCellsSolve
+
+! only use positive values for flux
+      totalRunoff = max( (riverRunoffFlux(iCell) + iceRunoffFlux(iCell)), 0.0_RKIND)
+
+! convert to mg/m2/s since using kg results in huge numbers
+        if (dyeMackenzieMask(iCell) > 0.0_RKIND)   &
+          sedSurfaceFluxRunoff(indexSedMackenzie, iCell) = totalRunoff*1.e-6_RKIND
+        if (dyeObMask(iCell) > 0.0_RKIND)   &
+          sedSurfaceFluxRunoff(indexSedOb, iCell) = totalRunoff*1.e-6_RKIND
+        if (dyeYeneseiMask(iCell) > 0.0_RKIND)   &
+          sedSurfaceFluxRunoff(indexSedYenesei, iCell) = totalRunoff*1.e-6_RKIND
+        if (dyeLenaMask(iCell) > 0.0_RKIND)   &
+          sedSurfaceFluxRunoff(indexSedLena, iCell) = totalRunoff*1.e-6_RKIND
+        if (dyeYukonMask(iCell) > 0.0_RKIND)   &
+          sedSurfaceFluxRunoff(indexSedYukon, iCell) = totalRunoff*1.e-6_RKIND
+        if (dyeKolymaMask(iCell) > 0.0_RKIND)   &
+          sedSurfaceFluxRunoff(indexSedKolyma, iCell) = totalRunoff*1.e-6_RKIND
+
+      enddo  !  iCell
+
+      call mpas_timer_stop("sed surface flux")
+
+   !--------------------------------------------------------------------
+
+   end subroutine ocn_tracer_sed_surface_flux_compute!}}}
 
 !***********************************************************************
 !

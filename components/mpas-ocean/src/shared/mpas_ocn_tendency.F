@@ -1147,6 +1147,41 @@ contains
          endif ! dye
 
          !
+         ! compute sedGrp1 surface fluxes, there are no interior sources/sinks
+         !
+         if ( groupName == 'sedGrp1Tracers' ) then
+   
+            indxdyeVolMackenzieNS = 0
+            call mpas_pool_get_dimension(tracersPool, 'index_sedGrp1Mackenzie', indexdyeVolMackenzieNS)
+            indxdyeVolMackenzieNS = indexdyeVolMackenzieNS ! convert to int scalar due to problems with int scalar pointers
+            indxdyeVolObNS = 0
+            call mpas_pool_get_dimension(tracersPool, 'index_sedGrp1Ob', indexdyeVolObNS)
+            indxdyeVolObNS = indexdyeVolObNS ! convert to int scalar due to problems with int scalar pointers
+            indxdyeVolYeneseiNS = 0
+            call mpas_pool_get_dimension(tracersPool, 'index_sedGrp1Yenesei', indexdyeVolYeneseiNS)
+            indxdyeVolYeneseiNS = indexdyeVolYeneseiNS ! convert to int scalar due to problems with int scalar pointers
+            indxdyeVolLenaNS = 0
+            call mpas_pool_get_dimension(tracersPool, 'index_sedGrp1Lena', indexdyeVolLenaNS)
+            indxdyeVolLenaNS = indexdyeVolLenaNS ! convert to int scalar due to problems with int scalar pointers
+            indxdyeVolYukonNS = 0
+            call mpas_pool_get_dimension(tracersPool, 'index_sedGrp1Yukon', indexdyeVolYukonNS)
+            indxdyeVolYukonNS = indexdyeVolYukonNS ! convert to int scalar due to problems with int scalar pointers
+            indxdyeVolKolymaNS = 0
+            call mpas_pool_get_dimension(tracersPool, 'index_sedGrp1Kolyma', indexdyeVolKolymaNS)
+            indxdyeVolKolymaNS = indexdyeVolKolymaNS ! convert to int scalar due to problems with int scalar pointers
+                                                 
+            call ocn_tracer_sed_surface_flux_compute( &
+                                        tracerGroup, forcingPool, meshPool,  &
+                                        nTracersGroup, nCellsOwned, &
+                                        minLevelCell, maxLevelCell, nVertLevels, layerThickness, &
+                                        tracerGroupSurfaceFlux, tracerGroupSurfaceFluxRunoff,  &
+                                        indexdyeVolMackenzieNS, indexdyeVolObNS, &
+                                        indexdyeVolYeneseiNS, indexdyeVolLenaNS, &
+                                        indexdyeVolYukonNS, indxdyeVolKolymaNS,  &
+                                        err)
+         endif ! dye
+
+         !
          ! ocean surface restoring
          !
          if (config_use_tracerGroup_surface_restoring) then
