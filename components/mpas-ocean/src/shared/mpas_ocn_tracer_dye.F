@@ -403,9 +403,7 @@ contains
          indexSedYenesei,  &
          indexSedLena,  &
          indexSedYukon,  &
-         indexSedKolyma,  &
-         indexSedPrecipEvap,  &
-         indexSedIceMeltForm
+         indexSedKolyma
 
       !-----------------------------------------------------------------
       !
@@ -448,8 +446,7 @@ contains
          dyeYeneseiMask,      &
          dyeLenaMask,  &
          dyeKolymaMask,  &
-         dyeYukonMask,  &
-         sedArcticMask
+         dyeYukonMask
 
       real (kind=RKIND) :: totalRunoff
       real (kind=RKIND) :: totalNonRunoff
@@ -457,8 +454,6 @@ contains
       err = 0
 
       call mpas_timer_start("sed surface flux")
-
-      if (.not. config_use_sedTracers) return
 
 ! get runoff fluxes
       call mpas_pool_get_array(forcingPool, 'riverRunoffFlux', riverRunoffFlux)
@@ -471,14 +466,12 @@ contains
 
 ! get masks and diagnostic arrays
       call mpas_pool_get_subpool(forcingPool, 'sedDiagFields', sedDiagFields)
-      call mpas_pool_get_array(meshPool, 'dyeArcticMask', dyeArcticMask)
       call mpas_pool_get_array(meshPool, 'dyeMackenzieMask', dyeMackenzieMask)
       call mpas_pool_get_array(meshPool, 'dyeObMask', dyeObMask)
       call mpas_pool_get_array(meshPool, 'dyeYeneseiMask', dyeYeneseiMask)
       call mpas_pool_get_array(meshPool, 'dyeLenaMask', dyeLenaMask)
-      call mpas_pool_get_array(meshPool, 'dyeYukonMask', sedYukonMask)
+      call mpas_pool_get_array(meshPool, 'dyeYukonMask', dyeYukonMask)
       call mpas_pool_get_array(meshPool, 'dyeKolymaMask', dyeKolymaMask)
-      call mpas_pool_get_array(meshPool, 'dyeArcticMask', dyeArcticMask)
 
       do iCell=1,nCellsSolve
 
