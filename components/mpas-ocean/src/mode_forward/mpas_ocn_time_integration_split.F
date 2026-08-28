@@ -240,7 +240,11 @@ module ocn_time_integration_split
       real (kind=RKIND), dimension(:,:,:), pointer, contiguous :: &
          activeTracers   ! retain active tracers for Salt dyes
 
-      type (mpas_pool_type), pointer :: dyeDiagFields
+      type (mpas_pool_type), pointer :: dyeDiagFields, sedDiagFields
+
+      real (kind=RKIND), dimension(:,:), pointer :: &
+         sedBotRemovalRate, &
+         sedBotAcc
 
       real (kind=RKIND), dimension(:), pointer :: &
          dyeVolBarents_zint,  &
@@ -2361,37 +2365,46 @@ module ocn_time_integration_split
 
                      ! collect sediment from bottom layer
                      if (trim(groupItr % memberName) == 'sedGrp1Tracers') then
+                        call mpas_pool_get_subpool(forcingPool, 'sedGrp1DiagFields', sedDiagFields)
+                        call mpas_pool_get_array(sedDiagFields, 'sedGrp1TracersBotRemovalRate', sedBotRemovalRate)
+                        call mpas_pool_get_array(sedDiagFields, 'sedGrp1TracersBotAcc', sedBotAcc)
                         do iTracer = 1,size(tracersGroupCur,1)
                         do iCell = 1, nCellsAll
                            k = maxLevelCell(iCell)
                            sedRemovalRate = -config_settling_vel_sedGrp1*tracersGroupNew(iTracer,k,iCell)
                            sedRemoved = sedRemovalRate*dt
-                           !sedGrp1TracersBotRemovalRate(iTracer,iCell) = sedRemovalRate
-                           !sedGrp1TracersBotAcc(iTracer,iCell) = sedGrp1TracersBotAcc(iTracer,iCell) + sedRemoved
+                           sedBotRemovalRate(iTracer,iCell) = sedRemovalRate
+                           sedBotAcc(iTracer,iCell) = sedBotAcc(iTracer,iCell) + sedRemoved
                            tracersGroupNew(iTracer,k,iCell) = tracersGroupNew(iTracer,k,iCell) - sedRemoved/layerThicknessNew(k,iCell)
                         end do
                         end do
                      endif
                      if (trim(groupItr % memberName) == 'sedGrp2Tracers') then
+                        call mpas_pool_get_subpool(forcingPool, 'sedGrp2DiagFields', sedDiagFields)
+                        call mpas_pool_get_array(sedDiagFields, 'sedGrp2TracersBotRemovalRate', sedBotRemovalRate)
+                        call mpas_pool_get_array(sedDiagFields, 'sedGrp2TracersBotAcc', sedBotAcc)
                         do iTracer = 1,size(tracersGroupCur,1)
                         do iCell = 1, nCellsAll
                            k = maxLevelCell(iCell)
                            sedRemovalRate = -config_settling_vel_sedGrp2*tracersGroupNew(iTracer,k,iCell)
                            sedRemoved = sedRemovalRate*dt
-                           !sedGrp2TracersBotRemovalRate(iTracer,iCell) = sedRemovalRate
-                           !sedGrp2TracersBotAcc(iTracer,iCell) = sedGrp2TracersBotAcc(iTracer,iCell) + sedRemoved
+                           sedBotRemovalRate(iTracer,iCell) = sedRemovalRate
+                           sedBotAcc(iTracer,iCell) = sedBotAcc(iTracer,iCell) + sedRemoved
                            tracersGroupNew(iTracer,k,iCell) = tracersGroupNew(iTracer,k,iCell) - sedRemoved/layerThicknessNew(k,iCell)
                         end do
                         end do
                      endif
                      if (trim(groupItr % memberName) == 'sedGrp3Tracers') then
+                        call mpas_pool_get_subpool(forcingPool, 'sedGrp3DiagFields', sedDiagFields)
+                        call mpas_pool_get_array(sedDiagFields, 'sedGrp3TracersBotRemovalRate', sedBotRemovalRate)
+                        call mpas_pool_get_array(sedDiagFields, 'sedGrp3TracersBotAcc', sedBotAcc)
                         do iTracer = 1,size(tracersGroupCur,1)
                         do iCell = 1, nCellsAll
                            k = maxLevelCell(iCell)
                            sedRemovalRate = -config_settling_vel_sedGrp3*tracersGroupNew(iTracer,k,iCell)
                            sedRemoved = sedRemovalRate*dt
-                           !sedGrp3TracersBotRemovalRate(iTracer,iCell) = sedRemovalRate
-                           !sedGrp3TracersBotAcc(iTracer,iCell) = sedGrp3TracersBotAcc(iTracer,iCell) + sedRemoved
+                           sedBotRemovalRate(iTracer,iCell) = sedRemovalRate
+                           sedBotAcc(iTracer,iCell) = sedBotAcc(iTracer,iCell) + sedRemoved
                            tracersGroupNew(iTracer,k,iCell) = tracersGroupNew(iTracer,k,iCell) - sedRemoved/layerThicknessNew(k,iCell)
                         end do
                         end do
