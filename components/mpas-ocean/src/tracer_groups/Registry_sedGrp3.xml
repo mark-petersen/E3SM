@@ -326,6 +326,48 @@
 			<var name="sedGrp3Kolyma_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
 			description="Vertical integral of sedGrp3Kolyma Sediment Group 1"
 			/>
+			<var_array name="sedGrp3TracersBotRemovalRate" type="real" dimensions="nCells Time" packages="sedGrp3TracersPKG">
+				<!-- Add constituents of tracer group -->
+				<var name="sedGrp3MackenzieBotRemovalRate" array_group="sedGrp3BotRemovalRateGRP" units="kg m^{-3} m s^{-1}"
+					description="sedGrp3Mackenzie bottom removal rate"
+				/>
+				<var name="sedGrp3ObBotRemovalRate" array_group="sedGrp3BotRemovalRateGRP" units="kg m^{-3} m s^{-1}"
+					description="sedGrp3Ob bottom removal rate"
+				/>
+				<var name="sedGrp3YeneseiBotRemovalRate" array_group="sedGrp3BotRemovalRateGRP" units="kg m^{-3} m s^{-1}"
+					description="sedGrp3Yenesei bottom removal rate"
+				/>
+				<var name="sedGrp3LenaBotRemovalRate" array_group="sedGrp3BotRemovalRateGRP" units="kg m^{-3} m s^{-1}"
+					description="sedGrp3Lena bottom removal rate"
+				/>
+				<var name="sedGrp3YukonBotRemovalRate" array_group="sedGrp3BotRemovalRateGRP" units="kg m^{-3} m s^{-1}"
+					description="sedGrp3Yukon bottom removal rate"
+				/>
+				<var name="sedGrp3KolymaBotRemovalRate" array_group="sedGrp3BotRemovalRateGRP" units="kg m^{-3} m s^{-1}"
+					description="sedGrp3Kolyma bottom removal rate"
+				/>
+			</var_array>
+			<var_array name="sedGrp3TracersBotAcc" type="real" dimensions="nCells Time" packages="sedGrp3TracersPKG">
+				<!-- Add constituents of tracer group -->
+				<var name="sedGrp3MackenzieBotAcc" array_group="sedGrp3BotAccGRP" units="kg m^{-3} m s^{-1}"
+					description="sedGrp3Mackenzie Bottom removal, accumulated"
+				/>
+				<var name="sedGrp3ObBotAcc" array_group="sedGrp3BotAccGRP" units="kg m^{-3} m s^{-1}"
+					description="sedGrp3Ob Bottom removal, accumulated"
+				/>
+				<var name="sedGrp3YeneseiBotAcc" array_group="sedGrp3BotAccGRP" units="kg m^{-3} m s^{-1}"
+					description="sedGrp3Yenesei Bottom removal, accumulated"
+				/>
+				<var name="sedGrp3LenaBotAcc" array_group="sedGrp3BotAccGRP" units="kg m^{-3} m s^{-1}"
+					description="sedGrp3Lena Bottom removal, accumulated"
+				/>
+				<var name="sedGrp3YukonBotAcc" array_group="sedGrp3BotAccGRP" units="kg m^{-3} m s^{-1}"
+					description="sedGrp3Yukon Bottom removal, accumulated"
+				/>
+				<var name="sedGrp3KolymaBotAcc" array_group="sedGrp3BotAccGRP" units="kg m^{-3} m s^{-1}"
+					description="sedGrp3Kolyma Bottom removal, accumulated"
+				/>
+			</var_array>
 		</var_struct>
 	</var_struct>
 

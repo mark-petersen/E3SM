@@ -135,25 +135,25 @@
 					description="sedGrp1Kolyma Surface Flux Due to Runoff"
 				/>
 			</var_array>
-			<var_array name="sedGrp2TracersSurfaceFluxRemoved" type="real" dimensions="nCells Time" packages="sedGrp2TracersPKG">
+			<var_array name="sedGrp1TracersSurfaceFluxRemoved" type="real" dimensions="nCells Time" packages="sedGrp1TracersPKG">
 				<!-- Add constituents of tracer group -->
-				<var name="sedGrp2MackenzieSurfaceFluxRemoved" array_group="sedGrp2SurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
-					description="sedGrp2Mackenzie Surface Flux that is ignored"
+				<var name="sedGrp1MackenzieSurfaceFluxRemoved" array_group="sedGrp1SurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
+					description="sedGrp1Mackenzie Surface Flux that is ignored"
 				/>
-				<var name="sedGrp2ObSurfaceFluxRemoved" array_group="sedGrp2SurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
-					description="sedGrp2Ob Surface Flux that is ignored"
+				<var name="sedGrp1ObSurfaceFluxRemoved" array_group="sedGrp1SurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
+					description="sedGrp1Ob Surface Flux that is ignored"
 				/>
-				<var name="sedGrp2YeneseiSurfaceFluxRemoved" array_group="sedGrp2SurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
-					description="sedGrp2Yenesei Surface Flux that is ignored"
+				<var name="sedGrp1YeneseiSurfaceFluxRemoved" array_group="sedGrp1SurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
+					description="sedGrp1Yenesei Surface Flux that is ignored"
 				/>
-				<var name="sedGrp2LenaSurfaceFluxRemoved" array_group="sedGrp2SurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
-					description="sedGrp2Lena Surface Flux that is ignored"
+				<var name="sedGrp1LenaSurfaceFluxRemoved" array_group="sedGrp1SurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
+					description="sedGrp1Lena Surface Flux that is ignored"
 				/>
-				<var name="sedGrp2YukonSurfaceFluxRemoved" array_group="sedGrp2SurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
-					description="sedGrp2Yukon Surface Flux that is ignored"
+				<var name="sedGrp1YukonSurfaceFluxRemoved" array_group="sedGrp1SurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
+					description="sedGrp1Yukon Surface Flux that is ignored"
 				/>
-				<var name="sedGrp2KolymaSurfaceFluxRemoved" array_group="sedGrp2SurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
-					description="sedGrp2Kolyma Surface Flux that is ignored"
+				<var name="sedGrp1KolymaSurfaceFluxRemoved" array_group="sedGrp1SurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
+					description="sedGrp1Kolyma Surface Flux that is ignored"
 				/>
 			</var_array>
 		</var_struct>
