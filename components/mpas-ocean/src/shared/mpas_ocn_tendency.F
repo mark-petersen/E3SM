@@ -592,6 +592,7 @@ contains
          indxdyeVolOb,       &! tracer index for dyeVolOb
          indxdyeVolYenesei,  &! tracer index for dyeVolYenesei
          indxdyeVolLena,     &! tracer index for dyeVolLena
+         indxdyeVolYukon,     &! tracer index for dyeVolYukon
          indxdyeVolKolyma,     &! tracer index for dyeVolKolyma
          indxdyeVolPrecipEvap,   &! tracer index for dyeVolPrecipEvap
          indxdyeVolIceMeltForm,  &! tracer index for dyeVolIceMeltForm
@@ -641,6 +642,7 @@ contains
          indexdyeVolOb,        & ! tracer indicies for dyes
          indexdyeVolYenesei,   & ! tracer indicies for dyes
          indexdyeVolLena,      & ! tracer indicies for dyes
+         indexdyeVolYukon,      & ! tracer indicies for dyes
          indexdyeVolKolyma,      & ! tracer indicies for dyes
          indexdyeVolPrecipEvap,& ! tracer indicies for dyes
          indexdyeVolIceMeltForm,&! tracer indicies for dyes
@@ -1151,35 +1153,36 @@ contains
          !
          if ( groupName == 'sedGrp1Tracers' ) then
    
-            indxdyeVolMackenzieNS = 0
-            call mpas_pool_get_dimension(tracersPool, 'index_sedGrp1Mackenzie', indexdyeVolMackenzieNS)
-            indxdyeVolMackenzieNS = indexdyeVolMackenzieNS ! convert to int scalar due to problems with int scalar pointers
-            indxdyeVolObNS = 0
-            call mpas_pool_get_dimension(tracersPool, 'index_sedGrp1Ob', indexdyeVolObNS)
-            indxdyeVolObNS = indexdyeVolObNS ! convert to int scalar due to problems with int scalar pointers
-            indxdyeVolYeneseiNS = 0
-            call mpas_pool_get_dimension(tracersPool, 'index_sedGrp1Yenesei', indexdyeVolYeneseiNS)
-            indxdyeVolYeneseiNS = indexdyeVolYeneseiNS ! convert to int scalar due to problems with int scalar pointers
-            indxdyeVolLenaNS = 0
-            call mpas_pool_get_dimension(tracersPool, 'index_sedGrp1Lena', indexdyeVolLenaNS)
-            indxdyeVolLenaNS = indexdyeVolLenaNS ! convert to int scalar due to problems with int scalar pointers
-            indxdyeVolYukonNS = 0
-            call mpas_pool_get_dimension(tracersPool, 'index_sedGrp1Yukon', indexdyeVolYukonNS)
-            indxdyeVolYukonNS = indexdyeVolYukonNS ! convert to int scalar due to problems with int scalar pointers
-            indxdyeVolKolymaNS = 0
-            call mpas_pool_get_dimension(tracersPool, 'index_sedGrp1Kolyma', indexdyeVolKolymaNS)
-            indxdyeVolKolymaNS = indexdyeVolKolymaNS ! convert to int scalar due to problems with int scalar pointers
+            ! reuse dyeVol integers
+            indxdyeVolMackenzie = 0
+            call mpas_pool_get_dimension(tracersPool, 'index_sedGrp1Mackenzie', indexdyeVolMackenzie)
+            indxdyeVolMackenzie = indexdyeVolMackenzie ! convert to int scalar due to problems with int scalar pointers
+            indxdyeVolOb = 0
+            call mpas_pool_get_dimension(tracersPool, 'index_sedGrp1Ob', indexdyeVolOb)
+            indxdyeVolOb = indexdyeVolOb ! convert to int scalar due to problems with int scalar pointers
+            indxdyeVolYenesei = 0
+            call mpas_pool_get_dimension(tracersPool, 'index_sedGrp1Yenesei', indexdyeVolYenesei)
+            indxdyeVolYenesei = indexdyeVolYenesei ! convert to int scalar due to problems with int scalar pointers
+            indxdyeVolLena = 0
+            call mpas_pool_get_dimension(tracersPool, 'index_sedGrp1Lena', indexdyeVolLena)
+            indxdyeVolLena = indexdyeVolLena ! convert to int scalar due to problems with int scalar pointers
+            indxdyeVolYukon = 0
+            call mpas_pool_get_dimension(tracersPool, 'index_sedGrp1Yukon', indexdyeVolYukon)
+            indxdyeVolYukon = indexdyeVolYukon ! convert to int scalar due to problems with int scalar pointers
+            indxdyeVolKolyma = 0
+            call mpas_pool_get_dimension(tracersPool, 'index_sedGrp1Kolyma', indexdyeVolKolyma)
+            indxdyeVolKolyma = indexdyeVolKolyma ! convert to int scalar due to problems with int scalar pointers
                                                  
             call ocn_tracer_sed_surface_flux_compute( &
                                         tracerGroup, forcingPool, meshPool,  &
                                         nTracersGroup, nCellsOwned, &
                                         minLevelCell, maxLevelCell, nVertLevels, layerThickness, &
                                         tracerGroupSurfaceFlux, tracerGroupSurfaceFluxRunoff,  &
-                                        indexdyeVolMackenzieNS, indexdyeVolObNS, &
-                                        indexdyeVolYeneseiNS, indexdyeVolLenaNS, &
-                                        indexdyeVolYukonNS, indxdyeVolKolymaNS,  &
+                                        indexdyeVolMackenzie, indexdyeVolOb, &
+                                        indexdyeVolYenesei, indexdyeVolLena, &
+                                        indexdyeVolYukon, indxdyeVolKolyma,  &
                                         err)
-         endif ! dye
+         endif ! sedGrp1
 
          !
          ! ocean surface restoring

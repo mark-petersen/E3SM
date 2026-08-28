@@ -362,7 +362,7 @@ contains
 !
 !  routine ocn_tracer_sed_surface_flux_compute
 !
-!> \brief   computes a tracer tendency due to sediment surface fluxes
+! \brief   computes a tracer tendency due to sediment surface fluxes
 !> \author  Mark Petersen
 !> \date    08/22/2026
 !> \details
