@@ -2206,6 +2206,9 @@
 			<var name="SSHfinal" packages="scaledSFWFPKG"/>
 			<var name="nValidTotalfwFluxHistory" packages="scaledSFWFPKG"/>
 			<var name="SFWFScalingFactor" packages="scaledSFWFPKG"/> 
+      <var_array name="sedGrp1TracersBotAcc">
+      <var_array name="sedGrp2TracersBotAcc">
+      <var_array name="sedGrp3TracersBotAcc">
 		</stream>
 
 		<stream name="output"

@@ -438,7 +438,6 @@ contains
       real (kind=RKIND), dimension(:), pointer :: riverRunoffFlux, iceRunoffFlux,  &
          rainFlux, snowFlux, evaporationFlux
 
-      type (mpas_pool_type), pointer :: sedDiagFields
 
       real (kind=RKIND), dimension(:), pointer :: &
          dyeMackenzieMask,      &
@@ -465,7 +464,6 @@ contains
       call mpas_pool_get_array(forcingPool, 'seaIceFreshWaterFlux', seaIceFreshWaterFlux)
 
 ! get masks and diagnostic arrays
-      call mpas_pool_get_subpool(forcingPool, 'sedDiagFields', sedDiagFields)
       call mpas_pool_get_array(meshPool, 'dyeMackenzieMask', dyeMackenzieMask)
       call mpas_pool_get_array(meshPool, 'dyeObMask', dyeObMask)
       call mpas_pool_get_array(meshPool, 'dyeYeneseiMask', dyeYeneseiMask)
