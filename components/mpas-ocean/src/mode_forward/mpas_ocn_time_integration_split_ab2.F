@@ -2583,6 +2583,51 @@ module ocn_time_integration_split_ab2
                         end do
                         end do
                      endif
+                     if (trim(groupItr % memberName) == 'sedGrp4Tracers') then
+                        call mpas_pool_get_subpool(forcingPool, 'sedGrp4DiagFields', sedDiagFields)
+                        call mpas_pool_get_array(sedDiagFields, 'sedGrp4TracersBotRemovalRate', sedBotRemovalRate)
+                        call mpas_pool_get_array(sedDiagFields, 'sedGrp4TracersBotAcc', sedBotAcc)
+                        do iTracer = 1,size(tracersGroupCur,1)
+                        do iCell = 1, nCellsAll
+                           k = maxLevelCell(iCell)
+                           sedRemovalRate = -config_settling_vel_sedGrp4*tracersGroupNew(iTracer,k,iCell)
+                           sedRemoved = sedRemovalRate*dt
+                           sedBotRemovalRate(iTracer,iCell) = sedRemovalRate
+                           sedBotAcc(iTracer,iCell) = sedBotAcc(iTracer,iCell) + sedRemoved
+                           tracersGroupNew(iTracer,k,iCell) = tracersGroupNew(iTracer,k,iCell) - sedRemoved/layerThicknessNew(k,iCell)
+                        end do
+                        end do
+                     endif
+                     if (trim(groupItr % memberName) == 'sedGrp5Tracers') then
+                        call mpas_pool_get_subpool(forcingPool, 'sedGrp5DiagFields', sedDiagFields)
+                        call mpas_pool_get_array(sedDiagFields, 'sedGrp5TracersBotRemovalRate', sedBotRemovalRate)
+                        call mpas_pool_get_array(sedDiagFields, 'sedGrp5TracersBotAcc', sedBotAcc)
+                        do iTracer = 1,size(tracersGroupCur,1)
+                        do iCell = 1, nCellsAll
+                           k = maxLevelCell(iCell)
+                           sedRemovalRate = -config_settling_vel_sedGrp5*tracersGroupNew(iTracer,k,iCell)
+                           sedRemoved = sedRemovalRate*dt
+                           sedBotRemovalRate(iTracer,iCell) = sedRemovalRate
+                           sedBotAcc(iTracer,iCell) = sedBotAcc(iTracer,iCell) + sedRemoved
+                           tracersGroupNew(iTracer,k,iCell) = tracersGroupNew(iTracer,k,iCell) - sedRemoved/layerThicknessNew(k,iCell)
+                        end do
+                        end do
+                     endif
+                     if (trim(groupItr % memberName) == 'sedGrp6Tracers') then
+                        call mpas_pool_get_subpool(forcingPool, 'sedGrp6DiagFields', sedDiagFields)
+                        call mpas_pool_get_array(sedDiagFields, 'sedGrp6TracersBotRemovalRate', sedBotRemovalRate)
+                        call mpas_pool_get_array(sedDiagFields, 'sedGrp6TracersBotAcc', sedBotAcc)
+                        do iTracer = 1,size(tracersGroupCur,1)
+                        do iCell = 1, nCellsAll
+                           k = maxLevelCell(iCell)
+                           sedRemovalRate = -config_settling_vel_sedGrp6*tracersGroupNew(iTracer,k,iCell)
+                           sedRemoved = sedRemovalRate*dt
+                           sedBotRemovalRate(iTracer,iCell) = sedRemovalRate
+                           sedBotAcc(iTracer,iCell) = sedBotAcc(iTracer,iCell) + sedRemoved
+                           tracersGroupNew(iTracer,k,iCell) = tracersGroupNew(iTracer,k,iCell) - sedRemoved/layerThicknessNew(k,iCell)
+                        end do
+                        end do
+                     endif
 
                      ! Reset transect dye tracers
                      if (trim(groupItr % memberName) == 'dyeTracers') then

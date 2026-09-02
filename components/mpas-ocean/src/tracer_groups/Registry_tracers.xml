@@ -10,4 +10,7 @@
 #include "Registry_sedGrp1.xml"
 #include "Registry_sedGrp2.xml"
 #include "Registry_sedGrp3.xml"
+#include "Registry_sedGrp4.xml"
+#include "Registry_sedGrp5.xml"
+#include "Registry_sedGrp6.xml"
 //#include "Registry_TEMPLATEGRP.xml"

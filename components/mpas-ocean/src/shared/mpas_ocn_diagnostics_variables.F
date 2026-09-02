@@ -72,6 +72,9 @@ module ocn_diagnostics_variables
    real (kind=RKIND), dimension(:,:), pointer :: sedBotAccGrp1
    real (kind=RKIND), dimension(:,:), pointer :: sedBotAccGrp2
    real (kind=RKIND), dimension(:,:), pointer :: sedBotAccGrp3
+   real (kind=RKIND), dimension(:,:), pointer :: sedBotAccGrp4
+   real (kind=RKIND), dimension(:,:), pointer :: sedBotAccGrp5
+   real (kind=RKIND), dimension(:,:), pointer :: sedBotAccGrp6
 
    real (kind=RKIND), dimension(:), pointer :: upwindFactor
    real (kind=RKIND), dimension(:), pointer :: gradSSH
@@ -488,6 +491,9 @@ contains
          call mpas_pool_get_array(diagnosticsPool, 'sedBotAccGrp1', sedBotAccGrp1)
          call mpas_pool_get_array(diagnosticsPool, 'sedBotAccGrp2', sedBotAccGrp2)
          call mpas_pool_get_array(diagnosticsPool, 'sedBotAccGrp3', sedBotAccGrp3)
+         call mpas_pool_get_array(diagnosticsPool, 'sedBotAccGrp4', sedBotAccGrp4)
+         call mpas_pool_get_array(diagnosticsPool, 'sedBotAccGrp5', sedBotAccGrp5)
+         call mpas_pool_get_array(diagnosticsPool, 'sedBotAccGrp6', sedBotAccGrp6)
 
          call mpas_pool_get_array(diagnosticsPool, 'slopeTriadUp', &
                    slopeTriadUp)
@@ -818,6 +824,9 @@ contains
          !$acc                   sedBotAccGrp1,                     &
          !$acc                   sedBotAccGrp2,                     &
          !$acc                   sedBotAccGrp3,                     &
+         !$acc                   sedBotAccGrp4,                     &
+         !$acc                   sedBotAccGrp5,                     &
+         !$acc                   sedBotAccGrp6,                     &
          !$acc                   SSHGradient,                     &
          !$acc                   circulation,                     &
          !$acc                   slopeTriadUp,                    &
@@ -1083,6 +1092,9 @@ contains
          !$acc                   sedBotAccGrp1,                     &
          !$acc                   sedBotAccGrp2,                     &
          !$acc                   sedBotAccGrp3,                     &
+         !$acc                   sedBotAccGrp4,                     &
+         !$acc                   sedBotAccGrp5,                     &
+         !$acc                   sedBotAccGrp6,                     &
          !$acc                   SSHGradient,                     &
          !$acc                   circulation,                     &
          !$acc                   slopeTriadUp,                    &
@@ -1296,6 +1308,9 @@ contains
                  sedBotAccGrp1,                     &
                  sedBotAccGrp2,                     &
                  sedBotAccGrp3,                     &
+                 sedBotAccGrp4,                     &
+                 sedBotAccGrp5,                     &
+                 sedBotAccGrp6,                     &
                  SSHGradient,                     &
                  circulation,                     &
                  slopeTriadUp,                    &

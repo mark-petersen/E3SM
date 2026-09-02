@@ -568,6 +568,9 @@ add_default($nl, 'config_tracer_del4');
 add_default($nl, 'config_settling_vel_sedGrp1');
 add_default($nl, 'config_settling_vel_sedGrp2');
 add_default($nl, 'config_settling_vel_sedGrp3');
+add_default($nl, 'config_settling_vel_sedGrp4');
+add_default($nl, 'config_settling_vel_sedGrp5');
+add_default($nl, 'config_settling_vel_sedGrp6');
 
 ##############################
 # Namelist group: hmix_Leith #
@@ -1401,6 +1404,42 @@ add_default($nl, 'config_use_sedGrp3Tracers_exponential_decay');
 add_default($nl, 'config_use_sedGrp3Tracers_idealAge_forcing');
 add_default($nl, 'config_use_sedGrp3Tracers_ttd_forcing');
 
+##################################################
+# Namelist group: tracer_forcing_sedGrp4Tracers #
+##################################################
+
+add_default($nl, 'config_use_sedGrp4Tracers');
+add_default($nl, 'config_use_sedGrp4Tracers_surface_bulk_forcing');
+add_default($nl, 'config_use_sedGrp4Tracers_surface_restoring');
+add_default($nl, 'config_use_sedGrp4Tracers_interior_restoring');
+add_default($nl, 'config_use_sedGrp4Tracers_exponential_decay');
+add_default($nl, 'config_use_sedGrp4Tracers_idealAge_forcing');
+add_default($nl, 'config_use_sedGrp4Tracers_ttd_forcing');
+
+##################################################
+# Namelist group: tracer_forcing_sedGrp5Tracers #
+##################################################
+
+add_default($nl, 'config_use_sedGrp5Tracers');
+add_default($nl, 'config_use_sedGrp5Tracers_surface_bulk_forcing');
+add_default($nl, 'config_use_sedGrp5Tracers_surface_restoring');
+add_default($nl, 'config_use_sedGrp5Tracers_interior_restoring');
+add_default($nl, 'config_use_sedGrp5Tracers_exponential_decay');
+add_default($nl, 'config_use_sedGrp5Tracers_idealAge_forcing');
+add_default($nl, 'config_use_sedGrp5Tracers_ttd_forcing');
+
+##################################################
+# Namelist group: tracer_forcing_sedGrp6Tracers #
+##################################################
+
+add_default($nl, 'config_use_sedGrp6Tracers');
+add_default($nl, 'config_use_sedGrp6Tracers_surface_bulk_forcing');
+add_default($nl, 'config_use_sedGrp6Tracers_surface_restoring');
+add_default($nl, 'config_use_sedGrp6Tracers_interior_restoring');
+add_default($nl, 'config_use_sedGrp6Tracers_exponential_decay');
+add_default($nl, 'config_use_sedGrp6Tracers_idealAge_forcing');
+add_default($nl, 'config_use_sedGrp6Tracers_ttd_forcing');
+
 ##################################
 # Namelist group: AM_globalStats #
 ##################################
@@ -2019,6 +2058,9 @@ my @groups = qw(run_modes
                 tracer_forcing_sedgrp1tracers
                 tracer_forcing_sedgrp2tracers
                 tracer_forcing_sedgrp3tracers
+                tracer_forcing_sedgrp4tracers
+                tracer_forcing_sedgrp5tracers
+                tracer_forcing_sedgrp6tracers
                 am_globalstats
                 am_surfaceareaweightedaverages
                 am_watermasscensus

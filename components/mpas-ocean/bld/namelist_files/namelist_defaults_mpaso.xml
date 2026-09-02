@@ -173,9 +173,12 @@
 <config_tracer_del4>0.0</config_tracer_del4>
 
 <!-- sediments -->
-<config_settling_vel_sedGrp1>-3.4e-4</config_settling_vel_sedGrp1>
-<config_settling_vel_sedGrp2>-3.4e-5</config_settling_vel_sedGrp2>
-<config_settling_vel_sedGrp3>-3.4e-6</config_settling_vel_sedGrp3>
+<config_settling_vel_sedGrp1>0.0</config_settling_vel_sedGrp1>
+<config_settling_vel_sedGrp2>-1.00e-7</config_settling_vel_sedGrp2>
+<config_settling_vel_sedGrp3>-3.16e-7</config_settling_vel_sedGrp3>
+<config_settling_vel_sedGrp4>-1.00e-6</config_settling_vel_sedGrp4>
+<config_settling_vel_sedGrp5>-3.16e-6</config_settling_vel_sedGrp5>
+<config_settling_vel_sedGrp6>-1.00e-5</config_settling_vel_sedGrp6>
 
 <!-- hmix_Leith -->
 <config_use_Leith_del2>.false.</config_use_Leith_del2>
@@ -913,6 +916,33 @@
 <config_use_sedGrp3Tracers_exponential_decay>.false.</config_use_sedGrp3Tracers_exponential_decay>
 <config_use_sedGrp3Tracers_idealAge_forcing>.false.</config_use_sedGrp3Tracers_idealAge_forcing>
 <config_use_sedGrp3Tracers_ttd_forcing>.false.</config_use_sedGrp3Tracers_ttd_forcing>
+
+<!-- tracer_forcing_sedGrp4Tracers -->
+<config_use_sedGrp4Tracers>.false.</config_use_sedGrp4Tracers>
+<config_use_sedGrp4Tracers_surface_bulk_forcing>.false.</config_use_sedGrp4Tracers_surface_bulk_forcing>
+<config_use_sedGrp4Tracers_surface_restoring>.false.</config_use_sedGrp4Tracers_surface_restoring>
+<config_use_sedGrp4Tracers_interior_restoring>.false.</config_use_sedGrp4Tracers_interior_restoring>
+<config_use_sedGrp4Tracers_exponential_decay>.false.</config_use_sedGrp4Tracers_exponential_decay>
+<config_use_sedGrp4Tracers_idealAge_forcing>.false.</config_use_sedGrp4Tracers_idealAge_forcing>
+<config_use_sedGrp4Tracers_ttd_forcing>.false.</config_use_sedGrp4Tracers_ttd_forcing>
+
+<!-- tracer_forcing_sedGrp5Tracers -->
+<config_use_sedGrp5Tracers>.false.</config_use_sedGrp5Tracers>
+<config_use_sedGrp5Tracers_surface_bulk_forcing>.false.</config_use_sedGrp5Tracers_surface_bulk_forcing>
+<config_use_sedGrp5Tracers_surface_restoring>.false.</config_use_sedGrp5Tracers_surface_restoring>
+<config_use_sedGrp5Tracers_interior_restoring>.false.</config_use_sedGrp5Tracers_interior_restoring>
+<config_use_sedGrp5Tracers_exponential_decay>.false.</config_use_sedGrp5Tracers_exponential_decay>
+<config_use_sedGrp5Tracers_idealAge_forcing>.false.</config_use_sedGrp5Tracers_idealAge_forcing>
+<config_use_sedGrp5Tracers_ttd_forcing>.false.</config_use_sedGrp5Tracers_ttd_forcing>
+
+<!-- tracer_forcing_sedGrp6Tracers -->
+<config_use_sedGrp6Tracers>.false.</config_use_sedGrp6Tracers>
+<config_use_sedGrp6Tracers_surface_bulk_forcing>.false.</config_use_sedGrp6Tracers_surface_bulk_forcing>
+<config_use_sedGrp6Tracers_surface_restoring>.false.</config_use_sedGrp6Tracers_surface_restoring>
+<config_use_sedGrp6Tracers_interior_restoring>.false.</config_use_sedGrp6Tracers_interior_restoring>
+<config_use_sedGrp6Tracers_exponential_decay>.false.</config_use_sedGrp6Tracers_exponential_decay>
+<config_use_sedGrp6Tracers_idealAge_forcing>.false.</config_use_sedGrp6Tracers_idealAge_forcing>
+<config_use_sedGrp6Tracers_ttd_forcing>.false.</config_use_sedGrp6Tracers_ttd_forcing>
 
 <!-- AM_globalStats -->
 <config_AM_globalStats_enable>.true.</config_AM_globalStats_enable>
