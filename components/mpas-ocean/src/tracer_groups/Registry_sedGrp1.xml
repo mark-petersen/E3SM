@@ -43,6 +43,12 @@
 		<var_struct name="tracers" time_levs="2">
 			<var_array name="sedGrp1Tracers" dimensions="nVertLevels nCells Time" type="real" packages="sedGrp1TracersPKG"  default_value="0.0">
 				<!-- Add constituents of tracer group -->
+				<var name="sedGrp1Kolyma" array_group="sedGrp1GRP" units="kg m^{-3}"
+			description="sedGrp1Kolyma Sediment Group 1"
+				/>
+				<var name="sedGrp1Lena" array_group="sedGrp1GRP" units="kg m^{-3}"
+			description="sedGrp1Lena Sediment Group 1"
+				/>
 				<var name="sedGrp1Mackenzie" array_group="sedGrp1GRP" units="kg m^{-3}"
 			description="sedGrp1Mackenzie Sediment Group 1"
 				/>
@@ -52,14 +58,8 @@
 				<var name="sedGrp1Yenesei" array_group="sedGrp1GRP" units="kg m^{-3}"
 			description="sedGrp1Yenesei Sediment Group 1"
 				/>
-				<var name="sedGrp1Lena" array_group="sedGrp1GRP" units="kg m^{-3}"
-			description="sedGrp1Lena Sediment Group 1"
-				/>
 				<var name="sedGrp1Yukon" array_group="sedGrp1GRP" units="kg m^{-3}"
 			description="sedGrp1Yukon Sediment Group 1"
-				/>
-				<var name="sedGrp1Kolyma" array_group="sedGrp1GRP" units="kg m^{-3}"
-			description="sedGrp1Kolyma Sediment Group 1"
 				/>
 			</var_array>
 		</var_struct>
@@ -69,6 +69,12 @@
 		<var_struct name="tracersTend" time_levs="1">
 			<var_array name="sedGrp1TracersTend" type="real" dimensions="nVertLevels nCells Time" packages="sedGrp1TracersPKG">
 				<!-- Add constituents of tracer group -->
+				<var name="sedGrp1KolymaTend" array_group="sedGrp1GRP" units="kg m^{-3} s^{-1}"
+			description="sedGrp1Kolyma Tendency"
+				/>
+				<var name="sedGrp1LenaTend" array_group="sedGrp1GRP" units="kg m^{-3} s^{-1}"
+			description="sedGrp1Lena Tendency"
+				/>
 				<var name="sedGrp1MackenzieTend" array_group="sedGrp1GRP" units="kg m^{-3} s^{-1}"
 			description="sedGrp1Mackenzie Tendency"
 				/>
@@ -78,14 +84,8 @@
 				<var name="sedGrp1YeneseiTend" array_group="sedGrp1GRP" units="kg m^{-3} s^{-1}"
 			description="sedGrp1Yenesei Tendency"
 				/>
-				<var name="sedGrp1LenaTend" array_group="sedGrp1GRP" units="kg m^{-3} s^{-1}"
-			description="sedGrp1Lena Tendency"
-				/>
 				<var name="sedGrp1YukonTend" array_group="sedGrp1GRP" units="kg m^{-3} s^{-1}"
 			description="sedGrp1Yukon Tendency"
-				/>
-				<var name="sedGrp1KolymaTend" array_group="sedGrp1GRP" units="kg m^{-3} s^{-1}"
-			description="sedGrp1Kolyma Tendency"
 				/>
 			</var_array>
 		</var_struct>
@@ -95,6 +95,12 @@
 		<var_struct name="tracersSurfaceFlux" time_levs="1">
 			<var_array name="sedGrp1TracersSurfaceFlux" type="real" dimensions="nCells Time" packages="sedGrp1TracersPKG">
 				<!-- Add constituents of tracer group -->
+				<var name="sedGrp1KolymaSurfaceFlux" array_group="sedGrp1SurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
+			description="sedGrp1Kolyma Surface Flux"
+				/>
+				<var name="sedGrp1LenaSurfaceFlux" array_group="sedGrp1SurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
+			description="sedGrp1Lena Surface Flux"
+				/>
 				<var name="sedGrp1MackenzieSurfaceFlux" array_group="sedGrp1SurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
 			description="sedGrp1Mackenzie Surface Flux"
 				/>
@@ -104,18 +110,18 @@
 				<var name="sedGrp1YeneseiSurfaceFlux" array_group="sedGrp1SurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
 			description="sedGrp1Yenesei Surface Flux"
 				/>
-				<var name="sedGrp1LenaSurfaceFlux" array_group="sedGrp1SurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
-			description="sedGrp1Lena Surface Flux"
-				/>
 				<var name="sedGrp1YukonSurfaceFlux" array_group="sedGrp1SurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
 			description="sedGrp1Yukon Surface Flux"
-				/>
-				<var name="sedGrp1KolymaSurfaceFlux" array_group="sedGrp1SurfaceFluxGRP" units="kg m^{-3} m s^{-1}"
-			description="sedGrp1Kolyma Surface Flux"
 				/>
 			</var_array>
 			<var_array name="sedGrp1TracersSurfaceFluxRunoff" type="real" dimensions="nCells Time" packages="sedGrp1TracersPKG">
 				<!-- Add constituents of tracer group -->
+				<var name="sedGrp1KolymaSurfaceFluxRunoff" array_group="sedGrp1SurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
+					description="sedGrp1Kolyma Surface Flux Due to Runoff"
+				/>
+				<var name="sedGrp1LenaSurfaceFluxRunoff" array_group="sedGrp1SurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
+					description="sedGrp1Lena Surface Flux Due to Runoff"
+				/>
 				<var name="sedGrp1MackenzieSurfaceFluxRunoff" array_group="sedGrp1SurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
 					description="sedGrp1Mackenzie Surface Flux Due to Runoff"
 				/>
@@ -125,18 +131,18 @@
 				<var name="sedGrp1YeneseiSurfaceFluxRunoff" array_group="sedGrp1SurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
 					description="sedGrp1Yenesei Surface Flux Due to Runoff"
 				/>
-				<var name="sedGrp1LenaSurfaceFluxRunoff" array_group="sedGrp1SurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
-					description="sedGrp1Lena Surface Flux Due to Runoff"
-				/>
 				<var name="sedGrp1YukonSurfaceFluxRunoff" array_group="sedGrp1SurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
 					description="sedGrp1Yukon Surface Flux Due to Runoff"
-				/>
-				<var name="sedGrp1KolymaSurfaceFluxRunoff" array_group="sedGrp1SurfaceFluxRunoffGRP" units="kg m^{-3} m s^{-1}"
-					description="sedGrp1Kolyma Surface Flux Due to Runoff"
 				/>
 			</var_array>
 			<var_array name="sedGrp1TracersSurfaceFluxRemoved" type="real" dimensions="nCells Time" packages="sedGrp1TracersPKG">
 				<!-- Add constituents of tracer group -->
+				<var name="sedGrp1KolymaSurfaceFluxRemoved" array_group="sedGrp1SurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
+					description="sedGrp1Kolyma Surface Flux that is ignored"
+				/>
+				<var name="sedGrp1LenaSurfaceFluxRemoved" array_group="sedGrp1SurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
+					description="sedGrp1Lena Surface Flux that is ignored"
+				/>
 				<var name="sedGrp1MackenzieSurfaceFluxRemoved" array_group="sedGrp1SurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
 					description="sedGrp1Mackenzie Surface Flux that is ignored"
 				/>
@@ -146,19 +152,19 @@
 				<var name="sedGrp1YeneseiSurfaceFluxRemoved" array_group="sedGrp1SurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
 					description="sedGrp1Yenesei Surface Flux that is ignored"
 				/>
-				<var name="sedGrp1LenaSurfaceFluxRemoved" array_group="sedGrp1SurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
-					description="sedGrp1Lena Surface Flux that is ignored"
-				/>
 				<var name="sedGrp1YukonSurfaceFluxRemoved" array_group="sedGrp1SurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
 					description="sedGrp1Yukon Surface Flux that is ignored"
-				/>
-				<var name="sedGrp1KolymaSurfaceFluxRemoved" array_group="sedGrp1SurfaceFluxRemovedGRP" units="kg m^{-3} m s^{-1}"
-					description="sedGrp1Kolyma Surface Flux that is ignored"
 				/>
 			</var_array>
 		</var_struct>
 		<var_struct name="tracersSurfaceRestoringFields" time_levs="1">
 			<var_array name="sedGrp1TracersPistonVelocity" type="real" dimensions="nCells Time" packages="sedGrp1TracersSurfaceRestoringPKG">
+				<var name="sedGrp1KolymaPistonVelocity" array_group="sedGrp1PVGRP" units="m s^{-1}"
+				description="A non-negative field controlling the rate at which sedGrp1Kolyma is restored to sedGrp1KolymaSurfaceRestoringValue"
+				/>
+				<var name="sedGrp1LenaPistonVelocity" array_group="sedGrp1PVGRP" units="m s^{-1}"
+				description="A non-negative field controlling the rate at which sedGrp1Lena is restored to sedGrp1LenaSurfaceRestoringValue"
+				/>
 				<var name="sedGrp1MackenziePistonVelocity" array_group="sedGrp1PVGRP" units="m s^{-1}"
 				description="A non-negative field controlling the rate at which sedGrp1Mackenzie is restored to sedGrp1MackenzieSurfaceRestoringValue"
 				/>
@@ -168,17 +174,17 @@
 				<var name="sedGrp1YeneseiPistonVelocity" array_group="sedGrp1PVGRP" units="m s^{-1}"
 				description="A non-negative field controlling the rate at which sedGrp1Yenesei is restored to sedGrp1YeneseiSurfaceRestoringValue"
 				/>
-				<var name="sedGrp1LenaPistonVelocity" array_group="sedGrp1PVGRP" units="m s^{-1}"
-				description="A non-negative field controlling the rate at which sedGrp1Lena is restored to sedGrp1LenaSurfaceRestoringValue"
-				/>
 				<var name="sedGrp1YukonPistonVelocity" array_group="sedGrp1PVGRP" units="m s^{-1}"
 				description="A non-negative field controlling the rate at which sedGrp1Yukon is restored to sedGrp1YukonSurfaceRestoringValue"
 				/>
-				<var name="sedGrp1KolymaPistonVelocity" array_group="sedGrp1PVGRP" units="m s^{-1}"
-				description="A non-negative field controlling the rate at which sedGrp1Kolyma is restored to sedGrp1KolymaSurfaceRestoringValue"
-				/>
 			</var_array>
 			<var_array name="sedGrp1TracersSurfaceRestoringValue" type="real" dimensions="nCells Time" packages="sedGrp1TracersSurfaceRestoringPKG">
+				<var name="sedGrp1KolymaSurfaceRestoringValue" array_group="sedGrp1SRVGRP" units="kg m^{3}"
+				description="Tracer is restored toward this field at a rate controlled by sedGrp1KolymaPistonVelocity."
+				/>
+				<var name="sedGrp1LenaSurfaceRestoringValue" array_group="sedGrp1SRVGRP" units="kg m^{3}"
+				description="Tracer is restored toward this field at a rate controlled by sedGrp1LenaPistonVelocity."
+				/>
 				<var name="sedGrp1MackenzieSurfaceRestoringValue" array_group="sedGrp1SRVGRP" units="kg m^{3}"
 				description="Tracer is restored toward this field at a rate controlled by sedGrp1MackenziePistonVelocity."
 				/>
@@ -188,19 +194,19 @@
 				<var name="sedGrp1YeneseiSurfaceRestoringValue" array_group="sedGrp1SRVGRP" units="kg m^{3}"
 				description="Tracer is restored toward this field at a rate controlled by sedGrp1YeneseiPistonVelocity."
 				/>
-				<var name="sedGrp1LenaSurfaceRestoringValue" array_group="sedGrp1SRVGRP" units="kg m^{3}"
-				description="Tracer is restored toward this field at a rate controlled by sedGrp1LenaPistonVelocity."
-				/>
 				<var name="sedGrp1YukonSurfaceRestoringValue" array_group="sedGrp1SRVGRP" units="kg m^{3}"
 				description="Tracer is restored toward this field at a rate controlled by sedGrp1YukonPistonVelocity."
-				/>
-				<var name="sedGrp1KolymaSurfaceRestoringValue" array_group="sedGrp1SRVGRP" units="kg m^{3}"
-				description="Tracer is restored toward this field at a rate controlled by sedGrp1KolymaPistonVelocity."
 				/>
 			</var_array>
 		</var_struct>
 		<var_struct name="tracersInteriorRestoringFields" time_levs="1">
 			<var_array name="sedGrp1TracersInteriorRestoringRate" type="real" dimensions="nVertLevels nCells Time" packages="sedGrp1TracersInteriorRestoringPKG">
+				<var name="sedGrp1KolymaInteriorRestoringRate" array_group="sedGrp1IRRGRP" units="{s}^-1"
+				description="A non-negative field controlling the rate at which sedGrp1Kolyma is restored to sedGrp1KolymaInteriorRestoringValue"
+				/>
+				<var name="sedGrp1LenaInteriorRestoringRate" array_group="sedGrp1IRRGRP" units="{s}^-1"
+				description="A non-negative field controlling the rate at which sedGrp1Lena is restored to sedGrp1LenaInteriorRestoringValue"
+				/>
 				<var name="sedGrp1MackenzieInteriorRestoringRate" array_group="sedGrp1IRRGRP" units="{s}^-1"
 				description="A non-negative field controlling the rate at which sedGrp1Mackenzie is restored to sedGrp1MackenzieInteriorRestoringValue"
 				/>
@@ -210,17 +216,17 @@
 				<var name="sedGrp1YeneseiInteriorRestoringRate" array_group="sedGrp1IRRGRP" units="{s}^-1"
 				description="A non-negative field controlling the rate at which sedGrp1Yenesei is restored to sedGrp1YeneseiInteriorRestoringValue"
 				/>
-				<var name="sedGrp1LenaInteriorRestoringRate" array_group="sedGrp1IRRGRP" units="{s}^-1"
-				description="A non-negative field controlling the rate at which sedGrp1Lena is restored to sedGrp1LenaInteriorRestoringValue"
-				/>
 				<var name="sedGrp1YukonInteriorRestoringRate" array_group="sedGrp1IRRGRP" units="{s}^-1"
 				description="A non-negative field controlling the rate at which sedGrp1Yukon is restored to sedGrp1YukonInteriorRestoringValue"
 				/>
-				<var name="sedGrp1KolymaInteriorRestoringRate" array_group="sedGrp1IRRGRP" units="{s}^-1"
-				description="A non-negative field controlling the rate at which sedGrp1Kolyma is restored to sedGrp1KolymaInteriorRestoringValue"
-				/>
 			</var_array>
 			<var_array name="sedGrp1TracersInteriorRestoringValue" type="real" dimensions="nVertLevels nCells Time" packages="sedGrp1TracersInteriorRestoringPKG">
+				<var name="sedGrp1KolymaInteriorRestoringValue" array_group="sedGrp1IRVGRP" units="kg m^{3}"
+				description="Tracer is restored toward this field at a rate controlled by sedGrp1KolymaInteriorRestoringRate."
+				/>
+				<var name="sedGrp1LenaInteriorRestoringValue" array_group="sedGrp1IRVGRP" units="kg m^{3}"
+				description="Tracer is restored toward this field at a rate controlled by sedGrp1LenaInteriorRestoringRate."
+				/>
 				<var name="sedGrp1MackenzieInteriorRestoringValue" array_group="sedGrp1IRVGRP" units="kg m^{3}"
 				description="Tracer is restored toward this field at a rate controlled by sedGrp1MackenzieInteriorRestoringRate."
 				/>
@@ -230,19 +236,19 @@
 				<var name="sedGrp1YeneseiInteriorRestoringValue" array_group="sedGrp1IRVGRP" units="kg m^{3}"
 				description="Tracer is restored toward this field at a rate controlled by sedGrp1YeneseiInteriorRestoringRate."
 				/>
-				<var name="sedGrp1LenaInteriorRestoringValue" array_group="sedGrp1IRVGRP" units="kg m^{3}"
-				description="Tracer is restored toward this field at a rate controlled by sedGrp1LenaInteriorRestoringRate."
-				/>
 				<var name="sedGrp1YukonInteriorRestoringValue" array_group="sedGrp1IRVGRP" units="kg m^{3}"
 				description="Tracer is restored toward this field at a rate controlled by sedGrp1YukonInteriorRestoringRate."
-				/>
-				<var name="sedGrp1KolymaInteriorRestoringValue" array_group="sedGrp1IRVGRP" units="kg m^{3}"
-				description="Tracer is restored toward this field at a rate controlled by sedGrp1KolymaInteriorRestoringRate."
 				/>
 			</var_array>
 		</var_struct>
 		<var_struct name="tracersExponentialDecayFields" time_levs="1">
 			<var_array name="sedGrp1TracersExponentialDecayRate" type="real" dimensions="Time" packages="sedGrp1TracersExponentialDecayPKG">
+				<var name="sedGrp1KolymaExponentialDecayRate" array_group="sedGrp1GRP" units="s"
+				description="A non-negative field controlling the exponential decay of sedGrp1Kolyma Sediment Group 1"
+				/>
+				<var name="sedGrp1LenaExponentialDecayRate" array_group="sedGrp1GRP" units="s"
+				description="A non-negative field controlling the exponential decay of sedGrp1Lena Sediment Group 1"
+				/>
 				<var name="sedGrp1MackenzieExponentialDecayRate" array_group="sedGrp1GRP" units="s"
 				description="A non-negative field controlling the exponential decay of sedGrp1Mackenzie Sediment Group 1"
 				/>
@@ -252,19 +258,19 @@
 				<var name="sedGrp1YeneseiExponentialDecayRate" array_group="sedGrp1GRP" units="s"
 				description="A non-negative field controlling the exponential decay of sedGrp1Yenesei Sediment Group 1"
 				/>
-				<var name="sedGrp1LenaExponentialDecayRate" array_group="sedGrp1GRP" units="s"
-				description="A non-negative field controlling the exponential decay of sedGrp1Lena Sediment Group 1"
-				/>
 				<var name="sedGrp1YukonExponentialDecayRate" array_group="sedGrp1GRP" units="s"
 				description="A non-negative field controlling the exponential decay of sedGrp1Yukon Sediment Group 1"
-				/>
-				<var name="sedGrp1KolymaExponentialDecayRate" array_group="sedGrp1GRP" units="s"
-				description="A non-negative field controlling the exponential decay of sedGrp1Kolyma Sediment Group 1"
 				/>
 			</var_array>
 		</var_struct>
 		<var_struct name="tracersIdealAgeFields" time_levs="1">
 			<var_array name="sedGrp1TracersIdealAgeMask" type="real" dimensions="nCells Time" packages="sedGrp1TracersIdealAgePKG">
+				<var name="sedGrp1KolymaIdealAgeMask" array_group="sedGrp1GRP" units="unitless"
+				description="In top layer, sedGrp1Kolyma is reset to sedGrp1Kolyma * sedGrp1KolymaIdealAgeMask, valid values of sedGrp1KolymaIdealAgeMask or 0 and 1"
+				/>
+				<var name="sedGrp1LenaIdealAgeMask" array_group="sedGrp1GRP" units="unitless"
+				description="In top layer, sedGrp1Lena is reset to sedGrp1Lena * sedGrp1LenaIdealAgeMask, valid values of sedGrp1LenaIdealAgeMask or 0 and 1"
+				/>
 				<var name="sedGrp1MackenzieIdealAgeMask" array_group="sedGrp1GRP" units="unitless"
 				description="In top layer, sedGrp1Mackenzie is reset to sedGrp1Mackenzie * sedGrp1MackenzieIdealAgeMask, valid values of sedGrp1MackenzieIdealAgeMask or 0 and 1"
 				/>
@@ -274,19 +280,18 @@
 				<var name="sedGrp1YeneseiIdealAgeMask" array_group="sedGrp1GRP" units="unitless"
 				description="In top layer, sedGrp1Yenesei is reset to sedGrp1Yenesei * sedGrp1YeneseiIdealAgeMask, valid values of sedGrp1YeneseiIdealAgeMask or 0 and 1"
 				/>
-				<var name="sedGrp1LenaIdealAgeMask" array_group="sedGrp1GRP" units="unitless"
-				description="In top layer, sedGrp1Lena is reset to sedGrp1Lena * sedGrp1LenaIdealAgeMask, valid values of sedGrp1LenaIdealAgeMask or 0 and 1"
-				/>
 				<var name="sedGrp1YukonIdealAgeMask" array_group="sedGrp1GRP" units="unitless"
 				description="In top layer, sedGrp1Yukon is reset to sedGrp1Yukon * sedGrp1YukonIdealAgeMask, valid values of sedGrp1YukonIdealAgeMask or 0 and 1"
-				/>
-				<var name="sedGrp1KolymaIdealAgeMask" array_group="sedGrp1GRP" units="unitless"
-				description="In top layer, sedGrp1Kolyma is reset to sedGrp1Kolyma * sedGrp1KolymaIdealAgeMask, valid values of sedGrp1KolymaIdealAgeMask or 0 and 1"
 				/>
 			</var_array>
 		</var_struct>
 		<var_struct name="tracersTTDFields" time_levs="1">
 			<var_array name="sedGrp1TracersTTDMask" type="real" dimensions="nCells Time" packages="sedGrp1TracersTTDPKG">
+				<var name="sedGrp1KolymaTTDMask" array_group="sedGrp1GRP" units="unitless" description="In top layer, sedGrp1Kolyma is reset to sedGrp1VolKolymaTTDMask, valid values of sedGrp1KolymaTTDMask or 0 and 1"
+				/>
+				<var name="sedGrp1LenaTTDMask" array_group="sedGrp1GRP" units="unitless"
+				description="In top layer, sedGrp1Lena is reset to sedGrp1VolLenaTTDMask, valid values of sedGrp1LenaTTDMask or 0 and 1"
+				/>
 				<var name="sedGrp1MackenzieTTDMask" array_group="sedGrp1GRP" units="unitless"
 				description="In top layer, sedGrp1Mackenzie is reset to sedGrp1VolMackenzieTTDMask, valid values of sedGrp1MackenzieTTDMask or 0 and 1"
 				/>
@@ -296,18 +301,18 @@
 				<var name="sedGrp1YeneseiTTDMask" array_group="sedGrp1GRP" units="unitless"
 				description="In top layer, sedGrp1Yenesei is reset to sedGrp1VolYeneseiTTDMask, valid values of sedGrp1YeneseiTTDMask or 0 and 1"
 				/>
-				<var name="sedGrp1LenaTTDMask" array_group="sedGrp1GRP" units="unitless"
-				description="In top layer, sedGrp1Lena is reset to sedGrp1VolLenaTTDMask, valid values of sedGrp1LenaTTDMask or 0 and 1"
-				/>
 				<var name="sedGrp1YukonTTDMask" array_group="sedGrp1GRP" units="unitless"
 				description="In top layer, sedGrp1Yukon is reset to sedGrp1VolYukonTTDMask, valid values of sedGrp1YukonTTDMask or 0 and 1"
-				/>
-				<var name="sedGrp1KolymaTTDMask" array_group="sedGrp1GRP" units="unitless"
-				description="In top layer, sedGrp1Kolyma is reset to sedGrp1VolKolymaTTDMask, valid values of sedGrp1KolymaTTDMask or 0 and 1"
 				/>
 			</var_array>
 		</var_struct>
 		<var_struct name="sedGrp1DiagFields" time_levs="1">
+			<var name="sedGrp1Kolyma_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
+			description="Vertical integral of sedGrp1Kolyma Sediment Group 1"
+			/>
+			<var name="sedGrp1Lena_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
+			description="Vertical integral of sedGrp1Lena Sediment Group 1"
+			/>
 			<var name="sedGrp1Mackenzie_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
 			description="Vertical integral of sedGrp1Mackenzie Sediment Group 1"
 			/>
@@ -317,17 +322,17 @@
 			<var name="sedGrp1Yenesei_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
 			description="Vertical integral of sedGrp1Yenesei Sediment Group 1"
 			/>
-			<var name="sedGrp1Lena_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
-			description="Vertical integral of sedGrp1Lena Sediment Group 1"
-			/>
 			<var name="sedGrp1Yukon_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
 			description="Vertical integral of sedGrp1Yukon Sediment Group 1"
 			/>
-			<var name="sedGrp1Kolyma_zint" type="real" dimensions="nCells Time" units="kg m^{-2}"
-			description="Vertical integral of sedGrp1Kolyma Sediment Group 1"
-			/>
 			<var_array name="sedGrp1TracersBotRemovalRate" type="real" dimensions="nCells Time" packages="sedGrp1TracersPKG">
 				<!-- Add constituents of tracer group -->
+				<var name="sedGrp1KolymaBotRemovalRate" array_group="sedGrp1BotRemovalRateGRP" units="kg m^{-3} m s^{-1}"
+					description="sedGrp1Kolyma bottom removal rate"
+				/>
+				<var name="sedGrp1LenaBotRemovalRate" array_group="sedGrp1BotRemovalRateGRP" units="kg m^{-3} m s^{-1}"
+					description="sedGrp1Lena bottom removal rate"
+				/>
 				<var name="sedGrp1MackenzieBotRemovalRate" array_group="sedGrp1BotRemovalRateGRP" units="kg m^{-3} m s^{-1}"
 					description="sedGrp1Mackenzie bottom removal rate"
 				/>
@@ -337,18 +342,18 @@
 				<var name="sedGrp1YeneseiBotRemovalRate" array_group="sedGrp1BotRemovalRateGRP" units="kg m^{-3} m s^{-1}"
 					description="sedGrp1Yenesei bottom removal rate"
 				/>
-				<var name="sedGrp1LenaBotRemovalRate" array_group="sedGrp1BotRemovalRateGRP" units="kg m^{-3} m s^{-1}"
-					description="sedGrp1Lena bottom removal rate"
-				/>
 				<var name="sedGrp1YukonBotRemovalRate" array_group="sedGrp1BotRemovalRateGRP" units="kg m^{-3} m s^{-1}"
 					description="sedGrp1Yukon bottom removal rate"
-				/>
-				<var name="sedGrp1KolymaBotRemovalRate" array_group="sedGrp1BotRemovalRateGRP" units="kg m^{-3} m s^{-1}"
-					description="sedGrp1Kolyma bottom removal rate"
 				/>
 			</var_array>
 			<var_array name="sedGrp1TracersBotAcc" type="real" dimensions="nCells Time" packages="sedGrp1TracersPKG">
 				<!-- Add constituents of tracer group -->
+				<var name="sedGrp1KolymaBotAcc" array_group="sedGrp1BotAccGRP" units="kg m^{-3} m s^{-1}"
+					description="sedGrp1Kolyma Bottom removal, accumulated"
+				/>
+				<var name="sedGrp1LenaBotAcc" array_group="sedGrp1BotAccGRP" units="kg m^{-3} m s^{-1}"
+					description="sedGrp1Lena Bottom removal, accumulated"
+				/>
 				<var name="sedGrp1MackenzieBotAcc" array_group="sedGrp1BotAccGRP" units="kg m^{-3} m s^{-1}"
 					description="sedGrp1Mackenzie Bottom removal, accumulated"
 				/>
@@ -358,14 +363,8 @@
 				<var name="sedGrp1YeneseiBotAcc" array_group="sedGrp1BotAccGRP" units="kg m^{-3} m s^{-1}"
 					description="sedGrp1Yenesei Bottom removal, accumulated"
 				/>
-				<var name="sedGrp1LenaBotAcc" array_group="sedGrp1BotAccGRP" units="kg m^{-3} m s^{-1}"
-					description="sedGrp1Lena Bottom removal, accumulated"
-				/>
 				<var name="sedGrp1YukonBotAcc" array_group="sedGrp1BotAccGRP" units="kg m^{-3} m s^{-1}"
 					description="sedGrp1Yukon Bottom removal, accumulated"
-				/>
-				<var name="sedGrp1KolymaBotAcc" array_group="sedGrp1BotAccGRP" units="kg m^{-3} m s^{-1}"
-					description="sedGrp1Kolyma Bottom removal, accumulated"
 				/>
 			</var_array>
 		</var_struct>
