@@ -246,6 +246,420 @@
 				description="salinity at bottom"
 			/>
 		</var_array>
+      <var_array name="sedGrp1TracersAtSurface" type="real" dimensions="nCells Time">
+          <var name="sedGrp1KolymaAtSurface" array_group="sedGrp1TracersAtSurface" units="kg m^{-3}"
+        description="sedGrp1Kolyma Sediment Group 1"
+          />
+          <var name="sedGrp1LenaAtSurface" array_group="sedGrp1TracersAtSurface" units="kg m^{-3}"
+        description="sedGrp1Lena Sediment Group 1"
+          />
+          <var name="sedGrp1MackenzieAtSurface" array_group="sedGrp1TracersAtSurface" units="kg m^{-3}"
+        description="sedGrp1Mackenzie Sediment Group 1"
+          />
+          <var name="sedGrp1ObAtSurface" array_group="sedGrp1TracersAtSurface" units="kg m^{-3}"
+        description="sedGrp1Ob Sediment Group 1"
+          />
+          <var name="sedGrp1YeneseiAtSurface" array_group="sedGrp1TracersAtSurface" units="kg m^{-3}"
+        description="sedGrp1Yenesei Sediment Group 1"
+          />
+          <var name="sedGrp1YukonAtSurface" array_group="sedGrp1TracersAtSurface" units="kg m^{-3}"
+        description="sedGrp1Yukon Sediment Group 1"
+          />
+      </var_array>
+			<var name="sedGrp1TracersAtSurfaceAll" type="real" dimensions="nCells Time" units="kg m^{-3}"
+					description="all rivers Sediment Group 1"
+			/>
+      <var_array name="sedGrp1TracersAt250m" type="real" dimensions="nCells Time">
+          <var name="sedGrp1KolymaAt250m" array_group="sedGrp1TracersAt250m" units="kg m^{-3}"
+        description="sedGrp1Kolyma Sediment Group 1"
+          />
+          <var name="sedGrp1LenaAt250m" array_group="sedGrp1TracersAt250m" units="kg m^{-3}"
+        description="sedGrp1Lena Sediment Group 1"
+          />
+          <var name="sedGrp1MackenzieAt250m" array_group="sedGrp1TracersAt250m" units="kg m^{-3}"
+        description="sedGrp1Mackenzie Sediment Group 1"
+          />
+          <var name="sedGrp1ObAt250m" array_group="sedGrp1TracersAt250m" units="kg m^{-3}"
+        description="sedGrp1Ob Sediment Group 1"
+          />
+          <var name="sedGrp1YeneseiAt250m" array_group="sedGrp1TracersAt250m" units="kg m^{-3}"
+        description="sedGrp1Yenesei Sediment Group 1"
+          />
+          <var name="sedGrp1YukonAt250m" array_group="sedGrp1TracersAt250m" units="kg m^{-3}"
+        description="sedGrp1Yukon Sediment Group 1"
+				/>
+		</var_array>
+			<var name="sedGrp1TracersAt250mAll" type="real" dimensions="nCells Time" units="kg m^{-3}"
+					description="all rivers Sediment Group 1"
+			/>
+      <var_array name="sedGrp1TracersZInt" type="real" dimensions="nCells Time">
+          <var name="sedGrp1KolymaZInt" array_group="sedGrp1TracersZInt" units="kg m^{-3}"
+        description="sedGrp1Kolyma Sediment Group 1"
+          />
+          <var name="sedGrp1LenaZInt" array_group="sedGrp1TracersZInt" units="kg m^{-3}"
+        description="sedGrp1Lena Sediment Group 1"
+          />
+          <var name="sedGrp1MackenzieZInt" array_group="sedGrp1TracersZInt" units="kg m^{-3}"
+        description="sedGrp1Mackenzie Sediment Group 1"
+          />
+          <var name="sedGrp1ObZInt" array_group="sedGrp1TracersZInt" units="kg m^{-3}"
+        description="sedGrp1Ob Sediment Group 1"
+          />
+          <var name="sedGrp1YeneseiZInt" array_group="sedGrp1TracersZInt" units="kg m^{-3}"
+        description="sedGrp1Yenesei Sediment Group 1"
+          />
+          <var name="sedGrp1YukonZInt" array_group="sedGrp1TracersZInt" units="kg m^{-3}"
+        description="sedGrp1Yukon Sediment Group 1"
+				/>
+		</var_array>
+			<var name="sedGrp1TracersZIntAll" type="real" dimensions="nCells Time" units="kg m^{-3}"
+					description="all rivers Sediment Group 1"
+			/>
+      <var_array name="sedGrp2TracersAtSurface" type="real" dimensions="nCells Time">
+          <var name="sedGrp2KolymaAtSurface" array_group="sedGrp2TracersAtSurface" units="kg m^{-3}"
+        description="sedGrp2Kolyma Sediment Group 1"
+          />
+          <var name="sedGrp2LenaAtSurface" array_group="sedGrp2TracersAtSurface" units="kg m^{-3}"
+        description="sedGrp2Lena Sediment Group 1"
+          />
+          <var name="sedGrp2MackenzieAtSurface" array_group="sedGrp2TracersAtSurface" units="kg m^{-3}"
+        description="sedGrp2Mackenzie Sediment Group 1"
+          />
+          <var name="sedGrp2ObAtSurface" array_group="sedGrp2TracersAtSurface" units="kg m^{-3}"
+        description="sedGrp2Ob Sediment Group 1"
+          />
+          <var name="sedGrp2YeneseiAtSurface" array_group="sedGrp2TracersAtSurface" units="kg m^{-3}"
+        description="sedGrp2Yenesei Sediment Group 1"
+          />
+          <var name="sedGrp2YukonAtSurface" array_group="sedGrp2TracersAtSurface" units="kg m^{-3}"
+        description="sedGrp2Yukon Sediment Group 1"
+          />
+      </var_array>
+			<var name="sedGrp2TracersAtSurfaceAll" type="real" dimensions="nCells Time" units="kg m^{-3}"
+					description="all rivers Sediment Group 1"
+			/>
+      <var_array name="sedGrp2TracersAt250m" type="real" dimensions="nCells Time">
+          <var name="sedGrp2KolymaAt250m" array_group="sedGrp2TracersAt250m" units="kg m^{-3}"
+        description="sedGrp2Kolyma Sediment Group 1"
+          />
+          <var name="sedGrp2LenaAt250m" array_group="sedGrp2TracersAt250m" units="kg m^{-3}"
+        description="sedGrp2Lena Sediment Group 1"
+          />
+          <var name="sedGrp2MackenzieAt250m" array_group="sedGrp2TracersAt250m" units="kg m^{-3}"
+        description="sedGrp2Mackenzie Sediment Group 1"
+          />
+          <var name="sedGrp2ObAt250m" array_group="sedGrp2TracersAt250m" units="kg m^{-3}"
+        description="sedGrp2Ob Sediment Group 1"
+          />
+          <var name="sedGrp2YeneseiAt250m" array_group="sedGrp2TracersAt250m" units="kg m^{-3}"
+        description="sedGrp2Yenesei Sediment Group 1"
+          />
+          <var name="sedGrp2YukonAt250m" array_group="sedGrp2TracersAt250m" units="kg m^{-3}"
+        description="sedGrp2Yukon Sediment Group 1"
+				/>
+		</var_array>
+			<var name="sedGrp2TracersAt250mAll" type="real" dimensions="nCells Time" units="kg m^{-3}"
+					description="all rivers Sediment Group 1"
+			/>
+      <var_array name="sedGrp2TracersZInt" type="real" dimensions="nCells Time">
+          <var name="sedGrp2KolymaZInt" array_group="sedGrp2TracersZInt" units="kg m^{-3}"
+        description="sedGrp2Kolyma Sediment Group 1"
+          />
+          <var name="sedGrp2LenaZInt" array_group="sedGrp2TracersZInt" units="kg m^{-3}"
+        description="sedGrp2Lena Sediment Group 1"
+          />
+          <var name="sedGrp2MackenzieZInt" array_group="sedGrp2TracersZInt" units="kg m^{-3}"
+        description="sedGrp2Mackenzie Sediment Group 1"
+          />
+          <var name="sedGrp2ObZInt" array_group="sedGrp2TracersZInt" units="kg m^{-3}"
+        description="sedGrp2Ob Sediment Group 1"
+          />
+          <var name="sedGrp2YeneseiZInt" array_group="sedGrp2TracersZInt" units="kg m^{-3}"
+        description="sedGrp2Yenesei Sediment Group 1"
+          />
+          <var name="sedGrp2YukonZInt" array_group="sedGrp2TracersZInt" units="kg m^{-3}"
+        description="sedGrp2Yukon Sediment Group 1"
+				/>
+		</var_array>
+			<var name="sedGrp2TracersZIntAll" type="real" dimensions="nCells Time" units="kg m^{-3}"
+					description="all rivers Sediment Group 1"
+			/>
+      <var_array name="sedGrp3TracersAtSurface" type="real" dimensions="nCells Time">
+          <var name="sedGrp3KolymaAtSurface" array_group="sedGrp3TracersAtSurface" units="kg m^{-3}"
+        description="sedGrp3Kolyma Sediment Group 1"
+          />
+          <var name="sedGrp3LenaAtSurface" array_group="sedGrp3TracersAtSurface" units="kg m^{-3}"
+        description="sedGrp3Lena Sediment Group 1"
+          />
+          <var name="sedGrp3MackenzieAtSurface" array_group="sedGrp3TracersAtSurface" units="kg m^{-3}"
+        description="sedGrp3Mackenzie Sediment Group 1"
+          />
+          <var name="sedGrp3ObAtSurface" array_group="sedGrp3TracersAtSurface" units="kg m^{-3}"
+        description="sedGrp3Ob Sediment Group 1"
+          />
+          <var name="sedGrp3YeneseiAtSurface" array_group="sedGrp3TracersAtSurface" units="kg m^{-3}"
+        description="sedGrp3Yenesei Sediment Group 1"
+          />
+          <var name="sedGrp3YukonAtSurface" array_group="sedGrp3TracersAtSurface" units="kg m^{-3}"
+        description="sedGrp3Yukon Sediment Group 1"
+          />
+      </var_array>
+			<var name="sedGrp3TracersAtSurfaceAll" type="real" dimensions="nCells Time" units="kg m^{-3}"
+					description="all rivers Sediment Group 1"
+			/>
+      <var_array name="sedGrp3TracersAt250m" type="real" dimensions="nCells Time">
+          <var name="sedGrp3KolymaAt250m" array_group="sedGrp3TracersAt250m" units="kg m^{-3}"
+        description="sedGrp3Kolyma Sediment Group 1"
+          />
+          <var name="sedGrp3LenaAt250m" array_group="sedGrp3TracersAt250m" units="kg m^{-3}"
+        description="sedGrp3Lena Sediment Group 1"
+          />
+          <var name="sedGrp3MackenzieAt250m" array_group="sedGrp3TracersAt250m" units="kg m^{-3}"
+        description="sedGrp3Mackenzie Sediment Group 1"
+          />
+          <var name="sedGrp3ObAt250m" array_group="sedGrp3TracersAt250m" units="kg m^{-3}"
+        description="sedGrp3Ob Sediment Group 1"
+          />
+          <var name="sedGrp3YeneseiAt250m" array_group="sedGrp3TracersAt250m" units="kg m^{-3}"
+        description="sedGrp3Yenesei Sediment Group 1"
+          />
+          <var name="sedGrp3YukonAt250m" array_group="sedGrp3TracersAt250m" units="kg m^{-3}"
+        description="sedGrp3Yukon Sediment Group 1"
+				/>
+		</var_array>
+			<var name="sedGrp3TracersAt250mAll" type="real" dimensions="nCells Time" units="kg m^{-3}"
+					description="all rivers Sediment Group 1"
+			/>
+      <var_array name="sedGrp3TracersZInt" type="real" dimensions="nCells Time">
+          <var name="sedGrp3KolymaZInt" array_group="sedGrp3TracersZInt" units="kg m^{-3}"
+        description="sedGrp3Kolyma Sediment Group 1"
+          />
+          <var name="sedGrp3LenaZInt" array_group="sedGrp3TracersZInt" units="kg m^{-3}"
+        description="sedGrp3Lena Sediment Group 1"
+          />
+          <var name="sedGrp3MackenzieZInt" array_group="sedGrp3TracersZInt" units="kg m^{-3}"
+        description="sedGrp3Mackenzie Sediment Group 1"
+          />
+          <var name="sedGrp3ObZInt" array_group="sedGrp3TracersZInt" units="kg m^{-3}"
+        description="sedGrp3Ob Sediment Group 1"
+          />
+          <var name="sedGrp3YeneseiZInt" array_group="sedGrp3TracersZInt" units="kg m^{-3}"
+        description="sedGrp3Yenesei Sediment Group 1"
+          />
+          <var name="sedGrp3YukonZInt" array_group="sedGrp3TracersZInt" units="kg m^{-3}"
+        description="sedGrp3Yukon Sediment Group 1"
+				/>
+		</var_array>
+			<var name="sedGrp3TracersZIntAll" type="real" dimensions="nCells Time" units="kg m^{-3}"
+					description="all rivers Sediment Group 1"
+			/>
+      <var_array name="sedGrp4TracersAtSurface" type="real" dimensions="nCells Time">
+          <var name="sedGrp4KolymaAtSurface" array_group="sedGrp4TracersAtSurface" units="kg m^{-3}"
+        description="sedGrp4Kolyma Sediment Group 1"
+          />
+          <var name="sedGrp4LenaAtSurface" array_group="sedGrp4TracersAtSurface" units="kg m^{-3}"
+        description="sedGrp4Lena Sediment Group 1"
+          />
+          <var name="sedGrp4MackenzieAtSurface" array_group="sedGrp4TracersAtSurface" units="kg m^{-3}"
+        description="sedGrp4Mackenzie Sediment Group 1"
+          />
+          <var name="sedGrp4ObAtSurface" array_group="sedGrp4TracersAtSurface" units="kg m^{-3}"
+        description="sedGrp4Ob Sediment Group 1"
+          />
+          <var name="sedGrp4YeneseiAtSurface" array_group="sedGrp4TracersAtSurface" units="kg m^{-3}"
+        description="sedGrp4Yenesei Sediment Group 1"
+          />
+          <var name="sedGrp4YukonAtSurface" array_group="sedGrp4TracersAtSurface" units="kg m^{-3}"
+        description="sedGrp4Yukon Sediment Group 1"
+          />
+      </var_array>
+			<var name="sedGrp4TracersAtSurfaceAll" type="real" dimensions="nCells Time" units="kg m^{-3}"
+					description="all rivers Sediment Group 1"
+			/>
+      <var_array name="sedGrp4TracersAt250m" type="real" dimensions="nCells Time">
+          <var name="sedGrp4KolymaAt250m" array_group="sedGrp4TracersAt250m" units="kg m^{-3}"
+        description="sedGrp4Kolyma Sediment Group 1"
+          />
+          <var name="sedGrp4LenaAt250m" array_group="sedGrp4TracersAt250m" units="kg m^{-3}"
+        description="sedGrp4Lena Sediment Group 1"
+          />
+          <var name="sedGrp4MackenzieAt250m" array_group="sedGrp4TracersAt250m" units="kg m^{-3}"
+        description="sedGrp4Mackenzie Sediment Group 1"
+          />
+          <var name="sedGrp4ObAt250m" array_group="sedGrp4TracersAt250m" units="kg m^{-3}"
+        description="sedGrp4Ob Sediment Group 1"
+          />
+          <var name="sedGrp4YeneseiAt250m" array_group="sedGrp4TracersAt250m" units="kg m^{-3}"
+        description="sedGrp4Yenesei Sediment Group 1"
+          />
+          <var name="sedGrp4YukonAt250m" array_group="sedGrp4TracersAt250m" units="kg m^{-3}"
+        description="sedGrp4Yukon Sediment Group 1"
+				/>
+		</var_array>
+			<var name="sedGrp4TracersAt250mAll" type="real" dimensions="nCells Time" units="kg m^{-3}"
+					description="all rivers Sediment Group 1"
+			/>
+      <var_array name="sedGrp4TracersZInt" type="real" dimensions="nCells Time">
+          <var name="sedGrp4KolymaZInt" array_group="sedGrp4TracersZInt" units="kg m^{-3}"
+        description="sedGrp4Kolyma Sediment Group 1"
+          />
+          <var name="sedGrp4LenaZInt" array_group="sedGrp4TracersZInt" units="kg m^{-3}"
+        description="sedGrp4Lena Sediment Group 1"
+          />
+          <var name="sedGrp4MackenzieZInt" array_group="sedGrp4TracersZInt" units="kg m^{-3}"
+        description="sedGrp4Mackenzie Sediment Group 1"
+          />
+          <var name="sedGrp4ObZInt" array_group="sedGrp4TracersZInt" units="kg m^{-3}"
+        description="sedGrp4Ob Sediment Group 1"
+          />
+          <var name="sedGrp4YeneseiZInt" array_group="sedGrp4TracersZInt" units="kg m^{-3}"
+        description="sedGrp4Yenesei Sediment Group 1"
+          />
+          <var name="sedGrp4YukonZInt" array_group="sedGrp4TracersZInt" units="kg m^{-3}"
+        description="sedGrp4Yukon Sediment Group 1"
+				/>
+		</var_array>
+			<var name="sedGrp4TracersZIntAll" type="real" dimensions="nCells Time" units="kg m^{-3}"
+					description="all rivers Sediment Group 1"
+			/>
+      <var_array name="sedGrp5TracersAtSurface" type="real" dimensions="nCells Time">
+          <var name="sedGrp5KolymaAtSurface" array_group="sedGrp5TracersAtSurface" units="kg m^{-3}"
+        description="sedGrp5Kolyma Sediment Group 1"
+          />
+          <var name="sedGrp5LenaAtSurface" array_group="sedGrp5TracersAtSurface" units="kg m^{-3}"
+        description="sedGrp5Lena Sediment Group 1"
+          />
+          <var name="sedGrp5MackenzieAtSurface" array_group="sedGrp5TracersAtSurface" units="kg m^{-3}"
+        description="sedGrp5Mackenzie Sediment Group 1"
+          />
+          <var name="sedGrp5ObAtSurface" array_group="sedGrp5TracersAtSurface" units="kg m^{-3}"
+        description="sedGrp5Ob Sediment Group 1"
+          />
+          <var name="sedGrp5YeneseiAtSurface" array_group="sedGrp5TracersAtSurface" units="kg m^{-3}"
+        description="sedGrp5Yenesei Sediment Group 1"
+          />
+          <var name="sedGrp5YukonAtSurface" array_group="sedGrp5TracersAtSurface" units="kg m^{-3}"
+        description="sedGrp5Yukon Sediment Group 1"
+          />
+      </var_array>
+			<var name="sedGrp5TracersAtSurfaceAll" type="real" dimensions="nCells Time" units="kg m^{-3}"
+					description="all rivers Sediment Group 1"
+			/>
+      <var_array name="sedGrp5TracersAt250m" type="real" dimensions="nCells Time">
+          <var name="sedGrp5KolymaAt250m" array_group="sedGrp5TracersAt250m" units="kg m^{-3}"
+        description="sedGrp5Kolyma Sediment Group 1"
+          />
+          <var name="sedGrp5LenaAt250m" array_group="sedGrp5TracersAt250m" units="kg m^{-3}"
+        description="sedGrp5Lena Sediment Group 1"
+          />
+          <var name="sedGrp5MackenzieAt250m" array_group="sedGrp5TracersAt250m" units="kg m^{-3}"
+        description="sedGrp5Mackenzie Sediment Group 1"
+          />
+          <var name="sedGrp5ObAt250m" array_group="sedGrp5TracersAt250m" units="kg m^{-3}"
+        description="sedGrp5Ob Sediment Group 1"
+          />
+          <var name="sedGrp5YeneseiAt250m" array_group="sedGrp5TracersAt250m" units="kg m^{-3}"
+        description="sedGrp5Yenesei Sediment Group 1"
+          />
+          <var name="sedGrp5YukonAt250m" array_group="sedGrp5TracersAt250m" units="kg m^{-3}"
+        description="sedGrp5Yukon Sediment Group 1"
+				/>
+		</var_array>
+			<var name="sedGrp5TracersAt250mAll" type="real" dimensions="nCells Time" units="kg m^{-3}"
+					description="all rivers Sediment Group 1"
+			/>
+      <var_array name="sedGrp5TracersZInt" type="real" dimensions="nCells Time">
+          <var name="sedGrp5KolymaZInt" array_group="sedGrp5TracersZInt" units="kg m^{-3}"
+        description="sedGrp5Kolyma Sediment Group 1"
+          />
+          <var name="sedGrp5LenaZInt" array_group="sedGrp5TracersZInt" units="kg m^{-3}"
+        description="sedGrp5Lena Sediment Group 1"
+          />
+          <var name="sedGrp5MackenzieZInt" array_group="sedGrp5TracersZInt" units="kg m^{-3}"
+        description="sedGrp5Mackenzie Sediment Group 1"
+          />
+          <var name="sedGrp5ObZInt" array_group="sedGrp5TracersZInt" units="kg m^{-3}"
+        description="sedGrp5Ob Sediment Group 1"
+          />
+          <var name="sedGrp5YeneseiZInt" array_group="sedGrp5TracersZInt" units="kg m^{-3}"
+        description="sedGrp5Yenesei Sediment Group 1"
+          />
+          <var name="sedGrp5YukonZInt" array_group="sedGrp5TracersZInt" units="kg m^{-3}"
+        description="sedGrp5Yukon Sediment Group 1"
+				/>
+		</var_array>
+			<var name="sedGrp5TracersZIntAll" type="real" dimensions="nCells Time" units="kg m^{-3}"
+					description="all rivers Sediment Group 1"
+			/>
+      <var_array name="sedGrp6TracersAtSurface" type="real" dimensions="nCells Time">
+          <var name="sedGrp6KolymaAtSurface" array_group="sedGrp6TracersAtSurface" units="kg m^{-3}"
+        description="sedGrp6Kolyma Sediment Group 1"
+          />
+          <var name="sedGrp6LenaAtSurface" array_group="sedGrp6TracersAtSurface" units="kg m^{-3}"
+        description="sedGrp6Lena Sediment Group 1"
+          />
+          <var name="sedGrp6MackenzieAtSurface" array_group="sedGrp6TracersAtSurface" units="kg m^{-3}"
+        description="sedGrp6Mackenzie Sediment Group 1"
+          />
+          <var name="sedGrp6ObAtSurface" array_group="sedGrp6TracersAtSurface" units="kg m^{-3}"
+        description="sedGrp6Ob Sediment Group 1"
+          />
+          <var name="sedGrp6YeneseiAtSurface" array_group="sedGrp6TracersAtSurface" units="kg m^{-3}"
+        description="sedGrp6Yenesei Sediment Group 1"
+          />
+          <var name="sedGrp6YukonAtSurface" array_group="sedGrp6TracersAtSurface" units="kg m^{-3}"
+        description="sedGrp6Yukon Sediment Group 1"
+          />
+      </var_array>
+			<var name="sedGrp6TracersAtSurfaceAll" type="real" dimensions="nCells Time" units="kg m^{-3}"
+					description="all rivers Sediment Group 1"
+			/>
+      <var_array name="sedGrp6TracersAt250m" type="real" dimensions="nCells Time">
+          <var name="sedGrp6KolymaAt250m" array_group="sedGrp6TracersAt250m" units="kg m^{-3}"
+        description="sedGrp6Kolyma Sediment Group 1"
+          />
+          <var name="sedGrp6LenaAt250m" array_group="sedGrp6TracersAt250m" units="kg m^{-3}"
+        description="sedGrp6Lena Sediment Group 1"
+          />
+          <var name="sedGrp6MackenzieAt250m" array_group="sedGrp6TracersAt250m" units="kg m^{-3}"
+        description="sedGrp6Mackenzie Sediment Group 1"
+          />
+          <var name="sedGrp6ObAt250m" array_group="sedGrp6TracersAt250m" units="kg m^{-3}"
+        description="sedGrp6Ob Sediment Group 1"
+          />
+          <var name="sedGrp6YeneseiAt250m" array_group="sedGrp6TracersAt250m" units="kg m^{-3}"
+        description="sedGrp6Yenesei Sediment Group 1"
+          />
+          <var name="sedGrp6YukonAt250m" array_group="sedGrp6TracersAt250m" units="kg m^{-3}"
+        description="sedGrp6Yukon Sediment Group 1"
+				/>
+		</var_array>
+			<var name="sedGrp6TracersAt250mAll" type="real" dimensions="nCells Time" units="kg m^{-3}"
+					description="all rivers Sediment Group 1"
+			/>
+      <var_array name="sedGrp6TracersZInt" type="real" dimensions="nCells Time">
+          <var name="sedGrp6KolymaZInt" array_group="sedGrp6TracersZInt" units="kg m^{-3}"
+        description="sedGrp6Kolyma Sediment Group 1"
+          />
+          <var name="sedGrp6LenaZInt" array_group="sedGrp6TracersZInt" units="kg m^{-3}"
+        description="sedGrp6Lena Sediment Group 1"
+          />
+          <var name="sedGrp6MackenzieZInt" array_group="sedGrp6TracersZInt" units="kg m^{-3}"
+        description="sedGrp6Mackenzie Sediment Group 1"
+          />
+          <var name="sedGrp6ObZInt" array_group="sedGrp6TracersZInt" units="kg m^{-3}"
+        description="sedGrp6Ob Sediment Group 1"
+          />
+          <var name="sedGrp6YeneseiZInt" array_group="sedGrp6TracersZInt" units="kg m^{-3}"
+        description="sedGrp6Yenesei Sediment Group 1"
+          />
+          <var name="sedGrp6YukonZInt" array_group="sedGrp6TracersZInt" units="kg m^{-3}"
+        description="sedGrp6Yukon Sediment Group 1"
+				/>
+		</var_array>
+			<var name="sedGrp6TracersZIntAll" type="real" dimensions="nCells Time" units="kg m^{-3}"
+					description="all rivers Sediment Group 1"
+			/>
 			<var name="kineticEnergyAtBottom" type="real" dimensions="nCells Time" units="m^2 s^-2"
 					description="kinetic energy at cell centers at bottom"
 			/>

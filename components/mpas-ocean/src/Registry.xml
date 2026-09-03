@@ -294,23 +294,23 @@
 					description="Sediments settling velocity, positive upwards"
 					possible_values="any real"
 		/>
-		<nml_option name="config_settling_vel_sedGrp2" type="real" default_value="-1.00e-7" units="m s^-1"
+		<nml_option name="config_settling_vel_sedGrp2" type="real" default_value="-3.16e-6" units="m s^-1"
 					description="Sediments settling velocity, positive upwards"
 					possible_values="any real"
 		/>
-		<nml_option name="config_settling_vel_sedGrp3" type="real" default_value="-3.16e-7" units="m s^-1"
+		<nml_option name="config_settling_vel_sedGrp3" type="real" default_value="-1.00e-5" units="m s^-1"
 					description="Sediments settling velocity, positive upwards"
 					possible_values="any real"
 		/>
-		<nml_option name="config_settling_vel_sedGrp4" type="real" default_value="-1.00e-6" units="m s^-1"
+		<nml_option name="config_settling_vel_sedGrp4" type="real" default_value="-3.16e-5" units="m s^-1"
 					description="Sediments settling velocity, positive upwards"
 					possible_values="any real"
 		/>
-		<nml_option name="config_settling_vel_sedGrp5" type="real" default_value="-3.16e-6" units="m s^-1"
+		<nml_option name="config_settling_vel_sedGrp5" type="real" default_value="-1.00e-4" units="m s^-1"
 					description="Sediments settling velocity, positive upwards"
 					possible_values="any real"
 		/>
-		<nml_option name="config_settling_vel_sedGrp6" type="real" default_value="-1.00e-5" units="m s^-1"
+		<nml_option name="config_settling_vel_sedGrp6" type="real" default_value="-3.16e-4" units="m s^-1"
 					description="Sediments settling velocity, positive upwards"
 					possible_values="any real"
 		/>
